@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
+#include<unistd.h>
 
 int main(int argc, char** argv) 
 {
@@ -26,6 +27,7 @@ int main(int argc, char** argv)
       top->eval();
       printf("a = %d, b = %d, f = %d\n", a, b, top->f);
       assert(top->f == (a ^ b));
+      sleep(1);
     }
 
     delete top;
