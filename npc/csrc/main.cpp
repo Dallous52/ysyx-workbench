@@ -14,6 +14,7 @@ int main(int argc, char** argv)
     Vtop* top = new Vtop{contextp};
 
     // 初始化随机数发生器
+    time_t t;
     srand((unsigned) time(&t));
 
     while (!contextp->gotFinish())
