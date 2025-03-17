@@ -5,7 +5,7 @@ all:
 # build project
 sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	verilator --cc --exe --build -j 7 -Wall csrc/main.cpp vsrc/top.v
+	verilator --cc --exe --build -j 4 -Wall csrc/main.cpp vsrc/top.v
 	make -C obj_dir -f Vtop.mk Vtop
 
 # gtkwave
