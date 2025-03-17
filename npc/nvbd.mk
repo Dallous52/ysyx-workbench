@@ -9,8 +9,23 @@
 VERILATOR_CFLAGS += -MMD --build -cc  \
 				-O3 --x-assign fast --x-initial fast --noassert
 
+# 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
+VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
+
+# 获取所有 C/C++ 源文件（`csrc` 目录下的 `.c`、`.cc`、`.cpp` 文件）
+CSRCS = ./csrc/nvboard.cpp
+# $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
+
+# C++ 编译选项：
+INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
+# - `-DTOP_NAME="V$(TOPNAME)"` 定义宏 `TOP_NAME`，用于 Verilator 生成的顶层模块
+CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
+
 # rules for NVBoard
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 
-nvbd:
-	@echo "hello hello"
+nvbd: $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
+	verilator $(VERILATOR_CFLAGS) \
+		--top-module top $^ \
+		$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS)) \
+		--exe -o top
