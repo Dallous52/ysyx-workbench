@@ -15,11 +15,11 @@ int main(int argc, char** argv)
     contextp->commandArgs(argc, argv);
 
     Vtop* top = new Vtop{contextp};
-    
+
     // 接下来的四行代码用于设置波形存储为VCD文件
     Verilated::traceEverOn(true);
     VerilatedVcdC *m_trace = new VerilatedVcdC;  
-    dut->trace(m_trace, 5);               
+    top->trace(m_trace, 5);               
     m_trace->open("waveform.vcd");
 
     // 初始化随机数发生器
