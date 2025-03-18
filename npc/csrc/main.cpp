@@ -5,7 +5,7 @@
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
-void verilator_main_loop(Vtop* top);
+void verilator_main_loop(Vtop* top, VerilatedVcdC* vtrace);
 #endif // VSIM_T
 
 
