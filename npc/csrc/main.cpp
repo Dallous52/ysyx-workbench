@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 {
     Vtop* top = new Vtop();
 
-#ifdef NVBD_T
+#ifdef VSIM_T
     // 接下来的四行代码用于设置波形存储为VCD文件
     Verilated::traceEverOn(true);
     VerilatedVcdC *m_trace = new VerilatedVcdC;
@@ -33,9 +33,9 @@ int main(int argc, char** argv)
 
     m_trace->close();
     delete top;
-#endif // NVBD_T
+#endif // VSIM_T
 
-#ifdef VSIM_T 
+#ifdef NVBD_T
     nvboard_bind_all_pins(top);
 
     nvboard_init();
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     }
 
     nvboard_quit();
-#endif // VSIM_T
+#endif // NVBD_T
 
     return 0;
 }
