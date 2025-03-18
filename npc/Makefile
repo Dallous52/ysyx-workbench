@@ -13,7 +13,7 @@ VERILATOR_CFLAGS += -MMD --build -cc  \
 TOPNAME = top
 
 # 需编译模块名称
-MODNAME ?= NONE_M=1
+MODNAME ?= DUALCTL_M=1
 
 # 模拟器名称
 SIMNAME ?= VSIM_T=1
@@ -27,8 +27,8 @@ CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*
 # C++ 编译选项：
 INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
 # - `-DTOP_NAME="V$(TOPNAME)"` 定义宏 `TOP_NAME`，用于 Verilator 生成的顶层模块
-CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\"" $(MODNAME) $(SIMNAME)
-VERILATOR_CFLAGS += -Wno-UNOPTFLAT -D$(MODNAME) $(SIMNAME)
+CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\"" -D$(MODNAME) -D$(SIMNAME)
+VERILATOR_CFLAGS += -Wno-UNOPTFLAT -D$(MODNAME) -D$(SIMNAME)
 
 all: sim
 
