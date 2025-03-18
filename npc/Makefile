@@ -16,7 +16,8 @@ TOPNAME = top
 MODNAME ?= DUALCTL_M=1
 
 # 模拟器名称
-SIMNAME ?= VSIM_T=1
+VSIM = VSIM_T=1
+NVBD = NVBD_T=1
 
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
@@ -27,8 +28,8 @@ CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*
 # C++ 编译选项：
 INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
 # - `-DTOP_NAME="V$(TOPNAME)"` 定义宏 `TOP_NAME`，用于 Verilator 生成的顶层模块
-CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\"" -D$(MODNAME) -D$(SIMNAME)
-VERILATOR_CFLAGS += -Wno-UNOPTFLAT -D$(MODNAME) -D$(SIMNAME)
+CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\"" -D$(MODNAME)
+VERILATOR_CFLAGS += -Wno-UNOPTFLAT -D$(MODNAME)
 
 all: sim
 
@@ -38,6 +39,7 @@ sim: $(VSRCS) $(CSRCS)
 	@rm -rf ./obj_dir
 	verilator $(VERILATOR_CFLAGS) \
 		--trace --top-module ${TOPNAME} $^ \
+		-CFLAGS -D$(VSIM) \
 		$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS)) \
 		--exe -o top
 
@@ -58,6 +60,7 @@ nvboard: $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 	@rm -rf ./obj_dir
 	verilator $(VERILATOR_CFLAGS) \
 		--top-module ${TOPNAME} $^ \
+		-CFLAGS -D$(NVBD) \
 		$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS)) \
 		--exe -o top
 
