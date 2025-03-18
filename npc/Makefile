@@ -33,7 +33,7 @@ VERILATOR_CFLAGS += -Wno-UNOPTFLAT -D$(MODNAME)
 
 all: sim
 
-# build project
+# simple sim test
 sim: $(VSRCS) $(CSRCS)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@rm -rf ./obj_dir
@@ -48,7 +48,7 @@ gtkwave:
 	@if [ -f waveform.vcd ]; then \
 		gtkwave waveform.vcd; \
 	else \
-		echo "\033[31mPlease include and use <verilated_vcd_c.h> to create waveform.vcd.\033[31m"; \
+		echo "\033[31mPlease include and use <verilated_vcd_c.h> to create waveform.vcd\033[31m"; \
 	fi
 
 
