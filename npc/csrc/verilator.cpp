@@ -40,7 +40,6 @@ int main(int argc, char** argv)
     }
 
     delete top;
-    delete contextp;
 
     return 0;
 }
