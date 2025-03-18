@@ -9,7 +9,7 @@
 
 #include "Vtop.h"
 
-#define MAX_SIM_TIME 20  // 仿真总时钟边沿数
+#define MAX_SIM_TIME 50  // 仿真总时钟边沿数
 vluint64_t sim_time = 0; // 用于计数时钟边沿
 
 int main(int argc, char** argv)
@@ -42,6 +42,6 @@ int main(int argc, char** argv)
     m_trace->close();
     delete top;
     exit(EXIT_SUCCESS);
-    
+
     return 0;
 }

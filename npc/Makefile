@@ -10,8 +10,8 @@ sim:
 
 # gtkwave
 gtkwave:
-	@if [ -f obj_dir/waveform.vcd ]; then \
-		gtkwave ./obj_dir/waveform.vcd; \
+	@if [ -f waveform.vcd ]; then \
+		gtkwave waveform.vcd; \
 	else \
 		echo "\033[31mPlease include and use <verilated_vcd_c.h> to create waveform.vcd.\033[31m"; \
 	fi
@@ -20,6 +20,7 @@ include nvbd.mk
 
 # nvboard test
 nvboard: nvbd
+	./obj_dir/top
 
 
 # build and run
