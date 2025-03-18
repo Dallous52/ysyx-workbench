@@ -1,11 +1,13 @@
-#include "Vtop.h"
-#include "verilated.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
 #include <unistd.h>
+
+#include <verilated.h>
+#include <verilated_vcd_c.h>
+
+#include "Vtop.h"
 
 int main(int argc, char** argv)
 {
@@ -13,6 +15,12 @@ int main(int argc, char** argv)
     contextp->commandArgs(argc, argv);
 
     Vtop* top = new Vtop{contextp};
+    
+    // 接下来的四行代码用于设置波形存储为VCD文件
+    Verilated::traceEverOn(true);
+    VerilatedVcdC *m_trace = new VerilatedVcdC;  
+    dut->trace(m_trace, 5);               
+    m_trace->open("waveform.vcd");
 
     // 初始化随机数发生器
     time_t t;
