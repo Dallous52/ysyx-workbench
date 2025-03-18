@@ -33,7 +33,7 @@ VERILATOR_CFLAGS += -Wno-UNOPTFLAT -D$(MODNAME) -D$(SIMNAME)
 all: sim
 
 # build project
-sim:
+sim: $(VSRCS) $(CSRCS)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@rm -rf ./obj_dir
 	verilator $(VERILATOR_CFLAGS) \
