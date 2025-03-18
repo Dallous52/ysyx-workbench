@@ -25,13 +25,13 @@ int main(int argc, char** argv)
 #ifdef VSIM_T
     // 接下来的四行代码用于设置波形存储为VCD文件
     Verilated::traceEverOn(true);
-    VerilatedVcdC *m_trace = new VerilatedVcdC;
-    top->trace(m_trace, 5);
-    m_trace->open("waveform.vcd");
+    VerilatedVcdC *vtrace = new VerilatedVcdC;
+    top->trace(vtrace, 5);
+    vtrace->open("waveform.vcd");
 
-    verilator_main_loop(top);
+    verilator_main_loop(top, vtrace);
 
-    m_trace->close();
+    vtrace->close();
     delete top;
 #endif // VSIM_T
 
