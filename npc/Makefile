@@ -28,5 +28,6 @@ run: sim
 
 clean:
 	@rm -rf obj_dir
+	@rm -f waveform.vcd
 
 include ../Makefile
