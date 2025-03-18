@@ -35,10 +35,10 @@ VM_PREFIX = Vtop
 VM_MODPREFIX = Vtop
 # User CFLAGS (from -CFLAGS on Verilator command line)
 VM_USER_CFLAGS = \
+	-DNVBD_T=1 \
 	-I/home/dallous/Documents/ysyx-workbench/nvboard/usr/include \
 	-DTOP_NAME="Vtop" \
 	-DDUALCTL_M=1 \
-	-DVSIM_T=1 \
 	-MMD \
 	-O3 \
 	-I/usr/include/SDL2 \
@@ -46,6 +46,7 @@ VM_USER_CFLAGS = \
 
 # User LDLIBS (from -LDFLAGS on Verilator command line)
 VM_USER_LDLIBS = \
+	/home/dallous/Documents/ysyx-workbench/nvboard/build/nvboard.a \
 	-lSDL2 \
 	-lSDL2_image \
 	-lSDL2_ttf \

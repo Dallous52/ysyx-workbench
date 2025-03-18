@@ -91,7 +91,7 @@ void single_cycle(Vtop& dut)
 void reset(Vtop& dut, int n)
 {
     dut.rst = 1;
-    while (n -- > 0) single_cycle();
+    while (n -- > 0) single_cycle(dut);
     dut.rst = 0;
 }
 #endif // NVBD_T

@@ -1,3 +1,5 @@
+#ifdef VSIM_T
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -30,3 +32,5 @@ void verilator_main_loop(Vtop* top, VerilatedVcdC* vtrace)
     }
 }
 #endif // DUALCTL_M
+
+#endif // VSIM_T
