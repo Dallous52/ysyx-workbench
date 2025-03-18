@@ -5,6 +5,7 @@ all:
 # build project
 sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
+	@rm -rf ./obj_dir
 	verilator --cc --exe --build -j 4 -Wall --trace csrc/verilator.cpp vsrc/top.v
 	make -C obj_dir -f Vtop.mk Vtop
 

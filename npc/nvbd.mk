@@ -25,6 +25,7 @@ CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 nvbd: $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
+	@rm -rf ./obj_dir
 	verilator $(VERILATOR_CFLAGS) \
 		--top-module top $^ \
 		$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS)) \
