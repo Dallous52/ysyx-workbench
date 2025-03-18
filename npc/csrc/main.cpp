@@ -1,3 +1,6 @@
+#include "Vtop.h"
+
+
 #ifdef VSIM_T
 #include <verilated.h>
 #include <verilated_vcd_c.h>
@@ -14,10 +17,6 @@ void nvboard_bind_all_pins(Vtop* top);
 void single_cycle(Vtop& dut);
 void reset(Vtop& dut, int n);
 #endif // NVBD_T
-
-
-#include "Vtop.h"
-
 
 int main(int argc, char** argv)
 {
