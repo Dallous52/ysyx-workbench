@@ -37,7 +37,7 @@ sim: $(VSRCS) $(CSRCS)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@rm -rf ./obj_dir
 	verilator $(VERILATOR_CFLAGS) \
-		--top-module ${TOPNAME} $^ \
+		--trace --top-module ${TOPNAME} $^ \
 		$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS)) \
 		--exe -o top
 
