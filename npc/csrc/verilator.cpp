@@ -9,39 +9,26 @@
 
 #include "Vtop.h"
 
+// 双控开关模块
+#ifdef DUALCTL_M
 #define MAX_SIM_TIME 50  // 仿真总时钟边沿数
 vluint64_t sim_time = 0; // 用于计数时钟边沿
 
-int main(int argc, char** argv)
+void verilator_main_loop(Vtop* top)
 {
-    Vtop* top = new Vtop;
-
-    // 接下来的四行代码用于设置波形存储为VCD文件
-    Verilated::traceEverOn(true);
-    VerilatedVcdC *m_trace = new VerilatedVcdC;  
-    top->trace(m_trace, 5);               
-    m_trace->open("waveform.vcd");
-
     // 初始化随机数发生器
     time_t t;
     srand((unsigned) time(&t));
-
+    top->ledr = 0;
+    
     while (sim_time < MAX_SIM_TIME)
     {
-      int a = rand() & 1;
-      int b = rand() & 1;
-      top->a = a;
-      top->b = b;
-      top->eval();
-      printf("a = %d, b = %d, f = %d\n", a, b, top->f);
-      assert(top->f == (a ^ b));
-      m_trace->dump(sim_time);
-      sim_time++; // 更新仿真时间
+        top->sw = (unsigned char)rand() % 4;
+        top->eval();
+        printf("sw = %d, f = %d\n", top->sw, top->ledr);
+        assert(top->f == (a ^ b));
+        m_trace->dump(sim_time);
+        sim_time++; // 更新仿真时间
     }
-
-    m_trace->close();
-    delete top;
-    exit(EXIT_SUCCESS);
-
-    return 0;
 }
+#endif // DUALCTL_M
