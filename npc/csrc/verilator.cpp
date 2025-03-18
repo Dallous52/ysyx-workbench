@@ -9,12 +9,12 @@
 
 #include "Vtop.h"
 
+#define MAX_SIM_TIME 20  // 仿真总时钟边沿数
+vluint64_t sim_time = 0; // 用于计数时钟边沿
+
 int main(int argc, char** argv)
 {
-    VerilatedContext* contextp = new VerilatedContext;
-    contextp->commandArgs(argc, argv);
-
-    Vtop* top = new Vtop{contextp};
+    Vtop* top = new Vtop;
 
     // 接下来的四行代码用于设置波形存储为VCD文件
     Verilated::traceEverOn(true);
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
     time_t t;
     srand((unsigned) time(&t));
 
-    while (!contextp->gotFinish())
+    while (sim_time < MAX_SIM_TIME)
     {
       int a = rand() & 1;
       int b = rand() & 1;
@@ -35,7 +35,8 @@ int main(int argc, char** argv)
       top->eval();
       printf("a = %d, b = %d, f = %d\n", a, b, top->f);
       assert(top->f == (a ^ b));
-      sleep(1);
+      m_trace->dump(sim_time);
+      sim_time++; // 更新仿真时间
     }
 
     delete top;
