@@ -39,7 +39,9 @@ int main(int argc, char** argv)
       sim_time++; // 更新仿真时间
     }
 
+    m_trace->close();
     delete top;
-
+    exit(EXIT_SUCCESS);
+    
     return 0;
 }
