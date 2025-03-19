@@ -2,7 +2,7 @@ module top(
     input clk,
     input rst,
     input [4:0] btn,
-    input [7:0] sw,
+    input [15:0] sw,
     input ps2_clk,
     input ps2_data,
     input uart_rx,
@@ -40,7 +40,7 @@ module top(
             .x0 	(sw[3:2]),
             .x1 	(sw[5:4]),
             .x2 	(sw[7:6]),
-            .x3 	(btn[1:0]),
+            .x3 	(sw[9:8]),
             .y  	(sw[1:0]),
             .f  	(ledr[1:0])
         );
