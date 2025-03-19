@@ -33,4 +33,4 @@ void verilator_main_loop(Vtop* top, VerilatedVcdC* vtrace)
 }
 #endif // DUALCTL_M
 
-#endif // VSIM_T
+#endif // VSIM_T·

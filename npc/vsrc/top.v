@@ -26,14 +26,24 @@ module top(
 );
   
     // 双控开关模块
-    `ifdef  DUALCTL_M 
-
+    `ifdef DUALCTL_M 
         dualctl u_dualctl(
           .a 	(sw[0]  ),
           .b 	(sw[1]  ),
           .f 	(ledr[0]  )
         );  
-      
+    `endif
+    
+    // 2位4选1选择器
+    `ifdef CHOOSE_M
+        choose u_choose(
+            .x0 	(sw[3:2]),
+            .x1 	(sw[5:4]),
+            .x2 	(sw[7:6]),
+            .x3 	(btn[1:0]),
+            .y  	(sw[1:0]),
+            .f  	(ledr[1:0])
+        );
     `endif
 
 endmodule
