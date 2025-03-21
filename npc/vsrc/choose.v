@@ -54,6 +54,7 @@ module MuxKeyWithDefault #(NR_KEY = 2, KEY_LEN = 1, DATA_LEN = 1) (
   MuxKeyInternal #(NR_KEY, KEY_LEN, DATA_LEN, 1) i0 (out, key, default_out, lut);
 endmodule
 
+// 4-2 二位选择器
 module choose(
     input [1:0] x0,
     input [1:0] x1,

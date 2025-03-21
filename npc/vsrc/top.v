@@ -46,4 +46,15 @@ module top(
         );
     `endif
 
+    // 8-3 优先编码器
+    `ifdef ENCODE_M
+        encode u_encode(
+            .src  	(sw[7:0]),
+            .en   	(sw[8]),
+            .isin 	(ledr[4]),
+            .led  	(seg0),
+            .ret  	(ledr[2:0])
+        );
+    `endif
+
 endmodule
