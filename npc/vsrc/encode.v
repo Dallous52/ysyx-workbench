@@ -16,7 +16,7 @@ module encode83 (
         else  ret = 0;
     end
 
-    assign isin = ~en && src == 0 ? 0 : 1;
+    assign isin = en && src == 0 ? 0 : 1;
 
 endmodule
 
