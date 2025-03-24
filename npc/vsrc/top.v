@@ -72,7 +72,7 @@ module top(
         );
 
         segdis u_seg0(
-            .num 	(ans[2:0] % 10),
+            .num 	(ans[2:0]),
             .led 	(seg0)
         );
 
