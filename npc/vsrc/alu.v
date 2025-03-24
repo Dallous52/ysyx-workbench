@@ -7,23 +7,26 @@ module alu(
     output reg ovfl,
     output reg carry
 );
-    reg [3:0] cura;
-    reg [3:0] curb;
+    reg [3:0] cura, curb;
+    reg [3:0] tmp;
 
-    always @(cura, curb, opt) begin
+    always @(*) begin
         cura = arga[3] == 0 ? arga : ({arga[3], ~arga[2:0]} + 4'b0001);
         curb = argb[3] == 0 ? argb : ({argb[3], ~argb[2:0]} + 4'b0001);
+        carry = 0;
+        ovfl = 0;
+        tmp = 0;
 
         case (opt)
-            3'b000: begin 
+            3'b000: begin
                 {carry, res} = cura + curb;
                 ovfl = (cura[3] == curb[3]) && (res[3] != cura[3]);
             end
             
             3'b001: begin
-                curb = ~curb + 4'b0001;
-                {carry, res} = cura + curb;
-                ovfl = (cura[3] == curb[3]) && (res[3] != cura[3]);
+                tmp = ~curb + 4'b0001;
+                {carry, res} = cura + tmp;
+                ovfl = (cura[3] == tmp[3]) && (res[3] != cura[3]);
             end
 
             3'b010: begin
