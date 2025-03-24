@@ -77,6 +77,7 @@ module top(
         );
 
         assign seg1 = ans[3] ? 8'b11111101 : 8'b11111111;
+        assign ledr[7:4] = ans;
     `endif
 
 endmodule
