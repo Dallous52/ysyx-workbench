@@ -43,11 +43,11 @@ module alu(
             end
 
             3'b110: begin
-                res = {2'b00, cura < curb};
+                res = {3'b000, cura < curb};
             end
 
             3'b111: begin
-                res = {2'b00, cura == curb};
+                res = {3'b000, cura == curb};
             end 
         endcase
         res = res[3] == 0 ? res : {res[3], ~(res[2:0] - 3'b001)};
