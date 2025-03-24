@@ -21,14 +21,12 @@ module alu(
             3'b000: begin
                 {carry, res} = cura + curb;
                 ovfl = (cura[3] == curb[3]) && (res[3] != cura[3]);
-                res = res[3] == 0 ? res : {res[3], ~(res[2:0] - 3'b001)};
             end
 
             3'b001: begin
                 tmp = ~curb + 4'b0001;
                 {carry, res} = cura + tmp;
                 ovfl = (cura[3] == tmp[3]) && (res[3] != cura[3]);
-                res = res[3] == 0 ? res : {res[3], ~(res[2:0] - 3'b001)};
             end
 
             3'b010: begin
@@ -55,6 +53,7 @@ module alu(
                 res = {3'b000, cura == curb};
             end
         endcase
+        res = res[3] == 0 ? res : {res[3], ~(res[2:0] - 3'b001)};
     end
 
     assign zero = ~(|res);
