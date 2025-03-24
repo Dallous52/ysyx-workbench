@@ -23,7 +23,7 @@ endmodule
 
 // 数码管显示模块
 module segdis(
-    input [3:0] num,
+    input [2:0] num,
     output reg [7:0] led
 );
 
@@ -37,8 +37,6 @@ module segdis(
             5 : led = 8'b01001000;
             6 : led = 8'b01000000;
             7 : led = 8'b00011110;
-            8 : led = 8'b00000000;
-            9 : led = 8'b00001000;
             default: led = 8'b11111111;
         endcase
     end
