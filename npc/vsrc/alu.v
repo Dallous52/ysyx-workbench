@@ -1,20 +1,3 @@
-module adder(
-    input [3:0] arga,
-    input [3:0] argb,
-    output [3:0] res,
-    output ovfl,
-    output carry
-);
-
-    // 加法运算
-    assign {carry, res} = arga + argb;
-    
-    // 进位判断
-    assign ovfl = (arga[2] == argb[2]) && (res[2] != arga[2]);
-    
-endmodule //adder
-
-
 module alu(
     input [3:0] arga,
     input [3:0] argb,
@@ -64,7 +47,7 @@ module alu(
             end
 
             3'b111: begin
-                
+                res = {2'b00, cura == curb};
             end 
         endcase
         res = res[3] == 0 ? res : {res[3], ~(res[2:0] - 3'b001)};

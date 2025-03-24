@@ -57,4 +57,30 @@ module top(
         );
     `endif
 
+    // ALU
+    `ifdef ALU_M  
+        reg [3:0] ans;
+        
+        alu u_alu(
+            .arga  	(sw[3:0]),
+            .argb  	(sw[7:4]),
+            .opt   	(sw[10:8]),
+            .res   	(ans),
+            .zero  	(ledr[0]),
+            .ovfl  	(ledr[1]),
+            .carry 	(ledr[2])
+        );
+
+        segdis u_seg0(
+            .num 	(ans % 10),
+            .led 	(seg0)
+        );
+
+        segdis u_seg1(
+            .num 	(ans / 10),
+            .led 	(seg1)
+        );
+        
+    `endif
+
 endmodule
