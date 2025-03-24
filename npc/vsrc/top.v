@@ -76,7 +76,7 @@ module top(
             .led 	(seg0)
         );
 
-        assign seg1 = ans[3] ? 8'b00000001 : 8'b11111101;
+        assign seg1 = ans[3] ? 8'b11111101 : 8'b11111111;
     `endif
 
 endmodule
