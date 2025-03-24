@@ -30,7 +30,7 @@ module top(
         dualctl u_dualctl(
           .a 	(sw[0]  ),
           .b 	(sw[1]  ),
-          .f 	(ledr[0]  )
+          .f 	(ledr[0])
         );  
     `endif
     
@@ -72,15 +72,11 @@ module top(
         );
 
         segdis u_seg0(
-            .num 	(ans % 10),
+            .num 	(ans[2:0] % 10),
             .led 	(seg0)
         );
 
-        segdis u_seg1(
-            .num 	(ans / 10),
-            .led 	(seg1)
-        );
-        
+        assign seg2 = ans[3] ? 8'b00000001 : 8'b11111101;
     `endif
 
 endmodule

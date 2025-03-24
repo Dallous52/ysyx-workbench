@@ -22,7 +22,7 @@ module alu(
                 {carry, res} = cura + curb;
                 ovfl = (cura[3] == curb[3]) && (res[3] != cura[3]);
             end
-            
+
             3'b001: begin
                 tmp = ~curb + 4'b0001;
                 {carry, res} = cura + tmp;
@@ -48,7 +48,7 @@ module alu(
             3'b110: begin
                 res = {3'b000, cura < curb};
             end
-
+            
             3'b111: begin
                 res = {3'b000, cura == curb};
             end
