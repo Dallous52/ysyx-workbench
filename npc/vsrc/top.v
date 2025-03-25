@@ -80,4 +80,15 @@ module top(
         assign ledr[7:4] = ans;
     `endif
 
+    // 4 位并行加法器
+    `ifdef ADDER_M
+        adder u_adder(
+            .ina  	(sw[3:0]),
+            .inb  	(sw[7:4]),
+            .cin  	(sw[8]),
+            .cout 	(ledr[4]),
+            .sout 	(ledr[3:0])
+        );
+    `endif
+
 endmodule
