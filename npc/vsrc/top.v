@@ -86,6 +86,8 @@ module top(
             .ina  	(sw[3:0]),
             .inb  	(sw[7:4]),
             .cin  	(sw[8]),
+            .pf     (ledr[5]),
+            .gf     (ledr[6]),
             .cout 	(ledr[4]),
             .sout 	(ledr[3:0])
         );
