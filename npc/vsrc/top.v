@@ -107,12 +107,12 @@ module top(
             else nums = 8'b00000001;
         end
         
-        segdis16 u_segdis16(
+        segdis16 u_seg0(
             .num 	(nums[3:0]),
             .led 	(seg0)
         );
         
-        segdis16 u_segdis16(
+        segdis16 u_seg1(
             .num 	(nums[7:4]),
             .led 	(seg1)
         );
