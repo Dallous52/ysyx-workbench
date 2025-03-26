@@ -94,7 +94,7 @@ module top(
     `endif
 
     // 移位随机数发生器
-    `ifdef SHIFT_M 
+    `ifdef RANDOM_M 
         reg [7:0] nums;
         initial begin
             nums = 8'b0;
@@ -119,6 +119,17 @@ module top(
         );
 
         assign ledr[7:0] = nums;
+    `endif
+
+    // 桶形移位器
+    `ifdef SHIFT_M
+        shiftreg u_shiftreg(
+            .din   	(sw[7:0]    ),
+            .shamt 	(sw[15:13]  ),
+            .lr    	(sw[12]     ),
+            .al    	(sw[11]     ),
+            .dout  	(ledr[7:0]   )
+        );
     `endif
 
 endmodule

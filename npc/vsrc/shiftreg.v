@@ -37,6 +37,7 @@ module shiftreg(
     assign lv3[0] = 1'b0;
     assign lv3[9] = csal;
 
+    // 第一层
     generate
         genvar i;
         for (i = 0; i < 8; i = i + 1) begin
@@ -51,6 +52,7 @@ module shiftreg(
         end
     endgenerate
     
+    // 第二层
     generate
         for (i = 0; i < 8; i = i + 1) begin
             wire xl = i > 6 ? lv2[9] : lv2[i + 3];
@@ -66,6 +68,7 @@ module shiftreg(
         end
     endgenerate
 
+    // 第三层
     generate
         for (i = 0; i < 8; i = i + 1) begin
             wire xl = i > 4 ? lv2[9] : lv3[i + 5];
