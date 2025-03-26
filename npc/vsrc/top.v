@@ -102,7 +102,8 @@ module top(
         
         always @(posedge btn[0]) begin
             if (|nums) begin
-                nums <= {nums[0], nums[7:1]};
+                
+                nums <= {^nums[4:2] ^ nums[0], nums[7:1]};
             end
             else nums <= 8'b00000001;
         end
