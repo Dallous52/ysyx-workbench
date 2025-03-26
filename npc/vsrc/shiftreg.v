@@ -71,8 +71,8 @@ module shiftreg(
     // 第三层
     generate
         for (i = 0; i < 8; i = i + 1) begin
-            wire xl = i > 4 ? lv2[9] : lv3[i + 5];
-            wire x3 = i < 3 ? lv2[0] : lv3[i - 3];
+            wire xl = i > 4 ? lv3[9] : lv3[i + 5];
+            wire x3 = i < 3 ? lv3[0] : lv3[i - 3];
             chos u_chos(
                 .x0 	(lv3[i + 1]),
                 .x1 	(xl),
