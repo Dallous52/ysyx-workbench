@@ -81,7 +81,7 @@ module shiftreg(
                 .x2 	(lv3[k + 1]),
                 .x3 	(kx3),
                 .y  	({shamt[2], lr}),
-                .f  	(dout[i])
+                .f  	(dout[k])
             );
         end
     endgenerate
