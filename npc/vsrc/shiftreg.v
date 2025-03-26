@@ -54,30 +54,32 @@ module shiftreg(
     
     // 第二层
     generate
-        for (i = 0; i < 8; i = i + 1) begin
-            wire xl = i > 6 ? lv2[9] : lv2[i + 3];
-            wire x3 = i < 1 ? lv2[0] : lv2[i - 1];
+        genvar j;
+        for (j = 0; j < 8; j = j + 1) begin
+            wire jxl = j > 6 ? lv2[9] : lv2[j + 3];
+            wire jx3 = j < 1 ? lv2[0] : lv2[j - 1];
             chos u_chos(
-                .x0 	(lv2[i + 1]),
-                .x1 	(xl),
-                .x2 	(lv2[i + 1]),
-                .x3 	(x3),
+                .x0 	(lv2[j + 1]),
+                .x1 	(jxl),
+                .x2 	(lv2[j + 1]),
+                .x3 	(jx3),
                 .y  	({shamt[1], lr}),
-                .f  	(lv3[i + 1])
+                .f  	(lv3[j + 1])
             );
         end
     endgenerate
 
     // 第三层
     generate
-        for (i = 0; i < 8; i = i + 1) begin
-            wire xl = i > 4 ? lv3[9] : lv3[i + 5];
-            wire x3 = i < 3 ? lv3[0] : lv3[i - 3];
+        genvar k;
+        for (k = 0; k < 8; k = k + 1) begin
+            wire kxl = k > 4 ? lv3[9] : lv3[k + 5];
+            wire kx3 = k < 3 ? lv3[0] : lv3[k - 3];
             chos u_chos(
-                .x0 	(lv3[i + 1]),
-                .x1 	(xl),
-                .x2 	(lv3[i + 1]),
-                .x3 	(x3),
+                .x0 	(lv3[k + 1]),
+                .x1 	(kxl),
+                .x2 	(lv3[k + 1]),
+                .x3 	(kx3),
                 .y  	({shamt[2], lr}),
                 .f  	(dout[i])
             );
