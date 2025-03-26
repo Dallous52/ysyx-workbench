@@ -46,7 +46,7 @@ module shiftreg(
                 .x1 	(lv1[i + 2]),
                 .x2 	(din[i]),
                 .x3 	(lv1[i]),
-                .y  	({shamt[0], lr}),
+                .y  	({lr, shamt[0]}),
                 .f  	(lv2[i + 1])
             );
         end
@@ -63,7 +63,7 @@ module shiftreg(
                 .x1 	(jxl),
                 .x2 	(lv2[j + 1]),
                 .x3 	(jx3),
-                .y  	({shamt[1], lr}),
+                .y  	({lr, shamt[1]}),
                 .f  	(lv3[j + 1])
             );
         end
@@ -80,7 +80,7 @@ module shiftreg(
                 .x1 	(kxl),
                 .x2 	(lv3[k + 1]),
                 .x3 	(kx3),
-                .y  	({shamt[2], lr}),
+                .y  	({lr, shamt[2]}),
                 .f  	(dout[k])
             );
         end
