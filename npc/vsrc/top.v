@@ -116,6 +116,8 @@ module top(
             .num 	(nums[7:4]),
             .led 	(seg1)
         );
+
+        assign ledr[7:0] = nums;
     `endif
 
 endmodule
