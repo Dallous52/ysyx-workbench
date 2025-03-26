@@ -36,7 +36,6 @@ module adder(
         .cin    (cin),
         .cout 	(c[4:1])
     );
-    
 
     assign cout = c[4];
     assign sout = p ^ c[3:0];

@@ -93,4 +93,29 @@ module top(
         );
     `endif
 
+    // 移位随机数发生器
+    `ifdef SHIFT_M 
+        reg [7:0] nums;
+        initial begin
+            nums = 8'b0;
+        end
+        
+        always @(posedge btn[0]) begin
+            if (&&nums) begin
+                nums <= {nums[0], nums[7:1]};
+            end
+            else nums = 8'b00000001;
+        end
+        
+        segdis16 u_segdis16(
+            .num 	(nums[3:0]),
+            .led 	(seg0)
+        );
+        
+        segdis16 u_segdis16(
+            .num 	(nums[7:4]),
+            .led 	(seg1)
+        );
+    `endif
+
 endmodule

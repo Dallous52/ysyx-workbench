@@ -44,6 +44,37 @@ module segdis(
 endmodule
 
 
+// 数码管显示模块
+module segdis16(
+    input [3:0] num,
+    output reg [7:0] led
+);
+
+    always @(num) begin
+        case (num)
+            4'd0 : led = 8'b00000011;
+            4'd1 : led = 8'b10011111;
+            4'd2 : led = 8'b00100101;
+            4'd3 : led = 8'b00001101;
+            4'd4 : led = 8'b10011001;
+            4'd5 : led = 8'b01001001;
+            4'd6 : led = 8'b01000001;
+            4'd7 : led = 8'b00011111;
+            4'd8 : led = 8'b00000001;
+            4'd9 : led = 8'b00001001;
+            4'd10: led = 8'b00010001;
+            4'd11: led = 8'b11000001;
+            4'd12: led = 8'b01100011;
+            4'd13: led = 8'b10000101;
+            4'd14: led = 8'b01100001;
+            4'd15: led = 8'b01110001;
+            default: led = 8'b11111111;
+        endcase
+    end
+
+endmodule
+
+
 module encode (
     input [7:0] src,
     input en,
