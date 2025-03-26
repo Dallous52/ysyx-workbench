@@ -72,22 +72,3 @@ module choose(
     });
 
 endmodule
-
-// 4-2 一位选择器
-module chos(
-    input  x0,
-    input  x1,
-    input  x2,
-    input  x3,
-    input [1:0] y,
-    output f
-);
-
-    MuxKeyWithDefault #(4, 2, 1) i0 (f, y, 1'b0, {
-        2'b00, x0,
-        2'b01, x1,
-        2'b10, x2,
-        2'b11, x3
-    });
-
-endmodule
