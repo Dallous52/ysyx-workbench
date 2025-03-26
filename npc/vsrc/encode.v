@@ -7,13 +7,13 @@ module encode83 (
 );
 
     integer i;
-    always @(src or en) begin
+    always @(*) begin
         if (en) begin
-            ret = 3'b000;
+            ret = 3'b0;
             for( i = 0; i < 8; i = i + 1)
                 if(src[i] == 1) ret = i[2:0];
         end
-        else  ret = 0;
+        else  ret = 3'b0;
     end
 
     assign isin = en && src != 0 ? 1 : 0;
