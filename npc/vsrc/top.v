@@ -136,10 +136,13 @@ module top(
     `ifdef KEYBOARD_M
         wire [7:0] data;
         reg [7:0] ascii;
-        
+        wire clrn;
+
+        assign clrn = ~btn[0];
+
         keyboard u_keyboard(
             .clk      	(clk       ),
-            .clrn     	(btn[0]     ),   // 复位
+            .clrn     	(clrn     ),   // 复位
             .ps2_clk  	(ps2_clk   ),
             .ps2_data 	(ps2_data  ),
             .data     	(data      ),
