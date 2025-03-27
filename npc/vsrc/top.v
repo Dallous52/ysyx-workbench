@@ -147,6 +147,11 @@ module top(
             .overflow 	(ledr[1]   ),
             .ascii    	(ascii     )
         );
+        
+        assign seg0 = ledr[0] ? seg0 : 8'hff;
+        assign seg1 = ledr[0] ? seg1 : 8'hff;
+        assign seg2 = ledr[0] ? seg2 : 8'hff;
+        assign seg3 = ledr[0] ? seg3 : 8'hff;
 
         segdis16 u_seg0(
             .num 	(data[3:0]  ),
