@@ -61,7 +61,6 @@ endmodule
 
 module keyboard(
     input clk,
-    input clrn,         // 异步复位信号（低电平有效）
     input ps2_clk,      // PS2接口时钟信号
     input ps2_data,     // PS2接口数据信号
     output [7:0] data,  // 当前读取的键盘数据
@@ -72,6 +71,10 @@ module keyboard(
 
     reg [7:0] ascii_table [0:255] = '{default: 8'h00};
     reg nextdata;
+    reg clrn;
+    initial begin
+        clrn = 1'b1;
+    end
 
     initial begin
         ascii_table[8'h1C] = 8'h41; // A
@@ -114,8 +117,8 @@ module keyboard(
     assign ascii = ascii_table[data];
     
     always @(posedge clk) begin
-        if (ready) nextdata <= 1'b0;
-        else nextdata <= 1'b1;
+        if (ready) nextdata <= 1'b1;
+        else nextdata <= 1'b0;
     end
 
     ps2_keyboard u_ps2_keyboard(
