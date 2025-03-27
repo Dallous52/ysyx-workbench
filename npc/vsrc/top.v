@@ -128,7 +128,44 @@ module top(
             .shamt 	(sw[15:13]  ),
             .lr    	(sw[12]     ),
             .al    	(sw[11]     ),
-            .dout  	(ledr[7:0]   )
+            .dout  	(ledr[7:0]  )
+        );
+    `endif
+
+    // 键盘模块
+    `ifdef KEYBOARD_M
+        wire [7:0] data;
+        reg [7:0] ascii;
+        
+        keyboard u_keyboard(
+            .clk      	(clk       ),
+            .clrn     	(sw[0]     ),   // 复位
+            .ps2_clk  	(ps2_clk   ),
+            .ps2_data 	(ps2_data  ),
+            .data     	(data      ),
+            .ready    	(ledr[0]   ),
+            .overflow 	(ledr[1]   ),
+            .ascii    	(ascii     )
+        );
+
+        segdis16 u_segdis16(
+            .num 	(data[3:0]  ),
+            .led 	(seg0  )
+        );
+        
+        segdis16 u_segdis16(
+            .num 	(data[7:4]  ),
+            .led 	(seg1  )
+        );
+
+        segdis16 u_segdis16(
+            .num 	(ascii[3:0]  ),
+            .led 	(seg2  )
+        );
+        
+        segdis16 u_segdis16(
+            .num 	(ascii[7:4]  ),
+            .led 	(seg3  )
         );
     `endif
 

@@ -40,13 +40,15 @@ int main(int argc, char** argv)
 
     nvboard_init();
 
+    reset(10);
+
     while(1)
     {
-        top->eval();
         nvboard_update();
+        single_cycle();
     }
 
-    nvboard_quit();
+    nvboard_quit();  
 #endif // NVBD_T
 
     return 0;
