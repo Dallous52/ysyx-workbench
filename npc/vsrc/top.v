@@ -148,22 +148,22 @@ module top(
             .ascii    	(ascii     )
         );
 
-        segdis16 u_segdis16(
+        segdis16 u_seg0(
             .num 	(data[3:0]  ),
             .led 	(seg0  )
         );
         
-        segdis16 u_segdis16(
+        segdis16 u_seg1(
             .num 	(data[7:4]  ),
             .led 	(seg1  )
         );
 
-        segdis16 u_segdis16(
+        segdis16 u_seg2(
             .num 	(ascii[3:0]  ),
             .led 	(seg2  )
         );
         
-        segdis16 u_segdis16(
+        segdis16 u_seg3(
             .num 	(ascii[7:4]  ),
             .led 	(seg3  )
         );
