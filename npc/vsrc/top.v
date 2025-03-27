@@ -123,7 +123,7 @@ module top(
 
     // 桶形移位器
     `ifdef SHIFT_M
-        shiftreg u_shiftreg(
+        shiftor u_shiftor(
             .din   	(sw[7:0]    ),
             .shamt 	(sw[15:13]  ),
             .lr    	(sw[12]     ),

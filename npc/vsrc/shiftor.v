@@ -17,9 +17,9 @@ module chos(
         endcase
     end
 
-endmodule    
+endmodule 
 
-module shiftreg(
+module shiftor(
     input [7:0] din,
     input [2:0] shamt,
     input lr, // 左1 右0
