@@ -148,10 +148,10 @@ module top(
             .ascii    	(ascii     )
         );
         
-        assign seg0 = ledr[0] ? seg0 : 8'hff;
-        assign seg1 = ledr[0] ? seg1 : 8'hff;
-        assign seg2 = ledr[0] ? seg2 : 8'hff;
-        assign seg3 = ledr[0] ? seg3 : 8'hff;
+        assign seg0 = ps2_data ? seg0 : 8'hff;
+        assign seg1 = ps2_data ? seg1 : 8'hff;
+        assign seg2 = ps2_data ? seg2 : 8'hff;
+        assign seg3 = ps2_data ? seg3 : 8'hff;
 
         segdis16 u_seg0(
             .num 	(data[3:0]  ),
