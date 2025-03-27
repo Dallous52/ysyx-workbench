@@ -136,7 +136,6 @@ module top(
     `ifdef KEYBOARD_M
         wire [7:0] data;
         reg [7:0] ascii;
-        wire clrn;
 
         keyboard u_keyboard(
             .clk      	(clk       ),
@@ -167,6 +166,12 @@ module top(
             .num 	(ascii[7:4]  ),
             .led 	(seg3  )
         );
+
+        assign seg0 = data == 8'hf0 ? 8'hff : seg0;
+        assign seg1 = data == 8'hf0 ? 8'hff : seg1;
+        assign seg2 = data == 8'hf0 ? 8'hff : seg2;
+        assign seg3 = data == 8'hf0 ? 8'hff : seg3;
+
     `endif
 
 endmodule
