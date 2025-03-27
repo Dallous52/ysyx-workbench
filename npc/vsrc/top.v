@@ -139,7 +139,7 @@ module top(
         
         keyboard u_keyboard(
             .clk      	(clk       ),
-            .clrn     	(sw[0]     ),   // 复位
+            .clrn     	(btn[0]     ),   // 复位
             .ps2_clk  	(ps2_clk   ),
             .ps2_data 	(ps2_data  ),
             .data     	(data      ),
