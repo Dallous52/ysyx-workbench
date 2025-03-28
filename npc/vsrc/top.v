@@ -191,8 +191,8 @@ module top(
         assign seg2 = off ? 8'hff : seg2;
         assign seg3 = off ? 8'hff : seg3;
 
-        assign ledr[5] = ps2_clk;
-        assign ledr[6] = ps2_data;
+        assign ledr[2] = ps2_clk;
+        assign ledr[3] = ps2_data;
     `endif
 
 endmodule
