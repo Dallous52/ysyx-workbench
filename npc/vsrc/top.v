@@ -137,6 +137,7 @@ module top(
         reg [7:0] data;
         reg [7:0] ascii;
         reg [7:0] count;
+        reg off;
 
         initial begin
             count = 8'd0;
@@ -151,7 +152,8 @@ module top(
             .ready    	(ledr[0]   ),
             .overflow 	(ledr[1]   ),
             .ascii    	(ascii     ),
-            .count      (count     )
+            .count      (count     ),
+            .off        (off       )
         );
 
         segdis16 u_seg0(
@@ -184,10 +186,10 @@ module top(
             .led 	(seg7  )
         );
 
-        // assign seg0 = data == 8'hf0 ? 8'hff : seg0;
-        // assign seg1 = data == 8'hf0 ? 8'hff : seg1;
-        // assign seg2 = data == 8'hf0 ? 8'hff : seg2;
-        // assign seg3 = data == 8'hf0 ? 8'hff : seg3;
+        assign seg0 = off ? 8'hff : seg0;
+        assign seg1 = off ? 8'hff : seg1;
+        assign seg2 = off ? 8'hff : seg2;
+        assign seg3 = off ? 8'hff : seg3;
     `endif
 
 endmodule
