@@ -121,7 +121,7 @@ module keyboard(
     always @(posedge clk) begin
         if (ready) begin
             data <= keydata;
-            if (data == 8'hf0) begin
+            if (keydata == 8'hf0) begin
                 count <= count + 1;
             end        
             nextdata <= 1'b0;
