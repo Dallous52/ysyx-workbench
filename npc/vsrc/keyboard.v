@@ -127,11 +127,12 @@ module keyboard(
             if (keydata == 8'hf0) begin
                 count <= count + 1;
                 off <= 1'b1;
+            end else begin
+                off <= 1'b0;
             end        
             nextdata <= 1'b0;
         end
         else begin
-            off <= 1'b0;
             nextdata <= 1'b1;
         end
     end
