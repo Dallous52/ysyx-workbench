@@ -118,7 +118,6 @@ module keyboard(
     end
 
     assign ascii = ascii_table[data];
-    assign off = ps2_clk & ps2_data;
 
     // 数据读取
     always @(posedge clk) begin
