@@ -32,7 +32,7 @@ module ps2_keyboard(
             if ( ready ) begin // read to output next data
                 if(nextdata_n == 1'b0) //read next data
                 begin
-                    $display("rptr: %d, w_ptr: %d, data: %h", r_ptr, w_ptr, data);
+                    // $display("rptr: %d, w_ptr: %d, data: %h", r_ptr, w_ptr, data);
                     r_ptr <= r_ptr + 3'b1;
                     if(w_ptr==(r_ptr+3'b1)) //empty
                         ready <= 1'b0;
@@ -116,6 +116,7 @@ module keyboard(
 
     assign ascii = ascii_table[data];
 
+    // 数据读取
     always @(posedge clk) begin
         if (ready) begin
             data <= keydata;

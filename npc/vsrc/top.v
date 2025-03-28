@@ -134,8 +134,13 @@ module top(
 
     // 键盘模块
     `ifdef KEYBOARD_M
-        wire [7:0] data;
+        reg [7:0] data;
         reg [7:0] ascii;
+        reg [7:0] count;
+
+        initial begin
+            count = 8'd0;
+        end
 
         keyboard u_keyboard(
             .clk      	(clk       ),
@@ -168,12 +173,26 @@ module top(
             .led 	(seg3  )
         );
 
+        segdis16 u_seg6(
+            .num 	(count[3:0]  ),
+            .led 	(seg6  )
+        );
+        
+        segdis16 u_seg7(
+            .num 	(count[7:4]  ),
+            .led 	(seg7  )
+        );
+
+        always @(posedge clk) begin
+            if (data == 8'hf0) begin
+                count = count + 1;
+            end            
+        end
+
         // assign seg0 = data == 8'hf0 ? 8'hff : seg0;
         // assign seg1 = data == 8'hf0 ? 8'hff : seg1;
         // assign seg2 = data == 8'hf0 ? 8'hff : seg2;
         // assign seg3 = data == 8'hf0 ? 8'hff : seg3;
-        assign ledr[2] = ps2_clk;
-        assign ledr[3] = ps2_data;
     `endif
 
 endmodule
