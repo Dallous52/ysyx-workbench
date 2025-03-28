@@ -174,7 +174,7 @@ module top(
         // assign seg3 = data == 8'hf0 ? 8'hff : seg3;
         assign ledr[2] = ps2_clk;
         assign ledr[3] = ps2_data;
-
+        $display("data_out: %h", data);
     `endif
 
 endmodule
