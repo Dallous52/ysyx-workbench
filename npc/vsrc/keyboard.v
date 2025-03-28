@@ -147,7 +147,7 @@ module keyboard(
         end
 
         // 一段时间内 ready 信号为低电平，判断为无输入
-        if (counter > 16'd10000) begin
+        if (counter > 16'h8888) begin
             off <= 1'b1;
         end else begin
             off <= 1'b0;
