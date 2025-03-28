@@ -73,7 +73,7 @@ module keyboard(
     reg [7:0] ascii_table [0:255] = '{default: 8'h00};
     reg nextdata;
     reg fready;
-
+    reg rest;
 
     initial begin
         ascii_table[8'h1C] = 8'h41; // A
@@ -114,19 +114,25 @@ module keyboard(
     end
 
     assign ascii = ascii_table[data];
-    
+
     always @(posedge clk) begin
         fready <= ready;
-        if (~fready & ready) nextdata <= 1'b0;
-        else nextdata <= 1'b1;
+        if (~fready & ready) begin 
+            nextdata <= 1'b0;
+            rest <= 1'b0;
+        end
+        else begin 
+            nextdata <= 1'b1;
+            rest <= clrn;
+        end
     end
 
     ps2_keyboard u_ps2_keyboard(
         .clk        	(clk         ),
-        .clrn       	(clrn        ),
+        .clrn       	(rest        ),
         .ps2_clk    	(ps2_clk     ),
         .ps2_data   	(ps2_data    ),
-        .nextdata_n 	(nextdata  ),
+        .nextdata_n 	(nextdata    ),
         .data       	(data        ),
         .ready      	(ready       ),
         .overflow   	(overflow    )
