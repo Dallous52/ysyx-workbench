@@ -14,6 +14,7 @@ module ps2_keyboard(
     reg [7:0] fifo[7:0];     // data fifo
     reg [2:0] w_ptr,r_ptr;   // fifo write and read pointers
     reg [3:0] count;  // count ps2_data bits
+    
     // detect falling edge of ps2_clk
     reg [2:0] ps2_clk_sync;
 
@@ -73,7 +74,7 @@ module keyboard(
     reg [7:0] ascii_table [0:255] = '{default: 8'h00};
     reg nextdata;
     reg fready;
-    reg rest;
+    // reg rest;
 
     initial begin
         ascii_table[8'h1C] = 8'h41; // A
@@ -119,17 +120,17 @@ module keyboard(
         fready <= ready;
         if (~fready & ready) begin 
             nextdata <= 1'b0;
-            rest <= 1'b0;
+            // rest <= 1'b0;
         end
         else begin 
             nextdata <= 1'b1;
-            rest <= clrn;
+            // rest <= clrn;
         end
     end
 
     ps2_keyboard u_ps2_keyboard(
         .clk        	(clk         ),
-        .clrn       	(rest        ),
+        .clrn       	(clrn        ),
         .ps2_clk    	(ps2_clk     ),
         .ps2_data   	(ps2_data    ),
         .nextdata_n 	(nextdata    ),
