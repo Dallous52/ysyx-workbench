@@ -15,6 +15,12 @@ module ps2_keyboard(
     reg [2:0] w_ptr,r_ptr;   // fifo write and read pointers
     reg [3:0] count;  // count ps2_data bits
     
+    initial begin
+        w_ptr = 3'b0;
+        r_ptr = 3'b0;
+        count = 4'b0;
+    end
+
     // detect falling edge of ps2_clk
     reg [2:0] ps2_clk_sync;
 
