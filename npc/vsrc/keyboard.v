@@ -121,9 +121,9 @@ module keyboard(
 
     // 数据读取
     always @(posedge clk) begin
+        if (ps2_clk) $display("psclk: %d", ps2_clk);
         fready <= ready;
         if (~fready & ready) begin
-            $display("psclk: %d", ps2_clk);
             data <= keydata;
             if (keydata == 8'hf0) begin
                 count <= count + 1;
