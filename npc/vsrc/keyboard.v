@@ -118,7 +118,8 @@ module keyboard(
     end
 
     assign ascii = ascii_table[data];
-
+    assign off = ~ready & ps2_data;
+     
     // 数据读取
     always @(posedge clk) begin
         if (ps2_clk) $display("psclk: %d", ps2_clk);
