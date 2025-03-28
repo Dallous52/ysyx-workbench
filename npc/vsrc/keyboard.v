@@ -134,26 +134,6 @@ module keyboard(
         end
     end
 
-    reg [15:0] counter;  // 计数器
-
-    // 计数器逻辑
-    always @(posedge clk) begin
-        if (ready) begin
-            counter <= 16'd0;
-        end else begin
-            if (counter < 16'hFFFF) begin
-                counter <= counter + 1;
-            end
-        end
-
-        // 一段时间内 ready 信号为低电平，判断为无输入
-        if (counter > 16'hf000) begin
-            off <= 1'b1;
-        end else begin
-            off <= 1'b0;
-        end
-    end
-
     ps2_keyboard u_ps2_keyboard(
         .clk        	(clk         ),
         .clrn       	(clrn        ),
