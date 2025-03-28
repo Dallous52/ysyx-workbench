@@ -119,7 +119,7 @@ module keyboard(
     
     always @(posedge clk) begin
         fready <= ready;
-        if (fready && ~ready) nextdata <= 1'b0;
+        if (~fready && ready) nextdata <= 1'b0;
         else nextdata <= 1'b1;
     end
 
