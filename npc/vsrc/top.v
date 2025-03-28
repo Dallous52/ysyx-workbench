@@ -185,6 +185,7 @@ module top(
 
         always @(posedge clk) begin
             if (data == 8'hf0) begin
+                $display("count: %d", count);
                 count = count + 1;
             end            
         end
