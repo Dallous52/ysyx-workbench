@@ -123,6 +123,7 @@ module keyboard(
     always @(posedge clk) begin
         fready <= ready;
         if (~fready & ready) begin
+            $display("psclk: %d", ps2_clk);
             data <= keydata;
             if (keydata == 8'hf0) begin
                 count <= count + 1;
