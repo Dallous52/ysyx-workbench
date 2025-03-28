@@ -32,7 +32,7 @@ module ps2_keyboard(
             if ( ready ) begin // read to output next data
                 if(nextdata_n == 1'b0) //read next data
                 begin
-                    $display("rptr: %d, w_ptr: %d, data: %h", r_ptr, w_ptr, data);
+                    // $display("rptr: %d, w_ptr: %d, data: %h", r_ptr, w_ptr, data);
                     r_ptr <= r_ptr + 3'b1;
                     if(w_ptr==(r_ptr+3'b1)) //empty
                         ready <= 1'b0;
@@ -66,7 +66,7 @@ module keyboard(
     input clrn,
     input ps2_clk,      // PS2接口时钟信号
     input ps2_data,     // PS2接口数据信号
-    output [7:0] data,  // 当前读取的键盘数据
+    output reg [7:0] data,  // 当前读取的键盘数据
     output reg ready,   // FIFO数据就绪标志
     output reg overflow,// FIFO溢出标志
     output reg [7:0] ascii // 输出ASCLL码
@@ -74,7 +74,7 @@ module keyboard(
 
     reg [7:0] ascii_table [0:255] = '{default: 8'h00};
     reg nextdata;
-    // reg rest;
+    reg [7:0] keydata;
 
     initial begin
         ascii_table[8'h1C] = 8'h41; // A
@@ -117,14 +117,13 @@ module keyboard(
     assign ascii = ascii_table[data];
 
     always @(posedge clk) begin
-        if (ready) begin 
+        if (ready) begin
+            data <= keydata;
             nextdata <= 1'b0;
-            // rest <= 1'b0;
             $display("data_out: %h", data);
         end
         else begin 
             nextdata <= 1'b1;
-            // rest <= clrn;
         end
     end
 
@@ -134,7 +133,7 @@ module keyboard(
         .ps2_clk    	(ps2_clk     ),
         .ps2_data   	(ps2_data    ),
         .nextdata_n 	(nextdata    ),
-        .data       	(data        ),
+        .data       	(keydata     ),
         .ready      	(ready       ),
         .overflow   	(overflow    )
     );
