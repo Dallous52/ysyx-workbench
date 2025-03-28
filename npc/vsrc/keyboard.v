@@ -69,7 +69,8 @@ module keyboard(
     output reg [7:0] data,  // 当前读取的键盘数据
     output reg ready,   // FIFO数据就绪标志
     output reg overflow,// FIFO溢出标志
-    output reg [7:0] ascii // 输出ASCLL码
+    output reg [7:0] ascii, // 输出ASCLL码
+    output reg [7:0] count  // 按键计数
 );
 
     reg [7:0] ascii_table [0:255] = '{default: 8'h00};
@@ -120,6 +121,9 @@ module keyboard(
     always @(posedge clk) begin
         if (ready) begin
             data <= keydata;
+            if (data == 8'hf0) begin
+                count <= count + 1;
+            end        
             nextdata <= 1'b0;
         end
         else begin 

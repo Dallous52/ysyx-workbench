@@ -150,7 +150,8 @@ module top(
             .data     	(data      ),
             .ready    	(ledr[0]   ),
             .overflow 	(ledr[1]   ),
-            .ascii    	(ascii     )
+            .ascii    	(ascii     ),
+            .count      (count     )
         );
 
         segdis16 u_seg0(
@@ -182,13 +183,6 @@ module top(
             .num 	(count[7:4]  ),
             .led 	(seg7  )
         );
-
-        always @(posedge clk) begin
-            if (data == 8'hf0) begin
-                $display("count: %d", count);
-                count = count + 1;
-            end            
-        end
 
         // assign seg0 = data == 8'hf0 ? 8'hff : seg0;
         // assign seg1 = data == 8'hf0 ? 8'hff : seg1;
