@@ -14,12 +14,6 @@ module ps2_keyboard(
     reg [7:0] fifo[7:0];     // data fifo
     reg [2:0] w_ptr,r_ptr;   // fifo write and read pointers
     reg [3:0] count;  // count ps2_data bits
-    
-    initial begin
-        w_ptr = 3'b0;
-        r_ptr = 3'b0;
-        count = 4'b0;
-    end
 
     // detect falling edge of ps2_clk
     reg [2:0] ps2_clk_sync;
@@ -38,6 +32,7 @@ module ps2_keyboard(
             if ( ready ) begin // read to output next data
                 if(nextdata_n == 1'b0) //read next data
                 begin
+                    $display("rptr: %d, w_ptr: %d, data: %h", r_ptr, w_ptr, data);
                     r_ptr <= r_ptr + 3'b1;
                     if(w_ptr==(r_ptr+3'b1)) //empty
                         ready <= 1'b0;
@@ -79,7 +74,6 @@ module keyboard(
 
     reg [7:0] ascii_table [0:255] = '{default: 8'h00};
     reg nextdata;
-    reg fready;
     // reg rest;
 
     initial begin
@@ -123,8 +117,7 @@ module keyboard(
     assign ascii = ascii_table[data];
 
     always @(posedge clk) begin
-        fready <= ready;
-        if (~fready & ready) begin 
+        if (ready) begin 
             nextdata <= 1'b0;
             // rest <= 1'b0;
         end
