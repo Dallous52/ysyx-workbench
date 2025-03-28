@@ -171,7 +171,6 @@ module top(
         assign seg1 = data == 8'hf0 ? 8'hff : seg1;
         assign seg2 = data == 8'hf0 ? 8'hff : seg2;
         assign seg3 = data == 8'hf0 ? 8'hff : seg3;
-
     `endif
 
 endmodule
