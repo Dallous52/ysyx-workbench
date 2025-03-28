@@ -168,10 +168,10 @@ module top(
             .led 	(seg3  )
         );
 
-        assign seg0 = ~ps2_data ? 8'hff : seg0;
-        assign seg1 = ~ps2_data ? 8'hff : seg1;
-        assign seg2 = ~ps2_data ? 8'hff : seg2;
-        assign seg3 = ~ps2_data ? 8'hff : seg3;
+        assign seg0 = ps2_data ? 8'hff : seg0;
+        assign seg1 = ps2_data ? 8'hff : seg1;
+        assign seg2 = ps2_data ? 8'hff : seg2;
+        assign seg3 = ps2_data ? 8'hff : seg3;
     `endif
 
 endmodule
