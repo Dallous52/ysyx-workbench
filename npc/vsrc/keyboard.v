@@ -120,6 +120,7 @@ module keyboard(
         if (ready) begin 
             nextdata <= 1'b0;
             // rest <= 1'b0;
+            $display("data_out: %h", data);
         end
         else begin 
             nextdata <= 1'b1;
