@@ -33,7 +33,7 @@ module ps2_keyboard(
                 if(nextdata_n == 1'b0) //read next data
                 begin
                     r_ptr <= r_ptr + 3'b1;
-                    if(w_ptr==(r_ptr+1'b1)) //empty
+                    if(w_ptr==(r_ptr+3'b1)) //empty
                         ready <= 1'b0;
                 end
             end
