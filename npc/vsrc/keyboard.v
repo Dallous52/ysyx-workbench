@@ -75,6 +75,7 @@ module keyboard(
 
     reg [7:0] ascii_table [0:255] = '{default: 8'h00};
     reg nextdata;
+    reg fready;
     reg [7:0] keydata;
 
     initial begin
@@ -119,7 +120,8 @@ module keyboard(
 
     // 数据读取
     always @(posedge clk) begin
-        if (ready) begin
+        fready <= ready;
+        if (~fready & ready) begin
             data <= keydata;
             if (keydata == 8'hf0) begin
                 count <= count + 1;
