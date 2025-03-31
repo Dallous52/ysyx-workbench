@@ -49,8 +49,7 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
-  printf("quit order.\n");
-  return -1;
+  exit(0);
 }
 
 static int cmd_help(char *args);
