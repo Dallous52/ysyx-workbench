@@ -62,7 +62,11 @@ static int cmd_si(char* args){
     cpu_exec(1);
   else
   {
-    
+    int si_num = atoi(args);
+    if (si_num > 0)
+      cpu_exec((uint64_t)si_num);
+    else
+      printf("Please use si [N] to execute, N > 0.");
   }
 
   return 0;
