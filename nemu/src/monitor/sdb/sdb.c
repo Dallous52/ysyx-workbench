@@ -57,7 +57,16 @@ static int cmd_q(char *args) {
 static int cmd_help(char *args);
 
 /* Single step execution */
-static int cmd_si(char* args);
+static int cmd_si(char* args){
+  if (args == NULL)
+    cpu_exec(1);
+  else
+  {
+    
+  }
+
+  return 0;
+}
 
 static struct {
   const char *name;
@@ -93,24 +102,6 @@ static int cmd_help(char *args) {
     }
     printf("Unknown command '%s'\n", arg);
   }
-  return 0;
-}
-
-static int cmd_si(char* args)
-{
-  switch (nemu_state.state) {
-    case NEMU_END: case NEMU_ABORT: case NEMU_QUIT:
-      printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
-      return 0;
-    default: nemu_state.state = NEMU_RUNNING;
-  }
-
-  Decode s;
-  s.pc = cpu.pc;
-  s.snpc = cpu.pc;
-  isa_exec_once(&s);
-  cpu.pc = s.dnpc;
-  
   return 0;
 }
 
