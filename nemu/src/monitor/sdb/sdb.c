@@ -194,12 +194,21 @@ static int cmd_x(char* args)
     goto x_end;
   }
 
-  while (x_num--) 
+  if (likely(in_pmem(x_addr)))
   {
-    word_t tmp = paddr_read(x_addr, 4);
-    printf("0x%x\t%u\n", x_addr, tmp);
-    x_addr += 4;
+    while (x_num--) 
+    {
+      word_t tmp = paddr_read(x_addr, 4);
+      printf("0x%x\t%u\n", x_addr, tmp);
+      x_addr += 4;
+    }  
   }
+  else 
+  {
+    printf("Memory access out of bounds.");
+    return 0;
+  }
+  
 
 x_end:
   if (!exey)
