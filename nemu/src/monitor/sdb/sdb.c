@@ -18,6 +18,7 @@
 #include <cpu/decode.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include "macro.h"
 #include "sdb.h"
 #include "utils.h"
 
@@ -66,9 +67,34 @@ static int cmd_si(char* args){
     if (si_num > 0)
       cpu_exec((uint64_t)si_num);
     else
-      printf("Please use si [N] to execute, N > 0.\n");
+      printf("Please use \"si [N]\" to execute, N > 0.\n");
   }
 
+  return 0;
+}
+
+static int cmd_info(char* args)
+{
+  bool exey = true;
+  if (args == NULL || STRLEN(args) != 1)
+  {
+    exey = false;
+    goto info_end;
+  }
+
+  if (*args == 'r')
+    isa_reg_display();
+  else if (*args == 'w')
+  {}
+  else {
+    exey = false;
+  }
+
+info_end:
+  if (!exey) {
+    printf("Please use command: \"info r\" or \"info w\".");
+  }
+  
   return 0;
 }
 
@@ -80,7 +106,8 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  { "si", "Single step execution", cmd_si }
+  { "si", "Single or N step execution", cmd_si },
+  { "info", "Print status of program", cmd_info }
   /* TODO: Add more commands */
 };
 
