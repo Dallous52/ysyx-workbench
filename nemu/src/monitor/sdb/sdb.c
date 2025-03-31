@@ -15,6 +15,7 @@
 
 #include <isa.h>
 #include <cpu/cpu.h>
+#include <cpu/decode.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
@@ -104,6 +105,12 @@ static int cmd_si(char* args)
     default: nemu_state.state = NEMU_RUNNING;
   }
 
+  Decode s;
+  s.pc = cpu.pc;
+  s.snpc = cpu.pc;
+  isa_exec_once(&s);
+  cpu.pc = s.dnpc;
+  
   return 0;
 }
 
