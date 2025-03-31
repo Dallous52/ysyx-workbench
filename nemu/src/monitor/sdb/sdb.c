@@ -18,6 +18,7 @@
 #include <cpu/decode.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <stdio.h>
 #include "macro.h"
 #include "sdb.h"
 #include "utils.h"
@@ -49,6 +50,7 @@ static int cmd_q(char *args);
 static int cmd_help(char *args);
 static int cmd_si(char* args);
 static int cmd_info(char* args);
+static int cmd_x(char* args);
 
 // command table <name describe fuction> 
 static struct {
@@ -60,7 +62,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Single or N step execution", cmd_si },
-  { "info", "Print status of program", cmd_info }
+  { "info", "Print status of program", cmd_info },
+  { "x", "four bytes of memory after scanning", cmd_x}
   /* TODO: Add more commands */
 };
 
@@ -118,8 +121,8 @@ static int cmd_si(char* args){
     cpu_exec(1);
   else
   {
-    int si_num = atoi(args);
-    if (si_num > 0)
+    int si_num = 0;
+    if (sscanf(args, "%d", &si_num) == 1)
       cpu_exec((uint64_t)si_num);
     else
       printf("Please use \"si [N]\" to execute, N > 0.\n");
@@ -140,18 +143,59 @@ static int cmd_info(char* args)
   }
 
   if (*args == 'r')
+  {
     isa_reg_display();
+  }
   else if (*args == 'w')
   {}
-  else {
+  else
+  {
     exey = false;
   }
 
 info_end:
-  if (!exey) {
+  if (!exey) 
+  {
     printf("Please use command: \"info r\" or \"info w\".");
   }
   
+  return 0;
+}
+
+
+// scan memory
+static int cmd_x(char* args)
+{
+  bool exey = true;
+  char *arg = strtok(NULL, " ");
+  if (arg == NULL) 
+  {
+    exey = false;
+    goto x_end;
+  }
+
+  // 4 byte num
+  int x_num = atoi(arg);
+  if (x_num <= 0)
+  {
+    exey = false;
+    goto x_end;
+  }
+  
+  arg = strtok(NULL, " ");
+  if (arg == NULL) 
+  {
+    exey = false;
+    goto x_end;
+  }
+
+
+x_end:
+  if (!exey)
+  {
+    printf("Please use command: \"x [num] [hex addr]\".");
+  }
+
   return 0;
 }
 
@@ -207,7 +251,7 @@ static char* rl_gets()
 {
   static char *line_read = NULL;
 
-  if (line_read) 
+  if (line_read)
   {
     free(line_read);
     line_read = NULL;
