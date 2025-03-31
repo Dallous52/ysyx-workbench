@@ -27,7 +27,7 @@ void isa_reg_display() {
   int i = 0;
   for (; i < ARRLEN(regs); i++)
   {
-    printf("%s\t%p\t%u\n", regs[i], &gpr(i), gpr(i));
+    printf("%s\t%p\t%u\n", reg_name(i), &gpr(i), gpr(i));
   }
 }
 
