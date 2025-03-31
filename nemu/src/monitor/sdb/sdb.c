@@ -27,35 +27,74 @@ static int is_batch_mode = false;
 void init_regex();
 void init_wp_pool();
 
-/* We use the `readline' library to provide more flexibility to read from stdin. */
-static char* rl_gets() {
-  static char *line_read = NULL;
+// command read
+static char* rl_gets();
 
-  if (line_read) {
-    free(line_read);
-    line_read = NULL;
-  }
+// command function define
+static int cmd_c(char *args);
+static int cmd_q(char *args);
+static int cmd_help(char *args);
+static int cmd_si(char* args);
+static int cmd_info(char* args);
 
-  line_read = readline("(nemu) ");
+// command table <name describe fuction> 
+static struct {
+  const char *name;
+  const char *description;
+  int (*handler) (char *);
+} cmd_table [] = {
+  { "help", "Display information about all supported commands", cmd_help },
+  { "c", "Continue the execution of the program", cmd_c },
+  { "q", "Exit NEMU", cmd_q },
+  { "si", "Single or N step execution", cmd_si },
+  { "info", "Print status of program", cmd_info }
+  /* TODO: Add more commands */
+};
 
-  if (line_read && *line_read) {
-    add_history(line_read);
-  }
+#define NR_CMD ARRLEN(cmd_table)
 
-  return line_read;
-}
 
-static int cmd_c(char *args) {
+// continue
+static int cmd_c(char *args) 
+{
   cpu_exec(-1);
   return 0;
 }
 
-static int cmd_q(char *args) {
+
+// quit
+static int cmd_q(char *args) 
+{
   nemu_state.state = NEMU_QUIT;
   return -1;
 }
 
-static int cmd_help(char *args);
+
+// display help
+static int cmd_help(char *args) 
+{
+  /* extract the first argument */
+  char *arg = strtok(NULL, " ");
+  int i;
+
+  if (arg == NULL) {
+    /* no argument given */
+    for (i = 0; i < NR_CMD; i ++) {
+      printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
+    }
+  }
+  else {
+    for (i = 0; i < NR_CMD; i ++) {
+      if (strcmp(arg, cmd_table[i].name) == 0) {
+        printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
+        return 0;
+      }
+    }
+    printf("Unknown command '%s'\n", arg);
+  }
+  return 0;
+}
+
 
 /* Single step execution */
 static int cmd_si(char* args){
@@ -98,43 +137,6 @@ info_end:
   return 0;
 }
 
-static struct {
-  const char *name;
-  const char *description;
-  int (*handler) (char *);
-} cmd_table [] = {
-  { "help", "Display information about all supported commands", cmd_help },
-  { "c", "Continue the execution of the program", cmd_c },
-  { "q", "Exit NEMU", cmd_q },
-  { "si", "Single or N step execution", cmd_si },
-  { "info", "Print status of program", cmd_info }
-  /* TODO: Add more commands */
-};
-
-#define NR_CMD ARRLEN(cmd_table)
-
-static int cmd_help(char *args) {
-  /* extract the first argument */
-  char *arg = strtok(NULL, " ");
-  int i;
-
-  if (arg == NULL) {
-    /* no argument given */
-    for (i = 0; i < NR_CMD; i ++) {
-      printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
-    }
-  }
-  else {
-    for (i = 0; i < NR_CMD; i ++) {
-      if (strcmp(arg, cmd_table[i].name) == 0) {
-        printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
-        return 0;
-      }
-    }
-    printf("Unknown command '%s'\n", arg);
-  }
-  return 0;
-}
 
 void sdb_set_batch_mode() {
   is_batch_mode = true;
@@ -184,4 +186,23 @@ void init_sdb() {
 
   /* Initialize the watchpoint pool. */
   init_wp_pool();
+}
+
+
+/* We use the `readline' library to provide more flexibility to read from stdin. */
+static char* rl_gets() {
+  static char *line_read = NULL;
+
+  if (line_read) {
+    free(line_read);
+    line_read = NULL;
+  }
+
+  line_read = readline("(nemu) ");
+
+  if (line_read && *line_read) {
+    add_history(line_read);
+  }
+
+  return line_read;
 }
