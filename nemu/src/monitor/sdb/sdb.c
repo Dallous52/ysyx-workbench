@@ -48,13 +48,15 @@ static int cmd_c(char *args) {
   return 0;
 }
 
-
 static int cmd_q(char *args) {
   nemu_state.state = NEMU_QUIT;
   return -1;
 }
 
 static int cmd_help(char *args);
+
+/* Single step execution */
+static int cmd_si(char* args);
 
 static struct {
   const char *name;
@@ -64,9 +66,8 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si", "Single step execution", cmd_si }
   /* TODO: Add more commands */
-
 };
 
 #define NR_CMD ARRLEN(cmd_table)
@@ -91,6 +92,18 @@ static int cmd_help(char *args) {
     }
     printf("Unknown command '%s'\n", arg);
   }
+  return 0;
+}
+
+static int cmd_si(char* args)
+{
+  switch (nemu_state.state) {
+    case NEMU_END: case NEMU_ABORT: case NEMU_QUIT:
+      printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
+      return 0;
+    default: nemu_state.state = NEMU_RUNNING;
+  }
+
   return 0;
 }
 
