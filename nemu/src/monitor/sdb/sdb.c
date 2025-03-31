@@ -159,7 +159,7 @@ static int cmd_info(char* args)
 info_end:
   if (!exey) 
   {
-    printf("Please use command: \"info r\" or \"info w\".");
+    printf("Please use command: \"info r\" or \"info w\".\n");
   }
   
   return 0;
@@ -205,7 +205,7 @@ static int cmd_x(char* args)
   }
   else 
   {
-    printf("Memory access out of bounds.");
+    printf("Memory access out of bounds.\n");
     return 0;
   }
   
@@ -213,7 +213,7 @@ static int cmd_x(char* args)
 x_end:
   if (!exey)
   {
-    printf("Please use command: \"x [num] [hex addr]\".");
+    printf("Please use command: \"x [num] [hex addr]\".\n");
   }
 
   return 0;
