@@ -19,7 +19,9 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <stdio.h>
+#include "common.h"
 #include "macro.h"
+#include "memory/paddr.h"
 #include "sdb.h"
 #include "utils.h"
 
@@ -116,7 +118,8 @@ static int cmd_help(char *args)
 
 
 // Single step execution
-static int cmd_si(char* args){
+static int cmd_si(char* args)
+{
   if (args == NULL)
     cpu_exec(1);
   else
@@ -167,28 +170,36 @@ info_end:
 static int cmd_x(char* args)
 {
   bool exey = true;
-  char *arg = strtok(NULL, " ");
-  if (arg == NULL) 
+  char *arg_num = strtok(NULL, " ");
+  char* arg_addr = strtok(NULL, " ");
+  if (arg_num == NULL || arg_addr == NULL) 
   {
     exey = false;
     goto x_end;
   }
 
   // 4 byte num
-  int x_num = atoi(arg);
-  if (x_num <= 0)
+  int x_num = 0;
+  if (sscanf(arg_num, "%d", &x_num) == 0)
   {
     exey = false;
     goto x_end;
   }
   
-  arg = strtok(NULL, " ");
-  if (arg == NULL) 
+  // addr num
+  paddr_t x_addr = 0;
+  if (sscanf(arg_addr, "%x", &x_addr) == 0)
   {
     exey = false;
     goto x_end;
   }
 
+  while (x_num--) 
+  {
+    word_t tmp = paddr_read(x_addr, 4);
+    printf("%x\t%u\n", x_addr, tmp);
+    x_addr += 4;
+  }
 
 x_end:
   if (!exey)
