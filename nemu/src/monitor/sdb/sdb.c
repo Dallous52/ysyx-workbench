@@ -23,9 +23,22 @@
 #include "utils.h"
 
 static int is_batch_mode = false;
+void sdb_set_batch_mode() { is_batch_mode = true; }
 
+
+// initialize
 void init_regex();
 void init_wp_pool();
+
+void init_sdb() 
+{
+  /* Compile the regular expressions. */
+  init_regex();
+
+  /* Initialize the watchpoint pool. */
+  init_wp_pool();
+}
+
 
 // command read
 static char* rl_gets();
@@ -77,15 +90,18 @@ static int cmd_help(char *args)
   char *arg = strtok(NULL, " ");
   int i;
 
-  if (arg == NULL) {
+  if (arg == NULL) 
+  {
     /* no argument given */
-    for (i = 0; i < NR_CMD; i ++) {
+    for (i = 0; i < NR_CMD; i ++)
       printf("%s\t- %s\n", cmd_table[i].name, cmd_table[i].description);
-    }
   }
-  else {
-    for (i = 0; i < NR_CMD; i ++) {
-      if (strcmp(arg, cmd_table[i].name) == 0) {
+  else 
+  {
+    for (i = 0; i < NR_CMD; i ++) 
+    {
+      if (strcmp(arg, cmd_table[i].name) == 0)
+      {
         printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
         return 0;
       }
@@ -96,7 +112,7 @@ static int cmd_help(char *args)
 }
 
 
-/* Single step execution */
+// Single step execution
 static int cmd_si(char* args){
   if (args == NULL)
     cpu_exec(1);
@@ -112,6 +128,8 @@ static int cmd_si(char* args){
   return 0;
 }
 
+
+// print infomation
 static int cmd_info(char* args)
 {
   bool exey = true;
@@ -138,17 +156,17 @@ info_end:
 }
 
 
-void sdb_set_batch_mode() {
-  is_batch_mode = true;
-}
-
-void sdb_mainloop() {
-  if (is_batch_mode) {
+// main loop 
+void sdb_mainloop() 
+{
+  if (is_batch_mode) 
+  {
     cmd_c(NULL);
     return;
   }
 
-  for (char *str; (str = rl_gets()) != NULL; ) {
+  for (char *str; (str = rl_gets()) != NULL; ) 
+  {
     char *str_end = str + strlen(str);
 
     /* extract the first token as the command */
@@ -159,7 +177,8 @@ void sdb_mainloop() {
      * which may need further parsing
      */
     char *args = cmd + strlen(cmd) + 1;
-    if (args >= str_end) {
+    if (args >= str_end) 
+    {
       args = NULL;
     }
 
@@ -169,8 +188,10 @@ void sdb_mainloop() {
 #endif
 
     int i;
-    for (i = 0; i < NR_CMD; i ++) {
-      if (strcmp(cmd, cmd_table[i].name) == 0) {
+    for (i = 0; i < NR_CMD; i ++) 
+    {
+      if (strcmp(cmd, cmd_table[i].name) == 0) 
+      {
         if (cmd_table[i].handler(args) < 0) { return; }
         break;
       }
@@ -180,27 +201,22 @@ void sdb_mainloop() {
   }
 }
 
-void init_sdb() {
-  /* Compile the regular expressions. */
-  init_regex();
-
-  /* Initialize the watchpoint pool. */
-  init_wp_pool();
-}
-
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
-static char* rl_gets() {
+static char* rl_gets() 
+{
   static char *line_read = NULL;
 
-  if (line_read) {
+  if (line_read) 
+  {
     free(line_read);
     line_read = NULL;
   }
 
   line_read = readline("(nemu) ");
 
-  if (line_read && *line_read) {
+  if (line_read && *line_read) 
+  {
     add_history(line_read);
   }
 
