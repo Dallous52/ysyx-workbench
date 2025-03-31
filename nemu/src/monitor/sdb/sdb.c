@@ -66,7 +66,7 @@ static int cmd_si(char* args){
     if (si_num > 0)
       cpu_exec((uint64_t)si_num);
     else
-      printf("Please use si [N] to execute, N > 0.");
+      printf("Please use si [N] to execute, N > 0.\n");
   }
 
   return 0;
