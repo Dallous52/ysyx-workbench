@@ -74,7 +74,7 @@ module keyboard(
     output reg off
 );
 
-    reg [7:0] ascii_table [255:0] = '{default: 8'h00};
+    reg [7:0] ascii_table [255:0];
     reg nextdata;
     reg fready;
     reg [7:0] keydata;
