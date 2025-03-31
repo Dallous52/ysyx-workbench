@@ -76,7 +76,7 @@ static int cmd_si(char* args){
 static int cmd_info(char* args)
 {
   bool exey = true;
-  if (args == NULL || STRLEN(args) != 1)
+  if (args == NULL || strlen(args) != 1)
   {
     exey = false;
     goto info_end;
