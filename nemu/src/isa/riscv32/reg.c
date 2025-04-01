@@ -23,7 +23,8 @@ const char *regs[] = {
   "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
 };
 
-void isa_reg_display() {
+void isa_reg_display() 
+{
   int i = 0;
   for (; i < ARRLEN(regs); i++)
   {
@@ -31,6 +32,31 @@ void isa_reg_display() {
   }
 }
 
-word_t isa_reg_str2val(const char *s, bool *success) {
-  return 0;
+
+word_t isa_reg_str2val(const char *s, bool *success) 
+{
+  if (s == NULL || success == NULL) 
+  {
+    if (success == NULL)
+      return 0;
+
+    *success = false;
+    return 0;
+  }
+
+  int i = 0;
+  for (; i < ARRLEN(regs); i++)
+  {
+    if (strcmp(s, regs[i]) == 0)
+      break;
+  }
+
+  if (i == ARRLEN(regs))
+  {
+    *success = false;
+    return 0;
+  }
+
+  *success = true;
+  return gpr(i);
 }

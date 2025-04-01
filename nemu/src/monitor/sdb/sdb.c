@@ -30,10 +30,14 @@ void sdb_set_batch_mode() { is_batch_mode = true; }
 
 
 // initialize
+void init_regex();
 void init_wp_pool();
 
 void init_sdb() 
 {
+  /* Compile the regular expressions. */
+  init_regex();
+
   /* Initialize the watchpoint pool. */
   init_wp_pool();
 }
@@ -42,6 +46,9 @@ void init_sdb()
 // command read
 static char* rl_gets();
 
+// express to cmd_p
+word_t expr(char *e, bool *success);
+
 // command function define
 static int cmd_c(char *args);
 static int cmd_q(char *args);
@@ -49,6 +56,7 @@ static int cmd_help(char *args);
 static int cmd_si(char* args);
 static int cmd_info(char* args);
 static int cmd_x(char* args);
+static int cmd_p(char* args);
 
 // command table <name describe fuction> 
 static struct {
@@ -61,7 +69,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Single or N step execution", cmd_si },
   { "info", "Print status of program", cmd_info },
-  { "x", "four bytes of memory after scanning", cmd_x}
+  { "x", "four bytes of memory after scanning", cmd_x},
+  { "p", "Find the value of the provided expression", cmd_p}
   /* TODO: Add more commands */
 };
 
@@ -211,6 +220,20 @@ x_end:
   {
     printf("Please use command: \"x [num] [hex addr]\".\n");
   }
+
+  return 0;
+}
+
+
+// expression
+static int cmd_p(char* args)
+{
+  bool success = false;
+  word_t ret = expr(args, &success);
+  if (success)
+    printf("answer: %u\n", ret);
+  else
+    printf("your expression have some error.\n");
 
   return 0;
 }

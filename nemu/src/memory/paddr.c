@@ -26,15 +26,12 @@ static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 #endif
 
 
-// 将物理地址转换为主机地址
 uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 
 
-// 将主机地址转换为物理地址
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 
 
-// 从物理内存中读取数据
 static word_t pmem_read(paddr_t addr, int len) 
 {
   word_t ret = host_read(guest_to_host(addr), len);
@@ -42,14 +39,12 @@ static word_t pmem_read(paddr_t addr, int len)
 }
 
 
-// 向物理内存中写入数据
 static void pmem_write(paddr_t addr, int len, word_t data) 
 {
   host_write(guest_to_host(addr), len, data);
 }
 
 
-// 如果地址超出了物理内存的有效范围，调用此函数
 static void out_of_bound(paddr_t addr) 
 {
   panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
@@ -57,7 +52,6 @@ static void out_of_bound(paddr_t addr)
 }
 
 
-// 初始化物理内存
 void init_mem() 
 {
 #if defined(CONFIG_PMEM_MALLOC)
@@ -69,7 +63,6 @@ void init_mem()
 }
 
 
-// 从物理地址读取数据
 word_t paddr_read(paddr_t addr, int len) 
 {
   if (likely(in_pmem(addr))) return pmem_read(addr, len);
@@ -79,7 +72,6 @@ word_t paddr_read(paddr_t addr, int len)
 }
 
 
-// 向物理地址写入数据
 void paddr_write(paddr_t addr, int len, word_t data) 
 {
   if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
