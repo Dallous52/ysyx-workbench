@@ -100,7 +100,7 @@ static int get_main_oprt(char* e, int p, int q)
 
     // judge operator
     short hash = e[i] - oprt_hash;
-    if (hash < 0 || hash > 7) continue;
+    if (hash < 0 || hash > OPRTS_LEN) continue;
 
     if (oprts[hash].op != 0 && 
         oprts[hash].priority <= prio)
