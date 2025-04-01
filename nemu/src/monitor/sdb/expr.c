@@ -263,6 +263,7 @@ word_t expr(char *e, bool *success)
   // get resault
   word_t ret = expr_core(etmp, 0, j - 1);
   if (etmp[0] == 0) *success = false;
+  else *success = true;
 
   DFREE(etmp);
   return ret;
