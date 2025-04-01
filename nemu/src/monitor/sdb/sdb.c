@@ -30,14 +30,10 @@ void sdb_set_batch_mode() { is_batch_mode = true; }
 
 
 // initialize
-void init_regex();
 void init_wp_pool();
 
 void init_sdb() 
 {
-  /* Compile the regular expressions. */
-  // init_regex();
-
   /* Initialize the watchpoint pool. */
   init_wp_pool();
 }
