@@ -181,8 +181,14 @@ info_end:
 static int cmd_x(char* args)
 {
   bool exey = true;
+  char *str_end = args + strlen(args);
   char* arg_num = strtok(NULL, " ");
-  char* arg_expr = strtok(NULL, " ");
+  char *arg_expr = arg_num + strlen(arg_num) + 1;
+  if (arg_expr >= str_end) 
+  {
+    arg_expr = NULL;
+  }
+
   if (arg_num == NULL || arg_expr == NULL) 
   {
     exey = false;
