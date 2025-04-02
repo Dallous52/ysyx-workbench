@@ -269,7 +269,7 @@ word_t expr(char *e, bool *success)
     }
   }
   etmp[j] = '\0';
-  printf("%s\n", etmp);
+  // printf("%s\n", etmp);
 
   // get resault
   word_t ret = expr_core(etmp, 0, j - 1);
