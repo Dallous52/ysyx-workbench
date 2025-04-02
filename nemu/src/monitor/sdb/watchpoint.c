@@ -41,3 +41,25 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 
+// new watch point
+WP* new_wp()
+{
+  if (free_ == NULL)
+    return NULL;
+
+  WP* ret = free_;
+  free_ = free_->next;
+
+  ret->next = NULL;
+  return ret;
+}
+
+
+// free watch point
+void free_wp(WP *wp)
+{
+  if (wp == NULL) return;
+  
+  wp->next = free_;
+  free_ = wp;
+}
