@@ -94,7 +94,7 @@ static int get_main_oprt(char* e, int p, int q)
     if (bracket || e[i] == '(')
     {
       if (e[i] == ')') bracket--;
-      else if (e[i] == ')') bracket++;
+      else if (e[i] == '(') bracket++;
       continue;
     }
 
