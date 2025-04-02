@@ -113,6 +113,7 @@ void check_wp()
     if (ret != tmp->value)
     {
       printf("wp: %d  what: %s  ago: %u  now: %u\n", tmp->NO, tmp->what, tmp->value, ret);
+      tmp->value = ret; // update
       nemu_state.state = NEMU_STOP;
     }
 
