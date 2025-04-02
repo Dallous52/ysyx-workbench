@@ -50,7 +50,8 @@ void init_regex()
   static const oprt op[] = {
     {'*', 1}, {'/', 1},
     {'+', 2}, {'-', 2}, 
-    {'!', 3}, {'&', 3}, {'=',3}
+    {'!', 3}, {'=',3}, 
+    {'&', 4}
   };
 
   static int oplen = ARRLEN(op);
