@@ -157,6 +157,8 @@ word_t prase_reg(char* e, int p, int q)
   // prase
   bool success = false;
   word_t ret = isa_reg_str2val(sreg, &success);
+  if (!success)
+    e[0] = 0;
 
   DFREE(sreg);
   return ret;
@@ -186,7 +188,7 @@ word_t dereference(char* e, int p, int q)
 static word_t expr_core(char* e, int p, int q)
 {
   if (e == NULL || e[0] == 0) return 0;
-  
+
   int mop = get_main_oprt(e, p, q);
   
   if (mop < 0)
