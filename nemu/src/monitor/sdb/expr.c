@@ -103,7 +103,7 @@ static int get_main_oprt(char* e, int p, int q)
     if (hash < 0 || hash > OPRTS_LEN) continue;
 
     if (oprts[hash].op != 0 && 
-        oprts[hash].priority <= prio)
+        oprts[hash].priority >= prio)
     {
       // special operator
       if (i > p && oprts[e[i - 1] - oprt_hash].op != 0)
