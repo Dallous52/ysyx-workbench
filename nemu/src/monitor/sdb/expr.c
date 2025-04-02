@@ -84,7 +84,7 @@ static int get_main_oprt(char* e, int p, int q)
 {
   int ret = -1;
   
-  char prio = OPRT_MAX_PRIORITY + 1;
+  char prio = 0;
   int bracket = 0;
 
   int i = p;
