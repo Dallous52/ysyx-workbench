@@ -199,7 +199,7 @@ static int cmd_x(char* args)
   
   // addr num
   bool success = false;
-  paddr_t x_addr = expr(args, &success);
+  paddr_t x_addr = expr(arg_expr, &success);
   if (!success)
   {
     printf("your expression have some error.\n");
