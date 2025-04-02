@@ -181,9 +181,9 @@ info_end:
 static int cmd_x(char* args)
 {
   bool exey = true;
-  char *arg_num = strtok(NULL, " ");
-  char* arg_addr = strtok(NULL, " ");
-  if (arg_num == NULL || arg_addr == NULL) 
+  char* arg_num = strtok(NULL, " ");
+  char* arg_expr = strtok(NULL, " ");
+  if (arg_num == NULL || arg_expr == NULL) 
   {
     exey = false;
     goto x_end;
@@ -198,10 +198,11 @@ static int cmd_x(char* args)
   }
   
   // addr num
-  paddr_t x_addr = 0;
-  if (sscanf(arg_addr, "%x", &x_addr) == 0)
+  bool success = false;
+  paddr_t x_addr = expr(args, &success);
+  if (!success)
   {
-    exey = false;
+    printf("your expression have some error.\n");
     goto x_end;
   }
 
@@ -224,7 +225,7 @@ static int cmd_x(char* args)
 x_end:
   if (!exey)
   {
-    printf("Please use command: \"x [num] [hex addr]\".\n");
+    printf("Please use command: \"x [num] [expr]\".\n");
   }
 
   return 0;

@@ -112,7 +112,7 @@ void check_wp()
 
     if (ret != tmp->value)
     {
-      printf("wp: %d  what: %s  ago: %u  now: %u\n", tmp->NO, tmp->what, tmp->value, ret);
+      printf("wp: %d  what: [%s]  ago: %u  now: %u\n", tmp->NO, tmp->what, tmp->value, ret);
       tmp->value = ret; // update
       nemu_state.state = NEMU_STOP;
     }
@@ -127,7 +127,7 @@ void print_wp()
   WP* tmp = head;
   while (tmp != NULL)
   {
-    printf("wp: %d  what: %s  now: %u\n", tmp->NO, tmp->what, tmp->value);
+    printf("wp: %d  what: [%s]  now: %u\n", tmp->NO, tmp->what, tmp->value);
     tmp = tmp->next;
   }
 }
