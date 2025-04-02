@@ -13,15 +13,18 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include "utils.h"
 #include "sdb.h"
+#include <assert.h>
 
 #define NR_WP 32
 
-typedef struct watchpoint {
+typedef struct watchpoint 
+{
   int NO;
+  uint32_t value;
+  char* what;
   struct watchpoint *next;
-
-  /* TODO: Add more members if necessary */
 
 } WP;
 
@@ -42,24 +45,85 @@ void init_wp_pool() {
 /* TODO: Implement the functionality of watchpoint */
 
 // new watch point
-WP* new_wp()
+bool new_wp(const char* what, uint32_t value)
 {
-  if (free_ == NULL)
-    return NULL;
+  if (free_ == NULL) 
+    return false;
 
   WP* ret = free_;
   free_ = free_->next;
-
   ret->next = NULL;
-  return ret;
+
+  if (head == NULL)
+    head = ret;
+  else
+  {
+    ret->next = head;
+    head = ret;
+  }  
+
+  ret->what = strdup(what);
+  ret->value = value;
+  return true;
 }
 
 
 // free watch point
 void free_wp(WP *wp)
 {
-  if (wp == NULL) return;
+  if (wp == NULL || head == NULL) return;
   
+  WP* tmp = head;
+  WP* font = NULL;
+  while (tmp != NULL)
+  {
+    if (tmp == wp)
+    {
+      if (font == NULL)
+        head = tmp->next;
+      else
+        font->next = tmp->next;
+      break;
+    }
+
+    font = tmp;
+    tmp = tmp->next;
+  }
+
+  if (wp->what != NULL)
+    DFREE((void*)wp->what);
+
   wp->next = free_;
   free_ = wp;
+}
+
+
+// check and update watch point
+void check_wp()
+{
+  word_t expr(char *e, bool *success);
+
+  WP* tmp = head;
+  while (tmp != NULL)
+  {
+    bool success = false;
+    word_t ret = expr(tmp->what, &success);
+    assert(success);
+
+    if (ret != tmp->value)
+    {
+      printf("wp: %d  what: %s  ago: %u  now: %u\n", tmp->NO, tmp->what, tmp->value, ret);
+      nemu_state.state = NEMU_STOP;
+    }
+  }
+}
+
+
+void print_wp()
+{
+  WP* tmp = head;
+  while (tmp != NULL)
+  {
+    printf("wp: %d  what: %s  now: %u\n", tmp->NO, tmp->what, tmp->value);
+  }
 }

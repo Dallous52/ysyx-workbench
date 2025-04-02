@@ -57,6 +57,7 @@ static int cmd_si(char* args);
 static int cmd_info(char* args);
 static int cmd_x(char* args);
 static int cmd_p(char* args);
+static int cmd_w(char* args);
 
 // command table <name describe fuction> 
 static struct {
@@ -70,7 +71,8 @@ static struct {
   { "si", "Single or N step execution", cmd_si },
   { "info", "Print status of program", cmd_info },
   { "x", "four bytes of memory after scanning", cmd_x},
-  { "p", "Find the value of the provided expression", cmd_p}
+  { "p", "Find the value of the provided expression", cmd_p},
+  { "w", "Stop program when ${EXPR} change.", cmd_w}
   /* TODO: Add more commands */
 };
 
@@ -143,6 +145,8 @@ static int cmd_si(char* args)
 // print infomation
 static int cmd_info(char* args)
 {
+  void print_wp();
+
   bool exey = true;
   if (args == NULL || strlen(args) != 1)
   {
@@ -155,7 +159,9 @@ static int cmd_info(char* args)
     isa_reg_display();
   }
   else if (*args == 'w')
-  {}
+  {
+    print_wp();
+  }
   else
   {
     exey = false;
@@ -234,6 +240,25 @@ static int cmd_p(char* args)
     printf("answer: %u\n", ret);
   else
     printf("your expression have some error.\n");
+
+  return 0;
+}
+
+
+// watch point
+static int cmd_w(char* args)
+{
+  bool new_wp(const char* what, uint32_t value);
+  
+  bool success = false;
+  word_t ret = expr(args, &success);
+
+  if (success)
+  {
+    if (!new_wp(args, ret))
+      printf("No more watchpoints available.\n");
+  }
+  else printf("your expression have some error.\n");
 
   return 0;
 }
