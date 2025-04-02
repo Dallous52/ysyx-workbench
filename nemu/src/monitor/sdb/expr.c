@@ -18,6 +18,7 @@
 #include "memory/paddr.h"
 
 #include <ctype.h>
+#include <stdio.h>
 
 // max expression length
 #define MAX_EXPR_LEN 1024
@@ -158,7 +159,10 @@ word_t prase_reg(char* e, int p, int q)
   bool success = false;
   word_t ret = isa_reg_str2val(sreg, &success);
   if (!success)
+  {
+    printf("register name maybe error.\n");
     e[0] = 0;
+  }
 
   DFREE(sreg);
   return ret;
