@@ -58,6 +58,7 @@ static int cmd_info(char* args);
 static int cmd_x(char* args);
 static int cmd_p(char* args);
 static int cmd_w(char* args);
+static int cmd_d(char* args);
 
 // command table <name describe fuction> 
 static struct {
@@ -70,9 +71,10 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Single or N step execution", cmd_si },
   { "info", "Print status of program", cmd_info },
-  { "x", "four bytes of memory after scanning", cmd_x},
+  { "x", "Four bytes of memory after scanning", cmd_x},
   { "p", "Find the value of the provided expression", cmd_p},
-  { "w", "Stop program when ${EXPR} change.", cmd_w}
+  { "w", "Stop program when ${EXPR} change", cmd_w},
+  { "d", "Delete watch point with wp NO", cmd_d}
   /* TODO: Add more commands */
 };
 
@@ -155,17 +157,11 @@ static int cmd_info(char* args)
   }
 
   if (*args == 'r')
-  {
     isa_reg_display();
-  }
   else if (*args == 'w')
-  {
     print_wp();
-  }
   else
-  {
     exey = false;
-  }
 
 info_end:
   if (!exey) 
@@ -252,7 +248,7 @@ static int cmd_p(char* args)
 }
 
 
-// watch point
+// create watch point
 static int cmd_w(char* args)
 {
   bool new_wp(const char* what, uint32_t value);
@@ -266,6 +262,21 @@ static int cmd_w(char* args)
       printf("No more watchpoints available.\n");
   }
   else printf("your expression have some error.\n");
+
+  return 0;
+}
+
+
+// delete watch point
+static int cmd_d(char* args)
+{
+  void free_wp(int num);
+
+  int si_num = 0;
+  if (sscanf(args, "%d", &si_num) == 1)
+    free_wp(si_num);
+  else
+    printf("Please use \"d [N]\" to execute, N is the number of wp.\n");
 
   return 0;
 }

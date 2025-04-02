@@ -36,6 +36,8 @@ void init_wp_pool() {
   for (i = 0; i < NR_WP; i ++) {
     wp_pool[i].NO = i;
     wp_pool[i].next = (i == NR_WP - 1 ? NULL : &wp_pool[i + 1]);
+    wp_pool[i].value = 0;
+    wp_pool[i].what = NULL;
   }
 
   head = NULL;
@@ -69,9 +71,13 @@ bool new_wp(const char* what, uint32_t value)
 
 
 // free watch point
-void free_wp(WP *wp)
+void free_wp(int num)
 {
-  if (wp == NULL || head == NULL) return;
+  if (num < 0 || num >= NR_WP) return;
+
+  WP* wp = &wp_pool[num];
+
+  if (wp->what == NULL || head == NULL) return;
   
   WP* tmp = head;
   WP* font = NULL;
@@ -92,6 +98,7 @@ void free_wp(WP *wp)
 
   if (wp->what != NULL)
     DFREE((void*)wp->what);
+  wp->what = NULL;
 
   wp->next = free_;
   free_ = wp;
