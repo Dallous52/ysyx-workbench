@@ -172,17 +172,21 @@ word_t dereference(char* e, int p, int q)
   {
     return paddr_read(x_addr, 4);
   }
-  else 
+  else if (e[0] != 0)
   {
     printf("Memory access out of bounds.\n");
-    return 0;
+    return e[0] = 0;
   }
+
+  return 0;
 }
 
 
 // expression core function (recursive processing)
 static word_t expr_core(char* e, int p, int q)
 {
+  if (e == NULL || e[0] == 0) return 0;
+  
   int mop = get_main_oprt(e, p, q);
   
   if (mop < 0)
@@ -192,7 +196,7 @@ static word_t expr_core(char* e, int p, int q)
       return prase_num(e, p, q);
     else if (e[p] == '$') // if is register
       return prase_reg(e, p + 1, q);
-    else if (e[p] == '(')
+    else if (e[p] == '(') // if is ()
       return expr_core(e, p + 1, q - 1);
     else  // error
       return e[0] = 0;
