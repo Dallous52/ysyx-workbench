@@ -115,6 +115,8 @@ void check_wp()
       printf("wp: %d  what: %s  ago: %u  now: %u\n", tmp->NO, tmp->what, tmp->value, ret);
       nemu_state.state = NEMU_STOP;
     }
+
+    tmp = tmp->next;
   }
 }
 
@@ -125,5 +127,6 @@ void print_wp()
   while (tmp != NULL)
   {
     printf("wp: %d  what: %s  now: %u\n", tmp->NO, tmp->what, tmp->value);
+    tmp = tmp->next;
   }
 }
