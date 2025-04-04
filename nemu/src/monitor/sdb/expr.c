@@ -21,7 +21,7 @@
 #include <stdio.h>
 
 // max expression length
-#define MAX_EXPR_LEN 1024
+#define MAX_EXPR_LEN 65535
 
 // expression core function (recursive processing)
 static word_t expr_core(char* e, int p, int q);
