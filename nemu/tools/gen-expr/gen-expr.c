@@ -19,6 +19,7 @@
 #include <time.h>
 #include <assert.h>
 #include <string.h>
+#include <sys/random.h>
 
 // this should be enough
 static char buf[65536] = {};
@@ -31,19 +32,65 @@ static char *code_format =
 "  return 0; "
 "}";
 
-static void gen_rand_expr() {
-  buf[0] = '\0';
+static uint32_t choose(uint32_t n) 
+{
+  if (n == 0) return 0; 
+
+    uint32_t random_value;
+    
+    if (getrandom(&random_value, sizeof(random_value), 0) != sizeof(random_value)) 
+    {
+        perror("getrandom failed");
+        exit(1);
+    }
+
+    return random_value % n;
 }
 
-int main(int argc, char *argv[]) {
+static void gen_num()
+{
+  uint32_t randnum = choose(1000);
+  char tmp[5] = {};
+
+  sprintf(tmp, "%u", randnum);
+  strcat(buf, tmp);
+}
+
+static void gen(char c)
+{
+  strncat(buf, &c, 1);
+}
+
+static void gen_rand_op()
+{
+  static const char oprts[4] = {'+', '-', '*', '/'};
+  uint32_t randnum = choose(4);
+
+  strncat(buf, oprts + randnum, 1);
+} 
+
+static void gen_rand_expr() 
+{
+  switch (choose(3)) 
+  {
+    case 0: gen_num(); break;
+    case 1: gen('('); gen_rand_expr(); gen(')'); break;
+    default: gen_rand_expr(); gen_rand_op(); gen_rand_expr(); break;
+  }
+}
+
+int main(int argc, char *argv[])
+{
   int seed = time(0);
   srand(seed);
   int loop = 1;
   if (argc > 1) {
     sscanf(argv[1], "%d", &loop);
   }
+
   int i;
-  for (i = 0; i < loop; i ++) {
+  for (i = 0; i < loop; i ++) 
+  {
     gen_rand_expr();
 
     sprintf(code_buf, code_format, buf);

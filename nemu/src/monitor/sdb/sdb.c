@@ -191,7 +191,7 @@ static int cmd_x(char* args)
     goto x_end;
   }
 
-  // 4 byte num
+  // 4 byte's num
   int x_num = 0;
   if (sscanf(arg_num, "%d", &x_num) == 0)
   {
@@ -199,7 +199,7 @@ static int cmd_x(char* args)
     goto x_end;
   }
   
-  // addr num
+  // address  num
   bool success = false;
   paddr_t x_addr = expr(arg_expr, &success);
   if (!success)
