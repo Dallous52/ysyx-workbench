@@ -325,7 +325,7 @@ void sdb_mainloop()
       }
       else if (!success)
       {
-        printf("%s\n", args);
+         // printf("%s\n", args);
       }
   }
 
