@@ -60,6 +60,7 @@ static void gen_num()
 
   sprintf(tmp, "%u", randnum);
   while (tmp[i]) buf[bufidx++] = tmp[i++];
+  tmp[i] = 'u';
 }
 
 static void gen(char c)
