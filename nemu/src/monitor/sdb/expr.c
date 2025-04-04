@@ -50,14 +50,14 @@ static int debugfunc(char* e) {
   return 0;
 }
 
-// static void debuglook(const char* e, int p, int q)
-// {
-//   for (; p <= q; p++)
-//   {
-//     putc(e[p], stdout);
-//   }
-//   putc('\n', stdout);
-// }
+static void debuglook(const char* e, int p, int q)
+{
+  for (; p <= q; p++)
+  {
+    putc(e[p], stdout);
+  }
+  putc('\n', stdout);
+}
 
 
 void init_regex()
@@ -205,7 +205,7 @@ word_t dereference(char* e, int p, int q)
 static word_t expr_core(char* e, int p, int q)
 {
   if (e == NULL || e[0] == 0) return 0;
-  // debuglook(e, p, q);
+  debuglook(e, p, q);
 
   int mop = get_main_oprt(e, p, q);
   
