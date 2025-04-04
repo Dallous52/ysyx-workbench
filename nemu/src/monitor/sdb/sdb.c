@@ -286,51 +286,51 @@ static int cmd_d(char* args)
 // main loop 
 void sdb_mainloop() 
 {
-  // FILE *file = fopen("/home/dallous/Documents/ysyx-workbench/nemu/input", "r");
-  // if (file == NULL) {
-  //     perror("open file error");
-  //     return;
-  // }
+  FILE *file = fopen("/home/dallous/Documents/ysyx-workbench/nemu/input", "r");
+  if (file == NULL) {
+      perror("open file error");
+      return;
+  }
 
-  // char *line = NULL;
-  // size_t len = 0;
-  // ssize_t read;
+  char *line = NULL;
+  size_t len = 0;
+  ssize_t read;
 
-  // while ((read = getline(&line, &len, file)) != -1) {
-  //     char *str_end = line + strlen(line);
+  while ((read = getline(&line, &len, file)) != -1) {
+      char *str_end = line + strlen(line);
 
-  //     char *cmd = strtok(line, " ");
-  //     if (cmd == NULL) continue;
+      char *cmd = strtok(line, " ");
+      if (cmd == NULL) continue;
 
-  //     word_t res = 0;
-  //     if (sscanf(cmd, "%u", &res) != 1)
-  //     {
-  //       perror("get answer failed.\n");
-  //       continue;
-  //     }
+      word_t res = 0;
+      if (sscanf(cmd, "%u", &res) != 1)
+      {
+        perror("get answer failed.\n");
+        continue;
+      }
 
-  //     char *args = cmd + strlen(cmd) + 1;
-  //     if (args >= str_end) 
-  //     {
-  //       perror("get expr failed.\n");
-  //       continue;
-  //     }
+      char *args = cmd + strlen(cmd) + 1;
+      if (args >= str_end) 
+      {
+        perror("get expr failed.\n");
+        continue;
+      }
 
-  //     bool success = false;
-  //     word_t ret = expr(args, &success);
-  //     if (success && ret != res)
-  //     {
-  //       printf("error: %u %u\t", ret, res);
-  //       printf("%s\n", args);
-  //     }
-  //     else if (!success)
-  //     {
-  //       printf("%s\n", args);
-  //     }
-  // }
+      bool success = false;
+      word_t ret = expr(args, &success);
+      if (success && ret != res)
+      {
+        printf("error: %u %u\t", ret, res);
+        printf("%s\n", args);
+      }
+      else if (!success)
+      {
+        printf("%s\n", args);
+      }
+  }
 
-  // free(line);
-  // fclose(file);
+  free(line);
+  fclose(file);
 
 
   if (is_batch_mode) 
