@@ -215,12 +215,14 @@ static word_t expr_core(char* e, int p, int q)
   else if (mop > p)
   {
     word_t va = expr_core(e, p, mop - 1);
-    if (!e[0]) return 0;
+    if (!e[0]) 
+      return 0;
 
     int back = (oprts[e[mop] - oprt_hash].priority > 2) + 1;
     
     word_t vb = expr_core(e, mop + back, q);
-    if (!e[0]) return 0;
+    if (!e[0]) 
+      return 0;
 
     switch (e[mop]) 
     {
