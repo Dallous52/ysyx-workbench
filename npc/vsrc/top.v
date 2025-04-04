@@ -24,7 +24,15 @@ module top(
     output [7:0] seg6,
     output [7:0] seg7
 );
-  
+
+    `ifdef LIGHT_M
+    light u_light(
+        .clk 	(clk  ),
+        .rst 	(rst  ),
+        .led 	(ledr  )
+    );
+    `endif
+
     // 双控开关模块
     `ifdef DUALCTL_M 
         dualctl u_dualctl(

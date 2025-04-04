@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr > /home/dallous/Documents/ysyx-workbench/nemu/tools/gen-expr/build/error.log 2>&1");
+    int ret = system("gcc -Wdiv-by-zero -Werror /tmp/.code.c -o /tmp/.expr > /dev/null 2>&1");
     if (ret != 0) continue;
 
     fp = popen("/tmp/.expr", "r");
