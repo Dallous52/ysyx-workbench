@@ -25,7 +25,11 @@
 // this should be enough
 #define BUFLEN 65536
 static char buf[BUFLEN] = {};
+static char bufout[BUFLEN] = {};
+
 int bufidx = 0;
+int outidx = 0;
+
 static char code_buf[BUFLEN + 128] = {}; // a little larger than `buf`
 static char *code_format =
 "#include <stdio.h>\n"
@@ -60,7 +64,9 @@ static void gen_num()
 
   sprintf(tmp, "%u", randnum);
   while (tmp[i]) buf[bufidx++] = tmp[i++];
-  tmp[i] = 'u';
+  i = 0;
+  while (tmp[i]) bufout[outidx++] = tmp[i++];
+  buf[bufidx++] = 'u';
 }
 
 static void gen(char c)
@@ -68,6 +74,7 @@ static void gen(char c)
   if (bufidx >= BUFLEN) return;
 
   buf[bufidx++] = c;
+  bufout[outidx++] = c;
 }
 
 static void gen_rand_op()
@@ -78,6 +85,7 @@ static void gen_rand_op()
   uint32_t randnum = choose(4);
 
   buf[bufidx++] = oprts[randnum];
+  bufout[outidx++] = oprts[randnum];
 } 
 
 static void gen_rand_expr() 
@@ -106,6 +114,8 @@ int main(int argc, char *argv[])
   {
     bufidx = 0;
     memset(buf, 0, sizeof(buf));
+    outidx = 0;
+    memset(bufout, 0, sizeof(bufout));
     gen_rand_expr();
 
     sprintf(code_buf, code_format, buf);
@@ -125,7 +135,7 @@ int main(int argc, char *argv[])
     ret = fscanf(fp, "%d", &result);
     pclose(fp);
 
-    printf("%u %s\n", result, buf);
+    printf("%u %s\n", result, bufout);
   }
   return 0;
 }
