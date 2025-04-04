@@ -45,6 +45,11 @@ typedef struct operator{
 static oprt oprts[OPRTS_LEN] = { 0 };
 static int oprt_hash = -1;
 
+static int debugfunc(char* e) {
+  e[0] = 0;
+  return 0;
+}
+
 void init_regex()
 {
   static const oprt op[] = {
@@ -135,13 +140,13 @@ word_t prase_num(char* e, int p, int q)
     if (sscanf(snum, "%x", &ret) != 1)
     {
       DFREE(snum);
-      return e[0] = 0;
+      return debugfunc(e);
     }
   }
   else if (sscanf(snum, "%d", &ret) != 1)
   {
     DFREE(snum);
-    return e[0] = 0;
+    return debugfunc(e);
   }
 
   return ret;
@@ -162,7 +167,7 @@ word_t prase_reg(char* e, int p, int q)
   if (!success)
   {
     printf("register name maybe error.\n");
-    e[0] = 0;
+    debugfunc(e);
   }
 
   DFREE(sreg);
@@ -203,7 +208,7 @@ static word_t expr_core(char* e, int p, int q)
     else if (e[p] == '(') // if is ()
       return expr_core(e, p + 1, q - 1);
     else  // error
-      return e[0] = 0;
+      return debugfunc(e);
   }
   else if (mop == p)
   {
@@ -231,15 +236,15 @@ static word_t expr_core(char* e, int p, int q)
       case '*': return va * vb;
       case '/': 
         if (vb) return va / vb;
-        else return e[0] = 0;
+        else return debugfunc(e);
       case '!': return va != vb;
       case '=': return va == vb;
       case '&': return va && vb;
-      default: return e[0] = 0;
+      default: return debugfunc(e);
     }
   }
 
-  return e[0] = 0;
+  return debugfunc(e);
 }
 
 
