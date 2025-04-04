@@ -32,7 +32,6 @@ static const char ignore[] = {
 };
 static int ignore_len = ARRLEN(ignore);
 
-
 // operator characters
 typedef struct operator{
   char op;
@@ -45,19 +44,27 @@ typedef struct operator{
 static oprt oprts[OPRTS_LEN] = { 0 };
 static int oprt_hash = -1;
 
-static int abnormal(char* e) {
+static const char* abnormal_str[] = {
+  "Division by zero",
+  "Number parsing error",
+  "Unknown symbol",
+  "Register parsing error",
+  "Unexpected error"
+};
+
+static int abnormal(char* e, int p, int q, int err) 
+{
+  for (; p <= q; p++)
+  {
+    putchar(e[p]);
+  }
+  putchar('\n');
+  printf("%s\n", abnormal_str[err]);
+  putchar('\n');
+
   e[0] = 0;
   return 0;
 }
-
-// static void debuglook(const char* e, int p, int q)
-// {
-//   for (; p <= q; p++)
-//   {
-//     putc(e[p], stdout);
-//   }
-//   putc('\n', stdout);
-// }
 
 
 void init_regex()
@@ -150,13 +157,13 @@ word_t prase_num(char* e, int p, int q)
     if (sscanf(snum, "%x", &ret) != 1)
     {
       DFREE(snum);
-      return abnormal(e);
+      return abnormal(e, p, q, 1);
     }
   }
   else if (sscanf(snum, "%d", &ret) != 1)
   {
     DFREE(snum);
-    return abnormal(e);
+    return abnormal(e, p, q, 1);
   }
 
   return ret;
@@ -175,10 +182,7 @@ word_t prase_reg(char* e, int p, int q)
   bool success = false;
   word_t ret = isa_reg_str2val(sreg, &success);
   if (!success)
-  {
-    printf("register name maybe error.\n");
-    abnormal(e);
-  }
+    abnormal(e, p, q, 3);
 
   DFREE(sreg);
   return ret;
@@ -205,7 +209,6 @@ word_t dereference(char* e, int p, int q)
 static word_t expr_core(char* e, int p, int q)
 {
   if (e == NULL || e[0] == 0) return 0;
-  // debuglook(e, p, q);
 
   int mop = get_main_oprt(e, p, q);
   
@@ -219,7 +222,7 @@ static word_t expr_core(char* e, int p, int q)
     else if (e[p] == '(') // if is ()
       return expr_core(e, p + 1, q - 1);
     else  // error
-      return abnormal(e);
+      return abnormal(e, p, q, 2);
   }
   else if (mop == p)
   {
@@ -247,15 +250,15 @@ static word_t expr_core(char* e, int p, int q)
       case '*': return va * vb;
       case '/': 
         if (vb) return va / vb;
-        else return abnormal(e);
+        else return abnormal(e, p, q, 0);
       case '!': return va != vb;
       case '=': return va == vb;
       case '&': return va && vb;
-      default: return abnormal(e);
+      default: return abnormal(e, p, q, 2);
     }
   }
 
-  return abnormal(e);
+  return abnormal(e, p, q, 4);
 }
 
 
