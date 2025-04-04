@@ -285,6 +285,25 @@ static int cmd_d(char* args)
 // main loop 
 void sdb_mainloop() 
 {
+  FILE *file = fopen("/home/dallous/Documents/ysyx-workbench/nemu/input", "r");
+  if (file == NULL) {
+      perror("open file error");
+      return;
+  }
+
+  char *line = NULL;
+  size_t len = 0;
+  ssize_t read;
+
+  while ((read = getline(&line, &len, file)) != -1) {
+      // 输出读取的行
+      printf("%s", line);
+  }
+
+  free(line);
+  fclose(file);
+
+
   if (is_batch_mode) 
   {
     cmd_c(NULL);

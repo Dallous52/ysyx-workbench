@@ -13,6 +13,7 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include <readline/chardefs.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,8 +23,10 @@
 #include <sys/random.h>
 
 // this should be enough
-static char buf[65536] = {};
-static char code_buf[65536 + 128] = {}; // a little larger than `buf`
+#define BUFLEN 65536
+static char buf[BUFLEN] = {};
+int bufidx = 0;
+static char code_buf[BUFLEN + 128] = {}; // a little larger than `buf`
 static char *code_format =
 "#include <stdio.h>\n"
 "int main() { "
@@ -49,28 +52,37 @@ static uint32_t choose(uint32_t n)
 
 static void gen_num()
 {
+  if (bufidx >= BUFLEN) return;
+
   uint32_t randnum = choose(1000);
   char tmp[5] = {};
+  int i = 0;
 
   sprintf(tmp, "%u", randnum);
-  strcat(buf, tmp);
+  while (tmp[i]) buf[bufidx++] = tmp[i++];
 }
 
 static void gen(char c)
 {
-  strncat(buf, &c, 1);
+  if (bufidx >= BUFLEN) return;
+
+  buf[bufidx++] = c;
 }
 
 static void gen_rand_op()
 {
+  if (bufidx >= BUFLEN) return;
+
   static const char oprts[4] = {'+', '-', '*', '/'};
   uint32_t randnum = choose(4);
 
-  strncat(buf, oprts + randnum, 1);
+  buf[bufidx++] = oprts[randnum];
 } 
 
 static void gen_rand_expr() 
 {
+  if (bufidx >= BUFLEN) return;
+
   switch (choose(3)) 
   {
     case 0: gen_num(); break;
@@ -91,6 +103,8 @@ int main(int argc, char *argv[])
   int i;
   for (i = 0; i < loop; i ++) 
   {
+    bufidx = 0;
+    memset(buf, 0, sizeof(buf));
     gen_rand_expr();
 
     sprintf(code_buf, code_format, buf);
@@ -100,7 +114,7 @@ int main(int argc, char *argv[])
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
+    int ret = system("gcc /tmp/.code.c -o /tmp/.expr > /home/dallous/Documents/ysyx-workbench/nemu/tools/gen-expr/build/error.log 2>&1");
     if (ret != 0) continue;
 
     fp = popen("/tmp/.expr", "r");
