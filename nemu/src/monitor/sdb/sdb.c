@@ -319,11 +319,13 @@ void sdb_mainloop()
       bool success = false;
       word_t ret = expr(args, &success);
       if (success && ret != res)
-        printf("error: %u %u\n", ret, res);
-      else if (!success)
       {
         printf("error: %u %u\t", ret, res);
-        printf("your expression have some error. \n");
+        printf("%s\n", args);
+      }
+      else if (!success)
+      {
+        printf("%s\n", args);
       }
   }
 
