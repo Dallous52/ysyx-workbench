@@ -45,19 +45,19 @@ typedef struct operator{
 static oprt oprts[OPRTS_LEN] = { 0 };
 static int oprt_hash = -1;
 
-static int debugfunc(char* e) {
+static int abnormal(char* e) {
   e[0] = 0;
   return 0;
 }
 
-static void debuglook(const char* e, int p, int q)
-{
-  for (; p <= q; p++)
-  {
-    putc(e[p], stdout);
-  }
-  putc('\n', stdout);
-}
+// static void debuglook(const char* e, int p, int q)
+// {
+//   for (; p <= q; p++)
+//   {
+//     putc(e[p], stdout);
+//   }
+//   putc('\n', stdout);
+// }
 
 
 void init_regex()
@@ -150,13 +150,13 @@ word_t prase_num(char* e, int p, int q)
     if (sscanf(snum, "%x", &ret) != 1)
     {
       DFREE(snum);
-      return debugfunc(e);
+      return abnormal(e);
     }
   }
   else if (sscanf(snum, "%d", &ret) != 1)
   {
     DFREE(snum);
-    return debugfunc(e);
+    return abnormal(e);
   }
 
   return ret;
@@ -177,7 +177,7 @@ word_t prase_reg(char* e, int p, int q)
   if (!success)
   {
     printf("register name maybe error.\n");
-    debugfunc(e);
+    abnormal(e);
   }
 
   DFREE(sreg);
@@ -205,7 +205,7 @@ word_t dereference(char* e, int p, int q)
 static word_t expr_core(char* e, int p, int q)
 {
   if (e == NULL || e[0] == 0) return 0;
-  debuglook(e, p, q);
+  // debuglook(e, p, q);
 
   int mop = get_main_oprt(e, p, q);
   
@@ -219,7 +219,7 @@ static word_t expr_core(char* e, int p, int q)
     else if (e[p] == '(') // if is ()
       return expr_core(e, p + 1, q - 1);
     else  // error
-      return debugfunc(e);
+      return abnormal(e);
   }
   else if (mop == p)
   {
@@ -247,15 +247,15 @@ static word_t expr_core(char* e, int p, int q)
       case '*': return va * vb;
       case '/': 
         if (vb) return va / vb;
-        else return debugfunc(e);
+        else return abnormal(e);
       case '!': return va != vb;
       case '=': return va == vb;
       case '&': return va && vb;
-      default: return debugfunc(e);
+      default: return abnormal(e);
     }
   }
 
-  return debugfunc(e);
+  return abnormal(e);
 }
 
 
