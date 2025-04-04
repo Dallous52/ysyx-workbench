@@ -226,7 +226,9 @@ static word_t expr_core(char* e, int p, int q)
       case '+': return va + vb;
       case '-': return va - vb;
       case '*': return va * vb;
-      case '/': return va / vb;
+      case '/': 
+        if (vb) return va / vb;
+        else return e[0] = 0;
       case '!': return va != vb;
       case '=': return va == vb;
       case '&': return va && vb;
