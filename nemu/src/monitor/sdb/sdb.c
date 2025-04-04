@@ -16,6 +16,7 @@
 #include <isa.h>
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
+#include <readline/chardefs.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <stdio.h>
@@ -296,8 +297,34 @@ void sdb_mainloop()
   ssize_t read;
 
   while ((read = getline(&line, &len, file)) != -1) {
-      // 输出读取的行
-      printf("%s", line);
+      char *str_end = line + strlen(line);
+
+      char *cmd = strtok(line, " ");
+      if (cmd == NULL) continue;
+
+      word_t res = 0;
+      if (sscanf(cmd, "%u", &res) != 1)
+      {
+        perror("get answer failed.\n");
+        continue;
+      }
+
+      char *args = cmd + strlen(cmd) + 1;
+      if (args >= str_end) 
+      {
+        perror("get expr failed.\n");
+        continue;
+      }
+
+      bool success = false;
+      word_t ret = expr(args, &success);
+      if (success && ret != res)
+        printf("error: %u %u\n", ret, res);
+      else
+      {
+        printf("error: %u %u\t", ret, res);
+        printf("your expression have some error. \n");
+      }
   }
 
   free(line);
