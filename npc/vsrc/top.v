@@ -25,6 +25,7 @@ module top(
     output [7:0] seg7
 );
 
+    // 流水灯
     `ifdef LIGHT_M
     light u_light(
         .clk 	(clk  ),

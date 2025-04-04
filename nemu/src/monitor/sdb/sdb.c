@@ -296,7 +296,8 @@ void expr_test()
   size_t len = 0;
   ssize_t read;
 
-  while ((read = getline(&line, &len, file)) != -1) {
+  while ((read = getline(&line, &len, file)) != -1) 
+  {
       char *str_end = line + strlen(line);
 
       char *cmd = strtok(line, " ");
