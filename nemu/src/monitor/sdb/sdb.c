@@ -283,8 +283,8 @@ static int cmd_d(char* args)
 }
 
 
-// main loop 
-void sdb_mainloop() 
+// expr test
+void expr_test()
 {
   FILE *file = fopen("/home/dallous/Documents/ysyx-workbench/nemu/input", "r");
   if (file == NULL) {
@@ -331,7 +331,13 @@ void sdb_mainloop()
 
   free(line);
   fclose(file);
+}
 
+
+// main loop 
+void sdb_mainloop() 
+{
+  expr_test();
 
   if (is_batch_mode) 
   {
