@@ -93,7 +93,7 @@ static int cmd_c(char *args)
 // quit
 static int cmd_q(char *args) 
 {
-  // nemu_state.state = NEMU_QUIT;
+  nemu_state.state = NEMU_QUIT;
   return -1;
 }
 
