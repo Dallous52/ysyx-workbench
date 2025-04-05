@@ -99,7 +99,7 @@ static int cmd_q(char *args)
 
 
 // display help
-static int cmd_help(char *args) 
+static int cmd_help(char *args)
 {
   /* extract the first argument */
   char *arg = strtok(NULL, " ");
