@@ -265,7 +265,7 @@ static word_t expr_core(char* e, int p, int q)
 // Expression
 word_t expr(char *e, bool *success) 
 {
-  if (e == NULL || success == NULL) 
+  if (e == NULL || success == NULL)
   {
     if (success == NULL)
       return 0;
