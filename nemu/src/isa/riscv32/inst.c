@@ -22,7 +22,7 @@
 #define Mr vaddr_read
 #define Mw vaddr_write
 #define SIGN(n) ((int)(n))
-#define SIGNH(n) ((int64_t)(n))
+#define SIGNH(n) ((long long)(n))
 #define SHAMT(i) ((word_t)BITS(i, 24, 20))
 
 enum {
