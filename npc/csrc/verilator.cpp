@@ -20,11 +20,12 @@ void verilator_main_loop(Vtop* top, VerilatedVcdC* vtrace)
     // 初始化随机数发生器
     time_t t;
     srand((unsigned) time(&t));
-    top->ledr = 0;
+    top->f = 0;
 
     while (sim_time < MAX_SIM_TIME)
     {
-        top->sw = (unsigned char)rand() % 4;
+        top->a = (unsigned char)rand() % 2;
+        top->b = (unsigned char)rand() % 2;
         top->eval();
         printf("sw = %d, f = %d\n", top->sw, top->ledr);
         vtrace->dump(sim_time);
