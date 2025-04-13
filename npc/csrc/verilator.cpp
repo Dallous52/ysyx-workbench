@@ -27,7 +27,7 @@ void verilator_main_loop(Vtop* top, VerilatedVcdC* vtrace)
         top->a = (unsigned char)rand() % 2;
         top->b = (unsigned char)rand() % 2;
         top->eval();
-        printf("sw = %d, f = %d\n", top->sw, top->ledr);
+        printf("a = %d, b = %d, f = %d\n", top->a, top->b, top->f);
         vtrace->dump(sim_time);
         sim_time++; // 更新仿真时间
     }
