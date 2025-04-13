@@ -17,7 +17,7 @@ module adder(
     input [3:0] ina,
     input [3:0] inb,
     input cin,
-    output pf,
+    output pf, 
     output gf,
     output cout,
     output [3:0] sout

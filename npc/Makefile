@@ -19,6 +19,9 @@ MODNAME ?= DUALCTL_M
 VSIM = VSIM_T
 NVBD = NVBD_T
 
+# 功能名称
+FNAME ?=
+
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
 
@@ -27,8 +30,9 @@ CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*
 
 # C++ 编译选项：
 INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
+
 # - `-DTOP_NAME="V$(TOPNAME)"` 定义宏 `TOP_NAME`，用于 Verilator 生成的顶层模块
-CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\"" -D$(MODNAME)
+CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\"" -D$(MODNAME) -D${FNAME}
 VERILATOR_CFLAGS += -Wno-UNOPTFLAT -D$(MODNAME)
 
 all: sim

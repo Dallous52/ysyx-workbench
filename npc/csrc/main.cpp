@@ -3,7 +3,10 @@
 
 #ifdef VSIM_T
 #include <verilated.h>
+
+#ifdef VCD_F
 #include <verilated_vcd_c.h>
+#endif // VCD_F
 
 void verilator_main_loop(Vtop* top, VerilatedVcdC* vtrace);
 #endif // VSIM_T
@@ -23,19 +26,28 @@ int main(int argc, char** argv)
     Vtop* top = new Vtop();
 
 #ifdef VSIM_T
+
+#ifdef VCD_F
     // 接下来的四行代码用于设置波形存储为VCD文件
     Verilated::traceEverOn(true);
     VerilatedVcdC *vtrace = new VerilatedVcdC;
     top->trace(vtrace, 5);
     vtrace->open("waveform.vcd");
+#endif // VCD_F
 
     verilator_main_loop(top, vtrace);
 
+#ifdef VCD_F
     vtrace->close();
+#endif // VCD_F
+
     delete top;
+
 #endif // VSIM_T
 
+
 #ifdef NVBD_T
+
     nvboard_bind_all_pins(top);
 
     nvboard_init();
@@ -49,6 +61,7 @@ int main(int argc, char** argv)
     }
 
     nvboard_quit();  
+
 #endif // NVBD_T
 
     return 0;

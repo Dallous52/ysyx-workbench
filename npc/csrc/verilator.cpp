@@ -33,4 +33,21 @@ void verilator_main_loop(Vtop* top, VerilatedVcdC* vtrace)
 }
 #endif // DUALCTL_M
 
+
+#ifdef NPC_M
+void verilator_main_loop(Vtop* top, VerilatedVcdC* vtrace)
+{
+    top->ledr = 0;
+
+    while (sim_time < MAX_SIM_TIME)
+    {
+        top->sw = (unsigned char)rand() % 4;
+        top->eval();
+        printf("sw = %d, f = %d\n", top->sw, top->ledr);
+        vtrace->dump(sim_time);
+        sim_time++; // 更新仿真时间
+    }
+}    
+#endif // NPC_M
+
 #endif // VSIM_T·
