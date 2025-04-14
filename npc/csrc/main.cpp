@@ -1,5 +1,6 @@
 #include "Vysyx_25040111_top.h"
 
+#include <iostream>
 #include <verilated.h>
 #ifdef VCD_F
 #include <verilated_vcd_c.h>
@@ -22,6 +23,7 @@ int main(int argc, char** argv)
     {
         top->inst = 0xffc10113;
         top->eval();
+        std::cout << top->pc << std::endl;
 #ifdef VCD_F
         vtrace->dump(sim_time++);
 #endif // VCD_F

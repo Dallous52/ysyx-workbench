@@ -2,8 +2,8 @@
 
 module ysyx_25040111_top(
     input clk,
-    input [31:0] inst
-    // output reg [31:0] pc
+    input [31:0] inst,
+    output [31:0] pc
 );
    
     wire [31:0] wdata, rdata;
@@ -38,5 +38,6 @@ module ysyx_25040111_top(
 
     assign wdata = rdata + tdata;
     assign waddr = taddr;
+    assign pc = wdata;
 
 endmodule
