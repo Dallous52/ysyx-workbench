@@ -16,7 +16,7 @@ TOPNAME = top
 VSIM = VSIM_T
 
 # 功能名称
-FNAME ?=
+FNAME ?= NONE_F
 
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
