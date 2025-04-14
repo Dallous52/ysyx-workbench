@@ -1,20 +1,12 @@
-// `include "tpdef.vh" 
-
-// module top(
-//     input [31:0] inst,
-//     output [31:0] pc
-// );
-
-//     reg [31:0] rgst [31:0];
-    
-    
-
-// endmodule
+`include "tpdef.vh" 
 
 module top(
-    input a,
-    input b,
-    output f
+    input [31:0] inst,
+    output [31:0] pc
 );
-    assign f = a ^ b;
+
+    reg [31:0] rgst [31:0];
+    
+    
+
 endmodule

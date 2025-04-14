@@ -12,12 +12,8 @@ VERILATOR_CFLAGS += -MMD --build -cc  \
 # 顶层模块名称
 TOPNAME = top
 
-# 需编译模块名称
-MODNAME ?= DUALCTL_M
-
 # 模拟器名称
 VSIM = VSIM_T
-NVBD = NVBD_T
 
 # 功能名称
 FNAME ?=
