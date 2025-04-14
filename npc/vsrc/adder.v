@@ -41,5 +41,5 @@ module adder(
     assign sout = p ^ c[3:0];
     assign pf = &p;
     assign gf = g[3] | (p[3] & g[2]) | (&p[3:2] & g[1]) | (&p[3:1] & g[0]);
-
+    
 endmodule
