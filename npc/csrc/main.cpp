@@ -7,7 +7,7 @@
 
 int main(int argc, char** argv)
 {
-    Vtop* top = new Vtop();
+    Vysyx_25040111_top* top = new Vysyx_25040111_top();
 
 #ifdef VCD_F
     // 接下来的四行代码用于设置波形存储为VCD文件
