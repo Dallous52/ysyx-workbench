@@ -1,4 +1,4 @@
-// `include "tpdef.v" 
+`include "tpdef.vh" 
 
 module top(
     input [31:0] inst,
