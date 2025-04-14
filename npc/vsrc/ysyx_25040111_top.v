@@ -2,7 +2,7 @@
 
 module ysyx_25040111_top(
     input clk,
-    input [31:0] inst,
+    input [31:0] inst
     // output reg [31:0] pc
 );
    

@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 
     while (true)
     {
-        top->inst = 0x;
+        top->inst = 0xffc10113;
         top->eval();
 #ifdef VCD_F
         vtrace->dump(sim_time++);
