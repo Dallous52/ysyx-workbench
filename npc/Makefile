@@ -29,7 +29,7 @@ INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
 
 # - `-DTOP_NAME="V$(TOPNAME)"` 定义宏 `TOP_NAME`，用于 Verilator 生成的顶层模块
 CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\"" -D$(MODNAME) -D${FNAME}
-VERILATOR_CFLAGS += -Wno-UNOPTFLAT -D$(MODNAME)
+VERILATOR_CFLAGS += -Wno-UNOPTFLAT -D$(MODNAME) -I inc
 
 all: sim
 
