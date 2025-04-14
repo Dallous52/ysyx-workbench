@@ -10,7 +10,7 @@ VERILATOR_CFLAGS += -MMD --build -cc  \
 				-O3 --x-assign fast --x-initial fast --noassert
 
 # 顶层模块名称
-TOPNAME = top
+TOPNAME = ysyx_25040111_top
 
 # 模拟器名称
 VSIM = VSIM_T
