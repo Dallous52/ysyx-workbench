@@ -1,4 +1,4 @@
-#include "Vtop.h"
+#include "Vysyx_25040111_top.h"
 
 #include <verilated.h>
 #ifdef VCD_F
