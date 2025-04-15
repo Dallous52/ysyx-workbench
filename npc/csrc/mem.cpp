@@ -1,17 +1,24 @@
-#include <stdint.h>
+#include <cstdint>
+#include <cstdio>
 
 #define likely(cond)   __builtin_expect(cond, 1)
 
 typedef uint32_t paddr_t;
 typedef uint32_t word_t;
 
-static uint8_t pmem[0x8000000] __attribute((aligned(4096))) = {};
+#define CONFIG_MSIZE 0x8000000
+#define CONFIG_MBASE 0x80000000
+
+#define PMEM_LEFT  ((paddr_t)CONFIG_MBASE)
+#define PMEM_RIGHT ((paddr_t)CONFIG_MBASE + CONFIG_MSIZE - 1)
+
+static uint8_t pmem[CONFIG_MSIZE] __attribute((aligned(4096))) = {};
 
 
-uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - 0x80000000; }
+uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 
 
-paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + 0x80000000; }
+paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 
 
 static word_t host_read(void *addr, int len) {
@@ -47,8 +54,8 @@ static void pmem_write(paddr_t addr, int len, word_t data)
 
 static void out_of_bound(paddr_t addr) 
 {
-  panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
-      addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
+  printf("address = %x is out of bound of pmem [%x, %x]",
+      addr, PMEM_LEFT, PMEM_RIGHT);
 }
 
 
