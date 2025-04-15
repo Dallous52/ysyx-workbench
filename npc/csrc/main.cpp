@@ -6,6 +6,12 @@
 #include <verilated_vcd_c.h>
 #endif // VCD_F
 
+
+void pmem_init();
+
+word_t paddr_read(paddr_t addr, int len);
+
+
 int main(int argc, char** argv)
 {
     Vysyx_25040111_top* top = new Vysyx_25040111_top();
@@ -23,7 +29,7 @@ int main(int argc, char** argv)
 
     while (true)
     { 
-        top->inst = 0xffc10113;
+        top->inst = paddr_read(top->pc, 4);
         top->clk = 0; top->eval();
         top->clk = 1; top->eval();
         std::printf("%x\n", top->pc);

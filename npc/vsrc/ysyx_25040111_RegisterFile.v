@@ -13,7 +13,10 @@ module ysyx_25040111_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
 
     // 写入
     always @(posedge clk) begin
-        if (wen) rf[waddr] <= wdata;
+        if (wen) begin
+          rf[waddr] <= wdata;
+          $display("rg = %d;  data: %h\n", waddr, wdata);
+        end
     end
 
     // 读寄存器使能判断

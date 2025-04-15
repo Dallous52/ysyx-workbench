@@ -1,10 +1,11 @@
 #include <cstdint>
 #include <cstdio>
-
-#define likely(cond)   __builtin_expect(cond, 1)
+#include <cstdlib>
 
 typedef uint32_t paddr_t;
 typedef uint32_t word_t;
+
+#define likely(cond)   __builtin_expect(cond, 1)
 
 #define CONFIG_MSIZE 0x8000000
 #define CONFIG_MBASE 0x80000000
@@ -74,4 +75,18 @@ void paddr_write(paddr_t addr, int len, word_t data)
 {
   if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
   out_of_bound(addr);
+}
+
+
+void pmem_init()
+{
+    static const uint32_t img [] = {
+        0x00100093,  // addi x1, x0, 1
+        0x00508113,  // addi x2, x1, 5
+        0xFFF10193,  // addi x3, x2, -1
+        0x06400513,  // addi x10, x0, 100
+        0x00A28293,  // addi x5, x5, 10
+    };
+    
+    memcpy(pmem, img, sizeof(img));
 }
