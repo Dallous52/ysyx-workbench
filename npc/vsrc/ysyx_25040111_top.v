@@ -60,7 +60,7 @@ module ysyx_25040111_top(
         .rst  	(rst   ),
         .din  	(pc + 32'd4),
         .dout 	(pc  ),
-        .wen  	(1   )
+        .wen  	(wen   )
     );
     
    
