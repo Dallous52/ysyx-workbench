@@ -26,10 +26,11 @@ int main(int argc, char** argv)
 #endif // VCD_F
 
     top->pc = 0x80000000;
+    pmem_init();
 
-    while (true)
+    while (top->pc < 0x80000014)
     { 
-        top->inst = 0xffc10113; // paddr_read(top->pc, 4);
+        top->inst = paddr_read(top->pc, 4);
         top->clk = 0; top->eval();
         top->clk = 1; top->eval();
         std::printf("%x\n", top->pc);
