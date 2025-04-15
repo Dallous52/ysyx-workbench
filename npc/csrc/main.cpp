@@ -19,10 +19,11 @@ int main(int argc, char** argv)
     vluint64_t sim_time = 0; // 用于计数时钟边沿
 #endif // VCD_F
 
-    // while (true)
-    {
+    while (true)
+    { 
         top->inst = 0xffc10113;
-        top->eval();
+        top->clk = 0; top->eval();
+        top->clk = 1; top->eval();
         std::cout << top->pc << std::endl;
 #ifdef VCD_F
         vtrace->dump(sim_time++);

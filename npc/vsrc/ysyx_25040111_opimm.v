@@ -1,29 +1,59 @@
 module ysyx_25040111_opimm (
-    input [31:0] inst,
+    input en,
+    input clk,
+    input [31:7] inst,
     output [4:0] rs1,
-    output [31:0] wdata,
-    output [4:0] waddr
+    output [4:0] rd,
+    output [31:0] imm,
+    output [4:0] opt
 );
 
-    wire en;
-    wire [11:0] imm;
-    wire [4:0] rd;
+    wire [31:0] imm_t;
+    wire [11:0] imm_m;
     wire [2:0] fun3;
+    wire [4:0] rd_t, rs1_t, opt_t;
 
-    assign {imm, rs1, fun3, rd} = inst[31:7];
-    assign en = inst[6:0] == 7'b0010011;
+    assign {imm_m, rs1_t, fun3, rd_t} = inst[31:7];
 
-    wire [31:0] wdata_addi;
-    wire [4:0] waddr_addi;
-    ysyx_25040111_opimm_addi u_ysyx_25040111_opimm_addi(
-        .en    	(fun3 == 3'b000),
-        .imm   	(imm    ),
-        .rd    	(rd     ),
-        .wdata 	(wdata_addi  ),
-        .waddr 	(waddr_addi  )
+    ysyx_25040111_MuxKeyWithDefault #(1, 3, 32) imm_c (imm_t, fun3, 32'b0, {
+        3'b000, {{20{imm_m[11]}}, imm_m[11:0]}
+    });
+
+    ysyx_25040111_MuxKeyWithDefault #(1, 3, 5) opt_c (opt_t, fun3, 5'b0, {
+        3'b000, 5'b00001  // rd = rs1 + imm
+    });
+
+
+    ysyx_25040111_Reg #(5, 0) rs1_r (
+        .clk  	(clk ),
+        .rst  	(0   ),
+        .din  	(rs1_t  ),
+        .dout 	(rs1  ),
+        .wen  	(en   )
+    );
+
+    ysyx_25040111_Reg #(5, 0) rd_r (
+        .clk  	(clk ),
+        .rst  	(0   ),
+        .din  	(rd_t),
+        .dout 	(rd  ),
+        .wen  	(en   )
     );
     
-    assign waddr = en ? waddr_addi : 5'b00000;
-    assign wdata = en ? wdata_addi : 32'd0;
+    ysyx_25040111_Reg #(32, 0) imm_r (
+        .clk  	(clk ),
+        .rst  	(0   ),
+        .din  	(imm_t),
+        .dout 	(imm  ),
+        .wen  	(en   )
+    );
+
+    ysyx_25040111_Reg #(5, 0) opt_r (
+        .clk  	(clk ),
+        .rst  	(0   ),
+        .din  	(opt_t),
+        .dout 	(opt  ),
+        .wen  	(en   )
+    );
 
 endmodule
