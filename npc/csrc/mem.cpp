@@ -1,6 +1,6 @@
 #include <cstdint>
 #include <cstdio>
-#include <cstdlib>
+#include <cstring>
 
 typedef uint32_t paddr_t;
 typedef uint32_t word_t;
