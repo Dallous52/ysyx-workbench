@@ -81,7 +81,7 @@ void paddr_write(paddr_t addr, int len, word_t data)
 void pmem_init()
 {
     static const uint32_t img [] = {
-        0x00100093,  // addi x1, x0, 1
+        0xffc10113,  // addi x1, x0, 1
         0x00508113,  // addi x2, x1, 5
         0xFFF10193,  // addi x3, x2, -1
         0x06400513,  // addi x10, x0, 100
