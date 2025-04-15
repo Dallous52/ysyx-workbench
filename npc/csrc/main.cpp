@@ -9,7 +9,7 @@
 
 void pmem_init();
 
-word_t paddr_read(paddr_t addr, int len);
+uint32_t paddr_read(uint32_t addr, int len);
 
 
 int main(int argc, char** argv)
