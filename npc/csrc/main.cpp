@@ -29,10 +29,10 @@ int main(int argc, char** argv)
 
     while (true)
     { 
-        top->inst = paddr_read(top->pc, 4);
+        // top->inst = paddr_read(top->pc, 4);
         top->clk = 0; top->eval();
         top->clk = 1; top->eval();
-        // std::printf("%x\n", top->pc);
+        std::printf("%x\n", top->pc);
 #ifdef VCD_F
         vtrace->dump(sim_time++);
 #endif // VCD_F
