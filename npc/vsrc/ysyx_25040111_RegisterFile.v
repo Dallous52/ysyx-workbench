@@ -15,7 +15,7 @@ module ysyx_25040111_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
     always @(posedge clk) begin
         if (wen) begin
           rf[waddr] <= wdata;
-          $display("rg = %d;  data: %h\n", waddr, wdata);
+          $display("rg = %d;  data: 0x%h\n", waddr, wdata);
         end
     end
 
