@@ -12,10 +12,10 @@ void pmem_init();
 uint32_t paddr_read(uint32_t addr, int len);
 
 
+Vysyx_25040111_top top;
+
 int main(int argc, char** argv)
 {
-    Vysyx_25040111_top* top = new Vysyx_25040111_top();
-
 #ifdef VCD_F
     // 接下来的四行代码用于设置波形存储为VCD文件
     Verilated::traceEverOn(true);
@@ -25,15 +25,15 @@ int main(int argc, char** argv)
     vluint64_t sim_time = 0; // 用于计数时钟边沿
 #endif // VCD_F
 
-    top->pc = 0x80000000;
+    top.pc = 0x80000000;
     pmem_init();
 
-    while (top->pc < 0x80000014)
+    while (true)
     { 
-        top->inst = paddr_read(top->pc, 4);
-        top->clk = 0; top->eval();
-        top->clk = 1; top->eval();
-        std::printf("PC = 0x%x\n", top->pc);
+        top.inst = paddr_read(top.pc, 4);
+        top.clk = 0; top.eval();
+        top.clk = 1; top.eval();
+        std::printf("PC = 0x%x\n", top.pc);
 #ifdef VCD_F
         vtrace->dump(sim_time++);
 #endif // VCD_F
@@ -43,7 +43,11 @@ int main(int argc, char** argv)
     vtrace->close();
 #endif // VCD_F
 
-    delete top;
-
     return 0;
+}
+
+
+extern "C" void ebreak()
+{
+    exit(0);
 }
