@@ -12,9 +12,7 @@ module ysyx_25040111_top(
     wire [4:0] opt;
     
     ysyx_25040111_idu u_idu(
-        .en   	(inst[0] & inst[1]),
-        .clk  	(clk    ),
-        .inst 	(inst[31:2]),
+        .inst 	(inst[31:0]),
         .rs1  	(rs1   ),
         .rs2  	(rs2   ),
         .rd   	(rd    ),
@@ -46,7 +44,6 @@ module ysyx_25040111_top(
     
     
     ysyx_25040111_exu u_ysyx_25040111_exu(
-        .clk   	(clk    ),
         .opt   	(opt    ),
         .rs1_d 	(rs1_d  ),
         .rs2_d 	(rs2_d  ),

@@ -1,5 +1,4 @@
 module ysyx_25040111_exu(
-    input clk,
     input [4:0] opt,
     input [31:0] rs1_d,
     input [31:0] rs2_d,
@@ -7,17 +6,9 @@ module ysyx_25040111_exu(
     output [31:0] rd_d
 );
 
-    wire [31:0] rs1_add_imm;
-    
-    assign rs1_add_imm = imm + rs1_d;
-
-    ysyx_25040111_Reg #(32, 0) rd_r(
-        .clk  	(clk   ),
-        .rst  	(0   ),
-        .din  	(rs1_add_imm),
-        .dout 	(rd_d),
-        .wen  	(opt == 5'b00001)
-    );
+    ysyx_25040111_MuxKeyWithDefault #(1, 5, 32) rs1_add_imm (rd_d, opt, 32'b0, {
+        5'b00001, imm + rs1_d
+    });
     
 
 endmodule
