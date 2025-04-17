@@ -32,7 +32,11 @@ int main(int argc, char** argv)
     { 
         std::printf("PC = 0x%x\n", top.pc);
         top.inst = paddr_read(top.pc, 4);
+        
         top.clk = 0; top.eval();
+#ifdef VCD_F
+        vtrace->dump(sim_time++);
+#endif // VCD_F
         top.clk = 1; top.eval();
 #ifdef VCD_F
         vtrace->dump(sim_time++);
