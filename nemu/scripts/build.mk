@@ -7,6 +7,8 @@ CFLAGS  += -fPIC -fvisibility=hidden
 LDFLAGS += -shared -fPIC
 endif
 
+AM_CFLAGS ?= 
+
 WORK_DIR  = $(shell pwd)
 BUILD_DIR = $(WORK_DIR)/build
 
@@ -22,7 +24,7 @@ CXX := g++
 endif
 LD := $(CXX)
 INCLUDES = $(addprefix -I, $(INC_PATH))
-CFLAGS  := -O2 -MMD -Wall -Werror $(INCLUDES) $(CFLAGS)
+CFLAGS  := -O2 -MMD -Wall -Werror $(INCLUDES) $(CFLAGS) $(AM_CFLAGS)
 LDFLAGS := -O2 $(LDFLAGS)
 
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o) $(CXXSRC:%.cc=$(OBJ_DIR)/%.o)
@@ -31,7 +33,7 @@ OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o) $(CXXSRC:%.cc=$(OBJ_DIR)/%.o)
 $(OBJ_DIR)/%.o: %.c
 	@echo + CC $<
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c -o $@ $<
+	@$(CC) $(CFLAGS) -c -o $@ $<
 	$(call call_fixdep, $(@:.o=.d), $@)
 
 $(OBJ_DIR)/%.o: %.cc
