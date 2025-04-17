@@ -21,6 +21,12 @@ void engine_start() {
 #ifdef CONFIG_TARGET_AM
   cpu_exec(-1);
 #else
+
+#ifdef BATCH_MODE
+  void sdb_set_batch_mode();
+  sdb_set_batch_mode();
+#endif // BATCH_MODE
+
   /* Receive commands from user. */
   sdb_mainloop();
 #endif

@@ -14,6 +14,8 @@ INC_PATH := $(WORK_DIR)/include $(INC_PATH)
 OBJ_DIR  = $(BUILD_DIR)/obj-$(NAME)$(SO)
 BINARY   = $(BUILD_DIR)/$(NAME)$(SO)
 
+AM_CFLAGS ?=
+
 # Compilation flags
 ifeq ($(CC),clang)
 CXX := clang++
@@ -22,7 +24,7 @@ CXX := g++
 endif
 LD := $(CXX)
 INCLUDES = $(addprefix -I, $(INC_PATH))
-CFLAGS  := -O2 -MMD -Wall -Werror $(INCLUDES) $(CFLAGS)
+CFLAGS  := -O2 -MMD -Wall -Werror $(INCLUDES) $(CFLAGS) $(AM_CFLAGS)
 LDFLAGS := -O2 $(LDFLAGS)
 
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o) $(CXXSRC:%.cc=$(OBJ_DIR)/%.o)
