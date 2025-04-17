@@ -19,6 +19,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <generated/autoconf.h>
@@ -28,8 +29,8 @@
 #include <klib.h>
 #else
 #include <assert.h>
-#include <stdlib.h>
 #endif
+
 
 #if CONFIG_MBASE + CONFIG_MSIZE > 0x100000000ul
 #define PMEM64 1

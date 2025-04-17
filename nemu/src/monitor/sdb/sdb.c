@@ -338,7 +338,7 @@ void expr_test()
 // main loop 
 void sdb_mainloop() 
 {
-  expr_test();
+  // expr_test();
 
   if (is_batch_mode) 
   {
