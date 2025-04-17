@@ -48,6 +48,4 @@ typedef uint16_t ioaddr_t;
 #define DNEWS(type, num)	(type*)calloc((num), sizeof(type))
 #define DFREE(ptr)			free(ptr)
 
-#include <debug.h>
-
 #endif

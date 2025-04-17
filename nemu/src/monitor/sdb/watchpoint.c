@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "sdb.h"
 #include <assert.h>
+#include "debug.h"
 
 #define NR_WP 32
 
