@@ -33,14 +33,14 @@ static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
 static char iringbuf[IRINGBUF_SIZE][128] = {};
-static int curinst = 0;
+static int curinst = -1;
 
 void device_update();
 
 static void iringbuf_update(Decode* s)
 {
-  memcpy(iringbuf[curinst], s->logbuf, strlen(s->logbuf));
   curinst = curinst == IRINGBUF_SIZE ? 0 : curinst + 1;
+  memcpy(iringbuf[curinst], s->logbuf, strlen(s->logbuf));
 } 
 
 
