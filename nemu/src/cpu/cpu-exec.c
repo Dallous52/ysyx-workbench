@@ -39,7 +39,7 @@ void device_update();
 
 static void iringbuf_update(Decode* s)
 {
-  curinst = curinst == IRINGBUF_SIZE ? 0 : curinst + 1;
+  curinst = curinst == IRINGBUF_SIZE - 1 ? 0 : curinst + 1;
   memcpy(iringbuf[curinst], s->logbuf, strlen(s->logbuf));
 } 
 
