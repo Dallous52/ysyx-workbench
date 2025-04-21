@@ -49,7 +49,7 @@ static void iringbuf_print()
   int i = 0;
   static const char* spce = "    ";
   static const char* inst = " -->";
-  putchar('\n');
+  
   for (; i < IRINGBUF_SIZE; i++)
   {
     if (iringbuf[i][0] == 0) break;
