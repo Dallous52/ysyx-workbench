@@ -54,7 +54,7 @@ static void iringbuf_print()
   {
     if (iringbuf[i][0] == 0) break;
     const char* prt = i == curinst ? inst : spce;
-    printf("\n%s %s\n", prt, iringbuf[i]);
+    printf("\n\n%s %s\n", prt, iringbuf[i]);
   }
 }
 
