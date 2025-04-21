@@ -25,12 +25,38 @@
  */
 #define MAX_INST_TO_PRINT 10
 
+#define IRINGBUF_SIZE 16
+
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
+static char iringbuf[IRINGBUF_SIZE][128] = {};
+static int curinst = 0;
+
 void device_update();
+
+static void iringbuf_update(Decode* s)
+{
+  memcpy(iringbuf[curinst], s->logbuf, strlen(s->logbuf));
+  curinst = curinst == IRINGBUF_SIZE ? 0 : curinst + 1;
+} 
+
+
+static void iringbuf_print()
+{
+  int i = 0;
+  static const char* spce = "    ";
+  static const char* inst = " -->";
+
+  for (; i < IRINGBUF_SIZE; i++)
+  {
+    const char* prt = i == curinst ? inst : spce;
+    printf("%s %s\n", prt, iringbuf[i]);
+  }
+}
+
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
@@ -42,7 +68,8 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     log_write("%s\n", _this->logbuf); 
   }
 #endif
-  if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); printf("%s\n", _this->logbuf); }
+  if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
+  iringbuf_update(_this);
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 }
 
@@ -78,16 +105,24 @@ static void exec_once(Decode *s, vaddr_t pc)
 #endif
 }
 
-static void execute(uint64_t n) {
+
+static void execute(uint64_t n) 
+{
   Decode s;
-  for (;n > 0; n --) {
+  for (;n > 0; n --) 
+  {
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
     trace_and_difftest(&s, cpu.pc);
-    if (nemu_state.state != NEMU_RUNNING) break;
+    if (nemu_state.state != NEMU_RUNNING) 
+    {
+      iringbuf_print();
+      break;
+    }
     IFDEF(CONFIG_DEVICE, device_update());
   }
 }
+
 
 static void statistic() {
   IFNDEF(CONFIG_TARGET_AM, setlocale(LC_NUMERIC, ""));
