@@ -35,7 +35,6 @@ void device_update();
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
   void check_wp();
-  printf("------------haha----------\n");
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) 
   { 
@@ -45,6 +44,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
+  printf("------------haha----------\n");
 }
 
 static void exec_once(Decode *s, vaddr_t pc)
