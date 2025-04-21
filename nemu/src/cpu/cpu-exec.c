@@ -35,7 +35,7 @@ void device_update();
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
   void check_wp();
-  
+  printf("------------haha----------\n");
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) 
   { 
