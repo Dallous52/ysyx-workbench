@@ -49,7 +49,7 @@ static void iringbuf_print()
   int i = 0;
   static const char* spce = "    ";
   static const char* inst = " -->";
-  
+
   for (; i < IRINGBUF_SIZE; i++)
   {
     if (iringbuf[i][0] == 0) break;
@@ -125,7 +125,8 @@ static void execute(uint64_t n)
 }
 
 
-static void statistic() {
+static void statistic() 
+{
   IFNDEF(CONFIG_TARGET_AM, setlocale(LC_NUMERIC, ""));
 #define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
   Log("host time spent = " NUMBERIC_FMT " us", g_timer);
@@ -134,7 +135,9 @@ static void statistic() {
   else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
 
-void assert_fail_msg() {
+
+void assert_fail_msg() 
+{
   isa_reg_display();
   statistic();
 }
