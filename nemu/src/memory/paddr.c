@@ -69,8 +69,8 @@ void init_mem()
 word_t paddr_read(paddr_t addr, int len) 
 {
 #if defined(CONFIG_MTRACE) && CONFIG_MTRACE == 1 
-  printf("address = " FMT_PADDR " is read of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
-    addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
+  printf("address = " FMT_PADDR " is read of pmem at pc = " FMT_WORD,
+    addr, cpu.pc);
   putchar('\n');
 #endif // CONFIG_MTRACE
 
@@ -84,8 +84,8 @@ word_t paddr_read(paddr_t addr, int len)
 void paddr_write(paddr_t addr, int len, word_t data) 
 {
 #if defined(CONFIG_MTRACE) && CONFIG_MTRACE == 1
-  printf("address = " FMT_PADDR " is write of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
-    addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
+  printf("address = " FMT_PADDR " is write of pmem at pc = " FMT_WORD,
+    addr, cpu.pc);
   putchar('\n');
 #endif // CONFIG_MTRACE
 
