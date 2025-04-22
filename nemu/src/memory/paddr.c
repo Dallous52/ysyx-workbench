@@ -69,8 +69,8 @@ void init_mem()
 word_t paddr_read(paddr_t addr, int len) 
 {
 #if defined(CONFIG_MTRACE) && CONFIG_MTRACE == 1 
-  printf("address = " FMT_PADDR " is read of pmem at pc = " FMT_WORD,
-    addr, cpu.pc);
+  printf("[read] address = " FMT_PADDR "; pc = " FMT_WORD "; len = %d",
+    addr, cpu.pc, len);
   putchar('\n');
 #endif // CONFIG_MTRACE
 
