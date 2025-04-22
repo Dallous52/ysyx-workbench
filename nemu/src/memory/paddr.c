@@ -83,7 +83,7 @@ word_t paddr_read(paddr_t addr, int len)
 
 void paddr_write(paddr_t addr, int len, word_t data) 
 {
-#if CONFIG_MTRACE == 1
+#if defined(CONFIG_MTRACE) && CONFIG_MTRACE == 1
   printf("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
     addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
   putchar('\n');
