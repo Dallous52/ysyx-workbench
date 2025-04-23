@@ -68,7 +68,7 @@ void init_mem()
 
 word_t paddr_read(paddr_t addr, int len) 
 {
-#if defined(CONFIG_MTRACE) && CONFIG_MTRACE == 1 
+#if defined(CONFIG_MTRACE) && CONFIG_MTRACE == 1
   if (!(len == 4 && cpu.pc == addr))
   {
     printf("[read ] address = " FMT_PADDR "; pc = " FMT_WORD "; len = %d",
