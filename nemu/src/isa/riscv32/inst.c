@@ -84,13 +84,13 @@ static void ftrace(vaddr_t pc, vaddr_t call, int rd)
 
   if (rd == 1)
   {
-    printf("[0x%x in %s] call [%s 0x%x] %d\n", pc, src, dst, call, level);
     level++;
+    printf("[0x%x in %s] call [%s 0x%x] %d\n", pc, src, dst, call, level);
   }
   else if (rd == 0)
   {
-    printf("[0x%x in %s] ret  [%s 0x%x] %d\n", pc, src, dst, call, level);
     level--;
+    printf("[0x%x in %s] ret  [%s 0x%x] %d\n", pc, src, dst, call, level);
   }
 }
 
