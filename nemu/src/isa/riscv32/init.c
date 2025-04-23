@@ -122,11 +122,14 @@ void init_elf(const char* elf_file)
         p->name = strdup(sym_name);
         p->next = func_info;
         func_info = p;
+        
+        // debug
         printf("[%d] %s : Value=0x%x, Size=%u\n",
           i, sym_name, symtab[i].st_value, symtab[i].st_size);
       }
   }
 
+  // debug
   p = func_info;
   while (p != NULL)
   {
@@ -138,4 +141,20 @@ void init_elf(const char* elf_file)
   // 清理资源
   munmap(map, st.st_size);
   close(fd);
+}
+
+
+const char* ftrace_get_name(vaddr_t addr)
+{
+  ftrace_d* p =func_info;
+  while (p != NULL)
+  {
+    if (addr >= p->start && addr < p->end)
+    {
+      return p->name;
+    }
+    p = p->next;
+  }
+
+  return "???";
 }
