@@ -100,7 +100,8 @@ void init_elf(const char* elf_file)
   for (int i = 0; i < sym_count; ++i) 
   {
       const char *sym_name = strtab + symtab[i].st_name;
-      printf("[%d] %s\n", i, sym_name);
+      if (ELF64_ST_TYPE(symtab[i].st_info) == 2)
+        printf("[%d] %s\n", i, sym_name);
   }
 
   // 清理资源
