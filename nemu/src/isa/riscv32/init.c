@@ -33,6 +33,19 @@ static const uint32_t img [] = {
   0xdeadbeef,  // some data
 };
 
+
+typedef struct ftrace_data
+{
+  paddr_t start;
+  paddr_t end;
+  char* name;
+
+  struct ftrace_data* next;
+
+} ftrace_d;
+
+ftrace_d* func_info = NULL;
+
 static void restart() {
   /* Set the initial program counter. */
   cpu.pc = RESET_VECTOR;
@@ -97,15 +110,29 @@ void init_elf(const char* elf_file)
   const char *strtab = (char *)map + strtab_hdr->sh_offset;
   int sym_count = symtab_hdr->sh_size / sizeof(Elf32_Sym);
 
+  ftrace_d* p = NULL;
   for (int i = 0; i < sym_count; ++i) 
   {
       const char *sym_name = strtab + symtab[i].st_name;
       if (ELF64_ST_TYPE(symtab[i].st_info) == 2)
       {
-
+        p = DNEW(ftrace_d);
+        p->start = symtab[i].st_value;
+        p->end = symtab[i].st_value + symtab[i].st_size;
+        p->name = strdup(sym_name);
+        p->next = func_info;
+        func_info = p;
         printf("[%d] %s : Value=0x%x, Size=%u\n",
           i, sym_name, symtab[i].st_value, symtab[i].st_size);
       }
+  }
+
+  p = func_info;
+  while (p != NULL)
+  {
+    printf("[ftrace] %s : Value=0x%x, Size=%x\n",
+      p->name, p->start, p->end);
+      p = p->next;
   }
 
   // 清理资源
