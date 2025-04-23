@@ -130,7 +130,7 @@ void init_elf(const char* elf_file)
   p = func_info;
   while (p != NULL)
   {
-    printf("[ftrace] %s : Value=0x%x, Size=%x\n",
+    printf("[ftrace] %s : Value=0x%x, Size=0x%x\n",
       p->name, p->start, p->end);
       p = p->next;
   }
