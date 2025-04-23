@@ -101,7 +101,8 @@ void init_elf(const char* elf_file)
   {
       const char *sym_name = strtab + symtab[i].st_name;
       if (ELF64_ST_TYPE(symtab[i].st_info) == 2)
-        printf("[%d] %s\n", i, sym_name);
+        printf("[%d] %s : 地址 0x%x, 大小 %u 字节\n",
+        i, sym_name, symtab[i].st_value, symtab[i].st_size);
   }
 
   // 清理资源
