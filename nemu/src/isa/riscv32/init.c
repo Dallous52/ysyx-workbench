@@ -103,7 +103,7 @@ void init_elf(const char* elf_file)
       if (ELF64_ST_TYPE(symtab[i].st_info) == 2)
       {
 
-        printf("[%d] %s :\tValue=0x%x,\tSize=%u\n",
+        printf("[%d] %s : Value=0x%x, Size=%u\n",
           i, sym_name, symtab[i].st_value, symtab[i].st_size);
       }
   }
