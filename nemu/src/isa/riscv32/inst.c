@@ -75,8 +75,6 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
 
 static void ftrace(vaddr_t pc, vaddr_t call, int rd)
 {
-  static int level = 0;
-
   const char* ftrace_get_name(vaddr_t addr);
 
   const char* dst = ftrace_get_name(call);
@@ -84,13 +82,11 @@ static void ftrace(vaddr_t pc, vaddr_t call, int rd)
 
   if (rd == 1)
   {
-    // level++;
-    printf("[0x%x in %s] call [%s 0x%x] %d\n", pc, src, dst, call, level);
+    printf("[0x%x in %s] call [%s 0x%x]\n", pc, src, dst, call);
   }
   else if (rd == 0)
   {
-    // level--;
-    printf("[0x%x in %s] ret  [%s 0x%x] %d\n", pc, src, dst, call, level);
+    printf("[0x%x in %s] ret  [%s 0x%x]\n", pc, src, dst, call);
   }
 }
 
