@@ -81,9 +81,9 @@ static void ftrace(vaddr_t pc, vaddr_t call, int rd)
   const char* src = ftrace_get_name(pc);
 
   if (rd == 1)
-    printf("0x%x[%s] call [%s@0x%x]\n", pc, src, dst, call);
+    printf("[%s 0x%x] call [%s 0x%x]\n", src, pc, dst, call);
   else if (rd == 0)
-    printf("0x%x[%s] ret [%s@0x%x]\n", pc, src, dst, call);
+    printf("[%s 0x%x] ret [%s 0x%x]\n", src, pc, dst, call);
 }
 
 
