@@ -5,22 +5,21 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+
 int printf(const char *fmt, ...) {
-  panic("Not implemented");
-}
-
-
-int vsprintf(char *out, const char *fmt, va_list ap) {
-  panic("Not implemented");
-}
-
-
-int sprintf(char *out, const char *fmt, ...) 
-{
+  char out[1000] = {};
   // 获取可变参数
   va_list args;
   va_start(args, fmt);
+  int ret = vsprintf(out, fmt, args);
+  va_end(args);
+  putstr(out);
+  return ret;
+}
 
+
+int vsprintf(char *out, const char *fmt, va_list ap) 
+{
   char *p = out; // 当前写入位置
 
   while (*fmt) 
@@ -31,7 +30,7 @@ int sprintf(char *out, const char *fmt, ...)
           switch (*fmt) 
           {
               case 'd': {
-                int num = va_arg(args, int);
+                int num = va_arg(ap, int);
                 char buf[20];
                 char *b = buf + sizeof(buf) - 1;
                 *b = '\0';
@@ -53,14 +52,14 @@ int sprintf(char *out, const char *fmt, ...)
               }
 
               case 's': {
-                  char *s = va_arg(args, char*);
+                  char *s = va_arg(ap, char*);
                   while (*s) *p++ = *s++;
                   break;
               }
 
               case 'c': {
                   // char参数提升为int，Default Argument Promotions(默认参数提升)
-                  char c = (char)va_arg(args, int); 
+                  char c = (char)va_arg(ap, int); 
                   *p++ = c;
                   break;
               }
@@ -85,10 +84,23 @@ int sprintf(char *out, const char *fmt, ...)
   }
 
   *p = '\0'; // 末尾加上 '\0'
+
+  return p - out; 
+}
+
+
+int sprintf(char *out, const char *fmt, ...) 
+{
+  // 获取可变参数
+  va_list args;
+  va_start(args, fmt);
+
+  int ret = vsprintf(out, fmt, args);
+ 
   va_end(args);
   
   // 返回总长
-  return p - out; 
+  return ret; 
 }
 
 
