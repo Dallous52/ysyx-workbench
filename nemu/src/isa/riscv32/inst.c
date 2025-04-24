@@ -77,6 +77,7 @@ static void ftrace(vaddr_t pc, vaddr_t call, int rd)
 {
   const char* ftrace_get_name(vaddr_t addr);
 
+#if defined(CONFIG_FTRACE) && CONFIG_FTRACE == 1
   const char* dst = ftrace_get_name(call);
   const char* src = ftrace_get_name(pc);
 
@@ -88,6 +89,7 @@ static void ftrace(vaddr_t pc, vaddr_t call, int rd)
   {
     printf("[0x%x in %s] ret  [%s 0x%x]\n", pc, src, dst, call);
   }
+#endif
 }
 
 
