@@ -7,7 +7,7 @@
 
 
 int printf(const char *fmt, ...) {
-  char out[100] = {};
+  char out[1000] = {};
   // 获取可变参数
   va_list args;
   va_start(args, fmt);
