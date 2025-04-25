@@ -65,6 +65,7 @@ void init_isa() {
 
 void init_elf(const char* elf_file)
 {
+  if (elf_file == NULL) return;
   printf("[elf file] %s\n", elf_file);
 
   int fd = open(elf_file, O_RDONLY);
