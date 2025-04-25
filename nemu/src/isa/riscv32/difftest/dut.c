@@ -17,8 +17,21 @@
 #include <cpu/difftest.h>
 #include "../local-include/reg.h"
 
-bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
-  return false;
+bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) 
+{
+  int i = 0;
+  bool ret = true;
+  for (; i < ARRLEN(cpu.gpr); i++)
+  {
+    if (ref_r->gpr[i] != gpr(i))
+    {
+      printf("on 0x%x reg: %s error [nemu: 0x%x] [spike: 0x%x]\n", 
+        pc, reg_name(i), gpr(i), ref_r->gpr[i]);
+      ret = false;
+    }
+  }
+
+  return ret;
 }
 
 void isa_difftest_attach() {
