@@ -1,6 +1,7 @@
 #include <am.h>
 #include <klib.h>
 #include <klib-macros.h>
+#include <limits.h>
 #include <stdarg.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
@@ -36,7 +37,17 @@ int vsprintf(char *out, const char *fmt, va_list ap)
                 *b = '\0';
 
                 int neg = 0;
-                if (num < 0) { neg = 1; num = -num;}
+                if (num < 0) 
+                { 
+                  neg = 1; 
+                  if (num == INT_MIN)
+                  {
+                    strcpy(p, "-2147483648");
+                    p += 11;
+                    break;
+                  }
+                  num = -num; 
+                }
 
                 do 
                 {
