@@ -241,7 +241,7 @@ static int cmd_p(char* args)
   bool success = false;
   word_t ret = expr(args, &success);
   if (success)
-    printf("answer: %x\n", ret);
+    printf("answer: 0x%x\n", ret);
   else
     printf("your expression have some error.\n");
 
