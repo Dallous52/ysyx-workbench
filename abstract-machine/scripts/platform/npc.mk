@@ -28,6 +28,7 @@ image: image-dep
 	@$(OBJCOPY) -S --set-section-flags .bss=alloc,contents -O binary $(IMAGE).elf $(IMAGE).bin
 
 run: insert-arg
+	@echo $(NPCFLAGS)
 	$(MAKE) -C /home/dallous/Documents/ysyx-workbench/npc/ sim ARGS="$(NPCFLAGS)"
 
 .PHONY: insert-arg
