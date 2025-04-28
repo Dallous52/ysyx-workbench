@@ -18,6 +18,8 @@ VSIM = VSIM_T
 # 功能名称
 FNAME ?= NONE_F
 
+ARGS ?=
+
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
 
@@ -36,7 +38,6 @@ all: sim
 # simple sim test
 sim: $(VSRCS) $(CSRCS)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	@rm -rf ./obj_dir
 	verilator $(VERILATOR_CFLAGS) \
 		--trace --top-module ${TOPNAME} $^ \
 		-CFLAGS -D$(VSIM) \
@@ -67,7 +68,7 @@ nvboard: $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 
 # build and run
 run: sim
-	./obj_dir/top
+	./obj_dir/top $(ARGS)
 
 clean:
 	@rm -rf obj_dir
