@@ -21,7 +21,7 @@
 typedef uint32_t paddr_t;
 
 // 内存初始化
-void pmem_init();
+bool pmem_init(const char* fbin);
 
 // 内存读操作
 uint32_t paddr_read(uint32_t addr, int len);

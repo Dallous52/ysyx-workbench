@@ -50,8 +50,10 @@ static char *img_file = NULL;
 static int difftest_port = 1234;
 static char* elf_file = NULL;
 
-static long load_img() {
-  if (img_file == NULL) {
+static long load_img() 
+{
+  if (img_file == NULL) 
+  {
     Log("No image is given. Use the default build-in image.");
     return 4096; // built-in image size
   }
@@ -72,7 +74,8 @@ static long load_img() {
   return size;
 }
 
-static int parse_args(int argc, char *argv[]) {
+static int parse_args(int argc, char *argv[]) 
+{
   const struct option table[] = {
     {"batch"    , no_argument      , NULL, 'b'},
     {"log"      , required_argument, NULL, 'l'},
@@ -82,6 +85,7 @@ static int parse_args(int argc, char *argv[]) {
     {"elf"      , required_argument, NULL, 'e'},
     {0          , 0                , NULL,  0 },
   };
+  
   int o;
   while ( (o = getopt_long(argc, argv, "-bhl:d:p:e:", table, NULL)) != -1) {
     switch (o) {

@@ -3,10 +3,12 @@
 
 #include <iostream>
 #include <verilated.h>
+
 #ifdef VCD_F
 #include <verilated_vcd_c.h>
 #endif // VCD_F
 
+bool initialize(int argc, char** argv);
 
 Vysyx_25040111_top top;
 
@@ -21,9 +23,9 @@ int main(int argc, char** argv)
     vluint64_t sim_time = 0; // 用于计数时钟边沿
 #endif // VCD_F
 
-    top.pc = 0x80000000;
-    pmem_init();
+    initialize(argc, argv);
 
+    top.pc = 0x80000000;
     while (true)
     { 
         std::printf("PC = 0x%x\n", top.pc);

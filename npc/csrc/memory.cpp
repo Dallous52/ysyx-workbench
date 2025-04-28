@@ -1,7 +1,9 @@
 #include "memory.h"
 
+#include <cstddef>
 #include <cstdio>
 #include <cstring>
+#include <fstream>
 
 
 // 强制 4k 对齐
@@ -71,6 +73,41 @@ static void out_of_bound(paddr_t addr)
 }
 
 
+// 加载二进制程序
+static bool load_binary(const char* fbin)
+{
+  printf("[execute file] %s\n", fbin);
+
+  std::ifstream file(fbin, std::ios::binary); 
+  if (!file.is_open()) 
+  {
+      printf("open %s failed.\n", fbin);
+      return false;
+  }
+
+  // 获取文件大小
+  file.seekg(0, std::ios::end);
+  std::streamsize fsize = file.tellg();
+  file.seekg(0, std::ios::beg);
+
+  if (fsize > MSIZE)
+  {
+      printf("binary file is too big\n");
+      return false;
+  }
+
+  if (!file.read((char*)pmem, fsize))
+  {
+    printf("read %s failed\n", fbin);
+    return false;
+  }
+
+  file.close();
+  
+  return true;
+}
+
+
 word_t paddr_read(paddr_t addr, int len)
 {
   if (likely(in_pmem(addr))) return pmem_read(addr, len);
@@ -86,18 +123,23 @@ void paddr_write(paddr_t addr, int len, word_t data)
 }
 
 
-void pmem_init()
+bool pmem_init(const char* fbin)
 {
-    static const uint32_t img [] = {
-        0x00100093,  // addi x1, x0, 1
-        0x00508113,  // addi x2, x1, 5
-        0xFFF10193,  // addi x3, x2, -1
-        0x06400513,  // addi x10, x0, 100
-        0x00A28293,  // addi x5, x5, 10
-        0x00100073   // ebreak    
-    };
-    
+  static const uint32_t img [] = {
+      0x00100093,  // addi x1, x0, 1
+      0x00508113,  // addi x2, x1, 5
+      0xFFF10193,  // addi x3, x2, -1
+      0x06400513,  // addi x10, x0, 100
+      0x00A28293,  // addi x5, x5, 10
+      0x00100073   // ebreak    
+  };
+  
+  if (fbin == NULL)
     memcpy(pmem, img, sizeof(img));
+  else
+    return load_binary(fbin);
+
+  return true;
 }
 
 
