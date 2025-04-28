@@ -1,15 +1,11 @@
 #include "Vysyx_25040111_top.h"
+#include "memory.h"
 
 #include <iostream>
 #include <verilated.h>
 #ifdef VCD_F
 #include <verilated_vcd_c.h>
 #endif // VCD_F
-
-
-void pmem_init();
-
-uint32_t paddr_read(uint32_t addr, int len);
 
 
 Vysyx_25040111_top top;
