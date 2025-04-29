@@ -59,12 +59,12 @@ extern "C" void ebreak(int code)
 
     if (code)
     {
-        printf(ANSI_FMT("BAD TRAP", ANSI_FG_RED));
+        printf("[" ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED) "]");
         putchar('\n');
     }
     else 
     {
-        printf("[" ANSI_FMT("HIT GOOD", ANSI_FG_GREEN) "]");
+        printf("[" ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) "]");
         putchar('\n');
     }
     exit(0);
