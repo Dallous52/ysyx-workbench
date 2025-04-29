@@ -131,6 +131,7 @@ bool pmem_init(const char* fbin)
       0xFFF10193,  // addi x3, x2, -1
       0x06400513,  // addi x10, x0, 100
       0x00A28293,  // addi x5, x5, 10
+      0x00000513,  // addi a0, x0, 0
       0x00100073   // ebreak    
   };
   

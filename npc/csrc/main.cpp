@@ -1,6 +1,7 @@
 #include "Vysyx_25040111_top.h"
 #include "memory.h"
 
+#include <cstdio>
 #include <iostream>
 #include <verilated.h>
 
@@ -29,9 +30,9 @@ int main(int argc, char** argv)
     // char c = 's';
     while (true)
     { 
-        std::printf("PC = 0x%x\n", top.pc);
+        std::printf("PC = 0x%08x\n", top.pc);
         top.inst = paddr_read(top.pc, 4);
-        std::printf("inst = 0x%x\n", top.inst);
+        std::printf("inst = 0x%08x\n", top.inst);
         
         top.clk = 0; top.eval();
 #ifdef VCD_F
@@ -52,7 +53,19 @@ int main(int argc, char** argv)
 }
 
 
-extern "C" void ebreak()
+extern "C" void ebreak(int code)
 {
+    printf("PC = 0x%08x  ", top.pc);
+
+    if (code)
+    {
+        printf(ANSI_FMT("BAD TRAP", ANSI_FG_RED));
+        putchar('\n');
+    }
+    else 
+    {
+        printf(ANSI_FMT("HIT GOOD", ANSI_FG_GREEN));
+        putchar('\n');
+    }
     exit(0);
 }
