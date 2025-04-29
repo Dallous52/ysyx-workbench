@@ -8,7 +8,7 @@ module ysyx_25040111_exu(
     output [31:0] dnpc
 );
 
-    ysyx_25040111_MuxKeyWithDefault #(4, 5, 32) temp_alu (rd_d, opt[7:3], 32'b0, {
+    ysyx_25040111_MuxKeyWithDefault #(5, 5, 32) temp_alu (rd_d, opt[7:3], 32'b0, {
         5'b00000, imm,
         5'b00100, pc + imm,
         5'b00101, rs1_d + rs2_d,
