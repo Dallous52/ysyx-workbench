@@ -1,8 +1,9 @@
-module ysyx_25040111_auipc(
+module ysyx_25040111_auipc_lui(
     input [31:7] inst,
+    input chos,
     output [4:0] rd,
     output [31:0] imm,
-    output [7:0] opt
+    output [9:0] opt
 );
 
     wire [31:12] imm_m;
@@ -11,6 +12,6 @@ module ysyx_25040111_auipc(
 
     assign imm = {imm_m, 12'b0};
 
-    assign opt = 8'b00100001;
+    assign opt = chos ? 10'b0000000001 : 10'b0000100001;
 
 endmodule

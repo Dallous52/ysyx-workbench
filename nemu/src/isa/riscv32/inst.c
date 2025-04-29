@@ -35,7 +35,7 @@ enum {
 #define immU() do { *imm = SEXT(BITS(i, 31, 12), 20) << 12; } while(0)
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
 
-// J、B 型立即数是跳转目标地址偏移，都是 对齐 2 字节，所以会省略 imm[0]（最低位），需要你在拼接完后左移 << 1
+// J、B 型立即数是跳转目标地址偏移，都是 对齐 2 字节，所以会省略 imm[0]（最低位），需要在拼接完后左移 << 1
 #define immJ() do { \
   *imm = SEXT( \
     (BITS(i, 31, 31) << 20) | \

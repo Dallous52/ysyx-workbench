@@ -1,11 +1,11 @@
-// OPT [4:0]
+// OPT [9:0]
 //      [0]: reg wirte en (write to rd)
 //      [2:1]: reg read en [rs2, rs1]
 //      [4:3]: alu arguments
 //              00  pc, imm
 //              01  rs1, rs2
 //              10  rs1, imm
-//              11  rs1, shame[rs2]
+//              11  rs1, shame[rs2] 
 //      [7:5]: alu option
 //              000 empty
 //              001 add
@@ -13,7 +13,11 @@
 //              011 or
 //              100 xor
 //              101 shift
-
+//              110 pc + 4 (static next pc)
+//      [9:8]: pc update option
+//              00 pc + 4
+//              01 pc + imm
+//              10 rs1 + imm
 
 module ysyx_25040111_top(
     input clk,
@@ -26,7 +30,7 @@ module ysyx_25040111_top(
     wire [4:0] rs2;
     wire [4:0] rd;
     wire [31:0] imm;
-    wire [7:0] opt;
+    wire [9:0] opt;
     
     ysyx_25040111_idu u_idu(
         .inst 	(inst[31:0]),
@@ -49,21 +53,22 @@ module ysyx_25040111_top(
         .rdata 	({rs2_d, rs1_d}  )
     );
     
-    
+    wire [31:0] dnpc;
     ysyx_25040111_exu u_ysyx_25040111_exu(
-        .opt   	(opt[7:3]    ),
+        .opt   	(opt[9:3]    ),
         .rs1_d 	(rs1_d  ),
         .rs2_d 	(rs2_d  ),
         .imm   	(imm    ),
         .pc     (pc),
-        .rd_d  	(rd_d   )
+        .rd_d  	(rd_d   ),
+        .dnpc   (dnpc)
     );
     
     
     ysyx_25040111_Reg #(32, 32'h80000000) u_ysyx_25040111_Reg(
         .clk  	(clk   ),
         .rst  	(rst   ),
-        .din  	(pc + 32'd4),
+        .din  	(dnpc),
         .dout 	(pc  ),
         .wen  	(1   )
     );

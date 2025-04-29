@@ -71,7 +71,7 @@ void init_elf(const char* elf_file)
   int fd = open(elf_file, O_RDONLY);
   assert(fd >= 0);
 
-  struct stat st;
+  struct stat st; 
   int ret = fstat(fd, &st);
   assert(ret >= 0);
 

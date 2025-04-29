@@ -3,7 +3,7 @@ module ysyx_25040111_opimm (
     output [4:0] rs1,
     output [4:0] rd,
     output [31:0] imm,
-    output [7:0] opt
+    output [9:0] opt
 );
 
     wire [11:0] imm_m;
@@ -15,8 +15,8 @@ module ysyx_25040111_opimm (
         3'b000, {{20{imm_m[11]}}, imm_m[11:0]}
     });
 
-    ysyx_25040111_MuxKeyWithDefault #(1, 3, 8) opt_c (opt, fun3, 8'b0, {
-        3'b000, 8'b00110011  // rd = rs1 + imm
+    ysyx_25040111_MuxKeyWithDefault #(1, 3, 10) opt_c (opt, fun3, 10'b0, {
+        3'b000, 10'b0000110011  // rd = rs1 + imm
     });
 
 endmodule
