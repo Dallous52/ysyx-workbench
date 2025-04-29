@@ -64,7 +64,7 @@ extern "C" void ebreak(int code)
     }
     else 
     {
-        printf(ANSI_FMT("HIT GOOD", ANSI_FG_GREEN));
+        printf("[" ANSI_FMT("HIT GOOD", ANSI_FG_GREEN) "]");
         putchar('\n');
     }
     exit(0);
