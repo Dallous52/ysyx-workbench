@@ -26,7 +26,7 @@ int main(int argc, char** argv)
     initialize(argc, argv);
 
     top.pc = 0x80000000;
-    char c;
+    char c = 's';
     while (c == 's')
     { 
         std::printf("PC = 0x%x\n", top.pc);
