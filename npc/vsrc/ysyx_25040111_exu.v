@@ -12,7 +12,8 @@ module ysyx_25040111_exu(
         5'b00000, imm,
         5'b00100, pc + imm,
         5'b00101, rs1_d + rs2_d,
-        5'b00110, rs1_d + imm
+        5'b00110, rs1_d + imm,
+        5'b11000, pc + 4
     });
     
     ysyx_25040111_MuxKey #(4, 2, 32) dnpc_new(dnpc, opt[9:8], {
