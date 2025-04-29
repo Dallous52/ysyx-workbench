@@ -26,7 +26,8 @@ int main(int argc, char** argv)
     initialize(argc, argv);
 
     top.pc = 0x80000000;
-    while (true)
+    char c;
+    while (c == 's')
     { 
         std::printf("PC = 0x%x\n", top.pc);
         top.inst = paddr_read(top.pc, 4);
@@ -39,6 +40,7 @@ int main(int argc, char** argv)
 #ifdef VCD_F
         vtrace->dump(sim_time++);
 #endif // VCD_F
+        std::cin >> c;
     }
 
 #ifdef VCD_F
