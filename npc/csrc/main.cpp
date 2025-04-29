@@ -31,6 +31,7 @@ int main(int argc, char** argv)
     { 
         std::printf("PC = 0x%x\n", top.pc);
         top.inst = paddr_read(top.pc, 4);
+        std::printf("inst = 0x%x\n", top.inst);
         
         top.clk = 0; top.eval();
 #ifdef VCD_F
