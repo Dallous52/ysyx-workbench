@@ -107,7 +107,7 @@ int cmd_x(char* args)
         return 0;
     }
 
-    paddr_t endaddr = x_addr + x_num * 4;
+    paddr_t endaddr = x_addr + (x_num - 1) * 4;
     if (likely(in_pmem(endaddr)))
     {
         printf("ADDR\t\tVALUE\n");
