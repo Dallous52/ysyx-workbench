@@ -28,7 +28,7 @@ INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
 INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/npc/csrc/inc/
 
 # - `-DTOP_NAME="V$(TOPNAME)"` 定义宏 `TOP_NAME`，用于 Verilator 生成的顶层模块
-CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
+CXXFLAGS += $(INCFLAGS) # -DTOP_NAME="\"V$(TOPNAME)\""
 VERILATOR_CFLAGS += -Wno-UNOPTFLAT -I/home/dallous/Documents/ysyx-workbench/npc/vsrc/
 
 # LDFLAGS 添加链接库
@@ -41,7 +41,6 @@ sim: $(VSRCS) $(CSRCS)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	verilator $(VERILATOR_CFLAGS) \
 		--trace --top-module ${TOPNAME} $^ \
-		-CFLAGS -D$(VSIM) \
 		$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS)) \
 		--exe -o top
 
@@ -52,20 +51,6 @@ gtkwave:
 	else \
 		echo "\033[31mPlease include and use <verilated_vcd_c.h> to create waveform.vcd\033[31m"; \
 	fi
-
-
-# rules for NVBoard
-include $(NVBOARD_HOME)/scripts/nvboard.mk
-
-# nvboard test
-nvboard: $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
-	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	@rm -rf ./obj_dir
-	verilator $(VERILATOR_CFLAGS) \
-		--top-module ${TOPNAME} $^ \
-		-CFLAGS -D$(NVBD) \
-		$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS)) \
-		--exe -o top
 
 # build and run
 run: sim
