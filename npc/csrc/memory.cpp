@@ -68,7 +68,7 @@ static void pmem_write(paddr_t addr, int len, word_t data)
 // 越界判断
 static void out_of_bound(paddr_t addr) 
 {
-  printf("address = %x is out of bound of pmem [%x, %x]",
+  printf("address = %x is out of bound of pmem [%x, %x]\n",
       addr, PMEM_LEFT, PMEM_RIGHT);
 }
 

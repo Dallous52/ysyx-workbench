@@ -1,5 +1,6 @@
 #include "npc.h"
 #include "memory.h"
+#include "tpdef.h"
 
 #include <cstdio>
 #include <iostream>
@@ -106,7 +107,8 @@ int cmd_x(char* args)
         return 0;
     }
 
-    if (likely(in_pmem(x_addr)))
+    paddr_t endaddr = x_addr + x_num * 4;
+    if (likely(in_pmem(endaddr)))
     {
         printf("ADDR\t\tVALUE\n");
         while (x_num--)
@@ -118,7 +120,7 @@ int cmd_x(char* args)
     }
     else 
     {
-        printf("Memory access out of bounds.\n");
+        printf("[%08x] Memory access out of bounds.\n", endaddr);
         return 0;
     }
 
