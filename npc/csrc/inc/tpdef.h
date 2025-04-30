@@ -25,4 +25,13 @@ typedef uint32_t word_t;
 
 #define ANSI_FMT(str, fmt) fmt str ANSI_NONE
 
+// calculate the length of an array
+#define ARRLEN(arr) (int)(sizeof(arr) / sizeof(arr[0]))
+
+// init
+bool initialize(int argc, char** argv);
+
+// free
+void finalize();
+
 #endif // NPC_TYPE_DEFINE
