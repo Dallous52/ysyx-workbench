@@ -1,7 +1,9 @@
 #include "npc.h"
 #include "tpdef.h"
 
-#include <iostream> 
+#include <cstdio>
+#include <iostream>
+#include <cstring>
 
 // continue
 int cmd_c(char *args) 
@@ -37,7 +39,35 @@ int cmd_si(char* args)
 }
 
 
-int cmd_info(char* args){return 0;}
+// print infomation
+int cmd_info(char* args)
+{
+    // void print_wp();
+
+    bool exey = true;
+    if (args == NULL || strlen(args) != 1)
+    {
+      exey = false;
+      goto info_end;
+    }
+  
+    if (*args == 'r')
+      reg_print();
+    else if (*args == 'w')
+      printf("print watch point\n");
+    else
+      exey = false;
+  
+info_end:
+    if (!exey) 
+    {
+      printf("Please use command: \"info r\" or \"info w\".\n");
+    }
+    
+    return 0;
+}
+
+
 int cmd_x(char* args){return 0;}
 int cmd_p(char* args){return 0;}
 int cmd_w(char* args){return 0;}

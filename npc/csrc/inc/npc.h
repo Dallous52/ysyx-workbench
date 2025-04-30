@@ -10,6 +10,9 @@ void npc_init(bool vcd);
 // execute npc steps
 int cpu_exec(uint64_t steps);
 
+// print regiestor
+void reg_print();
+
 // free npc resource
 void npc_free();
 

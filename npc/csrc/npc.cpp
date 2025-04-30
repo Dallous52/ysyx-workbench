@@ -10,12 +10,21 @@
 #include <iostream>
 
 #define VCD_PATH "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
+#define REG ysyx_25040111_top__DOT__u_RegisterFile__DOT__rf
 
 static Vysyx_25040111_top top;
 static VerilatedVcdC *vtrace = nullptr;
 
 // 用于计数时钟边沿
 static vluint64_t sim_time = 0;
+
+// regiestor name
+static const char *regs[] = {
+    "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
+    "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
+    "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
+    "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
+};
 
 
 // initialize npc resource
@@ -49,12 +58,17 @@ int cpu_exec(uint64_t steps)
         if (vtrace) vtrace->dump(sim_time++);
     }
 
-    for (int i = 0; i < 32; i++)
-    {
-        std::cout << top.rootp->ysyx_25040111_top__DOT__u_RegisterFile__DOT__rf[i] << std::endl;
-    }
-
     return steps;
+}
+
+
+// print regiestor
+void reg_print()
+{
+    for (int i = 0; i < ARRLEN(regs); i++)
+    {
+        printf("%s : 0x%08x\n", regs[i], top.rootp->REG[i]);
+    }
 }
 
 
