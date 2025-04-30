@@ -66,12 +66,13 @@ int cpu_exec(uint64_t steps)
 // print regiestor
 void reg_print()
 {
-    for (int i = 0; i < ARRLEN(regs); i++)
+    for (int i = 0; i < ARRLEN(regs); ++i)
     {
         int j = i + 4;
-        for (; i < j; i++)
+        for (; i < j; ++i)
             printf("[%s]\t0x%08x\t", regs[i], REG[i]);
         putchar('\n');
+        --i;
     }
 }
 
