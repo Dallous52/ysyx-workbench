@@ -4,7 +4,7 @@
 #include <iostream> 
 
 // continue
-static int cmd_c(char *args) 
+int cmd_c(char *args) 
 {
   cpu_exec(-1);
   return 0;
@@ -12,7 +12,7 @@ static int cmd_c(char *args)
 
 
 // quit
-static int cmd_q(char *args) 
+int cmd_q(char *args) 
 {
   finalize();
   return -1;
