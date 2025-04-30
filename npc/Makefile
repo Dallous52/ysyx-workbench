@@ -34,7 +34,7 @@ CXXFLAGS += $(INCFLAGS) -I/home/dallous/Documents/ysyx-workbench/npc/csrc/inc/ -
 VERILATOR_CFLAGS += -Wno-UNOPTFLAT -I/home/dallous/Documents/ysyx-workbench/npc/vsrc/
 
 # LDFLAGS 添加链接库
-LDFLAGS += -L/usr/lib/x86_64-linux-gnu -lreadline -lhistory -ltinfo
+LDFLAGS += -L/usr/lib/x86_64-linux-gnu -lreadline -lhistory
 
 all: sim
 
