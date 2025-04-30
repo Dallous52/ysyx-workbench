@@ -11,7 +11,7 @@
 
 bool initialize(int argc, char** argv);
 
-Vysyx_25040111_top top;
+static Vysyx_25040111_top top;
 
 int main(int argc, char** argv)
 {
@@ -27,7 +27,6 @@ int main(int argc, char** argv)
     initialize(argc, argv);
 
     top.pc = 0x80000000;
-    // char c = 's';
     while (true)
     { 
         std::printf("PC = 0x%08x\n", top.pc);
@@ -42,7 +41,6 @@ int main(int argc, char** argv)
 #ifdef VCD_F
         vtrace->dump(sim_time++);
 #endif // VCD_F
-        // std::cin >> c;
     }
 
 #ifdef VCD_F
