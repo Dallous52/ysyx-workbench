@@ -11,7 +11,7 @@ static uint8_t pmem[MSIZE] __attribute((aligned(4096))) = {};
 
 
 // 内存越界判断
-static bool in_pmem(paddr_t addr) 
+bool in_pmem(paddr_t addr) 
 {
     return addr - MBASE < MSIZE;
 }

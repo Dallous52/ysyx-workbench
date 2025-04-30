@@ -13,6 +13,9 @@ int cpu_exec(uint64_t steps);
 // print regiestor
 void reg_print();
 
+// get regiestor value
+word_t reg_get_value(char* s, bool* success);
+
 // free npc resource
 void npc_free();
 

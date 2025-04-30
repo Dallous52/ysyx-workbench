@@ -69,6 +69,22 @@ info_end:
 
 
 int cmd_x(char* args){return 0;}
-int cmd_p(char* args){return 0;}
+
+
+int cmd_p(char* args)
+{
+    word_t expr(const char* e, bool* success);
+
+    bool success = false;
+    word_t ret = expr(args, &success);
+    if (success)
+      printf("answer: 0x%x\n", ret);
+    else
+      printf("your expression have some error.\n");
+  
+    return 0;
+}
+
+
 int cmd_w(char* args){return 0;}
 int cmd_d(char* args){return 0;}

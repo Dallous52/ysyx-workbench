@@ -18,8 +18,6 @@
 // 内存起始地址
 #define MBASE 0x80000000
 
-typedef uint32_t paddr_t;
-
 // 内存初始化
 bool pmem_init(const char* fbin);
 
@@ -28,5 +26,8 @@ uint32_t paddr_read(uint32_t addr, int len);
 
 // 内存写操作
 void paddr_write(paddr_t addr, int len, word_t data);
+
+// 内存越界判断
+bool in_pmem(paddr_t addr);
 
 #endif // NPC_MEMORY

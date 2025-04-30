@@ -5,12 +5,13 @@
 #include "tpdef.h"
 
 #include <cstddef>
+#include <cstdint>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 #include <iostream>
 
 #define VCD_PATH "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
-#define REG ysyx_25040111_top__DOT__u_RegisterFile__DOT__rf
+#define REG top.rootp->ysyx_25040111_top__DOT__u_RegisterFile__DOT__rf
 
 static Vysyx_25040111_top top;
 static VerilatedVcdC *vtrace = nullptr;
@@ -69,11 +70,45 @@ void reg_print()
     {
         int j = i + 4;
         for (; i < j; i++)
-            printf("[%s]\t0x%08x\t", regs[i], top.rootp->REG[i]);
+            printf("[%s]\t0x%08x\t", regs[i], REG[i]);
         putchar('\n');
     }
 }
 
+
+// get regiestor value
+word_t reg_get_value(char* s, bool* success)
+{
+    if (s == NULL || success == NULL) 
+    {
+        if (success == NULL) return 0;
+
+        *success = false;
+        return 0;
+    }
+
+    if (strcmp(s, "pc") == 0)
+    {
+        *success = true;
+        return top.pc;
+    }
+
+    int i = 0;
+    for (; i < ARRLEN(regs); i++)
+    {
+        if (strcmp(s, regs[i]) == 0)
+        break;
+    }
+
+    if (i == ARRLEN(regs))
+    {
+        *success = false;
+        return 0;
+    }
+
+    *success = true;
+    return REG[i];
+}
 
 // free npc resource
 void npc_free()

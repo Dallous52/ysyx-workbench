@@ -3,6 +3,7 @@
 
 #include <cstdint>
 
+typedef uint32_t paddr_t;
 typedef uint32_t word_t;
 
 #define ANSI_FG_BLACK   "\33[1;30m"
@@ -27,6 +28,10 @@ typedef uint32_t word_t;
 
 // calculate the length of an array
 #define ARRLEN(arr) (int)(sizeof(arr) / sizeof(arr[0]))
+
+#define DNEW(type)			(type*)calloc(1, sizeof(type))
+#define DNEWS(type, num)	(type*)calloc((num), sizeof(type))
+#define DFREE(ptr)			free(ptr)
 
 // init
 bool initialize(int argc, char** argv);
