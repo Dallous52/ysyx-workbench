@@ -55,8 +55,11 @@ int cpu_exec(uint64_t steps)
 // free npc resource
 void npc_free()
 {
-    vtrace->close();
-    delete vtrace;
+    if (vtrace)
+    {    
+        vtrace->close();
+        delete vtrace;
+    }
 }
 
 
