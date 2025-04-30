@@ -120,7 +120,7 @@ int cmd_x(char* args)
     }
     else 
     {
-        printf("[%08x] Memory access out of bounds.\n", endaddr);
+        printf("[0x%08x] Memory access out of bounds.\n", endaddr);
         return 0;
     }
 
