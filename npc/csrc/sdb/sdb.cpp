@@ -74,6 +74,9 @@ static int cmd_help(char *args)
 // main loop 
 void sdb_mainloop() 
 {
+  void init_regex();
+  init_regex();
+
   if (is_batch_mode)
   {
     cmd_c(nullptr);
