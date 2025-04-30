@@ -73,7 +73,7 @@ int cmd_x(char* args){return 0;}
 
 int cmd_p(char* args)
 {
-    word_t expr(const char* e, bool* success);
+    word_t expr(char* e, bool* success);
 
     bool success = false;
     word_t ret = expr(args, &success);
