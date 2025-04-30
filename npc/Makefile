@@ -12,9 +12,6 @@ VERILATOR_CFLAGS += -MMD --build -cc  \
 # 顶层模块名称
 TOPNAME = ysyx_25040111_top
 
-# 模拟器名称
-VSIM = VSIM_T
-
 ARGS ?=
 
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
@@ -28,7 +25,7 @@ INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
 INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/npc/csrc/inc/
 
 # - `-DTOP_NAME="V$(TOPNAME)"` 定义宏 `TOP_NAME`，用于 Verilator 生成的顶层模块
-CXXFLAGS += $(INCFLAGS) # -DTOP_NAME="\"V$(TOPNAME)\""
+CXXFLAGS += $(INCFLAGS)
 VERILATOR_CFLAGS += -Wno-UNOPTFLAT -I/home/dallous/Documents/ysyx-workbench/npc/vsrc/
 
 # LDFLAGS 添加链接库
