@@ -1,3 +1,4 @@
+#include "Vysyx_25040111_top___024root.h"
 #include "Vysyx_25040111_top.h"
 #include "npc.h"
 #include "memory.h"
@@ -28,7 +29,7 @@ void npc_init(bool vcd)
         top.trace(vtrace, 5);
         vtrace->open(VCD_PATH);
     }
-
+    
     top.pc = 0x80000000;
 }
 
@@ -46,6 +47,11 @@ int cpu_exec(uint64_t steps)
         if (vtrace) vtrace->dump(sim_time++);
         top.clk = 1; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
+    }
+
+    for (int i = 0; i < 32; i++)
+    {
+        std::cout << top.rootp->ysyx_25040111_top__DOT__u_RegisterFile__DOT__rf[i] << std::endl;
     }
 
     return steps;

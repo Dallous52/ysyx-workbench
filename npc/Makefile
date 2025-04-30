@@ -12,7 +12,7 @@ VERILATOR_CFLAGS += -MMD --build -cc  \
 # 顶层模块名称
 TOPNAME = ysyx_25040111_top
 
-ARGS ?=
+ARGS ?= 
 
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
