@@ -67,7 +67,7 @@ void reg_print()
 {
     for (int i = 0; i < ARRLEN(regs); i++)
     {
-        printf("%s : 0x%08x\n", regs[i], top.rootp->REG[i]);
+        printf("[%s]\t0x%08x\n", regs[i], top.rootp->REG[i]);
     }
 }
 
