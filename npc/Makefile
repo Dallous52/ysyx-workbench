@@ -30,9 +30,7 @@ CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*
 INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
 
 # - `-DTOP_NAME="V$(TOPNAME)"` 定义宏 `TOP_NAME`，用于 Verilator 生成的顶层模块
-CXXFLAGS += $(INCFLAGS) -I/home/dallous/Documents/ysyx-workbench/npc/csrc/inc/ \
-						-I/usr/include/\
-						-DTOP_NAME="\"V$(TOPNAME)\"" -D${FNAME}
+CXXFLAGS += $(INCFLAGS) -I/home/dallous/Documents/ysyx-workbench/npc/csrc/inc/ -DTOP_NAME="\"V$(TOPNAME)\"" -D${FNAME}
 VERILATOR_CFLAGS += -Wno-UNOPTFLAT -I/home/dallous/Documents/ysyx-workbench/npc/vsrc/
 
 all: sim
