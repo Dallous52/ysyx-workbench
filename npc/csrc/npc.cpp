@@ -49,10 +49,7 @@ int cpu_exec(uint64_t steps)
 {
     while (steps--)
     {
-        std::printf("PC = 0x%08x\n", top.pc);
         top.inst = paddr_read(top.pc, 4);
-        std::printf("inst = 0x%08x\n", top.inst);
-        
         top.clk = 0; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
         top.clk = 1; top.eval();
