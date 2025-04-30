@@ -1,9 +1,12 @@
 #include "npc.h"
-#include "tpdef.h"
+#include "memory.h"
 
 #include <cstdio>
 #include <iostream>
 #include <cstring>
+
+word_t expr(char* e, bool* success);
+
 
 // continue
 int cmd_c(char *args) 
@@ -68,13 +71,62 @@ info_end:
 }
 
 
-int cmd_x(char* args){return 0;}
+int cmd_x(char* args)
+{
+    bool exey = true;
+    char *str_end = args + strlen(args);
+    char* arg_num = strtok(NULL, " ");
+    char *arg_expr = arg_num + strlen(arg_num) + 1;
+    
+    if (arg_expr >= str_end) arg_expr = NULL;
+
+    if (arg_num == NULL || arg_expr == NULL) 
+    {
+        exey = false;
+        printf("Please use command: \"x [num] [expr]\".\n");
+        return 0;
+    }
+
+    // 4 byte's num
+    int x_num = 0;
+    if (sscanf(arg_num, "%d", &x_num) == 0)
+    {
+        exey = false;
+        printf("Please use command: \"x [num] [expr]\".\n");
+        return 0;
+    }
+    
+    // address  num
+    bool success = false;
+    paddr_t x_addr = expr(arg_expr, &success);
+    if (!success)
+    {
+        printf("your expression have some error.\n");
+        printf("Please use command: \"x [num] [expr]\".\n");
+        return 0;
+    }
+
+    if (likely(in_pmem(x_addr)))
+    {
+        while (x_num--)
+        {
+            word_t tmp = paddr_read(x_addr, 4);
+            printf("0x%x\t%u\n", x_addr, tmp);
+            x_addr += 4;
+        }  
+    }
+    else 
+    {
+        printf("Memory access out of bounds.\n");
+        return 0;
+    }
+
+    return 0;
+}
 
 
 int cmd_p(char* args)
 {
-    word_t expr(char* e, bool* success);
-
     bool success = false;
     word_t ret = expr(args, &success);
     if (success)
