@@ -185,7 +185,7 @@ word_t dereference(char* e, int p, int q)
   }
 
   printf("Memory access out of bounds.\n");
-  return 0;
+  return e[0] = 0;
 }
 
 
