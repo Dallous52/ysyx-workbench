@@ -108,7 +108,7 @@ int cmd_x(char* args)
 
     if (likely(in_pmem(x_addr)))
     {
-        printf("\tADDR\t\tVALUE\n");
+        printf("ADDR\t\tVALUE\n");
         while (x_num--)
         {
             word_t tmp = paddr_read(x_addr, 4);
