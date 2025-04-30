@@ -141,5 +141,13 @@ int cmd_p(char* args)
 }
 
 
-int cmd_w(char* args){return 0;}
-int cmd_d(char* args){return 0;}
+int cmd_w(char* args)
+{
+    return 0;
+}
+
+
+int cmd_d(char* args)
+{
+    return 0;
+}
