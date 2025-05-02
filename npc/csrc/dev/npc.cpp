@@ -4,6 +4,7 @@
 #include "npc.h"
 #include "memory.h"
 
+#include <cstdint>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 #include <iostream>
@@ -44,11 +45,11 @@ void npc_init(bool vcd)
 
 
 // print execute infomation
-static void print_exe_info()
+static void print_exe_info(uint32_t pc)
 {
     char logbuf[128] = {};
     char* p = logbuf;
-    p += snprintf(p, sizeof(logbuf), "%08x: ", top.pc);
+    p += snprintf(p, sizeof(logbuf), "%08x: ", pc);
 
     uint8_t *inst = (uint8_t *)&top.inst;
     for (int i = 3; i >= 0; i--) 
@@ -56,7 +57,7 @@ static void print_exe_info()
 
     *p = ' '; p++;
 
-    disassemble(p, logbuf + sizeof(logbuf) - p, top.pc, (uint8_t *)&top.inst, 4);
+    disassemble(p, logbuf + sizeof(logbuf) - p, pc, (uint8_t *)&top.inst, 4);
 
     std::cout << logbuf << std::endl;
 }
@@ -68,8 +69,11 @@ int cpu_exec(uint64_t steps)
     npc_stat = NPC_RUN;
 
     uint64_t step_ok = 0;
+    uint32_t oldpc = 0;
+
     while (steps--)
     {
+        oldpc = top.pc;
         top.inst = paddr_read(top.pc, 4);
         top.clk = 0; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
@@ -81,7 +85,7 @@ int cpu_exec(uint64_t steps)
         case NPC_EXIT:
             finalize(); break; 
         case NPC_RUN:
-            print_exe_info(); step_ok++; break;
+            print_exe_info(oldpc); step_ok++; break;
         case NPC_ABORT:
             return step_ok;
         }
