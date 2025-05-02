@@ -13,15 +13,20 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include <cstddef>
 #include <dlfcn.h>
 #include <capstone/capstone.h>
 #include <assert.h>
 
 #include "disasm.h"
 
-static size_t (*cs_disasm_dl)(csh handle, const uint8_t *code,
-    size_t code_size, uint64_t address, size_t count, cs_insn **insn);
-static void (*cs_free_dl)(cs_insn *insn, size_t count);
+typedef cs_err (*pcs_open)(cs_arch arch, cs_mode mode, csh *handle);
+typedef size_t (*pcs_disasm)(csh handle, const uint8_t *code,
+  size_t code_size, uint64_t address, size_t count, cs_insn **insn);
+typedef void (*pcs_free)(cs_insn *insn, size_t count);
+
+static pcs_disasm cs_disasm_dl = nullptr;
+static pcs_free cs_free_dl = nullptr;
 
 static csh handle;
 
@@ -31,14 +36,14 @@ void init_disasm()
   dl_handle = dlopen("tools/capstone/repo/libcapstone.so.5", RTLD_LAZY);
   assert(dl_handle);
 
-  cs_err (*cs_open_dl)(cs_arch arch, cs_mode mode, csh *handle) = NULL;
-  cs_open_dl = dlsym(dl_handle, "cs_open");
+  pcs_open cs_open_dl= nullptr;
+  cs_open_dl = (pcs_open)dlsym(dl_handle, "cs_open");
   assert(cs_open_dl);
 
-  cs_disasm_dl = dlsym(dl_handle, "cs_disasm");
+  cs_disasm_dl = (pcs_disasm)dlsym(dl_handle, "cs_disasm");
   assert(cs_disasm_dl);
 
-  cs_free_dl = dlsym(dl_handle, "cs_free");
+  cs_free_dl = (pcs_free)dlsym(dl_handle, "cs_free");
   assert(cs_free_dl);
 
   cs_arch arch = CS_ARCH_RISCV;
