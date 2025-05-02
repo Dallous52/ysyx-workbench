@@ -102,13 +102,6 @@ static bool load_binary(const char* fbin)
   }
 
   file.close();
-
-  int i = 0;
-  uint32_t* ptmp = (uint32_t*)pmem;
-  while (ptmp[i])
-  {
-    printf("%08x\n", ptmp[i++]);
-  }
   
   return true;
 }
@@ -141,7 +134,7 @@ bool pmem_init(const char* fbin)
       0x00100073   // ebreak    
   };
   
-  if (fbin == NULL || load_binary(fbin))
+  if (fbin == NULL || !load_binary(fbin))
     memcpy(pmem, img, sizeof(img));
 
   return true;
