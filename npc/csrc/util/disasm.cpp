@@ -33,7 +33,7 @@ static csh handle;
 void init_disasm()
 {
   void *dl_handle;
-  dl_handle = dlopen("tools/capstone/repo/libcapstone.so.5", RTLD_LAZY);
+  dl_handle = dlopen("/home/dallous/Documents/ysyx-workbench/nemu/tools/capstone/repo/libcapstone.so.5", RTLD_LAZY);
   assert(dl_handle);
 
   pcs_open cs_open_dl= nullptr;
