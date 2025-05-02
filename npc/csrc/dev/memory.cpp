@@ -2,6 +2,7 @@
 #include "npc.h"
 
 #include <cstddef>
+#include <cstdint>
 #include <cstdio>
 #include <cstring>
 #include <fstream>
@@ -103,9 +104,10 @@ static bool load_binary(const char* fbin)
   file.close();
 
   int i = 0;
-  while (pmem[i])
+  uint32_t* ptmp = (uint32_t*)pmem;
+  while (ptmp[i])
   {
-    printf("%08x\n", pmem[i++]);
+    printf("%08x\n", ptmp[i++]);
   }
   
   return true;
