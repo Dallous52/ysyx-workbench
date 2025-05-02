@@ -51,7 +51,7 @@ static void print_exe_info()
     p += snprintf(p, sizeof(logbuf), "%08x: ", top.pc);
 
     uint8_t *inst = (uint8_t *)&top.inst;
-    for (int i = 4; i > 0; i--) 
+    for (int i = 3; i >= 0; i--) 
         p += snprintf(p, 4, " %02x", inst[i]);
 
     *p = ' '; p++;
