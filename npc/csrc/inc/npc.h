@@ -19,4 +19,11 @@ word_t reg_get_value(char* s, bool* success);
 // free npc resource
 void npc_free();
 
+// runtime status
+extern uint32_t npc_stat;
+
+#define NPC_EXIT    0
+#define NPC_RUN     1
+#define NPC_ABORT   2 
+
 #endif // NPC_NPC

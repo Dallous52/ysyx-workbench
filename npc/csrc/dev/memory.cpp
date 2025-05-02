@@ -1,4 +1,5 @@
 #include "memory.h"
+#include "npc.h"
 
 #include <cstddef>
 #include <cstdio>
@@ -6,18 +7,18 @@
 #include <fstream>
 
 
-// 强制 4k 对齐
+// virtual device
 static uint8_t pmem[MSIZE] __attribute((aligned(4096))) = {};
 
 
-// 内存越界判断
+// is in pmem
 bool in_pmem(paddr_t addr) 
 {
     return addr - MBASE < MSIZE;
 }
 
 
-// 真实内存读操作
+// read from real device
 static word_t host_read(void *addr, int len) 
 {
     switch (len) {
@@ -29,7 +30,7 @@ static word_t host_read(void *addr, int len)
 }
   
 
-// 真实内存写操作
+// write in real device
 static void host_write(void *addr, int len, word_t data) 
 {
   switch (len) {
@@ -41,16 +42,14 @@ static void host_write(void *addr, int len, word_t data)
 }
 
 
-// paddr - MBASE 计算真实偏移
-// 定位 pmem 数组
-static uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - MBASE; }
+// get real address
+static uint8_t* guest_to_host(paddr_t paddr) { return pmem + (paddr - MBASE); }
 
 
-// 计算模拟内存地址 
-static paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + MBASE; }
+// get virtual address
+static paddr_t host_to_guest(uint8_t *haddr) { return (haddr - pmem) + MBASE; }
 
 
-// 模拟内存读操作
 static word_t pmem_read(paddr_t addr, int len)
 {
   word_t ret = host_read(guest_to_host(addr), len);
@@ -58,14 +57,13 @@ static word_t pmem_read(paddr_t addr, int len)
 }
 
 
-// 模拟内存写操作
 static void pmem_write(paddr_t addr, int len, word_t data) 
 {
   host_write(guest_to_host(addr), len, data);
 }
 
 
-// 越界判断
+// error message
 static void out_of_bound(paddr_t addr) 
 {
   printf("address = %x is out of bound of pmem [%x, %x]\n",
@@ -73,7 +71,7 @@ static void out_of_bound(paddr_t addr)
 }
 
 
-// 加载二进制程序
+// load binary file to execute
 static bool load_binary(const char* fbin)
 {
   printf("[execute file] %s\n", fbin);
@@ -85,7 +83,7 @@ static bool load_binary(const char* fbin)
       return false;
   }
 
-  // 获取文件大小
+  // get file size
   file.seekg(0, std::ios::end);
   std::streamsize fsize = file.tellg();
   file.seekg(0, std::ios::beg);
@@ -135,10 +133,8 @@ bool pmem_init(const char* fbin)
       0x00100073   // ebreak    
   };
   
-  if (fbin == NULL)
+  if (fbin == NULL || load_binary(fbin))
     memcpy(pmem, img, sizeof(img));
-  else
-    return load_binary(fbin);
 
   return true;
 }

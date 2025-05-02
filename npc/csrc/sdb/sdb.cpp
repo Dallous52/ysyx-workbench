@@ -40,6 +40,7 @@ static struct
 #define CMD_LEN ARRLEN(cmd_table)
 
 static bool is_batch_mode = false;
+void set_batch_mode() { is_batch_mode = true; }
 
 
 // display help
@@ -52,12 +53,12 @@ static int cmd_help(char *args)
   if (arg == NULL) 
   {
     // no argument given
-    for (i = 0; i < CMD_LEN; i ++)
+    for (i = 0; i < CMD_LEN; i++)
       printf("%s\t- %s\n", cmd_table[i].name, cmd_table[i].description);
   }
   else 
   {
-    for (i = 0; i < CMD_LEN; i ++) 
+    for (i = 0; i < CMD_LEN; i++) 
     {
       if (strcmp(arg, cmd_table[i].name) == 0)
       {
@@ -126,7 +127,7 @@ static char* rl_gets()
 
   line_read = readline("(npc) ");
 
-  if (line_read && *line_read) 
+  if (line_read && *line_read)
     add_history(line_read);
 
   return line_read;

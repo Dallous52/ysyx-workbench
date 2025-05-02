@@ -1,11 +1,9 @@
+#include "disasm.h"
 #include "Vysyx_25040111_top___024root.h"
 #include "Vysyx_25040111_top.h"
 #include "npc.h"
 #include "memory.h"
-#include "tpdef.h"
 
-#include <cstddef>
-#include <cstdint>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 #include <iostream>
@@ -27,13 +25,14 @@ static const char *regs[] = {
     "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
 };
 
+uint32_t npc_stat = -1;
 
 // initialize npc resource
 void npc_init(bool vcd)
 {
     if (vcd)
     {
-        // 设置波形存储为VCD文件
+        // set vcd
         Verilated::traceEverOn(true);
         vtrace = new VerilatedVcdC;
         top.trace(vtrace, 5);
@@ -44,9 +43,29 @@ void npc_init(bool vcd)
 }
 
 
+// print execute infomation
+static void print_exe_info()
+{
+    char logbuf[128] = {};
+    char* p = logbuf;
+    p += snprintf(p, sizeof(logbuf), "%08x: ", top.pc);
+
+    uint8_t *inst = (uint8_t *)&top.inst;
+    for (int i = 4; i > 0; i--) 
+        p += snprintf(p, 4, " %02x", inst[i]);
+
+    *p = ' '; p++;
+
+    disassemble(p, logbuf + sizeof(logbuf) - p, top.pc, (uint8_t *)&top.inst, 4);
+
+    std::cout << logbuf << std::endl;
+}
+
+
 // execute
 int cpu_exec(uint64_t steps)
 {
+    uint64_t step_ok = 0;
     while (steps--)
     {
         top.inst = paddr_read(top.pc, 4);
@@ -54,9 +73,19 @@ int cpu_exec(uint64_t steps)
         if (vtrace) vtrace->dump(sim_time++);
         top.clk = 1; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
+
+        switch (npc_stat)
+        {
+        case NPC_EXIT:
+            finalize(); break; 
+        case NPC_RUN:
+            print_exe_info(); step_ok++; break;
+        case NPC_ABORT:
+            return step_ok;
+        }
     }
 
-    return steps;
+    return step_ok;
 }
 
 

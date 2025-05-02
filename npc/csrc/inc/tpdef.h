@@ -1,7 +1,7 @@
 #ifndef NPC_TYPE_DEFINE
 #define NPC_TYPE_DEFINE
 
-#include <cstdint>
+#include <stdint.h>
 
 typedef uint32_t paddr_t;
 typedef uint32_t word_t;
