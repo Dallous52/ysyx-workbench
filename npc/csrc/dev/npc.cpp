@@ -65,6 +65,8 @@ static void print_exe_info()
 // execute
 int cpu_exec(uint64_t steps)
 {
+    npc_stat = NPC_RUN;
+
     uint64_t step_ok = 0;
     while (steps--)
     {
