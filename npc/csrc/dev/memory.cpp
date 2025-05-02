@@ -101,6 +101,12 @@ static bool load_binary(const char* fbin)
   }
 
   file.close();
+
+  int i = 0;
+  while (pmem[i])
+  {
+    printf("%08x\n", pmem[i++]);
+  }
   
   return true;
 }
