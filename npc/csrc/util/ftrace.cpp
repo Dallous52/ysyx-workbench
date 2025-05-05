@@ -92,8 +92,8 @@ bool init_elf(const char* elf_file)
         func_info = p;
         
         // debug
-        // printf("[%d] %s : Value=0x%x, Size=%u\n",
-        //   i, sym_name, symtab[i].st_value, symtab[i].st_size);
+        printf("[%d] %s : Value=0x%x, Size=%u\n",
+          i, sym_name, symtab[i].st_value, symtab[i].st_size);
       }
   }
 
@@ -101,7 +101,7 @@ bool init_elf(const char* elf_file)
   p = func_info;
   while (p != NULL)
   {
-    printf("[ftrace] %s : Value=0x%x, Size=0x%x\n",
+    printf("[ftrace] %s : Start=0x%x, End=0x%x\n",
       p->name, p->start, p->end);
       p = p->next;
   }
