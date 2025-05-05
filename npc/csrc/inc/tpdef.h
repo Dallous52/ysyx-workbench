@@ -27,6 +27,9 @@ typedef uint32_t word_t;
 
 #define ANSI_FMT(str, fmt) fmt str ANSI_NONE
 
+#define BITMASK(bits) ((1ull << (bits)) - 1)
+#define BITS(x, hi, lo) (((x) >> (lo)) & BITMASK((hi) - (lo) + 1)) 
+
 // calculate the length of an array
 #define ARRLEN(arr) (int)(sizeof(arr) / sizeof(arr[0]))
 

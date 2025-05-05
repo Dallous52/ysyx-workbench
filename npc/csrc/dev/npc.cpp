@@ -45,7 +45,6 @@ void npc_init(bool vcd)
 }
 
 
-
 static void ftrace(paddr_t pc, paddr_t call, int rd)
 {
   const char* ftrace_get_name(paddr_t addr);
@@ -81,7 +80,8 @@ static void print_exe_info(uint32_t pc)
     
     if (strncmp(logbuf + 25, "jal", 3) == 0)
     {
-        // ftrace(pc, top.pc, );
+        int rd = BITS(top.inst,  11, 7);
+        ftrace(pc, top.pc, rd);
     }
 
     std::cout << logbuf << std::endl;
