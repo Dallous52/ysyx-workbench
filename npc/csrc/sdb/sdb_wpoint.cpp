@@ -19,7 +19,7 @@ static WP wp_pool[WP_SIZE] = {};
 static WP *head = NULL, *free_ = NULL;
 
 
-void init_wp_pool() 
+void init_wp_pool()
 {
   int i;
   for (i = 0; i < WP_SIZE; i ++) 

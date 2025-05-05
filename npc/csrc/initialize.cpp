@@ -52,6 +52,9 @@ bool initialize(int argc, char** argv)
 
   init_disasm();
 
+  void init_wp_pool();
+  init_wp_pool();
+
   npc_init(use_vcd);
 
   return true;
