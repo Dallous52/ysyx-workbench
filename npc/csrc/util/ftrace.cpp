@@ -119,7 +119,7 @@ const char* ftrace_get_name(paddr_t addr)
   ftrace_d* p =func_info;
   while (p != NULL)
   {
-    if (addr >= p->start && addr < p->end)
+    if (addr >= p->start && addr <= p->end)
     {
       return p->name;
     }
