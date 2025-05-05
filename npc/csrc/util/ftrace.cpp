@@ -98,13 +98,13 @@ bool init_elf(const char* elf_file)
   }
 
   // debug
-  // p = func_info;
-  // while (p != NULL)
-  // {
-  //   printf("[ftrace] %s : Value=0x%x, Size=0x%x\n",
-  //     p->name, p->start, p->end);
-  //     p = p->next;
-  // }
+  p = func_info;
+  while (p != NULL)
+  {
+    printf("[ftrace] %s : Value=0x%x, Size=0x%x\n",
+      p->name, p->start, p->end);
+      p = p->next;
+  }
 
   // 清理资源
   munmap(map, st.st_size);
@@ -119,7 +119,7 @@ const char* ftrace_get_name(paddr_t addr)
   ftrace_d* p =func_info;
   while (p != NULL)
   {
-    if (addr >= p->start && addr <= p->end)
+    if (addr >= p->start && addr < p->end)
     {
       return p->name;
     }
