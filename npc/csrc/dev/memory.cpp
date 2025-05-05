@@ -69,6 +69,7 @@ static void out_of_bound(paddr_t addr)
 {
   printf("address = %x is out of bound of pmem [%x, %x]\n",
       addr, PMEM_LEFT, PMEM_RIGHT);
+  npc_stat = NPC_ABORT;
 }
 
 

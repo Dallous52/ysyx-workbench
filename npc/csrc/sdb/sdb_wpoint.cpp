@@ -19,6 +19,7 @@ static WP wp_pool[WP_SIZE] = {};
 static WP *head = NULL, *free_ = NULL;
 
 
+// initialize watch point pool
 void init_wp_pool()
 {
   int i;
@@ -118,6 +119,7 @@ void check_wp()
 }
 
 
+// print watch point
 void print_wp()
 {
   WP* tmp = head;

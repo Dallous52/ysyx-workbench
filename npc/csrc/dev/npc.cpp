@@ -56,7 +56,7 @@ static void print_exe_info(uint32_t pc)
     for (int i = 3; i >= 0; i--) 
         p += snprintf(p, 4, " %02x", inst[i]);
 
-    *p = ' '; p++;
+    *p = '\t'; p++;
 
     disassemble(p, logbuf + sizeof(logbuf) - p, pc, (uint8_t *)&top.inst, 4);
 
