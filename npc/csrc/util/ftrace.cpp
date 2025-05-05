@@ -22,7 +22,7 @@ ftrace_d* func_info = NULL;
 
 
 // ftrace elf file infomation initialize
-static bool init_elf(const char* elf_file)
+bool init_elf(const char* elf_file)
 {
   if (elf_file == NULL) return false;
   printf("[elf file] %s\n", elf_file);
