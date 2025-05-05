@@ -50,7 +50,7 @@ static void print_exe_info(uint32_t pc)
 {
     char logbuf[128] = {};
     char* p = logbuf;
-    p += snprintf(p, sizeof(logbuf), "%08x: ", pc);
+    p += snprintf(p, sizeof(logbuf), "0x%08x: ", pc);
 
     uint8_t *inst = (uint8_t *)&top.inst;
     for (int i = 3; i >= 0; i--) 
@@ -59,8 +59,8 @@ static void print_exe_info(uint32_t pc)
     *p = '\t'; p++;
 
     disassemble(p, logbuf + sizeof(logbuf) - p, pc, (uint8_t *)&top.inst, 4);
-
-    std::cout << logbuf << std::endl;
+    
+    std::cout << logbuf + 25 << std::endl;
 }
 
 
