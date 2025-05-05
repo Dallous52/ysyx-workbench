@@ -78,12 +78,14 @@ static void print_exe_info(uint32_t pc)
 
     disassemble(p, logbuf + sizeof(logbuf) - p, pc, (uint8_t *)&top.inst, 4);
     
-    if (strncmp(logbuf + 25, "jal", 3) == 0)
-    {
-        int rd = BITS(top.inst,  11, 7);
+    static uint8_t jal = 0b1101111;
+    static uint8_t jalr = 0b1100111;
+    uint8_t opt = BITS(top.inst, 6, 0);
+    uint8_t rd = BITS(top.inst, 11, 7);
+    
+    if (opt == jal || opt == jalr)
         ftrace(pc, top.pc, rd);
-    }
-
+    
     std::cout << logbuf << std::endl;
 }
 
