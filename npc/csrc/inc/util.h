@@ -3,10 +3,13 @@
 
 #include <stdint.h>
 
-// 初始化反汇编器
+// initialize disassemble
 void init_disasm();
 
-// 反汇编
+// disassemble
 void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+
+// initialize ftrace elf struct
+bool init_elf(const char* elf_file);
 
 #endif // NPC_DISASM

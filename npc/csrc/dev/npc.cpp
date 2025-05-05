@@ -1,4 +1,4 @@
-#include "disasm.h"
+#include "util.h"
 #include "Vysyx_25040111_top___024root.h"
 #include "Vysyx_25040111_top.h"
 #include "npc.h"
@@ -45,6 +45,25 @@ void npc_init(bool vcd)
 }
 
 
+
+static void ftrace(paddr_t pc, paddr_t call, int rd)
+{
+  const char* ftrace_get_name(paddr_t addr);
+
+  const char* dst = ftrace_get_name(call);
+  const char* src = ftrace_get_name(pc);
+
+  if (rd == 1)
+  {
+    printf("[0x%x in %s] call [%s 0x%x]\n", pc, src, dst, call);
+  }
+  else if (rd == 0)
+  {
+    printf("[0x%x in %s] ret  [%s 0x%x]\n", pc, src, dst, call);
+  }
+}
+
+
 // print execute infomation
 static void print_exe_info(uint32_t pc)
 {
@@ -60,7 +79,12 @@ static void print_exe_info(uint32_t pc)
 
     disassemble(p, logbuf + sizeof(logbuf) - p, pc, (uint8_t *)&top.inst, 4);
     
-    std::cout << logbuf + 25 << std::endl;
+    if (strncmp(logbuf + 25, "jal", 3) == 0)
+    {
+        ftrace(pc, top.pc, );
+    }
+
+    std::cout << logbuf << std::endl;
 }
 
 

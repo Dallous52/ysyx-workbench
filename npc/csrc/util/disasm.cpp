@@ -18,7 +18,7 @@
 #include <capstone/capstone.h>
 #include <assert.h>
 
-#include "disasm.h"
+#include "util.h"
 
 typedef cs_err (*pcs_open)(cs_arch arch, cs_mode mode, csh *handle);
 typedef size_t (*pcs_disasm)(csh handle, const uint8_t *code,
