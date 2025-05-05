@@ -24,6 +24,7 @@ extern uint32_t npc_stat;
 
 #define NPC_EXIT    0
 #define NPC_RUN     1
-#define NPC_ABORT   2 
+#define NPC_STOP    2
+#define NPC_ABORT   3 
 
 #endif // NPC_NPC

@@ -2,6 +2,7 @@
 #define NPC_TYPE_DEFINE
 
 #include <stdint.h>
+#include <stdlib.h>
 
 typedef uint32_t paddr_t;
 typedef uint32_t word_t;

@@ -46,7 +46,7 @@ int cmd_si(char* args)
 // print infomation
 int cmd_info(char* args)
 {
-    // void print_wp();
+    void print_wp();
 
     bool exey = true;
     if (args == NULL || strlen(args) != 1)
@@ -58,7 +58,7 @@ int cmd_info(char* args)
     if (*args == 'r')
       reg_print();
     else if (*args == 'w')
-      printf("print watch point\n");
+      print_wp();
     else
       exey = false;
   
@@ -141,13 +141,35 @@ int cmd_p(char* args)
 }
 
 
+// create watch point
 int cmd_w(char* args)
 {
-    return 0;
+  bool new_wp(const char* what, uint32_t value);
+  
+  bool success = false;
+  word_t ret = expr(args, &success);
+
+  if (success)
+  {
+    if (!new_wp(args, ret))
+      printf("No more watchpoints available.\n");
+  }
+  else printf("your expression have some error.\n");
+
+  return 0;
 }
 
 
+// delete watch point
 int cmd_d(char* args)
 {
-    return 0;
+  void free_wp(int num);
+
+  int si_num = 0;
+  if (sscanf(args, "%d", &si_num) == 1)
+    free_wp(si_num);
+  else
+    printf("Please use \"d [N]\" to execute, N is the number of wp.\n");
+
+  return 0;
 }

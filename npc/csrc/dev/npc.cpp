@@ -3,6 +3,7 @@
 #include "Vysyx_25040111_top.h"
 #include "npc.h"
 #include "memory.h"
+#include "tpdef.h"
 
 #include <cstdint>
 #include <verilated.h>
@@ -80,14 +81,19 @@ int cpu_exec(uint64_t steps)
         top.clk = 1; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
 
+        void check_wp();
+        check_wp();
+
         switch (npc_stat)
         {
         case NPC_EXIT:
             finalize(); break; 
         case NPC_RUN:
             print_exe_info(oldpc); step_ok++; break;
-        case NPC_ABORT:
+        case NPC_STOP:
             return step_ok;
+        case NPC_ABORT:
+            finalize(); break;
         }
     }
 
