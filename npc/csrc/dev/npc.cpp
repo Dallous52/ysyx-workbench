@@ -81,7 +81,7 @@ static void print_exe_info(uint32_t pc)
     
     if (strncmp(logbuf + 25, "jal", 3) == 0)
     {
-        ftrace(pc, top.pc, );
+        // ftrace(pc, top.pc, );
     }
 
     std::cout << logbuf << std::endl;
