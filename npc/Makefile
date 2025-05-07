@@ -36,6 +36,7 @@ all: sim
 
 # simple sim test
 sim: $(VSRCS) $(CSRCS)
+	@echo $(CSRCS)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	verilator $(VERILATOR_CFLAGS) \
 		--trace --top-module ${TOPNAME} $^ \
