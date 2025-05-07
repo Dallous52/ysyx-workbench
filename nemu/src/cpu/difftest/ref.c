@@ -18,16 +18,54 @@
 #include <difftest-def.h>
 #include <memory/paddr.h>
 
-__EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction) {
-  assert(0);
+__EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction) 
+{
+  if (buf == NULL || n == 0 || !direction) return;
+
+  uint8_t* wtbuf = (uint8_t*)buf;
+  while (n)
+  {
+    if (n >= 4)
+    {
+      paddr_write(addr, 4, *((uint32_t*)wtbuf));
+      n -= 4;
+      wtbuf += 4;
+      addr += 4;
+    }
+    else 
+    {
+      paddr_write(addr, 1, *((uint32_t*)wtbuf));
+      n -= 1;
+      wtbuf += 1;
+      addr += 1;
+    }
+  }
 }
 
-__EXPORT void difftest_regcpy(void *dut, bool direction) {
-  assert(0);
+__EXPORT void difftest_regcpy(void *dut, bool direction) 
+{
+  uint32_t* regs = (uint32_t*)dut;
+
+  if (direction == DIFFTEST_TO_REF) 
+  {
+    int i = 0;
+    for (i = 0; i < ARRLEN(cpu.gpr); i++)
+    {
+      cpu.gpr[i] = regs[i];
+    }  
+  } 
+  else 
+  {
+    int i = 0;
+    for (i = 0; i < ARRLEN(cpu.gpr); i++)
+    {
+      regs[i] = cpu.gpr[i];
+    }  
+  }
 }
 
 __EXPORT void difftest_exec(uint64_t n) {
-  assert(0);
+  cpu_exec(n);
 }
 
 __EXPORT void difftest_raise_intr(word_t NO) {
