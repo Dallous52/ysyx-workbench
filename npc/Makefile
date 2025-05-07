@@ -27,7 +27,7 @@ INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/nemu/tools/capstone/repo/in
 
 # - `-DTOP_NAME="V$(TOPNAME)"` 定义宏 `TOP_NAME`，用于 Verilator 生成的顶层模块
 CXXFLAGS += $(INCFLAGS)
-VERILATOR_CFLAGS += -Wno-UNOPTFLAT -I/home/dallous/Documents/ysyx-workbench/npc/vsrc/
+VERILATOR_CFLAGS += -g -Wno-UNOPTFLAT -I/home/dallous/Documents/ysyx-workbench/npc/vsrc/
 
 # LDFLAGS 添加链接库
 LDFLAGS += -L/usr/lib/x86_64-linux-gnu -lreadline -lhistory
