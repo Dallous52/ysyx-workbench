@@ -62,6 +62,8 @@ bool initialize(int argc, char** argv)
   void init_wp_pool();
   init_wp_pool();
 
+  init_difftest(get_img_size(), 0);
+
   npc_init(use_vcd);
 
   return true;
@@ -71,6 +73,9 @@ bool initialize(int argc, char** argv)
 // exit
 void finalize()
 {
+  void free_wp_pool();
+  free_wp_pool();
+  
   npc_free();
   
   exit(0);

@@ -29,6 +29,17 @@ static const char *regs[] = {
 
 uint32_t npc_stat = -1;
 
+
+const char* reg_name(int idx)
+{
+    if (idx >= 0 && idx < 32)
+    {
+        return regs[idx];
+    }
+    return "???";
+}
+
+
 // initialize npc resource
 void npc_init(bool vcd)
 {
@@ -174,6 +185,18 @@ word_t reg_get_value(char* s, bool* success)
     *success = true;
     return REG[i];
 }
+
+
+// get reg values
+void reg_value(word_t* regbuf)
+{
+    int i = 0;
+    for (; i < ARRLEN(regs); i++)
+    {
+        regbuf[i] = REG[i];
+    }
+}
+
 
 // free npc resource
 void npc_free()

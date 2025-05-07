@@ -1,6 +1,7 @@
 #include "npc.h"
 #include "tpdef.h"
 
+#include <cstddef>
 #include <stdio.h>
 #include <string.h>
 
@@ -127,5 +128,18 @@ void print_wp()
   {
     printf("wp: %d  what: [%s]  now: %u\n", tmp->NO, tmp->what, tmp->value);
     tmp = tmp->next;
+  }
+}
+
+
+void free_wp_pool()
+{
+  for (int i = 0; i < WP_SIZE; i++)
+  {
+    if (wp_pool[i].what != NULL)
+    {
+      DFREE(wp_pool[i].what);
+      wp_pool[i].what = NULL;
+    }
   }
 }

@@ -1,0 +1,71 @@
+#include "npc.h"
+#include "tpdef.h"
+#include "util.h"
+#include "memory.h"
+
+#include <assert.h>
+#include <cstddef>
+#include <dlfcn.h>
+#include <iostream>
+
+#define REF_SO_FILE "/home/dallous/Documents/ysyx-workbench/nemu/build/riscv32-nemu-interpreter-so"
+
+typedef void (*diff_memcpy)(paddr_t, void *, size_t , bool);
+diff_memcpy ref_difftest_memcpy  = nullptr;
+typedef void (*diff_regcpy)(void *, bool);
+diff_regcpy ref_difftest_regcpy = nullptr;
+typedef void (*diff_exec)(uint64_t);
+diff_exec ref_difftest_exec = nullptr;
+typedef void (*diff_raise_intr)(uint64_t);
+diff_raise_intr ref_difftest_raise_intr = nullptr;
+typedef void (*diff_init)(int);
+
+
+void init_difftest(long img_size, int port) 
+{
+    void *handle;
+    handle = dlopen(REF_SO_FILE, RTLD_LAZY);
+    assert(handle);
+  
+    ref_difftest_memcpy = (diff_memcpy)dlsym(handle, "difftest_memcpy");
+    assert(ref_difftest_memcpy);
+  
+    ref_difftest_regcpy = (diff_regcpy)dlsym(handle, "difftest_regcpy");
+    assert(ref_difftest_regcpy);
+  
+    ref_difftest_exec = (diff_exec)dlsym(handle, "difftest_exec");
+    assert(ref_difftest_exec);
+  
+    ref_difftest_raise_intr = (diff_raise_intr)dlsym(handle, "difftest_raise_intr");
+    assert(ref_difftest_raise_intr);
+  
+    diff_init ref_difftest_init = (diff_init)dlsym(handle, "difftest_init");
+    assert(ref_difftest_init);
+  
+    ref_difftest_init(port);
+    ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
+    
+    word_t regbuf[32] = {};
+    reg_value(regbuf);
+    ref_difftest_regcpy(regbuf, DIFFTEST_TO_REF);
+}
+  
+
+void difftest_step(paddr_t pc)
+{
+    word_t nemu_reg[32] = {};
+    word_t npc_reg[32] = {};
+    
+    ref_difftest_exec(1);
+    ref_difftest_regcpy(nemu_reg, DIFFTEST_TO_DUT);
+    reg_value(npc_reg);
+
+    for (int i = 0; i < 32; i++)
+    {
+        if (nemu_reg[i] != npc_reg[i])
+        {
+            printf("0x%08x reg: [%s] error [npc: 0x%08x] [nemu: 0x%08x]\n", 
+                pc, reg_name(i), npc_reg[i], nemu_reg[i]);
+        }
+    }
+}

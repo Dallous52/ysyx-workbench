@@ -5,6 +5,7 @@
 
 #define PMEM_LEFT  ((paddr_t)MBASE)
 #define PMEM_RIGHT ((paddr_t)MBASE + MSIZE - 1)
+#define RESET_VECTOR (PMEM_LEFT + 0x0)
 
 // 编译器内建函数，作用是告诉编译器某个条件的执行可能性，从而让编译器做优化
 // __builtin_expect(expression, expected_value)
@@ -29,5 +30,10 @@ void paddr_write(paddr_t addr, int len, word_t data);
 
 // 内存越界判断
 bool in_pmem(paddr_t addr);
+
+uint8_t* guest_to_host(paddr_t paddr);
+paddr_t host_to_guest(uint8_t *haddr);
+
+size_t get_img_size();
 
 #endif // NPC_MEMORY

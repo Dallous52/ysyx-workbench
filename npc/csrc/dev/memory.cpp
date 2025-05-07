@@ -11,6 +11,8 @@
 // virtual device
 static uint8_t pmem[MSIZE] __attribute((aligned(4096))) = {};
 
+// img size
+static size_t imgsize = 0;
 
 // is in pmem
 bool in_pmem(paddr_t addr) 
@@ -44,11 +46,11 @@ static void host_write(void *addr, int len, word_t data)
 
 
 // get real address
-static uint8_t* guest_to_host(paddr_t paddr) { return pmem + (paddr - MBASE); }
+uint8_t* guest_to_host(paddr_t paddr) { return pmem + (paddr - MBASE); }
 
 
 // get virtual address
-static paddr_t host_to_guest(uint8_t *haddr) { return (haddr - pmem) + MBASE; }
+paddr_t host_to_guest(uint8_t *haddr) { return (haddr - pmem) + MBASE; }
 
 
 static word_t pmem_read(paddr_t addr, int len)
@@ -103,8 +105,15 @@ static bool load_binary(const char* fbin)
   }
 
   file.close();
-  
+  imgsize = fsize;
+
   return true;
+}
+
+
+size_t get_img_size()
+{
+  return imgsize;
 }
 
 
@@ -130,11 +139,12 @@ bool pmem_init(const char* fbin)
       0x00508113,  // addi x2, x1, 5
       0xFFF10193,  // addi x3, x2, -1
       0x06400513,  // addi x10, x0, 100
-      0x00A28293,  // addi x5, x5, 10
+      0x00A28293,  // addi x5, x5, 10 
       0x00000513,  // addi a0, x0, 0
       0x00100073   // ebreak    
   };
   
+  imgsize = sizeof(img);
   if (fbin == NULL || !load_binary(fbin))
     memcpy(pmem, img, sizeof(img));
 

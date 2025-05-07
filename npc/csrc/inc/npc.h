@@ -19,6 +19,12 @@ word_t reg_get_value(char* s, bool* success);
 // free npc resource
 void npc_free();
 
+// get reg values
+void reg_value(word_t* regbuf);
+
+// get reg 
+const char* reg_name(int idx);
+
 // runtime status
 extern uint32_t npc_stat;
 
