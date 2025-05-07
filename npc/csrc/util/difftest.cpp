@@ -5,6 +5,7 @@
 
 #include <assert.h>
 #include <cstddef>
+#include <cstdio>
 #include <dlfcn.h>
 #include <iostream>
 
@@ -51,8 +52,10 @@ void init_difftest(long img_size, int port)
 }
   
 
-void difftest_step(paddr_t pc)
+bool difftest_step(paddr_t pc)
 {
+    bool ret = true;
+
     word_t nemu_reg[32] = {};
     word_t npc_reg[32] = {};
     
@@ -62,10 +65,14 @@ void difftest_step(paddr_t pc)
 
     for (int i = 0; i < 32; i++)
     {
+        printf("[npc: 0x%08x] [nemu: 0x%08x]\n", npc_reg[i], nemu_reg[i]);
         if (nemu_reg[i] != npc_reg[i])
         {
             printf("0x%08x reg: [%s] error [npc: 0x%08x] [nemu: 0x%08x]\n", 
                 pc, reg_name(i), npc_reg[i], nemu_reg[i]);
+            ret = false;
         }
     }
+
+    return ret;
 }

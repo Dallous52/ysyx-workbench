@@ -120,6 +120,9 @@ int cpu_exec(uint64_t steps)
 
         void check_wp();
         check_wp();
+        
+        if (!difftest_step(oldpc)) 
+            npc_stat = NPC_ABORT;
 
         switch (npc_stat)
         {

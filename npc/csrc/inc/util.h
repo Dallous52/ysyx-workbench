@@ -18,6 +18,6 @@ bool init_elf(const char* elf_file);
 void init_difftest(long img_size, int port);
 
 // difftest step
-void difftest_step(uint32_t pc);
+bool difftest_step(uint32_t pc);
 
 #endif // NPC_DISASM
