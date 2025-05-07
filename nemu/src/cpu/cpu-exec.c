@@ -32,10 +32,12 @@ uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
+void device_update();
+
+#ifdef CONFIG_ITRACE
+
 static char iringbuf[IRINGBUF_SIZE][128] = {};
 static int curinst = -1;
-
-void device_update();
 
 static void iringbuf_update(Decode* s)
 {
@@ -57,7 +59,7 @@ static void iringbuf_print()
     printf("%s %s\n", prt, iringbuf[i]);
   }
 }
-
+#endif // CONFIG_ITRACE
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
@@ -68,9 +70,9 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     check_wp();
     log_write("%s\n", _this->logbuf); 
   }
+  iringbuf_update(_this);
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
-  iringbuf_update(_this);
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 }
 
@@ -117,8 +119,11 @@ static void execute(uint64_t n)
     trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) 
     {
-      if (nemu_state.state == NEMU_ABORT) iringbuf_print();
-      break;
+      if (nemu_state.state == NEMU_ABORT) 
+#ifdef CONFIG_ITRACE   
+        iringbuf_print();
+#endif // CONFIG_ITRACE
+        break;
     }
     IFDEF(CONFIG_DEVICE, device_update());
   }

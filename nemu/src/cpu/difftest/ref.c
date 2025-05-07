@@ -46,7 +46,7 @@ __EXPORT void difftest_regcpy(void *dut, bool direction)
 {
   uint32_t* regs = (uint32_t*)dut;
 
-  if (direction == DIFFTEST_TO_REF) 
+  if (direction == DIFFTEST_TO_REF)
   {
     int i = 0;
     for (i = 0; i < ARRLEN(cpu.gpr); i++)
