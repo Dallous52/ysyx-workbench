@@ -1,3 +1,5 @@
+`include "ysyx_25040111_inc.vh"
+
 `define OPCODE_NUM 6
 
 module ysyx_25040111_idu(
@@ -6,7 +8,7 @@ module ysyx_25040111_idu(
     output [4:0] rs2,
     output [4:0] rd,
     output [31:0] imm,
-    output [9:0] opt
+    output [`OPT_HIGH:0] opt
 );
 
     // ------------------------------------------------------- 
@@ -14,7 +16,7 @@ module ysyx_25040111_idu(
     // -------------------------------------------------------
     wire [4:0] rs1_opimm, rd_opimm;
     wire [31:0] imm_opimm;
-    wire [9:0] opt_opimm;
+    wire [`OPT_HIGH:0] opt_opimm;
 
     ysyx_25040111_opimm u_ysyx_25040111_opimm(
         .inst 	(inst[31:7]),
@@ -30,7 +32,7 @@ module ysyx_25040111_idu(
     // -------------------------------------------------------
     wire [4:0] rd_auipc_lui;
     wire [31:0] imm_auipc_lui;
-    wire [9:0] opt_auipc_lui;
+    wire [`OPT_HIGH:0] opt_auipc_lui;
     
     ysyx_25040111_auipc_lui u_ysyx_25040111_auipc_lui(
         .inst 	(inst[31:7]  ),
@@ -46,7 +48,7 @@ module ysyx_25040111_idu(
     // -------------------------------------------------------
     wire [4:0] rs1_jalr;
     wire [31:0] imm_jalr;
-    wire [9:0] opt_jalr;
+    wire [`OPT_HIGH:0] opt_jalr;
     wire [4:0] rd_jalr;
     
     ysyx_25040111_jalr u_ysyx_25040111_jalr(
@@ -62,7 +64,7 @@ module ysyx_25040111_idu(
     //                         JAL                     
     // -------------------------------------------------------
     wire [31:0] imm_jal;
-    wire [9:0] opt_jal;
+    wire [`OPT_HIGH:0] opt_jal;
     wire [4:0] rd_jal;
     
     ysyx_25040111_jal u_ysyx_25040111_jal(
@@ -77,7 +79,7 @@ module ysyx_25040111_idu(
     //                         SYSTEM                       
     // -------------------------------------------------------
     wire [4:0] rs1_system;
-    wire [9:0] opt_system;
+    wire [`OPT_HIGH:0] opt_system;
 
     ysyx_25040111_system u_ysyx_25040111_system(
         .inst 	(inst[31:0]  ),
@@ -125,7 +127,7 @@ module ysyx_25040111_idu(
         7'b1110011, 32'b0
     });
 
-    ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, 10) opt_c (opt, inst[6:0], 10'b0, {
+    ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, `OPT_LEN) opt_c (opt, inst[6:0], `OPT_LEN'b0, {
         7'b0010011, opt_opimm,
         7'b0010111, opt_auipc_lui,
         7'b0110111, opt_auipc_lui,

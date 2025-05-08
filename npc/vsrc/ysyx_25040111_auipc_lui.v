@@ -1,9 +1,11 @@
+`include "ysyx_25040111_inc.vh"
+
 module ysyx_25040111_auipc_lui(
     input [31:7] inst,
     input chos,
     output [4:0] rd,
     output [31:0] imm,
-    output [9:0] opt
+    output [`OPT_HIGH:0] opt
 );
 
     wire [31:12] imm_m;

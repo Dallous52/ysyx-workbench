@@ -1,9 +1,11 @@
+`include "ysyx_25040111_inc.vh"
+
 module ysyx_25040111_opimm (
     input [31:7] inst,
     output [4:0] rs1,
     output [4:0] rd,
     output [31:0] imm,
-    output [9:0] opt
+    output [`OPT_HIGH:0] opt
 );
 
     wire [11:0] imm_m;
@@ -15,7 +17,7 @@ module ysyx_25040111_opimm (
         3'b000, {{20{imm_m[11]}}, imm_m[11:0]}
     });
 
-    ysyx_25040111_MuxKeyWithDefault #(1, 3, 10) opt_c (opt, fun3, 10'b0, {
+    ysyx_25040111_MuxKeyWithDefault #(1, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
         3'b000, 10'b0000110011  // rd = rs1 + imm
     });
 

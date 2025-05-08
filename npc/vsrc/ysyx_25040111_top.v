@@ -52,12 +52,12 @@ module ysyx_25040111_top(
         .wdata 	(rd_d  ),
         .waddr 	(rd ),
         .raddr 	({rs2, rs1}  ),
-        .rdata 	({rs2_d, rs1_d}  )
+        .rdata 	({rs2_d, rs1_d} )
     );
     
     wire [31:0] dnpc;
     ysyx_25040111_exu u_ysyx_25040111_exu(
-        .opt   	(opt[9:3]    ),
+        .opt   	(opt[`OPT_HIGH:3]    ),
         .rs1_d 	(rs1_d  ),
         .rs2_d 	(rs2_d  ),
         .imm   	(imm    ),
