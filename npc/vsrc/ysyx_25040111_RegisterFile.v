@@ -10,10 +10,12 @@ module ysyx_25040111_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
 
     reg [DATA_WIDTH-1:0] rf [2**ADDR_WIDTH-1:0];
     wire [ADDR_WIDTH-1:0] raddr_m [1:0];
+    wire is_zero;
 
     // 写入
+    assign is_zero = |waddr;
     always @(posedge clk) begin
-        if (wen & waddr) begin
+        if (wen & is_zero) begin
           rf[waddr] <= wdata;
         end
     end
