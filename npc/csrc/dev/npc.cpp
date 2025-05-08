@@ -122,7 +122,7 @@ int cpu_exec(uint64_t steps)
         check_wp();
         
         if (!difftest_step(oldpc)) 
-            npc_stat = NPC_ABORT;
+            npc_stat = NPC_STOP;
 
         switch (npc_stat)
         {
