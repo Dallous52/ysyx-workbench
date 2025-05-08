@@ -19,6 +19,8 @@
 //              01 pc + imm
 //              10 rs1 + imm
 
+`include "ysyx_25040111_inc.vh" 
+
 module ysyx_25040111_top(
     input clk,
     input rst,
@@ -30,7 +32,7 @@ module ysyx_25040111_top(
     wire [4:0] rs2;
     wire [4:0] rd;
     wire [31:0] imm;
-    wire [9:0] opt;
+    wire [`OPT_HIGH:0] opt;
     
     ysyx_25040111_idu u_idu(
         .inst 	(inst[31:0]),

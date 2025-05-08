@@ -30,32 +30,6 @@ static const char *regs[] = {
 uint32_t npc_stat = -1;
 
 
-const char* reg_name(int idx)
-{
-    if (idx >= 0 && idx < 32)
-    {
-        return regs[idx];
-    }
-    return "???";
-}
-
-
-// initialize npc resource
-void npc_init(bool vcd)
-{
-    if (vcd)
-    {
-        // set vcd
-        Verilated::traceEverOn(true);
-        vtrace = new VerilatedVcdC;
-        top.trace(vtrace, 5);
-        vtrace->open(VCD_PATH);
-    }
-    
-    top.pc = 0x80000000;
-}
-
-
 static void ftrace(paddr_t pc, paddr_t call, int rd)
 {
   const char* ftrace_get_name(paddr_t addr);
@@ -198,6 +172,32 @@ void reg_value(word_t* regbuf)
     {
         regbuf[i] = REG[i];
     }
+}
+
+
+const char* reg_name(int idx)
+{
+    if (idx >= 0 && idx < 32)
+    {
+        return regs[idx];
+    }
+    return "???";
+}
+
+
+// initialize npc resource
+void npc_init(bool vcd)
+{
+    if (vcd)
+    {
+        // set vcd
+        Verilated::traceEverOn(true);
+        vtrace = new VerilatedVcdC;
+        top.trace(vtrace, 5);
+        vtrace->open(VCD_PATH);
+    }
+    
+    top.pc = 0x80000000;
 }
 
 
