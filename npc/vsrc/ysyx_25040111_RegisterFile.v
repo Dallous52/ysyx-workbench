@@ -13,12 +13,10 @@ module ysyx_25040111_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
 
     // 写入
     always @(posedge clk) begin
-        if (wen) begin
+        if (wen && waddr) begin
           rf[waddr] <= wdata;
         end
     end
-
-    assign rf[0] = 0;
 
     // 读寄存器使能判断
     assign raddr_m[0] = ren[0] ? raddr[0] : {ADDR_WIDTH{1'b0}};
