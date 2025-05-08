@@ -13,7 +13,7 @@ module ysyx_25040111_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
 
     // 写入
     always @(posedge clk) begin
-        if (wen && waddr) begin
+        if (wen & waddr) begin
           rf[waddr] <= wdata;
         end
     end
