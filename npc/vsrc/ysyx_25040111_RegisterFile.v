@@ -18,6 +18,8 @@ module ysyx_25040111_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
         end
     end
 
+    assign rf[0] = 0;
+
     // 读寄存器使能判断
     assign raddr_m[0] = ren[0] ? raddr[0] : {ADDR_WIDTH{1'b0}};
     assign raddr_m[1] = ren[1] ? raddr[1] : {ADDR_WIDTH{1'b0}};
