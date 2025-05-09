@@ -28,6 +28,7 @@ module ysyx_25040111_exu(
     });
     
     always @(*) begin
+        $display("%b\n", opt);
         if (opt == 13'b0)
             ebreak(rs1_d);
     end
