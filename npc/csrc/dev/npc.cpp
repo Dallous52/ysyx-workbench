@@ -39,11 +39,11 @@ static void ftrace(paddr_t pc, paddr_t call, int rd)
 
   if (rd == 1)
   {
-    printf("[0x%x in %s] call [%s 0x%x]\n", pc, src, dst, call);
+    printf(ANSI_FMT("[0x%x in %s] call [%s 0x%x]\n", ANSI_FG_CYAN), pc, src, dst, call);
   }
   else if (rd == 0)
   {
-    printf("[0x%x in %s] ret  [%s 0x%x]\n", pc, src, dst, call);
+    printf(ANSI_FMT("[0x%x in %s] ret  [%s 0x%x]\n", ANSI_FG_CYAN), pc, src, dst, call);
   }
 }
 

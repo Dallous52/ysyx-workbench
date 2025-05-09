@@ -25,7 +25,7 @@ ftrace_d* func_info = NULL;
 bool init_elf(const char* elf_file)
 {
   if (elf_file == NULL) return false;
-  printf("[elf file] %s\n", elf_file);
+  printf(ANSI_FMT("[elf file] %s\n", ANSI_FG_BLUE), elf_file);
 
   int fd = open(elf_file, O_RDONLY);
   if (fd < 0) return false;
