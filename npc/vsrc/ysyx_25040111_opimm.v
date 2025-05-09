@@ -20,5 +20,6 @@ module ysyx_25040111_opimm (
     ysyx_25040111_MuxKeyWithDefault #(1, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
         3'b000, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `EMPTY, `EMPTY)  // rd = rs1 + imm
     });
+    0000000100111011
 
 endmodule

@@ -87,5 +87,8 @@ module ysyx_25040111_top(
         .wen  	(1   )
     );
     
-   
+    always @(*) begin
+        $display("%b\n", opt);
+    end
+
 endmodule
