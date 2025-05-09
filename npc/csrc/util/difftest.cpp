@@ -67,7 +67,7 @@ bool difftest_step(paddr_t pc)
     {
         if (nemu_reg[i] != npc_reg[i])
         {
-            printf("0x%08x reg: [%s] error [npc: 0x%08x] [nemu: 0x%08x]\n", 
+            printf(ANSI_FMT("0x%08x reg: [%s] error [npc: 0x%08x] [nemu: 0x%08x]\n", ANSI_FG_RED), 
                 pc, reg_name(i), npc_reg[i], nemu_reg[i]);
             ret = false;
         }
