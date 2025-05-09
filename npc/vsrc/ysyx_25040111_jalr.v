@@ -14,6 +14,7 @@ module ysyx_25040111_jalr(
     assign {imm_m, rs1, fun3, rd} = inst[31:7];
     
     assign imm = fun3 == 3'b0 ? {{20{imm_m[11]}}, imm_m} : 32'b0;
-    assign opt = fun3 == 3'b0 ? 10'b1011000011 : 10'b0;
+    assign opt = fun3 == 3'b0 ? `OPTG(`WFX, `EMP, `NPC, `RF_IM, `EMPTY, `EMPTY) 
+                                : `INVALID_INST;
 
 endmodule

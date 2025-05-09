@@ -18,7 +18,7 @@ module ysyx_25040111_opimm (
     });
 
     ysyx_25040111_MuxKeyWithDefault #(1, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
-        3'b000, 10'b0000110011  // rd = rs1 + imm
+        3'b000, `OPT_LEN'b0000000100111011  // rd = rs1 + imm
     });
 
 endmodule
