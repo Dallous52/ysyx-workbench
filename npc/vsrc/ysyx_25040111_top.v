@@ -88,7 +88,7 @@ module ysyx_25040111_top(
     );
     
     always @(*) begin
-        $display("%b\n", opt);
+        $display("%b\n", opt[0]);
     end
 
 endmodule
