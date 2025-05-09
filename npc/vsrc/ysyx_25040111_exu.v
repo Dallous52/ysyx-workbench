@@ -21,15 +21,10 @@ module ysyx_25040111_exu(
     });
     
     ysyx_25040111_MuxKey #(4, 2, 32) dnpc_new(dnpc, opt[9:8], {
-        2'b00, pc + 4,
-        2'b01, pc + imm,
-        2'b10, rs1_d + imm,
-        2'b11, pc
+        2'b00, pc,
+        2'b01, pc + 4,
+        2'b10, pc + imm,
+        2'b11, rs1_d + imm
     });
-    
-    always @(*) begin
-        if (opt == 13'b0)
-            ebreak(rs1_d);
-    end
 
 endmodule
