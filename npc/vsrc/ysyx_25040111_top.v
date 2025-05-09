@@ -69,7 +69,7 @@ module ysyx_25040111_top(
     
     wire [31:0] dnpc;
     ysyx_25040111_exu u_ysyx_25040111_exu(
-        .opt   	(opt[`OPT_HIGH:3]    ),
+        .opt   	(opt    ),
         .rs1_d 	(rs1_d  ),
         .rs2_d 	(rs2_d  ),
         .imm   	(imm    ),

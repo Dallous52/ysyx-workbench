@@ -3,7 +3,7 @@
 import "DPI-C" function void ebreak(int code);
 
 module ysyx_25040111_exu(
-    input [`OPT_HIGH:3] opt,
+    input [`OPT_HIGH:0] opt,
     input [31:0] rs1_d,
     input [31:0] rs2_d,
     input [31:0] imm,
@@ -26,5 +26,10 @@ module ysyx_25040111_exu(
         2'b10, pc + imm,
         2'b11, rs1_d + imm
     });
+    
+    always @(*) begin
+        if (opt == `EBREAK_INST)
+            ebreak(rs1_d);
+    end
 
 endmodule
