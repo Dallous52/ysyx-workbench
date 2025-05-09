@@ -15,7 +15,7 @@ module ysyx_25040111_auipc_lui (
     assign imm = {imm_m, 12'b0};
     //                                          lui
     assign opt = chos ? `OPTG(`WXX, `EMP, `EMPTY, `SNPC, `EMPTY, `EMPTY) :
-                        `OPTG(`WXX, `PC_IM, `EMPTY, `SNPC, `EMPTY, `EMPTY);
+                        `OPTG(`WXX, `PC_IM, `ADD, `SNPC, `EMPTY, `EMPTY);
     //                                          auipc
-    
+
 endmodule
