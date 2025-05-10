@@ -106,7 +106,11 @@ void check_wp()
   {
     bool success = false;
     word_t ret = expr(tmp->what, &success);
-    if (!success) finalize();
+    if (!success) 
+    {
+      printf(ANSI_FMT("check wp: Unexpectedly error\n", ANSI_BG_RED));
+      finalize(0);
+    }
 
     if (ret != tmp->value)
     {
