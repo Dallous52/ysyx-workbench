@@ -41,6 +41,6 @@ typedef uint32_t word_t;
 bool initialize(int argc, char** argv);
 
 // free
-void finalize();
+void finalize(int code);
 
 #endif // NPC_TYPE_DEFINE

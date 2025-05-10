@@ -71,12 +71,12 @@ bool initialize(int argc, char** argv)
 
 
 // exit
-void finalize()
+void finalize(int code)
 {
   void free_wp_pool();
   free_wp_pool();
   
   npc_free();
   
-  exit(0);
+  exit(code);
 }

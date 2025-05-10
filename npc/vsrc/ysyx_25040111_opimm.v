@@ -14,7 +14,7 @@ module ysyx_25040111_opimm (
     assign {imm_m, rs1, fun3, rd} = inst[31:7];
 
     ysyx_25040111_MuxKeyWithDefault #(1, 3, 32) imm_c (imm, fun3, 32'b0, {
-        3'b000, {{20{imm_m[11]}}, imm_m[11:0]}
+        3'b000, {{20{imm_m[11]}}, imm_m}
     });
 
     ysyx_25040111_MuxKeyWithDefault #(1, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {

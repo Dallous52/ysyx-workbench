@@ -104,13 +104,13 @@ int cpu_exec(uint64_t steps)
         switch (npc_stat)
         {
         case NPC_EXIT:
-            finalize(); break; 
+            finalize(0); break; 
         case NPC_RUN:
             print_exe_info(oldpc); step_ok++; break;
         case NPC_STOP:
             return step_ok;
         case NPC_ABORT:
-            finalize(); break;
+            finalize(1); break;
         }
     }
 
@@ -231,5 +231,5 @@ extern "C" void ebreak(int code)
         putchar('\n');
     }
 
-    finalize();
+    finalize(code);
 }

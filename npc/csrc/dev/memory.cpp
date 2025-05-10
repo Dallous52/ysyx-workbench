@@ -1,5 +1,6 @@
 #include "memory.h"
 #include "npc.h"
+#include "tpdef.h"
 
 #include <cstddef>
 #include <cstdint>
@@ -141,7 +142,7 @@ bool pmem_init(const char* fbin)
       0x06400513,  // addi x10, x0, 100
       0x00A28293,  // addi x5, x5, 10 
       0x00000513,  // addi a0, x0, 0
-      0x00100073   // ebreak    
+      0x00100073   // ebreak
   };
   
   imgsize = sizeof(img);
@@ -152,3 +153,31 @@ bool pmem_init(const char* fbin)
 }
 
 
+extern "C" int pmem_read(int raddr)
+{
+  // 总是读取地址为`raddr & ~0x3u`的4字节返回
+  return (int)paddr_read(raddr & ~0x3u, 4);
+}
+
+
+extern "C" void pmem_write(int waddr, int wdata, char wmask) 
+{
+  // 总是往地址为`waddr & ~0x3u`的4字节按写掩码`wmask`写入`wdata`
+  // `wmask`中每比特表示`wdata`中1个字节的掩码,
+  // 如`wmask = 0x3`代表只写入最低2个字节, 内存中的其它字节保持不变
+  paddr_t address = waddr & ~0x3u;
+  switch (wmask) 
+  {
+  case 0x1:
+    paddr_write(address, 1, (word_t)wdata);
+    break;
+  case 0x3:
+    paddr_write(address, 2, (word_t)wdata);
+    break;
+  case 0xF:
+    paddr_write(address, 4, (word_t)wdata);
+    break;
+  default:
+    break;
+  }
+}

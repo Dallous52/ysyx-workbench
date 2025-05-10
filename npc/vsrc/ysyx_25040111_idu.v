@@ -1,6 +1,6 @@
 `include "ysyx_25040111_inc.vh"
 
-`define OPCODE_NUM 6
+`define OPCODE_NUM 7
 
 module ysyx_25040111_idu(
     input [31:0] inst,
@@ -61,6 +61,24 @@ module ysyx_25040111_idu(
 
 
     // ------------------------------------------------------- 
+    //                         STORE
+    // -------------------------------------------------------
+    wire [4:0] rs1_store;
+    wire [4:0] rs2_store;
+    wire [31:0] imm_store;
+    wire [`OPT_HIGH:0] opt_store;
+    
+    ysyx_25040111_store u_ysyx_25040111_store(
+        .inst 	(inst[31:7]  ),
+        .rs1  	(rs1_store   ),
+        .rs2  	(rs2_store   ),
+        .imm  	(imm_store   ),
+        .opt  	(opt_store   )
+    );
+    
+
+
+    // ------------------------------------------------------- 
     //                         JAL                     
     // -------------------------------------------------------
     wire [31:0] imm_jal;
@@ -97,7 +115,8 @@ module ysyx_25040111_idu(
         7'b0110111, 5'b0,
         7'b1100111, rs1_jalr,
         7'b1101111, 5'b0,
-        7'b1110011, rs1_system
+        7'b1110011, rs1_system,
+        7'b0100011, rs1_store
     });
 
     ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, 5) rs2_c (rs2, inst[6:0], 5'b0, {
@@ -106,7 +125,8 @@ module ysyx_25040111_idu(
         7'b0110111, 5'b0,
         7'b1100111, 5'b0,
         7'b1101111, 5'b0,
-        7'b1110011, 5'b0
+        7'b1110011, 5'b0,
+        7'b0100011, rs2_store
     });
 
     ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, 5) rd_c (rd, inst[6:0], 5'b0, {
@@ -115,7 +135,8 @@ module ysyx_25040111_idu(
         7'b0110111, rd_auipc_lui,
         7'b1100111, rd_jalr,
         7'b1101111, rd_jal,
-        7'b1110011, 5'b0
+        7'b1110011, 5'b0,
+        7'b0100011, 5'b0
     });
 
     ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, 32) imm_c (imm, inst[6:0], 32'b0, {
@@ -124,7 +145,8 @@ module ysyx_25040111_idu(
         7'b0110111, imm_auipc_lui,
         7'b1100111, imm_jalr,
         7'b1101111, imm_jal,
-        7'b1110011, 32'b0
+        7'b1110011, 32'b0,
+        7'b0100011, imm_store
     });
 
     ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, `OPT_LEN) opt_c (opt, inst[6:0], `OPT_LEN'b0, {
@@ -133,7 +155,8 @@ module ysyx_25040111_idu(
         7'b0110111, opt_auipc_lui,
         7'b1100111, opt_jalr,
         7'b1101111, opt_jal,
-        7'b1110011, opt_system
+        7'b1110011, opt_system,
+        7'b0100011, opt_store
     });
 
 endmodule
