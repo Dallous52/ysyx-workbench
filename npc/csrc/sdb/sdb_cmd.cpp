@@ -20,7 +20,7 @@ int cmd_c(char *args)
 // quit
 int cmd_q(char *args) 
 {
-  finalize();
+  finalize(0);
   return -1;
 }
 
