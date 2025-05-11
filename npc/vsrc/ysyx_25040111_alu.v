@@ -2,6 +2,7 @@ module ysyx_25040111_alu (
     input [31:0] var1,
     input [31:0] var2,
     input [2:0] opt,
+    input sub,
     output [31:0] res
 );
 
@@ -13,6 +14,7 @@ module ysyx_25040111_alu (
     ysyx_25040111_adder32 u_adder32(
         .ina  	(var1   ),
         .inb  	(vart   ),
+        .sub    (sub),
         .sout 	(res_add)
     );
     

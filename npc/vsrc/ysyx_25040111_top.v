@@ -28,7 +28,7 @@
 //              101 lb
 //              110 lh
 //              111 lw
-//      [13]    shame enable
+//      [13]    [shift:shame] | [add:sub]
 //      [14]    unsigned enable
 //      [15]    other option
 

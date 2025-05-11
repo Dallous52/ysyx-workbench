@@ -30,6 +30,7 @@ module ysyx_25040111_exu(
         .var1 	(var1  ),
         .var2 	(var2  ),
         .opt  	(opt[7:5]   ),
+        .sub    (opt[13]),
         .res  	(res   )
     );
     
@@ -48,6 +49,7 @@ module ysyx_25040111_exu(
     ysyx_25040111_adder32 u_ysyx_25040111_adder32(
         .ina  	(ina   ),
         .inb  	(inb   ),
+        .sub    (0),
         .sout 	(dnpc  )
     );
     
