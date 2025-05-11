@@ -261,7 +261,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
     paddr_t address = waddr & ~0x3u;
     
     // mtrace memory write
-    if (0b0100011 == BITS(instruct, 6, 0) && unduplicate != currpc)
+    // if (0b0100011 == BITS(instruct, 6, 0) && unduplicate != currpc)
     {
         printf(ANSI_FMT("[write mem] address = 0x%08x; pc = 0x%08x; mask: 0x%02x;\n", ANSI_FG_CYAN),
            (paddr_t)waddr, top.pc, wmask);
