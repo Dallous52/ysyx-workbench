@@ -33,7 +33,7 @@ module ysyx_25040111_exu(
     ysyx_25040111_alu u_ysyx_25040111_alu(
         .var1 	(var1  ),
         .var2 	(var2  ),
-        .opt  	(opt[7:5]   ),
+        .opt  	(opt[7:5]),
         .res  	(res   )
     );
     
