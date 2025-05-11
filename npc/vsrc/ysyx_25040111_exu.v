@@ -10,7 +10,6 @@ module ysyx_25040111_exu(
     input [31:0] rs2_d,
     input [31:0] imm,
     input [31:0] pc,
-    input clk,
     output [31:0] rd_d,
     output [31:0] dnpc
 );
@@ -35,7 +34,6 @@ module ysyx_25040111_exu(
         .var1 	(var1  ),
         .var2 	(var2  ),
         .opt  	(opt[7:5]),
-        .clk    (clk),
         .res  	(res   )
     );
     
@@ -44,7 +42,6 @@ module ysyx_25040111_exu(
     // -------------------------------------------------------
     wire [31:0] ina;
     wire [31:0] inb;
-    wire [31:0] dnpc_t;
     ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, opt[9:8], {
         2'b00, {pc, 32'd4},
         2'b01, {pc, 32'd4},
@@ -55,17 +52,8 @@ module ysyx_25040111_exu(
     ysyx_25040111_adder32 u_ysyx_25040111_adder32(
         .ina  	(ina   ),
         .inb  	(inb   ),
-        .sout 	(dnpc_t  )
+        .sout 	(dnpc  )
     );
-
-    ysyx_25040111_Reg #(32, 32'h80000000) u_ysyx_25040111_Reg(
-        .clk  	(clk),
-        .rst  	(0 ),
-        .din  	(dnpc_t),
-        .dout 	(dnpc  ),
-        .wen  	(1   )
-    );
-    
     
     
     // ------------------------------------------------------- 

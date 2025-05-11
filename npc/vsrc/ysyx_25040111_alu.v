@@ -2,7 +2,6 @@ module ysyx_25040111_alu (
     input [31:0] var1,
     input [31:0] var2,
     input [2:0] opt,
-    input clk,
     output [31:0] res
 );
 
@@ -17,8 +16,8 @@ module ysyx_25040111_alu (
         .sout 	(res_add)
     );
     
-    wire [31:0] res_t;
-    ysyx_25040111_MuxKey #(8, 3, 32) c_alu (res_t, opt, {
+
+    ysyx_25040111_MuxKey #(8, 3, 32) c_alu (res, opt, {
         3'b000, var1,
         3'b001, res_add,
         3'b010, var1 & var2,
@@ -28,14 +27,5 @@ module ysyx_25040111_alu (
         3'b110, var1 >> var2,
         3'b111, res_add
     });
-
-    ysyx_25040111_Reg #(32, 32'h00000000) u_ysyx_25040111_Reg(
-        .clk  	(clk   ),
-        .rst  	(0   ),
-        .din  	(res_t   ),
-        .dout 	(res  ),
-        .wen  	(1   )
-    );
-    
     
 endmodule
