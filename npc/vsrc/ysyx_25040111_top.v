@@ -36,7 +36,6 @@
 module ysyx_25040111_top(
     input clk,
     input rst,
-    output reg [31:0] inst,
     output [31:0] pc
 );
    
@@ -45,6 +44,7 @@ module ysyx_25040111_top(
     wire [4:0] rd;
     wire [31:0] imm;
     wire [`OPT_HIGH:0] opt;
+    reg [31:0] inst;
 
     always @(*) begin
         inst = pmem_read(pc);

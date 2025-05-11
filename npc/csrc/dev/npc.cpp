@@ -28,7 +28,8 @@ static const char *regs[] = {
 };
 
 uint32_t npc_stat = -1;
-
+static word_t currpc = 0;
+static word_t instruct = 0;
 
 static void ftrace(paddr_t pc, paddr_t call, int rd)
 {
@@ -49,34 +50,33 @@ static void ftrace(paddr_t pc, paddr_t call, int rd)
 
 
 // print execute infomation
-static void print_exe_info(uint32_t pc)
+static void print_exe_info()
 {
     char logbuf[128] = {};
     char* p = logbuf;
-    p += snprintf(p, sizeof(logbuf), "0x%08x: ", pc);
+    p += snprintf(p, sizeof(logbuf), "0x%08x: ", currpc);
 
-    uint8_t *inst = (uint8_t *)&top.inst;
+    uint8_t *inst = (uint8_t *)&instruct;
     for (int i = 3; i >= 0; i--) 
         p += snprintf(p, 4, " %02x", inst[i]);
 
     *p = '\t'; p++;
 
-    disassemble(p, logbuf + sizeof(logbuf) - p, pc, (uint8_t *)&top.inst, 4);
+    disassemble(p, logbuf + sizeof(logbuf) - p, currpc, (uint8_t *)&instruct, 4);
     
     static uint8_t jal = 0b1101111;
     static uint8_t jalr = 0b1100111;
-    uint8_t opt = BITS(top.inst, 6, 0);
-    uint8_t rd = BITS(top.inst, 11, 7);
+    uint8_t opt = BITS(instruct, 6, 0);
+    uint8_t rd = BITS(instruct, 11, 7);
     
     if (opt == jal || opt == jalr)
-        ftrace(pc, top.pc, rd);
+        ftrace(currpc, top.pc, rd);
     
     std::cout << logbuf << std::endl;
 }
 
 
 // execute
-static uint32_t oldpc = 0;
 int cpu_exec(uint64_t steps)
 {
     npc_stat = NPC_RUN;
@@ -85,7 +85,8 @@ int cpu_exec(uint64_t steps)
 
     while (steps--)
     {
-        oldpc = top.pc;
+        currpc = top.pc;
+        instruct = paddr_read(currpc, 4);
         top.clk = 0; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
         top.clk = 1; top.eval();
@@ -94,9 +95,9 @@ int cpu_exec(uint64_t steps)
         void check_wp();
         check_wp();
         
-        if (!difftest_step(oldpc)) 
+        if (!difftest_step(currpc))
         {
-            print_exe_info(oldpc);
+            print_exe_info();
             npc_stat = NPC_STOP;
         }    
 
@@ -105,7 +106,7 @@ int cpu_exec(uint64_t steps)
         case NPC_EXIT:
             finalize(0); break; 
         case NPC_RUN:
-            print_exe_info(oldpc); step_ok++; break;
+            print_exe_info(); step_ok++; break;
         case NPC_STOP:
             return step_ok;
         case NPC_ABORT:
@@ -239,11 +240,11 @@ static word_t unduplicate = 0;
 extern "C" int pmem_read(int raddr)
 {
     // mtrace memory read
-    if (0b0000011 == BITS(top.inst, 6, 0) && unduplicate != oldpc)
+    if (0b0000011 == BITS(top.inst, 6, 0) && unduplicate != currpc)
     {
         printf(ANSI_FMT("[read mem] address = 0x%08x; pc = 0x%08x;\n", ANSI_FG_CYAN),
             (paddr_t)raddr & ~0x3u, top.pc);
-        unduplicate = oldpc;
+        unduplicate = currpc;
     }
     
     // 总是读取地址为`raddr & ~0x3u`的4字节返回
@@ -260,11 +261,11 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
     paddr_t address = waddr & ~0x3u;
     
     // mtrace memory write
-    if (0b0100011 == BITS(top.inst, 6, 0) && unduplicate != oldpc)
+    if (0b0100011 == BITS(top.inst, 6, 0) && unduplicate != currpc)
     {
         printf(ANSI_FMT("[write mem] address = 0x%08x; pc = 0x%08x; mask: 0x%02x;\n", ANSI_FG_CYAN),
            (paddr_t)waddr, top.pc, wmask);
-        unduplicate = oldpc;
+        unduplicate = currpc;
     }
 
     switch (wmask) 
