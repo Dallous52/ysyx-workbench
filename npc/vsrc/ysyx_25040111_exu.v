@@ -19,16 +19,12 @@ module ysyx_25040111_exu(
     wire [31:0] res;
     wire [31:0] var1;
     wire [31:0] var2;
-    ysyx_25040111_MuxKey #(4, 2, 64) c_alu_arg({var1, var2}, opt[9:8], {
+    ysyx_25040111_MuxKey #(4, 2, 64) c_alu_arg({var1, var2}, opt[4:3], {
         2'b00, {imm, 32'b0},
         2'b01, {pc, imm},
         2'b10, {rs1_d, rs2_d},
         2'b11, {rs1_d, imm}
     });
-
-    always @(*) begin
-        $display("%b rs1:%x  imm:%x  res:%x\n", opt[9:8], var1, var2, res);
-    end
 
     ysyx_25040111_alu u_ysyx_25040111_alu(
         .var1 	(var1  ),
