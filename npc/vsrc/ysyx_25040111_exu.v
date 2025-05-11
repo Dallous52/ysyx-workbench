@@ -27,7 +27,7 @@ module ysyx_25040111_exu(
     });
 
     always @(*) begin
-        $display("%d %d\n", imm, rs1_d);
+        $display("%x %x\n", imm, rs1_d);
     end
 
     ysyx_25040111_alu u_ysyx_25040111_alu(
