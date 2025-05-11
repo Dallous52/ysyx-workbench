@@ -91,6 +91,8 @@ int cpu_exec(uint64_t steps)
     {
         currpc = top.pc;
         instruct = paddr_read(top.pc, 4);
+        print_exe_info();
+        
         top.clk = 0; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
         top.clk = 1; top.eval();
@@ -99,7 +101,6 @@ int cpu_exec(uint64_t steps)
         void check_wp();
         check_wp();
         
-        print_exe_info();
         if (!difftest_step(currpc))
         {
             npc_stat = NPC_STOP;
