@@ -76,12 +76,12 @@ static void print_exe_info(uint32_t pc)
 
 
 // execute
+static uint32_t oldpc = 0;
 int cpu_exec(uint64_t steps)
 {
     npc_stat = NPC_RUN;
 
     uint64_t step_ok = 0;
-    uint32_t oldpc = 0;
 
     while (steps--)
     {
@@ -235,10 +235,18 @@ extern "C" void ebreak(int code)
 }
 
 
+static word_t unduplicate = 0;
+
 extern "C" int pmem_read(int raddr)
 {
-    printf(ANSI_FMT("[read ] address = 0x%08x; pc = 0x%08x;\n", ANSI_FG_CYAN),
-        (paddr_t)raddr & ~0x3u, top.pc);
+    // mtrace memory read
+    if (0b0000011 == BITS(top.inst, 6, 0) && unduplicate != oldpc)
+    {
+        printf(ANSI_FMT("[read mem] address = 0x%08x; pc = 0x%08x;\n", ANSI_FG_CYAN),
+            (paddr_t)raddr & ~0x3u, top.pc);
+        unduplicate = oldpc;
+    }
+    
     // 总是读取地址为`raddr & ~0x3u`的4字节返回
     return (int)paddr_read((paddr_t)raddr & ~0x3u, 4);
 }
@@ -251,8 +259,15 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
     // 如`wmask = 0x3`代表只写入最低2个字节, 内存中的其它字节保持不变
  
     paddr_t address = waddr & ~0x3u;
-    printf(ANSI_FMT("[write ] address = 0x%08x; pc = 0x%08x; mask: 0x%02x;\n", ANSI_FG_CYAN),
-    (paddr_t)waddr, top.pc, wmask);
+    
+    // mtrace memory write
+    if (0b0100011 == BITS(top.inst, 6, 0) && unduplicate != oldpc)
+    {
+        printf(ANSI_FMT("[write mem] address = 0x%08x; pc = 0x%08x; mask: 0x%02x;\n", ANSI_FG_CYAN),
+           (paddr_t)waddr, top.pc, wmask);
+        unduplicate = oldpc;
+    }
+
     switch (wmask) 
     {
     case 0x1:
