@@ -10,6 +10,7 @@ module ysyx_25040111_exu(
     input [31:0] rs2_d,
     input [31:0] imm,
     input [31:0] pc,
+    input clk,
     output [31:0] rd_d,
     output [31:0] dnpc
 );
@@ -26,7 +27,7 @@ module ysyx_25040111_exu(
         2'b11, {rs1_d, imm}
     });
 
-    always @(*) begin
+    always @(posedge clk) begin
         $display("pc:%x  imm:%x  rs1_d:%x\n", pc, imm, rs1_d);
     end
 
