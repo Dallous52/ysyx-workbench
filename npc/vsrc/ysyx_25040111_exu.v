@@ -44,6 +44,7 @@ module ysyx_25040111_exu(
     // -------------------------------------------------------
     wire [31:0] ina;
     wire [31:0] inb;
+    wire [31:0] dnpc_t;
     ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, opt[9:8], {
         2'b00, {pc, 32'd4},
         2'b01, {pc, 32'd4},
@@ -54,8 +55,17 @@ module ysyx_25040111_exu(
     ysyx_25040111_adder32 u_ysyx_25040111_adder32(
         .ina  	(ina   ),
         .inb  	(inb   ),
-        .sout 	(dnpc  )
+        .sout 	(dnpc_t  )
     );
+
+    ysyx_25040111_Reg #(32, 32'h80000000) u_ysyx_25040111_Reg(
+        .clk  	(clk),
+        .rst  	(0 ),
+        .din  	(dnpc_t),
+        .dout 	(dnpc  ),
+        .wen  	(1   )
+    );
+    
     
     
     // ------------------------------------------------------- 
