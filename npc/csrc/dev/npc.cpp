@@ -82,6 +82,7 @@ int cpu_exec(uint64_t steps)
     if (npc_stat != NPC_RUN)
     {
         printf(ANSI_FMT("Program is stop!", ANSI_FG_MAGENTA));
+        return 0;
     }
 
     uint64_t step_ok = 0;
@@ -236,7 +237,6 @@ extern "C" void ebreak(int code)
     {
         npc_stat = NPC_END;
     }
-
 }
 
 
