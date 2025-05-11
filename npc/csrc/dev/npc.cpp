@@ -94,6 +94,7 @@ int cpu_exec(uint64_t steps)
 
         top.clk = 0; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
+        printf("test work\n");
         top.clk = 1; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
 
