@@ -79,14 +79,17 @@ static void print_exe_info()
 // execute
 int cpu_exec(uint64_t steps)
 {
-    npc_stat = NPC_RUN;
+    if (npc_stat != NPC_RUN)
+    {
+        printf(ANSI_FMT("Program is stop!", ANSI_FG_MAGENTA));
+    }
 
     uint64_t step_ok = 0;
 
     while (steps--)
     {
         currpc = top.pc;
-        instruct = paddr_read(currpc, 4);
+        instruct = paddr_read(top.pc, 4);
         top.clk = 0; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
         top.clk = 1; top.eval();
@@ -95,9 +98,9 @@ int cpu_exec(uint64_t steps)
         void check_wp();
         check_wp();
         
+        print_exe_info(); 
         if (!difftest_step(currpc))
         {
-            print_exe_info();
             npc_stat = NPC_STOP;
         }    
 
@@ -106,7 +109,7 @@ int cpu_exec(uint64_t steps)
         case NPC_EXIT:
             finalize(0); break; 
         case NPC_RUN:
-            print_exe_info(); step_ok++; break;
+            step_ok++; break;
         case NPC_STOP:
             return step_ok;
         case NPC_ABORT:
@@ -201,6 +204,7 @@ void npc_init(bool vcd)
     }
     
     top.pc = 0x80000000;
+    npc_stat = NPC_RUN;
 }
 
 
@@ -231,7 +235,7 @@ extern "C" void ebreak(int code)
         putchar('\n');
     }
 
-    finalize(code);
+    npc_stat = NPC_STOP;
 }
 
 
