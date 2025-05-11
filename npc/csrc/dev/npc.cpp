@@ -98,7 +98,7 @@ int cpu_exec(uint64_t steps)
         void check_wp();
         check_wp();
         
-        print_exe_info(); 
+        print_exe_info();
         if (!difftest_step(currpc))
         {
             npc_stat = NPC_STOP;
@@ -106,14 +106,18 @@ int cpu_exec(uint64_t steps)
 
         switch (npc_stat)
         {
-        case NPC_EXIT:
-            finalize(0); break; 
         case NPC_RUN:
             step_ok++; break;
         case NPC_STOP:
             return step_ok;
         case NPC_ABORT:
-            finalize(1); break;
+            printf("[" ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED) "]\n");
+            return step_ok;
+        case NPC_END:
+            printf("[" ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) "]\n");
+            return step_ok;
+        default:
+            finalize(1);
         }
     }
 
@@ -226,16 +230,13 @@ extern "C" void ebreak(int code)
 
     if (code)
     {
-        printf("[" ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED) "]");
-        putchar('\n');
+        npc_stat = NPC_ABORT;
     }
     else 
     {
-        printf("[" ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) "]");
-        putchar('\n');
+        npc_stat = NPC_END;
     }
 
-    npc_stat = NPC_STOP;
 }
 
 

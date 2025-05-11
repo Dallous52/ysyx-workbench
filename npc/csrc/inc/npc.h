@@ -28,9 +28,9 @@ const char* reg_name(int idx);
 // runtime status
 extern uint32_t npc_stat;
 
-#define NPC_EXIT    0
 #define NPC_RUN     1
 #define NPC_STOP    2
-#define NPC_ABORT   3 
+#define NPC_ABORT   3
+#define NPC_END     4
 
 #endif // NPC_NPC
