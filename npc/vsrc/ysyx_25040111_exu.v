@@ -10,6 +10,7 @@ module ysyx_25040111_exu(
     input [31:0] rs2_d,
     input [31:0] imm,
     input [31:0] pc,
+    input clk,
     output [31:0] rd_d,
     output [31:0] dnpc
 );
@@ -34,6 +35,7 @@ module ysyx_25040111_exu(
         .var1 	(var1  ),
         .var2 	(var2  ),
         .opt  	(opt[7:5]),
+        .clk    (clk),
         .res  	(res   )
     );
     

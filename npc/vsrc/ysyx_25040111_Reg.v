@@ -10,7 +10,6 @@ module ysyx_25040111_Reg #(WIDTH = 1, RESET_VAL = 0) (
   always @(posedge clk) begin
     if (rst) dout <= RESET_VAL;
     else if (wen) dout <= din;
-    $display("in:%x out:%x", din, dout);
   end
 
 endmodule
