@@ -112,10 +112,10 @@ int cpu_exec(uint64_t steps)
         case NPC_STOP:
             return step_ok;
         case NPC_ABORT:
-            printf("[" ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED) "]\n");
+            printf("ebreak [" ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED) "]\n");
             return step_ok;
         case NPC_END:
-            printf("[" ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) "]\n");
+            printf("ebreak [" ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) "]\n");
             return step_ok;
         default:
             finalize(1);
