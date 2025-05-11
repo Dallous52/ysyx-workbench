@@ -230,16 +230,14 @@ extern "C" void ebreak(int code)
 }
 
 
-static word_t unduplicate = 0;
-
 extern "C" int pmem_read(int raddr)
 {
     // mtrace memory read
-    if (0b0000011 == BITS(instruct, 6, 0) && unduplicate != currpc)
+    word_t minst = paddr_read(top.pc, 4);
+    if (0b0000011 == BITS(minst, 6, 0))
     {
         printf(ANSI_FMT("[read mem] address = 0x%08x; pc = 0x%08x;\n", ANSI_FG_CYAN),
             (paddr_t)raddr & ~0x3u, top.pc);
-        unduplicate = currpc;
     }
     
     // 总是读取地址为`raddr & ~0x3u`的4字节返回
@@ -256,12 +254,11 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
     paddr_t address = waddr & ~0x3u;
     
     // mtrace memory write
-    // word_t minst = paddr_read(top.pc, 4);
-    // if (0b0100011 == BITS(minst, 6, 0) && unduplicate != currpc)
+    word_t minst = paddr_read(top.pc, 4);
+    if (0b0100011 == BITS(minst, 6, 0))
     {
         printf(ANSI_FMT("[write mem] address = 0x%08x; pc = 0x%08x; mask: 0x%02x;\n", ANSI_FG_CYAN),
            (paddr_t)waddr, top.pc, wmask);
-        unduplicate = currpc;
     }
 
     switch (wmask) 
