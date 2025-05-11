@@ -31,21 +31,26 @@ uint32_t npc_stat = -1;
 static word_t currpc = 0;
 static word_t instruct = 0;
 
-static void ftrace(paddr_t pc, paddr_t call, int rd)
+static void ftrace(paddr_t pc, paddr_t call)
 {
-  const char* ftrace_get_name(paddr_t addr);
+    const char* ftrace_get_name(paddr_t addr);
+    
+    static const uint8_t jal = 0b1101111;
+    static const uint8_t jalr = 0b1100111;
 
-  const char* dst = ftrace_get_name(call);
-  const char* src = ftrace_get_name(pc);
+    uint8_t opt = BITS(instruct, 6, 0);
+    uint8_t rd = BITS(instruct, 11, 7);
+    
+    if (opt == jal || opt == jalr)
+    {
+        const char* dst = ftrace_get_name(call);
+        const char* src = ftrace_get_name(pc);
 
-  if (rd == 1)
-  {
-    printf(ANSI_FMT("[0x%x in %s] call [%s 0x%x]\n", ANSI_FG_CYAN), pc, src, dst, call);
-  }
-  else if (rd == 0)
-  {
-    printf(ANSI_FMT("[0x%x in %s] ret  [%s 0x%x]\n", ANSI_FG_CYAN), pc, src, dst, call);
-  }
+        if (rd == 1)
+            printf(ANSI_FMT("[0x%x in %s] call [%s 0x%x]\n", ANSI_FG_CYAN), pc, src, dst, call);
+        else if (rd == 0)
+            printf(ANSI_FMT("[0x%x in %s] ret  [%s 0x%x]\n", ANSI_FG_CYAN), pc, src, dst, call);
+    }
 }
 
 
@@ -64,14 +69,6 @@ static void print_exe_info()
 
     disassemble(p, logbuf + sizeof(logbuf) - p, currpc, (uint8_t *)&instruct, 4);
     
-    static uint8_t jal = 0b1101111;
-    static uint8_t jalr = 0b1100111;
-    uint8_t opt = BITS(instruct, 6, 0);
-    uint8_t rd = BITS(instruct, 11, 7);
-    
-    if (opt == jal || opt == jalr)
-        ftrace(currpc, top.pc, rd);
-    
     std::cout << logbuf << std::endl;
 }
 
@@ -79,6 +76,8 @@ static void print_exe_info()
 // execute
 int cpu_exec(uint64_t steps)
 {
+    void check_wp();
+
     if (npc_stat != NPC_RUN)
     {
         printf(ANSI_FMT("Program is stop!\n", ANSI_FG_MAGENTA));
@@ -92,19 +91,17 @@ int cpu_exec(uint64_t steps)
         currpc = top.pc;
         instruct = paddr_read(top.pc, 4);
         print_exe_info();
-        
+
         top.clk = 0; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
         top.clk = 1; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
 
-        void check_wp();
+        ftrace(currpc, top.pc);
+        
         check_wp();
         
-        if (!difftest_step(currpc))
-        {
-            npc_stat = NPC_STOP;
-        }    
+        if (!difftest_step(currpc)) npc_stat = NPC_STOP;
 
         switch (npc_stat)
         {
@@ -229,13 +226,9 @@ void npc_free()
 extern "C" void ebreak(int code)
 {
     if (code)
-    {
         npc_stat = NPC_ABORT;
-    }
     else 
-    {
         npc_stat = NPC_END;
-    }
 }
 
 
