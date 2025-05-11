@@ -98,9 +98,7 @@ int cpu_exec(uint64_t steps)
         if (vtrace) vtrace->dump(sim_time++);
 
         ftrace(currpc, top.pc);
-        
         check_wp();
-        
         if (!difftest_step(currpc)) npc_stat = NPC_STOP;
 
         switch (npc_stat)
@@ -258,8 +256,8 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
     paddr_t address = waddr & ~0x3u;
     
     // mtrace memory write
-    word_t minst = paddr_read(top.pc, 4);
-    if (0b0100011 == BITS(minst, 6, 0) && unduplicate != currpc)
+    // word_t minst = paddr_read(top.pc, 4);
+    // if (0b0100011 == BITS(minst, 6, 0) && unduplicate != currpc)
     {
         printf(ANSI_FMT("[write mem] address = 0x%08x; pc = 0x%08x; mask: 0x%02x;\n", ANSI_FG_CYAN),
            (paddr_t)waddr, top.pc, wmask);
