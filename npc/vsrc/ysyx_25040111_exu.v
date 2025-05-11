@@ -26,6 +26,10 @@ module ysyx_25040111_exu(
         2'b11, {rs1_d, imm}
     });
 
+    always @(*) begin
+        $display("pc:%x  imm:%x  res:%x\n", pc, imm, res);
+    end
+
     ysyx_25040111_alu u_ysyx_25040111_alu(
         .var1 	(var1  ),
         .var2 	(var2  ),
