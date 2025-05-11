@@ -89,7 +89,7 @@ module ysyx_25040111_top(
         .rst  	(rst   ),
         .din  	(dnpc),
         .dout 	(pc  ),
-        .wen  	(clk   )
+        .wen  	(1   )
     );
 
 endmodule
