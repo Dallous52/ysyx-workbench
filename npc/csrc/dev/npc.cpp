@@ -86,7 +86,6 @@ int cpu_exec(uint64_t steps)
     while (steps--)
     {
         oldpc = top.pc;
-        top.inst = paddr_read(top.pc, 4);
         top.clk = 0; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
         top.clk = 1; top.eval();

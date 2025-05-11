@@ -33,10 +33,11 @@
 
 `include "ysyx_25040111_inc.vh" 
 
+import "DPI-C" function int pmem_read(input int raddr);
+
 module ysyx_25040111_top(
     input clk,
     input rst,
-    input [31:0] inst,
     output [31:0] pc
 );
    
@@ -45,7 +46,12 @@ module ysyx_25040111_top(
     wire [4:0] rd;
     wire [31:0] imm;
     wire [`OPT_HIGH:0] opt;
-    
+    reg [31:0] inst;
+
+    always @(*) begin
+        inst = pmem_read(pc);
+    end
+
     ysyx_25040111_idu u_idu(
         .inst 	(inst[31:0]),
         .rs1  	(rs1   ),
