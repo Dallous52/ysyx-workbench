@@ -1,9 +1,7 @@
-module ysyx_25040111_adder(
+module ysyx_25040111_adder4(
     input [3:0] ina,
     input [3:0] inb,
     input cin,
-    output pf, 
-    output gf,
     output cout,
     output [3:0] sout
 );
@@ -22,9 +20,8 @@ module ysyx_25040111_adder(
         .cout 	(c[4:1])
     );
 
+    // 进位与结果
     assign cout = c[4];
     assign sout = p ^ c[3:0];
-    assign pf = &p;
-    assign gf = g[3] | (p[3] & g[2]) | (&p[3:2] & g[1]) | (&p[3:1] & g[0]);
-    
+
 endmodule

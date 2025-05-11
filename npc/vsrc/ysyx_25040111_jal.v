@@ -18,6 +18,6 @@ module ysyx_25040111_jal(
     assign rd  = inst[11:7];
 
     assign imm = {{11{imm_m[20]}}, imm_m};
-    assign opt = `OPTG(`WXX, `EMP, `NPC, `INPC, `EMPTY, `EMPTY);
+    assign opt = `OPTG(`WXX, `PC_IM, `NPC, `INPC, `EMPTY, `EMPTY);
 
 endmodule

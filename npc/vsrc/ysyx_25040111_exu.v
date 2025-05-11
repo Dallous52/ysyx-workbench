@@ -13,31 +13,50 @@ module ysyx_25040111_exu(
     output [31:0] rd_d,
     output [31:0] dnpc
 );
-
-    // ALU
+    // ------------------------------------------------------- 
+    //                        ALU
+    // -------------------------------------------------------
     wire [31:0] res;
-    ysyx_25040111_MuxKeyWithDefault #(5, 5, 32) temp_alu (res, opt[7:3], 32'b0, {
-        5'b00000, imm,
-        5'b00101, pc + imm,
-        5'b00110, rs1_d + rs2_d,
-        5'b00111, rs1_d + imm,
-        5'b11000, pc + 4
+    wire [31:0] var1;
+    wire [31:0] var2;
+    ysyx_25040111_MuxKey #(4, 2, 64) c_alu_arg({var1, var2}, opt[9:8], {
+        2'b00, {imm, 32'b0},
+        2'b01, {pc, imm},
+        2'b10, {rs1_d, rs2_d},
+        2'b11, {rs1_d, imm}
     });
+
+    ysyx_25040111_alu u_ysyx_25040111_alu(
+        .var1 	(var1  ),
+        .var2 	(var2  ),
+        .opt  	(opt[7:5]   ),
+        .res  	(res   )
+    );
     
-    // PC UPDATE
-    ysyx_25040111_MuxKey #(4, 2, 32) dnpc_new(dnpc, opt[9:8], {
-        2'b00, pc + 4, // WARNNING
-        2'b01, pc + 4,
-        2'b10, pc + imm,
-        2'b11, rs1_d + imm
+    // ------------------------------------------------------- 
+    //                        PC UPDATE
+    // -------------------------------------------------------
+    wire [31:0] ina;
+    wire [31:0] inb;
+    ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, opt[9:8], {
+        2'b00, {pc, 32'd4},
+        2'b01, {pc, 32'd4},
+        2'b10, {pc, imm},
+        2'b11, {rs1_d, imm}
     });
+
+    ysyx_25040111_adder32 u_ysyx_25040111_adder32(
+        .ina  	(ina   ),
+        .inb  	(inb   ),
+        .sout 	(dnpc  )
+    );
     
     
     // ------------------------------------------------------- 
     //                        MEMORY
     // -------------------------------------------------------
     wire [7:0] wmask;
-    ysyx_25040111_MuxKey #(4, 2, 8) wmask_c(wmask, opt[11:10], {
+    ysyx_25040111_MuxKey #(4, 2, 8) c_wmask(wmask, opt[11:10], {
         2'b00, 8'h00,
         2'b01, 8'h01,
         2'b10, 8'h03,

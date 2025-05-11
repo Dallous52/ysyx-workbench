@@ -3,7 +3,7 @@
 //      [2:1]: reg read en [rs2, rs1]
 //      [4:3]: alu arguments
 //              00  empty
-//              01  pc, imm
+//              01  pc, imm (alu opt == 111 ? imm = 4 : imm)
 //              10  rs1, rs2
 //              11  rs1, imm
 //      [7:5]: alu option
@@ -12,8 +12,9 @@
 //              010 and
 //              011 or
 //              100 xor
-//              101 shift
-//              110 pc + 4 (static next pc)
+//              101 lshift
+//              110 rshift
+//              111 pc + 4 (static next pc)
 //      [9:8]: pc update option
 //              00 empty
 //              01 pc + 4
