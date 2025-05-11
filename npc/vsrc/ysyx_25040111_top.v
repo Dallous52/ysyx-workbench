@@ -33,8 +33,6 @@
 
 `include "ysyx_25040111_inc.vh" 
 
-import "DPI-C" function int pmem_read(input int raddr);
-
 module ysyx_25040111_top(
     input clk,
     input rst,
