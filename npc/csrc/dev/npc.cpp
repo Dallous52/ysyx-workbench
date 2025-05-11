@@ -227,8 +227,6 @@ void npc_free()
 // inst: ebreak
 extern "C" void ebreak(int code)
 {
-    printf("PC = 0x%08x  ", top.pc);
-
     if (code)
     {
         npc_stat = NPC_ABORT;
