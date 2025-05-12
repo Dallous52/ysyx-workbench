@@ -16,6 +16,13 @@ ARGS ?=
 
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
+CURRDIR = /home/dallous/Documents/ysyx-workbench/npc
+RTL_FILE = $(CURRDIR)/vsrc/ysyx_25040111_alu.v
+RTL_FILE += $(CURRDIR)/vsrc/ysyx_25040111_adder32.v
+RTL_FILE += $(CURRDIR)/vsrc/ysyx_25040111_adder4.v
+RTL_FILE += $(CURRDIR)/vsrc/ysyx_25040111_MuxKeyInternal.v
+RTL_FILE += $(CURRDIR)/vsrc/ysyx_25040111_MuxKey.v
+RTL_FILE += $(CURRDIR)/vsrc/ysyx_25040111_carry.v
 
 # 获取所有 C/C++ 源文件（`csrc` 目录下的 `.c`、`.cc`、`.cpp` 文件）
 CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
@@ -24,6 +31,7 @@ CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*
 INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
 INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/npc/csrc/inc/
 INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/nemu/tools/capstone/repo/include/
+
 
 # - `-DTOP_NAME="V$(TOPNAME)"` 定义宏 `TOP_NAME`，用于 Verilator 生成的顶层模块
 CXXFLAGS += $(INCFLAGS) -g
@@ -42,6 +50,10 @@ sim: $(VSRCS) $(CSRCS)
 		$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS)) \
 		--exe -o top
 
+sta:
+	make -C/home/dallous/Documents/yosys-sta/ RTL_FILES="$(RTL_FILE)" \
+		DESIGN=ysyx_25040111_alu ANSWER_DIR=$(CURRDIR)/ sta
+
 # gtkwave
 gtkwave:
 	@if [ -f waveform.vcd ]; then \
@@ -57,5 +69,6 @@ run: sim
 clean:
 	@rm -rf obj_dir
 	@rm -f waveform.vcd
+	@rm -rf result
 
 include ../Makefile
