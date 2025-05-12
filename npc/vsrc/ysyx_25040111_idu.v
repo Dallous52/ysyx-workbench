@@ -101,7 +101,7 @@ module ysyx_25040111_idu(
     wire [`OPT_HIGH:0] opt_jal;
     wire [4:0] rd_jal;
     
-    ysyx_25040111_jal u_ysyx_25040111_jal(
+    ysyx_25040111_jal u_ysyx_25040111_jal (
         .inst 	(inst[31:7]  ),
         .imm  	(imm_jal     ),
         .opt  	(opt_jal     ),

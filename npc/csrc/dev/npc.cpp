@@ -230,6 +230,7 @@ extern "C" void ebreak(int code)
 }
 
 
+static int tmppc = 0;
 extern "C" int pmem_read(int raddr)
 {
     paddr_t address = raddr & ~0x3u;
@@ -237,10 +238,11 @@ extern "C" int pmem_read(int raddr)
 
     // mtrace memory read
     word_t minst = paddr_read(top.pc, 4);
-    if (0b0000011 == BITS(minst, 6, 0))
+    if (0b0000011 == BITS(minst, 6, 0) && tmppc != currpc)
     {
         printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x;\n", ANSI_FG_CYAN),
             address, rdata, top.pc);
+        tmppc = currpc;
     }
     
     // 总是读取地址为`raddr & ~0x3u`的4字节返回
@@ -258,10 +260,11 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
     
     // mtrace memory write
     word_t minst = paddr_read(top.pc, 4);
-    if (0b0100011 == BITS(minst, 6, 0))
+    if (0b0100011 == BITS(minst, 6, 0) && tmppc != currpc)
     {
         printf(ANSI_FMT("[write mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x; mask: 0x%02x;\n", ANSI_FG_CYAN),
            (paddr_t)waddr, (word_t)wdata, top.pc, wmask);
+        tmppc = currpc;
     }
 
     switch (wmask) 
