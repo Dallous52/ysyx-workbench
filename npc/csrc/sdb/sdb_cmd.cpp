@@ -12,6 +12,7 @@ word_t expr(char* e, bool* success);
 // continue
 int cmd_c(char *args) 
 {
+  if (npc_stat == NPC_STOP) npc_stat = NPC_RUN;
   cpu_exec(-1);
   return 0;
 }
@@ -28,6 +29,7 @@ int cmd_q(char *args)
 // Single step execution
 int cmd_si(char* args)
 {
+  if (npc_stat == NPC_STOP) npc_stat = NPC_RUN;
   if (args == NULL)
     cpu_exec(1);
   else
