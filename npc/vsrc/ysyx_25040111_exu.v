@@ -67,7 +67,7 @@ module ysyx_25040111_exu(
 
     reg [31:0] rd_dt;
     always @(*) begin
-        if (|opt[12:10]) begin  // 有读写请求时
+        if (|opt[11:10]) begin  // 有读写请求时
             rd_dt = pmem_read(res);
             if (~opt[12]) begin // 有写请求时
                 pmem_write(res, rs2_d, wmask);
