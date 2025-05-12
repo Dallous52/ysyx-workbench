@@ -6,6 +6,8 @@ module ysyx_25040111_adder32 (
 );
 
     wire [7:0] cin;
+    wire [31:0] inbt;
+    assign inbt = sub ? ~inb : inb;
 
     generate
         genvar i;
@@ -13,7 +15,7 @@ module ysyx_25040111_adder32 (
             wire gcin = i == 0 ? sub : cin[i - 1];
             ysyx_25040111_adder4 u_ysyx_25040111_adder4(
                 .ina  	(ina[(4 * i + 3):(4 * i)]),
-                .inb  	(inb[(4 * i + 3):(4 * i)]),
+                .inb  	(inbt[(4 * i + 3):(4 * i)]),
                 .cin  	(gcin),
                 .cout 	(cin[i]),
                 .sout 	(sout[(4 * i + 3):(4 * i)])
