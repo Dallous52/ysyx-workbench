@@ -13,13 +13,15 @@ module ysyx_25040111_opimm (
 
     assign {imm_m, rs1, fun3, rd} = inst[31:7];
 
-    ysyx_25040111_MuxKeyWithDefault #(1, 3, 32) imm_c (imm, fun3, 32'b0, {
-        3'b000, {{20{imm_m[11]}}, imm_m}
+    ysyx_25040111_MuxKeyWithDefault #(2, 3, 32) imm_c (imm, fun3, {{20{imm_m[11]}}, imm_m}, {
+        3'b001, {27'b0, imm_m[4:0]},
+        3'b101, {27'b0, imm_m[4:0]}
     });
 
-    ysyx_25040111_MuxKeyWithDefault #(2, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
+    ysyx_25040111_MuxKeyWithDefault #(3, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
         3'b000, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `EMPTY, `EMPTY),       // addi
-        3'b011, `OPTG(`WFX, `RF_IM, `COMPARE, `SNPC, `EMPTY, `EXX)      // sltiu
+        3'b011, `OPTG(`WFX, `RF_IM, `COMPARE, `SNPC, `EMPTY, `EXX),     // sltiu
+        3'b101, `OPTG(`WFX, `RF_IM, `RSHIFT, `SNPC, `EMPTY, {1'b0, inst[30], 1'b0}) // srai srli
     });
 
 endmodule

@@ -33,7 +33,7 @@ module ysyx_25040111_alu (
         3'b010, ext ? (var1 | var2) : (var1 & var2),
         3'b011, dxor,
         3'b100, var1 << var2,
-        3'b101, var1 >> var2,
+        3'b101, sign ? var1 >>> var2 : var1 >> var2,
         3'b110, {31'b0, lt ^ negate},
         3'b111, {31'b0, (~(|dxor)) ^ negate}
     });
