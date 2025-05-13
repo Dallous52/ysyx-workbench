@@ -20,7 +20,8 @@ module ysyx_25040111_store(
     assign imm = {{20{imm_m[11]}}, imm_m};
 
     ysyx_25040111_MuxKeyWithDefault #(1, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
-        3'b010, `OPTG(`XFS, `RF_IM, `ADD, `SNPC, `MSW, `EMPTY)  // sw
+        3'b010, `OPTG(`XFS, `RF_IM, `ADD, `SNPC, `MSW, `EMPTY),  // sw
+        3'b010, `OPTG(`XFS, `RF_IM, `ADD, `SNPC, `MSH, `EMPTY)   // sh
     });
 
 endmodule
