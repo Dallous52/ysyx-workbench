@@ -76,22 +76,29 @@ module ysyx_25040111_exu(
     reg [31:0] rd_dt;
     always @(*) begin
         if (|opt[11:10]) begin  // 有读写请求时
-            $display("%x", res);
             rd_dt = pmem_read(res);
             if (~opt[12]) begin // 有写请求时
                 pmem_write(res, rs2_d, wmask);
             end
         end
         else begin
-            rd_dt = res;
+            rd_dt = 0;
         end
     end
 
+    wire [31:0] offset;
+    ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, res[1:0], {
+        2'b00, rd_dt,
+        2'b01, rd_dt >> 8,
+        2'b10, rd_dt >> 16,
+        2'b11, rd_dt >> 24
+    });
+
     ysyx_25040111_MuxKey #(4, 2, 32) c_rdmem(rd_d, opt[11:10], {
         2'b00, res,
-        2'b01, {{24{rd_dt[7] & opt[14]}}, rd_dt[7:0]},
-        2'b10, {{16{rd_dt[15] & opt[14]}}, rd_dt[15:0]},
-        2'b11, rd_dt
+        2'b01, {{24{offset[7] & opt[14]}}, offset[7:0]},
+        2'b10, {{16{offset[15] & opt[14]}}, offset[15:0]},
+        2'b11, offset
     });
 
     

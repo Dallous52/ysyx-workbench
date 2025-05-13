@@ -248,7 +248,7 @@ extern "C" int pmem_read(int raddr)
     if (raddr != top.pc && 0b0000011 == BITS(minst, 6, 0))
     {
         printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x;\n", ANSI_FG_CYAN),
-            (word_t)raddr, rdata, top.pc);
+            address, rdata, top.pc);
     }
     
     // 总是读取地址为`raddr & ~0x3u`的4字节返回
