@@ -24,9 +24,10 @@ module ysyx_25040111_op(
 
     assign {fun7, rs2, rs1, fun3, rd} = inst;
 
-    ysyx_25040111_MuxKeyWithDefault #(2, 10, `OPT_LEN) opt_c (opt, {fun7, fun3}, `OPT_LEN'b0, {
+    ysyx_25040111_MuxKeyWithDefault #(3, 10, `OPT_LEN) opt_c (opt, {fun7, fun3}, `OPT_LEN'b0, {
         `OP_SUB, `OPTG(`WFS, `RF_RS, `ADD, `SNPC, `EMPTY, `EXX),
-        `OP_ADD, `OPTG(`WFS, `RF_RS, `ADD, `SNPC, `EMPTY, `EMPTY)
+        `OP_ADD, `OPTG(`WFS, `RF_RS, `ADD, `SNPC, `EMPTY, `EMPTY),
+        `OP_SLL, `OPTG(`WFS, `RF_RS, `LSHIFT, `SNPC, `EMPTY, `EMPTY)
     });
 
 endmodule
