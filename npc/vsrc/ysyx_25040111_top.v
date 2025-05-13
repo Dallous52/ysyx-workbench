@@ -30,8 +30,8 @@
 //              111 lw
 //              100 pc + 4 [alu opt]
 //      [13]    [shift:shame] | [add:sub] | [and:or]
-//      [14]    unsigned enable
-//      [15]    other option
+//      [14]    signed enable
+//      [15]    [system opt] | [cmp-eq !res]
 
 `include "ysyx_25040111_inc.vh" 
 

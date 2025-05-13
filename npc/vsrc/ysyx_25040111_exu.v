@@ -30,8 +30,10 @@ module ysyx_25040111_exu(
         .var1 	(var1  ),
         .var2 	(var2  ),
         .opt  	(opt[7:5]   ),
-        .snpc    (opt[12:10] == 3'b100),
+        .snpc   (opt[12:10] == 3'b100),
         .ext    (opt[13]),
+        .sign   (opt[14]),
+        .negate (opt[15]),
         .res  	(res   )
     );
     
@@ -40,20 +42,23 @@ module ysyx_25040111_exu(
     // -------------------------------------------------------
     wire [31:0] ina;
     wire [31:0] inb;
+    wire [1:0] pc_ctl;
     
-    ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, opt[9:8], {
-        2'b00, {pc, 32'd4},
+    assign pc_ctl = |opt[9:8] ? opt[9:8] : res[0] ? `INPC : `SNPC;
+    ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, pc_ctl, {
+        2'b00, 64'd0,
         2'b01, {pc, 32'd4},
         2'b10, {pc, imm},
         2'b11, {rs1_d, imm}
     });
 
     ysyx_25040111_adder32 u_ysyx_25040111_adder32(
-        .ina  	(ina   ),
-        .inb  	(inb   ),
-        .sub    (0),
-        .sout 	(dnpc  ),
-        .over   ()
+        .ina  	    (ina   ),
+        .inb  	    (inb   ),
+        .sub        (0),
+        .sout 	    (dnpc  ),
+        .cout       (),
+        .overflow   ()
     );
     
     
