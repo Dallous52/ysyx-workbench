@@ -6,6 +6,7 @@
 #include "tpdef.h"
 
 #include <cstdint>
+#include <cstdio>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 #include <iostream>
@@ -55,21 +56,18 @@ static void ftrace(paddr_t pc, paddr_t call)
 
 
 // print execute infomation
-static void print_exe_info()
+static void print_exe_info(word_t tpc, word_t tinst, char* logbuf, size_t buflen)
 {
-    char logbuf[128] = {};
     char* p = logbuf;
-    p += snprintf(p, sizeof(logbuf), "0x%08x: ", currpc);
+    p += snprintf(p, buflen, "0x%08x: ", tpc);
 
-    uint8_t *inst = (uint8_t *)&instruct;
+    uint8_t *inst = (uint8_t *)&tinst;
     for (int i = 3; i >= 0; i--) 
         p += snprintf(p, 4, " %02x", inst[i]);
 
     *p = '\t'; p++;
 
-    disassemble(p, logbuf + sizeof(logbuf) - p, currpc, (uint8_t *)&instruct, 4);
-    
-    std::cout << logbuf << std::endl;
+    disassemble(p, logbuf + buflen - p, tpc, (uint8_t *)&tinst, 4);
 }
 
 
@@ -85,12 +83,14 @@ int cpu_exec(uint64_t steps)
     }
 
     uint64_t step_ok = 0;
+    char logbuf[128] = {};
 
     while (steps--)
     {
         currpc = top.pc;
         instruct = paddr_read(top.pc, 4);
-        print_exe_info();
+        print_exe_info(currpc, instruct, logbuf, 128);
+        printf("%s\n", logbuf);
 
         top.clk = 0; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
@@ -228,7 +228,9 @@ extern "C" void ebreak(int code)
         npc_stat = NPC_ABORT;
         if (code == 9)
         {
-            printf(ANSI_FMT("[unrealized] %08x\n", ANSI_FG_RED), top.pc);   
+            char logbuf[128] = {};
+            print_exe_info(top.pc, paddr_read(top.pc, 4), logbuf, 128);
+            printf(ANSI_FMT("[unrealized] %08x :: %s\n", ANSI_FG_RED), top.pc, logbuf);   
         }
     }
     else 
