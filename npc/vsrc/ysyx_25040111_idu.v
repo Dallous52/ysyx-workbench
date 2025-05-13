@@ -1,6 +1,6 @@
 `include "ysyx_25040111_inc.vh"
 
-`define OPCODE_NUM 9
+`define OPCODE_NUM 10
 
 module ysyx_25040111_idu(
     input [31:0] inst,
@@ -73,6 +73,24 @@ module ysyx_25040111_idu(
         .opt  	(opt_jalr   ),
         .rd   	(rd_jalr    )
     );
+
+
+    // ------------------------------------------------------- 
+    //                          JALR             
+    // -------------------------------------------------------
+    wire [4:0] rs1_branch;
+    wire [4:0] rs2_branch;
+    wire [31:0] imm_branch;
+    wire [`OPT_HIGH:0] opt_branch;
+    
+    ysyx_25040111_branch u_ysyx_25040111_branch(
+        .inst 	(inst[31:7]  ),
+        .rs1  	(rs1_branch   ),
+        .rs2  	(rs2_branch   ),
+        .imm  	(imm_branch   ),
+        .opt  	(opt_branch   )
+    );
+    
 
 
     // ------------------------------------------------------- 
@@ -149,7 +167,8 @@ module ysyx_25040111_idu(
         7'b1110011, rs1_system,
         7'b0100011, rs1_store,
         7'b0000011, rs1_load,
-        7'b0110011, rs1_op
+        7'b0110011, rs1_op,
+        7'b1100011, rs1_branch
     });
 
     ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, 5) rs2_c (rs2, inst[6:0], 5'b0, {
@@ -161,7 +180,8 @@ module ysyx_25040111_idu(
         7'b1110011, 5'b0,
         7'b0100011, rs2_store,
         7'b0000011, 5'b0,
-        7'b0110011, rs2_op
+        7'b0110011, rs2_op,
+        7'b1100011, rs2_branch
     });
 
     ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, 5) rd_c (rd, inst[6:0], 5'b0, {
@@ -173,7 +193,8 @@ module ysyx_25040111_idu(
         7'b1110011, 5'b0,
         7'b0100011, 5'b0,
         7'b0000011, rd_load,
-        7'b0110011, rd_op
+        7'b0110011, rd_op,
+        7'b1100011, 5'b0
     });
 
     ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, 32) imm_c (imm, inst[6:0], 32'b0, {
@@ -185,7 +206,8 @@ module ysyx_25040111_idu(
         7'b1110011, 32'b0,
         7'b0100011, imm_store,
         7'b0000011, imm_load,
-        7'b0110011, 32'b0
+        7'b0110011, 32'b0,
+        7'b1100011, imm_branch
     });
 
     ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, `OPT_LEN) opt_c (opt, inst[6:0], `OPT_LEN'b0, {
@@ -197,7 +219,8 @@ module ysyx_25040111_idu(
         7'b1110011, opt_system,
         7'b0100011, opt_store,
         7'b0000011, opt_load,
-        7'b0110011, opt_op
+        7'b0110011, opt_op,
+        7'b1100011, opt_branch
     });
 
 endmodule
