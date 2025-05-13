@@ -99,7 +99,7 @@ int cpu_exec(uint64_t steps)
 
         ftrace(currpc, top.pc);
         check_wp();
-        if (!difftest_step(currpc)) npc_stat = NPC_STOP;
+        // if (!difftest_step(currpc)) npc_stat = NPC_STOP;
 
         switch (npc_stat)
         {
@@ -240,7 +240,7 @@ extern "C" void ebreak(int code)
 
 extern "C" int pmem_read(int raddr)
 {
-    paddr_t address = (word_t)raddr; // raddr & ~0x3u;
+    paddr_t address = raddr & ~0x3u;
     word_t rdata = paddr_read(address, 4);
 
     // mtrace memory read
