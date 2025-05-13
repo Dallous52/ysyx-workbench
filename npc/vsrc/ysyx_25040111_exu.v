@@ -40,7 +40,7 @@ module ysyx_25040111_exu(
     // -------------------------------------------------------
     wire [31:0] ina;
     wire [31:0] inb;
-    wire over;
+    
     ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, opt[9:8], {
         2'b00, {pc, 32'd4},
         2'b01, {pc, 32'd4},
@@ -53,7 +53,7 @@ module ysyx_25040111_exu(
         .inb  	(inb   ),
         .sub    (0),
         .sout 	(dnpc  ),
-        .over   (over)
+        .over   ()
     );
     
     
@@ -90,8 +90,6 @@ module ysyx_25040111_exu(
     always @(*) begin
         if (opt == `EBREAK_INST)
             ebreak(rs1_d);
-        if (over)
-            ebreak(32'd1);
     end
 
 endmodule
