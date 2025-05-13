@@ -8,13 +8,13 @@
 //              11  rs1, imm
 //      [7:5]: alu option
 //              000 empty
-//              001 add
-//              010 and
-//              011 or
-//              100 xor
-//              101 lshift
-//              110 rshift
-//              111 pc + 4 (static next pc)
+//              001 add [13] sub
+//              010 and [13] or
+//              011 xor
+//              100 lshift
+//              101 rshift
+//              110 compare
+//              111 equal
 //      [9:8]: pc update option
 //              00 empty
 //              01 pc + 4
@@ -28,7 +28,8 @@
 //              101 lb
 //              110 lh
 //              111 lw
-//      [13]    [shift:shame] | [add:sub]
+//              100 pc + 4 [alu opt]
+//      [13]    [shift:shame] | [add:sub] | [and:or]
 //      [14]    unsigned enable
 //      [15]    other option
 

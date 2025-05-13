@@ -2,7 +2,8 @@ module ysyx_25040111_adder32 (
     input [31:0] ina,
     input [31:0] inb,
     input sub,
-    output [31:0] sout
+    output [31:0] sout,
+    output over
 );
 
     wire [7:0] cin;
@@ -22,5 +23,7 @@ module ysyx_25040111_adder32 (
             );
         end
     endgenerate
+
+    assign over = cin[7];
 
 endmodule
