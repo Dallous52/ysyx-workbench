@@ -245,7 +245,7 @@ extern "C" int pmem_read(int raddr)
 
     // mtrace memory read
     word_t minst = paddr_read(top.pc, 4);
-    if (0b0000011 == BITS(minst, 6, 0))
+    if (raddr != top.pc && 0b0000011 == BITS(minst, 6, 0))
     {
         printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x;\n", ANSI_FG_CYAN),
             address, rdata, top.pc);
