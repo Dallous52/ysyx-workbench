@@ -92,9 +92,11 @@ module ysyx_25040111_exu(
     // ------------------------------------------------------- 
     //                         SYSTEM
     // -------------------------------------------------------
+    wire [31:0] eret;
+    assign eret = opt[15] ? rs1_d : 32'd9;
     always @(*) begin
-        if (opt == `EBREAK_INST)
-            ebreak(rs1_d);
+        if (~(|opt[14:0]))
+            ebreak(eret);
     end
 
 endmodule

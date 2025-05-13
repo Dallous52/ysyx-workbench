@@ -224,7 +224,13 @@ void npc_free()
 extern "C" void ebreak(int code)
 {
     if (code)
+    {
         npc_stat = NPC_ABORT;
+        if (code == 9)
+        {
+            printf(ANSI_FMT("[unrealized] %08x\n", ANSI_FG_RED), top.pc);   
+        }
+    }
     else 
         npc_stat = NPC_END;
 }
