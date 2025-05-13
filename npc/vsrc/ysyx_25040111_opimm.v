@@ -19,7 +19,7 @@ module ysyx_25040111_opimm (
 
     ysyx_25040111_MuxKeyWithDefault #(2, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
         3'b000, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `EMPTY, `EMPTY),       // addi
-        3'b011, `OPTG(`WFX, `RF_IM, `COMPARE, `SNPC, `EMPTY, `EXT)      // sltiu
+        3'b011, `OPTG(`WFX, `RF_IM, `COMPARE, `SNPC, `EMPTY, `EXX)      // sltiu
     });
 
 endmodule
