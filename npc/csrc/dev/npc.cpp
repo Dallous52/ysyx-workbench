@@ -230,7 +230,7 @@ extern "C" void ebreak(int code)
         {
             char logbuf[128] = {};
             print_exe_info(top.pc, paddr_read(top.pc, 4), logbuf, 128);
-            printf(ANSI_FMT("[unrealized] %08x :: %s\n", ANSI_FG_RED), top.pc, logbuf);   
+            printf(ANSI_FMT("[unrealized] %s\n", ANSI_FG_RED), logbuf);   
         }
     }
     else 
