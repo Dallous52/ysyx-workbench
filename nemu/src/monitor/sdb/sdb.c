@@ -214,7 +214,7 @@ static int cmd_x(char* args)
     while (x_num--) 
     {
       word_t tmp = paddr_read(x_addr, 4);
-      printf("0x%08x\t%u\n", x_addr, tmp);
+      printf("0x%08x\t0x%08x\n", x_addr, tmp);
       x_addr += 4;
     }  
   }
