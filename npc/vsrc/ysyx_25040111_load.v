@@ -19,7 +19,7 @@ module ysyx_25040111_load (
         3'b100, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLB, `EMPTY),  // lbu
         3'b001, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLH, `XSX),    // lh
         3'b101, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLH, `EMPTY),  // lhu
-        3'b000, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLH, `XSX)     // lb
+        3'b000, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLB, `XSX)     // lb
     });
 
 endmodule
