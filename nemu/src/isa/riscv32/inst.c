@@ -104,6 +104,8 @@ static int decode_exec(Decode *s)
   decode_operand(s, &rd, &src1, &src2, &imm, concat(TYPE_, type)); \
   __VA_ARGS__ ; \
 }
+  
+  R(0) = 0; // reset $zero to 0
 
   INSTPAT_START();
 
