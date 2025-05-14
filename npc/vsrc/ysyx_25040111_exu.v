@@ -73,12 +73,20 @@ module ysyx_25040111_exu(
         2'b11, 8'b00001111
     });
 
+    wire [31:0] wdata;
+    ysyx_25040111_MuxKey #(4, 2, 32) c_wt_data(wdata, res[1:0], {
+        2'b00, rs2_d,
+        2'b01, rs2_d << 8,
+        2'b10, rs2_d << 16,
+        2'b11, rs2_d << 24
+    });
+
     reg [31:0] rd_dt;
     always @(*) begin
         if (|opt[11:10]) begin  // 有读写请求时
             rd_dt = pmem_read(res);
             if (~opt[12]) begin // 有写请求时
-                pmem_write(res, rs2_d << res[1:0], wmask);
+                pmem_write(res, wdata, wmask);
             end
         end
         else begin
