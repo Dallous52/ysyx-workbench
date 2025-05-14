@@ -20,9 +20,10 @@ module ysyx_25040111_branch(
     assign {rs2, rs1, fun3} = inst[24:12];
     assign imm = {{19{imm_m[12]}}, imm_m};
 
-    ysyx_25040111_MuxKeyWithDefault #(2, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
+    ysyx_25040111_MuxKeyWithDefault #(3, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
         3'b000, `OPTG(`XFS, `RF_RS, `EQUAL, `BRANCH, `EMPTY, `EXX),  // beq
-        3'b001, `OPTG(`XFS, `RF_RS, `EQUAL, `BRANCH, `EMPTY, `EXN)   // bne
+        3'b001, `OPTG(`XFS, `RF_RS, `EQUAL, `BRANCH, `EMPTY, `EXN),  // bne
+        3'b111, `OPTG(`XFS, `RF_RS, `COMPARE, `BRANCH, `EMPTY, `EXN) // bgeu
     });
 
 endmodule
