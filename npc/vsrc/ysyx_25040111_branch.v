@@ -25,7 +25,7 @@ module ysyx_25040111_branch(
         3'b001, `OPTG(`XFS, `RF_RS, `EQUAL, `BRANCH, `EMPTY, `EXN),   // bne
         3'b111, `OPTG(`XFS, `RF_RS, `COMPARE, `BRANCH, `EMPTY, `EXN), // bgeu
         3'b100, `OPTG(`XFS, `RF_RS, `COMPARE, `BRANCH, `EMPTY, `ESX), // blt
-        3'b111, `OPTG(`XFS, `RF_RS, `COMPARE, `BRANCH, `EMPTY, `ESN), // bge
+        3'b101, `OPTG(`XFS, `RF_RS, `COMPARE, `BRANCH, `EMPTY, `ESN), // bge
         3'b110, `OPTG(`XFS, `RF_RS, `COMPARE, `BRANCH, `EMPTY, `EXX)  // bltu
     });
 
