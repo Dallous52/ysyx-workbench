@@ -22,8 +22,9 @@ module ysyx_25040111_opimm (
         3'b000, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `EMPTY, `EMPTY),       // addi
         3'b011, `OPTG(`WFX, `RF_IM, `COMPARE, `SNPC, `EMPTY, `EXX),     // sltiu
         3'b101, `OPTG(`WFX, `RF_IM, `RSHIFT, `SNPC, `EMPTY, {1'b0, inst[30], 1'b0}), // srai srli
-        3'b111, `OPTG(`WFX, `RF_IM, `AND, `SNPC, `EMPTY, `EMPTY),
-        3'b100, `OPTG(`WFX, `RF_IM, `XOR, `SNPC, `EMPTY, `EMPTY)
+        3'b111, `OPTG(`WFX, `RF_IM, `AND, `SNPC, `EMPTY, `EMPTY),       // andi
+        3'b100, `OPTG(`WFX, `RF_IM, `XOR, `SNPC, `EMPTY, `EMPTY),       // xori
+        3'b001, `OPTG(`WFX, `RF_IM, `LSHIFT, `SNPC, `EMPTY, `EMPTY)     // slli
     });
 
 endmodule
