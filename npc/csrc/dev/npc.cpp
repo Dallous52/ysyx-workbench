@@ -283,7 +283,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
         if (wmask & (1 << i)) 
         {
             // 替换 old_data 中对应字节为 wdata 中对应的字节
-            uint8_t byte = (wdata >> (8 * i)) & 0xFF;
+            uint8_t byte = ((word_t)wdata >> (8 * i)) & 0xFF;
             wdata_ &= ~(0xFFu << (8 * i));        // 清空对应位置
             wdata_ |= ((word_t)byte << (8 * i));  // 写入对应字节
         }
