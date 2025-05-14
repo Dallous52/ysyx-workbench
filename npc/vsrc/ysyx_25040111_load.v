@@ -17,7 +17,7 @@ module ysyx_25040111_load (
     ysyx_25040111_MuxKeyWithDefault #(3, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
         3'b010, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLW, `EMPTY),  // lw
         3'b100, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLB, `EMPTY),  // lbu
-        3'b100, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLH, `XSX)     // lh
+        3'b001, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLH, `XSX)     // lh
     });
 
 endmodule
