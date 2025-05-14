@@ -24,7 +24,7 @@ module ysyx_25040111_op(
 
     assign {fun7, rs2, rs1, fun3, rd} = inst;
 
-    ysyx_25040111_MuxKeyWithDefault #(8, 10, `OPT_LEN) opt_c (opt, {fun7, fun3}, `OPT_LEN'b0, {
+    ysyx_25040111_MuxKeyWithDefault #(10, 10, `OPT_LEN) opt_c (opt, {fun7, fun3}, `OPT_LEN'b0, {
         `OP_SUB, `OPTG(`WFS, `RF_RS, `ADD, `SNPC, `EMPTY, `EXX),
         `OP_ADD, `OPTG(`WFS, `RF_RS, `ADD, `SNPC, `EMPTY, `EMPTY),
         `OP_SLL, `OPTG(`WFS, `RF_RS, `LSHIFT, `SNPC, `EMPTY, `EMPTY),
@@ -32,7 +32,9 @@ module ysyx_25040111_op(
         `OP_SLTU, `OPTG(`WFS, `RF_RS, `COMPARE, `SNPC, `EMPTY, `EXX),
         `OP_OR, `OPTG(`WFS, `RF_RS, `AND, `SNPC, `EMPTY, `EXX),
         `OP_XOR, `OPTG(`WFS, `RF_RS, `XOR, `SNPC, `EMPTY, `EMPTY),
-        `OP_SLT, `OPTG(`WFS, `RF_RS, `COMPARE, `SNPC, `EMPTY, `ESX)
+        `OP_SLT, `OPTG(`WFS, `RF_RS, `COMPARE, `SNPC, `EMPTY, `ESX),
+        `OP_SRA, `OPTG(`WFS, `RF_RS, `RSHIFT, `SNPC, `EMPTY, `XSX),
+        `OP_SRL, `OPTG(`WFS, `RF_RS, `RSHIFT, `SNPC, `EMPTY, `EMPTY)
     });
 
 endmodule
