@@ -25,7 +25,7 @@ module ysyx_25040111_alu (
     );
 
     assign dxor = (var1 ^ var2);
-    assign lt = sign ? ~overflow : ~cout;
+    assign lt = sign ? res_add[31] ^ overflow : ~cout;
 
     ysyx_25040111_MuxKey #(8, 3, 32) c_alu (res, opt, {
         3'b000, var1,
