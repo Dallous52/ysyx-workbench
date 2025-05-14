@@ -14,10 +14,12 @@ module ysyx_25040111_load (
     assign {imm_m, rs1, fun3, rd} = inst[31:7];
     assign imm = {{20{imm_m[11]}}, imm_m};
 
-    ysyx_25040111_MuxKeyWithDefault #(3, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
+    ysyx_25040111_MuxKeyWithDefault #(5, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
         3'b010, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLW, `EMPTY),  // lw
         3'b100, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLB, `EMPTY),  // lbu
-        3'b001, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLH, `XSX)     // lh
+        3'b001, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLH, `XSX),    // lh
+        3'b101, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLH, `EMPTY),  // lhu
+        3'b000, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `MLH, `XSX)     // lb
     });
 
 endmodule
