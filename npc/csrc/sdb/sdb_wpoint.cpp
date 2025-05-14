@@ -114,7 +114,7 @@ void check_wp()
 
     if (ret != tmp->value)
     {
-      printf("wp: %d  what: [%s]  ago: %u  now: %u\n", tmp->NO, tmp->what, tmp->value, ret);
+      printf("wp: %d  what: [%s]  ago: 0x%08x  now: 0x%08x\n", tmp->NO, tmp->what, tmp->value, ret);
       tmp->value = ret; // update
       npc_stat = NPC_STOP;
     }
