@@ -278,6 +278,8 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
     // 使用掩码逐字节合成新的数据
     for (int i = 0; i < 4; ++i) 
     {
+        //00000010
+        //00000001
         if (wmask & (1 << i)) 
         {
             // 替换 old_data 中对应字节为 wdata 中对应的字节
@@ -287,6 +289,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
         }
     }
 
+    printf("%08x\n", wdata_);
     // 按4字节对齐写入
     paddr_write(address, 4, wdata_);
 }
