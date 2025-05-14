@@ -272,18 +272,21 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
            (paddr_t)waddr, (word_t)wdata, top.pc, wmask);
     }
 
-    switch (wmask) 
+    // 读出当前地址上的完整 4 字节
+    word_t wdata_ = paddr_read(address, 4);
+
+    // 使用掩码逐字节合成新的数据
+    for (int i = 0; i < 4; ++i) 
     {
-    case 0x1:
-        paddr_write(address, 1, (word_t)wdata);
-        break;
-    case 0x3:
-        paddr_write(address, 2, (word_t)wdata);
-        break;
-    case 0xF:
-        paddr_write(address, 4, (word_t)wdata);
-        break;
-    default:
-        break;
+        if (wmask & (1 << i)) 
+        {
+            // 替换 old_data 中对应字节为 wdata 中对应的字节
+            uint8_t byte = (wdata >> (8 * i)) & 0xFF;
+            wdata_ &= ~(0xFFu << (8 * i));        // 清空对应位置
+            wdata_ |= ((word_t)byte << (8 * i));  // 写入对应字节
+        }
     }
+
+    // 按4字节对齐写入
+    paddr_write(address, 4, wdata_);
 }
