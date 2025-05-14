@@ -288,7 +288,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
             wdata_ |= ((word_t)byte << (8 * i));  // 写入对应字节
         }
     }
-
+    
     printf("%08x\n", wdata_);
     // 按4字节对齐写入
     paddr_write(address, 4, wdata_);
