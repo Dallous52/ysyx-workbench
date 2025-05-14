@@ -29,7 +29,7 @@ module ysyx_25040111_op(
         `OP_ADD, `OPTG(`WFS, `RF_RS, `ADD, `SNPC, `EMPTY, `EMPTY),
         `OP_SLL, `OPTG(`WFS, `RF_RS, `LSHIFT, `SNPC, `EMPTY, `EMPTY),
         `OP_AND, `OPTG(`WFS, `RF_RS, `AND, `SNPC, `EMPTY, `EMPTY),
-        `OP_SLTU, `OPTG(`WFS, `RF_RS, `COMPARE, `SNPC, `EMPTY, `EXN),
+        `OP_SLTU, `OPTG(`WFS, `RF_RS, `COMPARE, `SNPC, `EMPTY, `EXX),
         `OP_OR, `OPTG(`WFS, `RF_RS, `AND, `SNPC, `EMPTY, `EXX)
     });
 
