@@ -17,6 +17,7 @@
 #include <device/alarm.h>
 #include <sys/time.h>
 #include <signal.h>
+#include "debug.h"
 
 #define MAX_HANDLER 8
 
