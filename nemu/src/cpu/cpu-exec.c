@@ -63,8 +63,8 @@ static void iringbuf_print()
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
-  void check_wp();
 #ifdef CONFIG_ITRACE_COND
+  void check_wp();
   if (ITRACE_COND) 
   { 
     check_wp();
@@ -119,8 +119,8 @@ static void execute(uint64_t n)
     trace_and_difftest(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) 
     {
+#ifdef CONFIG_ITRACE
       if (nemu_state.state == NEMU_ABORT) 
-#ifdef CONFIG_ITRACE   
         iringbuf_print();
 #endif // CONFIG_ITRACE
         break;
