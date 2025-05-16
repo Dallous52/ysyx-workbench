@@ -41,6 +41,7 @@ void *malloc(size_t size) {
   maddr = (char*)maddr + size;
   return ret;
 #endif
+  return NULL;
 }
 
 void free(void *ptr) {
