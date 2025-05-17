@@ -75,7 +75,7 @@ int      cpu_current (void);
 int      atomic_xchg (int *addr, int newval);
 
 #ifdef __cplusplus
-}
+} 
 #endif
 
 #endif
