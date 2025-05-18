@@ -156,6 +156,11 @@ config MTRACE
   bool "Enable memory trace"
   default y
 
+config DTRACE
+  depends on TRACE
+  bool "Enable device trace"
+default n
+
 config FTRACE
   depends on TRACE
   bool "Enable function trace"
