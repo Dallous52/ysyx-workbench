@@ -1,9 +1,11 @@
+#include "klib.h"
 #include <am.h>
 #include <nemu.h>
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
 void __am_gpu_init() {
+  printf("gpu_t size: %d;\n", sizeof(AM_GPU_CONFIG_T));
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
