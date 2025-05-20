@@ -29,25 +29,24 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg)
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) 
 {
-  if (ctl->sync) 
+  int i = 0, j = 0, k = 0;
+  int w = inw(VGACTL_ADDR + 2);
+  uint32_t* fb = (uint32_t*)(uintptr_t)FB_ADDR;
+  uint32_t* px = (uint32_t*)ctl->pixels;
+
+  int mx = ctl->x + ctl->w;
+  int my = ctl->y + ctl->h;
+
+  for (i = ctl->y; i < my; i++)
   {
-    int i = 0, j = 0, k = 0;
-    int w = inw(VGACTL_ADDR + 2);
-    printf("x:%d  y:%d  w:%d  h:%d\n", ctl->x, ctl->y, ctl->w, ctl->h);
-    uint32_t* fb = (uint32_t*)(uintptr_t)FB_ADDR;
-    uint32_t* px = (uint32_t*)ctl->pixels;
-
-    int mx = ctl->x + ctl->w;
-    int my = ctl->y + ctl->h;
-
-    for (i = ctl->y; i < my; i++)
+    for (j = ctl->x; j < mx; j++)
     {
-      for (j = ctl->x; j < mx; j++)
-      {
-        fb[i * w + j] = px[k++];
-      }
+      fb[i * w + j] = px[k++];
     }
-    
+  }
+  
+  if (ctl->sync) 
+  { 
     outl(SYNC_ADDR, 1);
   }
 }
