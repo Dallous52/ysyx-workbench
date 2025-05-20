@@ -10,6 +10,7 @@ void __am_gpu_init()
 {
   int w = inw(VGACTL_ADDR + 2);
   int h = inw(VGACTL_ADDR);
+  outl(SYNC_ADDR, 1);
   printf("w:%d  h:%d\n", w, h);
 }
 
