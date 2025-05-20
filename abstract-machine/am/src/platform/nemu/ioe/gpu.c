@@ -32,9 +32,8 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl)
   if (ctl->sync) 
   {
     int i = 0, j = 0, k = 0;
-    printf("test\n");
     int w = inw(VGACTL_ADDR + 2);
-
+    printf("x:%d  y:%d  w:%d  h:%d\n", ctl->x, ctl->y, ctl->w, ctl->h);
     uint32_t* fb = (uint32_t*)(uintptr_t)FB_ADDR;
     uint32_t* px = (uint32_t*)ctl->pixels;
 
