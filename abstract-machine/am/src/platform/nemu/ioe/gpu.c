@@ -4,8 +4,15 @@
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
-void __am_gpu_init() {
-  printf("gpu_t size: %d;\n", sizeof(AM_GPU_CONFIG_T));
+
+void __am_gpu_init() 
+{
+  int i;
+  int w = inw(VGACTL_ADDR);
+  int h = inw(VGACTL_ADDR + 2);
+  uint32_t *fb = (uint32_t*)(uintptr_t)FB_ADDR;
+  for (i = 0; i < w* h; i++) fb[i] = i;
+  outl(SYNC_ADDR, 1);
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
@@ -14,6 +21,9 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
     .width = 0, .height = 0,
     .vmemsz = 0
   };
+  cfg->width = inw(VGACTL_ADDR);
+  cfg->height = inw(VGACTL_ADDR + 2);
+  cfg->vmemsz = cfg->width * cfg->height;
 }
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
