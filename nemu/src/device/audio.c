@@ -36,16 +36,17 @@ void audio_callback(void *userdata, Uint8 *stream, int len)
   uint32_t audio_len = audio_base[reg_sbuf_size];
   static uint32_t audio_pos = 0;
 
-  audio_base[reg_count] = audio_len - audio_pos;
   printf("count %d\n",audio_base[reg_count]);
   if (audio_pos >= audio_len) {
     // 没有数据了，填充静音
+    audio_base[reg_count] = 0;
     SDL_memset(stream, 0, len);
     return;
   }
 
   Uint32 remaining = audio_len - audio_pos;
   Uint32 copy_len = (len > remaining) ? remaining : len;
+  audio_base[reg_count] = copy_len;
 
   SDL_memcpy(stream, sbuf + audio_pos, copy_len);
   audio_pos += copy_len;
@@ -72,8 +73,8 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write)
     SDL_InitSubSystem(SDL_INIT_AUDIO);
     SDL_OpenAudio(&s, NULL);
     SDL_PauseAudio(0);
+    audio_base[reg_count] = CONFIG_SB_SIZE;
   }
-  audio_base[reg_count] = CONFIG_SB_SIZE;
 }
 
 void init_audio() 
