@@ -13,6 +13,7 @@ void __am_audio_init() {
 }
 
 void __am_audio_config(AM_AUDIO_CONFIG_T *cfg) {
+  outl(AUDIO_INIT_ADDR, false);
   cfg->present = true;
 }
 
@@ -24,11 +25,13 @@ void __am_audio_ctrl(AM_AUDIO_CTRL_T *ctrl) {
 }
 
 void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
+  outl(AUDIO_INIT_ADDR, false);
   stat->count = inl(AUDIO_COUNT_ADDR);
 }
 
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) 
 {
+  outl(AUDIO_INIT_ADDR, false);
   uint32_t sb_len = inl(AUDIO_SBUF_SIZE_ADDR);
   uint32_t len = ctl->buf.end - ctl->buf.start;
   uint8_t* sb = (uint8_t*)(uintptr_t)AUDIO_SBUF_ADDR;
