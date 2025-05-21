@@ -34,8 +34,9 @@ static uint32_t *audio_base = NULL;
 void audio_callback(void *userdata, Uint8 *stream, int len) 
 {
   uint32_t audio_len = audio_base[reg_sbuf_size];
-  uint32_t audio_pos = audio_base[reg_count];
+  static uint32_t audio_pos = 0;
 
+  audio_base[reg_count] = audio_len - audio_pos;
   if (audio_pos >= audio_len) {
     // 没有数据了，填充静音
     SDL_memset(stream, 0, len);
