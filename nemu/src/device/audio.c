@@ -30,10 +30,51 @@ enum {
 static uint8_t *sbuf = NULL;
 static uint32_t *audio_base = NULL;
 
-static void audio_io_handler(uint32_t offset, int len, bool is_write) {
+// 音频回调函数
+void audio_callback(void *userdata, Uint8 *stream, int len) 
+{
+  uint32_t audio_len = audio_base[reg_sbuf_size];
+  uint32_t audio_pos = audio_base[reg_count];
+
+  if (audio_pos >= audio_len) {
+    // 没有数据了，填充静音
+    SDL_memset(stream, 0, len);
+    return;
+  }
+
+  Uint32 remaining = audio_len - audio_pos;
+  Uint32 copy_len = (len > remaining) ? remaining : len;
+
+  SDL_memcpy(stream, sbuf + audio_pos, copy_len);
+  audio_pos += copy_len;
+
+  if (copy_len < len) {
+    SDL_memset(stream + copy_len, 0, len - copy_len);
+  }
 }
 
-void init_audio() {
+
+static void audio_io_handler(uint32_t offset, int len, bool is_write) 
+{
+  if (audio_base[reg_init])
+  {
+    SDL_AudioSpec s = {};
+    s.format = AUDIO_S16SYS;  // 假设系统中音频数据的格式总是使用16位有符号数来表示
+    s.userdata = NULL;        // 不使用
+  
+    s.freq = audio_base[reg_freq];
+    s.channels = audio_base[reg_channels];
+    s.samples = audio_base[reg_samples];
+    s.callback = audio_callback;
+  
+    SDL_InitSubSystem(SDL_INIT_AUDIO);
+    SDL_OpenAudio(&s, NULL);
+    SDL_PauseAudio(0);
+  }
+}
+
+void init_audio() 
+{
   uint32_t space_size = sizeof(uint32_t) * nr_reg;
   audio_base = (uint32_t *)new_space(space_size);
 #ifdef CONFIG_HAS_PORT_IO
