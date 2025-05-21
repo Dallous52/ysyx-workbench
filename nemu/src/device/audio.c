@@ -72,6 +72,7 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write)
     SDL_OpenAudio(&s, NULL);
     SDL_PauseAudio(0);
     audio_base[reg_count] = CONFIG_SB_SIZE;
+    printf("count: 0x%x\n", audio_base[reg_count]);
   }
 }
 
@@ -87,5 +88,4 @@ void init_audio()
 
   sbuf = (uint8_t *)new_space(CONFIG_SB_SIZE);
   add_mmio_map("audio-sbuf", CONFIG_SB_ADDR, sbuf, CONFIG_SB_SIZE, NULL);
-  audio_base[reg_count] = CONFIG_SB_SIZE;
 }
