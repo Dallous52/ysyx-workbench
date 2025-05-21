@@ -46,7 +46,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len)
 
   Uint32 remaining = audio_len - audio_pos;
   Uint32 copy_len = (len > remaining) ? remaining : len;
-  audio_base[reg_count] = copy_len;
+  audio_base[reg_count] = remaining;
 
   SDL_memcpy(stream, sbuf + audio_pos, copy_len);
   audio_pos += copy_len;
