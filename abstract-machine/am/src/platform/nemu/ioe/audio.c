@@ -36,6 +36,6 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl)
   uint32_t sb_len = inl(AUDIO_SBUF_SIZE_ADDR);
   uint32_t len = ctl->buf.end - ctl->buf.start;
   uint8_t* sb = (uint8_t*)(uintptr_t)AUDIO_SBUF_ADDR;
-  memcpy(sb, ctl->buf.start, len);
+  memcpy(sb + sb_len, ctl->buf.start, len);
   outl(AUDIO_SBUF_SIZE_ADDR, sb_len + len);
 }
