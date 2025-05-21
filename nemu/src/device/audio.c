@@ -36,7 +36,6 @@ void audio_callback(void *userdata, Uint8 *stream, int len)
   uint32_t audio_len = audio_base[reg_sbuf_size];
   static uint32_t audio_pos = 0;
 
-  printf("len: %d, pos %d, count %d\n", len, audio_pos, audio_base[reg_count]);
   if (audio_pos >= audio_len) {
     // 没有数据了，填充静音
     if (audio_base[reg_count] != CONFIG_SB_SIZE)
