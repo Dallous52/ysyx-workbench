@@ -71,9 +71,8 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write)
     SDL_InitSubSystem(SDL_INIT_AUDIO);
     SDL_OpenAudio(&s, NULL);
     SDL_PauseAudio(0);
-    printf("count: 0x%x\n", audio_base[reg_count]);
+    audio_base[reg_count] = CONFIG_SB_SIZE;
   }
-  audio_base[reg_count] = CONFIG_SB_SIZE;
 }
 
 void init_audio() 
