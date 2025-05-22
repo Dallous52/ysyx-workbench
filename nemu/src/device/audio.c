@@ -106,11 +106,11 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write)
     SDL_InitSubSystem(SDL_INIT_AUDIO);
     SDL_OpenAudio(&s, NULL);
     SDL_PauseAudio(0);
-    audio_base[reg_count] = CONFIG_SB_SIZE;
+    audio_base[reg_count] = 0;
   }
   else if (audio_base[reg_init] == 2) 
   {
-    audio_write(sbuf, audio_base[reg_sbuf_size]);
+    audio_write(sbuf, audio_base[reg_sbuf_size]); 
   }
 }
 
