@@ -13,9 +13,13 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#define _GNU_SOURCE
+#include <unistd.h>
+#include <fcntl.h>
 #include <common.h>
 #include <device/map.h>
 #include <SDL2/SDL.h>
+
 
 enum {
   reg_freq,
@@ -29,38 +33,65 @@ enum {
 
 static uint8_t *sbuf = NULL;
 static uint32_t *audio_base = NULL;
+static int rfd = -1, wfd = -1;
+
+#define count audio_base[reg_count]
 
 // 音频回调函数
 void audio_callback(void *userdata, Uint8 *stream, int len) 
 {
-  uint32_t audio_len = audio_base[reg_sbuf_size];
-  static uint32_t audio_pos = 0;
-
-  if (audio_pos >= audio_len) {
-    // 没有数据了，填充静音
-    if (audio_base[reg_count] != CONFIG_SB_SIZE)
-      audio_base[reg_count] = 0;
-    
-    SDL_memset(stream, 0, len);
-    return;
+  int nread = len;
+  if (count < len) nread = count;
+  int b = 0;
+  while (b < nread) {
+    int n = read(rfd, stream, nread);
+    if (n > 0) b += n;
   }
 
-  Uint32 remaining = audio_len - audio_pos;
-  Uint32 copy_len = (len > remaining) ? remaining : len;
-  audio_base[reg_count] = remaining;
+  count -= nread;
+  if (len > nread) {
+    memset(stream + nread, 0, len - nread);
+  }
+  // uint32_t audio_len = audio_base[reg_sbuf_size];
+  // static uint32_t audio_pos = 0;
 
-  SDL_memcpy(stream, sbuf + audio_pos, copy_len);
-  audio_pos += copy_len;
+  // if (audio_pos >= audio_len) {
+  //   // 没有数据了，填充静音
+  //   if (audio_base[reg_count] != CONFIG_SB_SIZE)
+  //     audio_base[reg_count] = 0;
+    
+  //   SDL_memset(stream, 0, len);
+  //   return;
+  // }
 
-  if (copy_len < len) {
-    SDL_memset(stream + copy_len, 0, len - copy_len);
+  // Uint32 remaining = audio_len - audio_pos;
+  // Uint32 copy_len = (len > remaining) ? remaining : len;
+  // audio_base[reg_count] = remaining;
+
+  // SDL_memcpy(stream, sbuf + audio_pos, copy_len);
+  // audio_pos += copy_len;
+
+  // if (copy_len < len) {
+  //   SDL_memset(stream + copy_len, 0, len - copy_len);
+  // }
+}
+
+
+static void audio_write(uint8_t *buf, int len) 
+{
+  int nwrite = 0;
+  while (nwrite < len) {
+    int n = write(wfd, buf, len);
+    if (n == -1) n = 0;
+    count += n;
+    nwrite += n;
   }
 }
 
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) 
 {
-  if (audio_base[reg_init])
+  if (audio_base[reg_init] == 1)
   {
     SDL_AudioSpec s = {};
     s.format = AUDIO_S16SYS;  // 假设系统中音频数据的格式总是使用16位有符号数来表示
@@ -76,6 +107,10 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write)
     SDL_PauseAudio(0);
     audio_base[reg_count] = CONFIG_SB_SIZE;
   }
+  else if (audio_base[reg_init] == 2) 
+  {
+    audio_write(sbuf, audio_base[reg_sbuf_size]);
+  }
 }
 
 void init_audio() 
@@ -90,4 +125,10 @@ void init_audio()
 
   sbuf = (uint8_t *)new_space(CONFIG_SB_SIZE);
   add_mmio_map("audio-sbuf", CONFIG_SB_ADDR, sbuf, CONFIG_SB_SIZE, NULL);
+
+  int fds[2];
+  int ret = pipe2(fds, O_NONBLOCK);
+  assert(ret == 0);
+  rfd = fds[0];
+  wfd = fds[1];
 }
