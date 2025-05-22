@@ -49,7 +49,6 @@ void audio_callback(void *userdata, Uint8 *stream, int len)
   }
 
   count -= nread;
-  printf("count : %d\n", count);
   if (len > nread) {
     memset(stream + nread, 0, len - nread);
   }
