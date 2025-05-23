@@ -3,8 +3,8 @@
 
 #include "tpdef.h"
 
-#define DEV_SERIAL 0xa00003f8
-#define DEV_TIMER  0xa0000048
+#define DEV_SERIAL (0xa00003f8)
+#define DEV_TIMER  (0xa0000048)
 
 
 void device_init();

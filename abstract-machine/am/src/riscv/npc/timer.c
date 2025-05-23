@@ -1,10 +1,16 @@
 #include <am.h>
+#include "../riscv.h"
+
+#define DEV_TIMMER        (0xa000048)
 
 void __am_timer_init() {
 }
 
-void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
-  uptime->us = 0;
+void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) 
+{
+  uint64_t high = inl(DEV_TIMMER + 4);
+  uint64_t low =  inl(DEV_TIMMER);
+  uptime->us = low | (high << 32);
 }
 
 void __am_timer_rtc(AM_TIMER_RTC_T *rtc) {

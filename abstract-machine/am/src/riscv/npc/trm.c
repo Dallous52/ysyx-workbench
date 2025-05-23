@@ -1,8 +1,11 @@
 #include <am.h>
 #include <klib-macros.h>
+#include "../riscv.h"
 
 extern char _heap_start;
 int main(const char *args);
+
+#define DEV_SERIAL (0xa00003f8)
 
 extern char _pmem_start;
 #define PMEM_SIZE (128 * 1024 * 1024)
@@ -12,6 +15,7 @@ Area heap = RANGE(&_heap_start, PMEM_END);
 static const char mainargs[MAINARGS_MAX_LEN] = MAINARGS_PLACEHOLDER; // defined in CFLAGS
 
 void putch(char ch) {
+  outb(DEV_SERIAL, ch);
 }
 
 void halt(int code) {
