@@ -245,7 +245,7 @@ extern "C" int pmem_read(int raddr)
     word_t rdata = 0;
 
     if (likely(in_pmem(address))) 
-        paddr_read(address, 4); 
+        rdata = paddr_read(address, 4); 
     else if (!device_call((paddr_t)raddr, &rdata, false))
         finalize(2);
 
