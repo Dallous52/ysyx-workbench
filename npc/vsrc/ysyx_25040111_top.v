@@ -49,6 +49,7 @@ module ysyx_25040111_top(
     reg [31:0] inst;
 
     always @(*) begin
+        $display("%b\n", opt);
         inst = pmem_read(pc);
     end
 
