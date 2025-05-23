@@ -1,3 +1,4 @@
+#include "device.h"
 #include "util.h"
 #include "memory.h"
 #include "npc.h"
@@ -64,7 +65,7 @@ bool initialize(int argc, char** argv)
 
   init_difftest(get_img_size(), 0);
 
-  
+  device_init();
 
   npc_init(use_vcd);
 
