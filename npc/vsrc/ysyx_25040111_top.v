@@ -29,7 +29,7 @@
 //              110 lh
 //              111 lw
 //              100 pc + 4 [alu opt]
-//      [13]    [shift:shame] | [add:sub] | [and:or]
+//      [13]    [add:sub] | [and:or]
 //      [14]    signed enable
 //      [15]    [system opt] | [cmp-eq !res]
 

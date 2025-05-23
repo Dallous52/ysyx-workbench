@@ -1,9 +1,10 @@
-#include "util.h"
 #include "Vysyx_25040111_top___024root.h"
 #include "Vysyx_25040111_top.h"
 #include "npc.h"
 #include "memory.h"
+#include "device.h"
 #include "tpdef.h"
+#include "util.h"
 
 #include <cstdint>
 #include <cstdio>
@@ -241,7 +242,12 @@ extern "C" void ebreak(int code)
 extern "C" int pmem_read(int raddr)
 {
     paddr_t address = raddr & ~0x3u;
-    word_t rdata = paddr_read(address, 4);
+    word_t rdata = 0;
+
+    if (likely(in_pmem(address))) 
+        paddr_read(address, 4); 
+    else if (!device_call((paddr_t)raddr, &rdata, false))
+        finalize(2);
 
     // mtrace memory read
     word_t minst = paddr_read(top.pc, 4);
@@ -253,6 +259,28 @@ extern "C" int pmem_read(int raddr)
     
     // 总是读取地址为`raddr & ~0x3u`的4字节返回
     return (int)rdata;
+}
+
+
+static void pmem_write_core(paddr_t address, int wdata, char wmask)
+{
+    // 读出当前地址上的完整 4 字节
+    word_t wdata_ = paddr_read(address, 4);
+
+    // 使用掩码逐字节合成新的数据
+    for (int i = 0; i < 4; ++i) 
+    {
+        if (wmask & (1 << i)) 
+        {
+            // 替换 old_data 中对应字节为 wdata 中对应的字节
+            uint8_t byte = ((word_t)wdata >> (8 * i)) & 0xFF;
+            wdata_ &= ~(0xFFu << (8 * i));        // 清空对应位置
+            wdata_ |= ((word_t)byte << (8 * i));  // 写入对应字节
+        }
+    }
+    
+    // 按4字节对齐写入
+    paddr_write(address, 4, wdata_);
 }
 
 
@@ -272,23 +300,8 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
            (paddr_t)waddr, (word_t)wdata, top.pc, wmask);
     }
 
-    // 读出当前地址上的完整 4 字节
-    word_t wdata_ = paddr_read(address, 4);
-
-    // 使用掩码逐字节合成新的数据
-    for (int i = 0; i < 4; ++i) 
-    {
-        //00000010
-        //00000001
-        if (wmask & (1 << i)) 
-        {
-            // 替换 old_data 中对应字节为 wdata 中对应的字节
-            uint8_t byte = ((word_t)wdata >> (8 * i)) & 0xFF;
-            wdata_ &= ~(0xFFu << (8 * i));        // 清空对应位置
-            wdata_ |= ((word_t)byte << (8 * i));  // 写入对应字节
-        }
-    }
+    if (likely(in_pmem(address))) { pmem_write_core(address, wdata, wmask); return; }
+    if (device_call((paddr_t)waddr, &wdata, true)) return;
     
-    // 按4字节对齐写入
-    paddr_write(address, 4, wdata_);
+    finalize(2);
 }

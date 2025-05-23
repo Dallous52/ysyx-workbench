@@ -64,6 +64,8 @@ bool initialize(int argc, char** argv)
 
   init_difftest(get_img_size(), 0);
 
+  
+
   npc_init(use_vcd);
 
   return true;

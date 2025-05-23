@@ -7,6 +7,8 @@
 typedef uint32_t paddr_t;
 typedef uint32_t word_t;
 
+typedef  void (*voidfunc)(void*);
+
 #define ANSI_FG_BLACK   "\33[1;30m"
 #define ANSI_FG_RED     "\33[1;31m"
 #define ANSI_FG_GREEN   "\33[1;32m"
@@ -42,5 +44,7 @@ bool initialize(int argc, char** argv);
 
 // free
 void finalize(int code);
+
+
 
 #endif // NPC_TYPE_DEFINE
