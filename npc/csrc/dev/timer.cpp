@@ -1,15 +1,21 @@
+#include "device.h"
+#include "tpdef.h"
+
 #include <stdio.h>
+#include <sys/types.h>
 #include <time.h>
 
 struct timespec start, end;
 
+word_t rtc[2] = {};
+
 void timer_init()
 {
     // 获取程序启动时间
-    clock_gettime(CLOCK_MONOTONIC, &start);  
+    clock_gettime(CLOCK_MONOTONIC, &start); 
 }
 
-void timer_handler(void* data)
+void timer_handler(word_t addr, void* data, bool isw)
 {
     clock_gettime(CLOCK_MONOTONIC, &end);    // 当前时间
 
@@ -21,5 +27,9 @@ void timer_handler(void* data)
         nanos += 1000000000;  // 借一秒，补纳秒
     }
     
-    (*(long*)data) = seconds * 1000000 + nanos / 1000;
+    uint64_t cur = (uint64_t)seconds * 1000000 + nanos / 1000;
+    rtc[0] = (word_t)cur;
+    rtc[1] = cur >> 32;
+
+    *((word_t*)data) = (addr - DEV_TIMER) ? rtc[1] : rtc[0];
 }

@@ -1,10 +1,13 @@
 #include "device.h"
+#include "tpdef.h"
+
+typedef  void (*callback)(word_t, void*, bool);
 
 typedef struct 
 {
     uint32_t start;
     uint32_t end;
-    voidfunc callback;
+    callback handler;
 
 } map;
 
@@ -13,18 +16,18 @@ static map mmio_map[16];
 static int mmio_idx = 0;
 
 // add new device
-static void device_add(uint32_t addr, uint32_t len, voidfunc callback)
+static void device_add(uint32_t addr, uint32_t len, callback handler)
 {
     mmio_map[mmio_idx].start = addr;
     mmio_map[mmio_idx].end = addr + len - 1;
-    mmio_map[mmio_idx].callback = callback;
+    mmio_map[mmio_idx].handler = handler;
     mmio_idx++;
 }
 
 
 // device call back function
-void serial_handler(void* data);
-void timer_handler(void* data);
+void serial_handler(word_t addr, void* data, bool isw);
+void timer_handler(word_t addr, void* data, bool isw);
 
 // device init
 void timer_init();
@@ -34,7 +37,7 @@ void device_init()
 {
     timer_init();
 
-    device_add(DEV_SERIAL, 8, serial_handler);
+    device_add(DEV_SERIAL, 1, serial_handler);
     device_add(DEV_TIMER,  8, timer_handler);
 }
 
@@ -46,7 +49,7 @@ bool device_call(uint32_t addr, void *data, bool isw)
     {
         if (mmio_map[i].start <= addr && mmio_map[i].end >= addr)
         {
-            mmio_map[i].callback(data);
+            mmio_map[i].handler(addr, data, isw);
             return true;
         }
     }
