@@ -1,6 +1,8 @@
 #include "device.h"
 #include "tpdef.h"
 
+#include <cstdio>
+
 typedef  void (*callback)(word_t, void*, bool);
 
 typedef struct 
@@ -54,5 +56,6 @@ bool device_call(uint32_t addr, void *data, bool isw)
         }
     }
 
+    printf(ANSI_FMT("device address not found 0x%08x\n", ANSI_FG_CYAN), addr);
     return false;
 }
