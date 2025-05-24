@@ -29,7 +29,7 @@ static void device_add(uint32_t addr, uint32_t len, callback handler)
 void serial_handler(word_t addr, void* data, bool isw);
 void timer_handler(word_t addr, void* data, bool isw);
 
-// device init
+// device init0
 void timer_init();
 
 // init all device

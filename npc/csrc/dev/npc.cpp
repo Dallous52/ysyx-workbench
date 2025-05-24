@@ -50,7 +50,7 @@ static void ftrace(paddr_t pc, paddr_t call)
 
         if (rd == 1)
             printf(ANSI_FMT("[0x%x in %s] call [%s 0x%x]\n", ANSI_FG_CYAN), pc, src, dst, call);
-        else if (rd == 0)
+        else if (rd == 0 && strcmp(dst, src))
             printf(ANSI_FMT("[0x%x in %s] ret  [%s 0x%x]\n", ANSI_FG_CYAN), pc, src, dst, call);
     }
 }
@@ -100,7 +100,7 @@ int cpu_exec(uint64_t steps)
 
         ftrace(currpc, top.pc);
         check_wp();
-        // if (!difftest_step(currpc)) npc_stat = NPC_STOP;
+        if (!difftest_step(currpc)) npc_stat = NPC_STOP;
 
         switch (npc_stat)
         {
