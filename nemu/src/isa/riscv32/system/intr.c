@@ -19,12 +19,14 @@
 #include <stdio.h>
 
 
-word_t isa_raise_intr(word_t NO, vaddr_t epc) {
+word_t isa_raise_intr(word_t NO, vaddr_t epc) 
+{
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * Then return the address of the interrupt/exception vector.
    */
   printf("mtvec 0x%08x\n", CSR(MTVEC));
-  return 0;
+
+  return CSR(MTVEC);
 }
 
 word_t isa_query_intr() {
