@@ -18,10 +18,32 @@
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 
+#define MSTATUS	0x300
+#define MTVEC	  0x305
+#define MEPC	  0x341
+#define MCAUSE	0x342
 
-static word_t csr_reg[400] = {};
+#define CSR_N   4
+static word_t csr_reg[CSR_N][2] = {
+  {MSTATUS, 0}, // mstatus
+  {MTVEC, 0}, // mtvec
+  {MEPC, 0}, // mepc
+  {MCAUSE, 0}  // mcause
+};
 
-#define CSR(i) csr_reg[i]
+static int get_csr(word_t i)
+{
+  word_t k = 0;
+  for (; k < CSR_N; k++) 
+  {
+    if (csr_reg[k][0] == i)
+      return k;
+  }
+  assert(k < CSR_N);
+  return -1;
+}
+
+#define CSR(i) (csr_reg[get_csr(i)][1])
 #define R(i) gpr(i)
 #define Mr vaddr_read
 #define Mw vaddr_write
@@ -164,6 +186,7 @@ static int decode_exec(Decode *s)
   INSTPAT("??????? ????? ????? 110 ????? 11000 11", bltu,   B, s->dnpc = src1 < src2 ? s->pc + imm : s->snpc);
 
   INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw,   I, R(rd) = CSR(imm); CSR(imm) = src1);
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall ,  N, isa_raise_intr(CSR(MCAUSE), CSR(MEPC))); // ecall
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
 
