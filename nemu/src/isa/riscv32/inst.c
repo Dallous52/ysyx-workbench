@@ -18,6 +18,12 @@
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 
+word_t csr_reg[CSR_N][2] = {
+  {MSTATUS, 0}, // mstatus
+  {MTVEC, 0}, // mtvec
+  {MEPC, 0}, // mepc
+  {MCAUSE, 0}  // mcause
+};
 
 #define R(i) gpr(i)
 #define Mr vaddr_read

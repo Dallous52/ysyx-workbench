@@ -37,12 +37,7 @@ static inline const char* reg_name(int idx) {
 #define MCAUSE	0x342
 
 #define CSR_N   4
-static word_t csr_reg[CSR_N][2] = {
-  {MSTATUS, 0}, // mstatus
-  {MTVEC, 0}, // mtvec
-  {MEPC, 0}, // mepc
-  {MCAUSE, 0}  // mcause
-};
+extern word_t csr_reg[CSR_N][2];
 
 static inline int get_csr(word_t i)
 {
