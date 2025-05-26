@@ -30,4 +30,32 @@ static inline const char* reg_name(int idx) {
   return regs[check_reg_idx(idx)];
 }
 
+
+#define MSTATUS	0x300
+#define MTVEC	  0x305
+#define MEPC	  0x341
+#define MCAUSE	0x342
+
+#define CSR_N   4
+static word_t csr_reg[CSR_N][2] = {
+  {MSTATUS, 0}, // mstatus
+  {MTVEC, 0}, // mtvec
+  {MEPC, 0}, // mepc
+  {MCAUSE, 0}  // mcause
+};
+
+static inline int get_csr(word_t i)
+{
+  word_t k = 0;
+  for (; k < CSR_N; k++) 
+  {
+    if (csr_reg[k][0] == i)
+      return k;
+  }
+  assert(k < CSR_N);
+  return -1;
+}
+
+#define CSR(i) (csr_reg[get_csr(i)][1])
+
 #endif
