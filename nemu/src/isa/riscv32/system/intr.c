@@ -26,7 +26,9 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc)
    */
   printf("mtvec 0x%08x; mcause %u; mepc 0x%08x\n", 
     CSR(MTVEC), NO, epc);
-
+  CSR(MEPC) = epc;
+  CSR(MCAUSE) = NO;
+  
   return CSR(MTVEC);
 }
 
