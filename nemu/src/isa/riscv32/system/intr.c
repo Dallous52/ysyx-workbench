@@ -24,7 +24,8 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc)
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * Then return the address of the interrupt/exception vector.
    */
-  printf("mtvec 0x%08x\n", CSR(MTVEC));
+  printf("mtvec 0x%08x; mcause %u; mepc 0x%08x\n", 
+    CSR(MTVEC), NO, epc);
 
   return CSR(MTVEC);
 }
