@@ -19,6 +19,13 @@ Context* __am_irq_handle(Context *c)
 
     c = user_handler(ev, c);
     assert(c != NULL);
+  
+    switch (ev.event) 
+    {
+    case EVENT_YIELD:
+      c->mepc += 4;
+    default:break;
+    }
   }
 
   return c;
