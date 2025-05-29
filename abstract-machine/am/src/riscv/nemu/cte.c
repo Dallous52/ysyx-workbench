@@ -49,6 +49,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg)
   Context* newc = (Context*)((char*)kstack.end - sizeof(Context));
   newc->mstatus = 0x1800;
   newc->mepc = (uintptr_t)entry;
+  newc->gpr[10] = (uintptr_t)arg;
   return newc;
 }
 
