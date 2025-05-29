@@ -43,6 +43,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg)
   Context* newc = (Context*)((char*)kstack.end - sizeof(Context));
   newc->mstatus = 0x1800;
   newc->mepc = (uintptr_t)entry;
+  printf("new mepc : 0x%08x\n", newc->mepc);
   return newc;
 }
 
