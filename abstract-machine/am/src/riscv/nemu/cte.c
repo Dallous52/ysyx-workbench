@@ -7,7 +7,6 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 Context* __am_irq_handle(Context *c) 
 {
   printf("old pc: %08x\n", (uintptr_t)c->mepc);
-
   if (user_handler)
   {
     Event ev = {0};
