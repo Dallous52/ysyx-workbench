@@ -6,7 +6,7 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) 
 {
-  printf("in hd: %08x\n", (uintptr_t)c);
+  // printf("in hd: %08x\n", (uintptr_t)c);
 
   if (user_handler)
   {
@@ -29,7 +29,7 @@ Context* __am_irq_handle(Context *c)
     }
   }
 
-  printf("hd: %08x\n", (uintptr_t)c);
+  // printf("hd: %08x\n", (uintptr_t)c);
   return c;
 }
 
