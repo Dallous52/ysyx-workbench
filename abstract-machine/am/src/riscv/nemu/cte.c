@@ -28,7 +28,7 @@ Context* __am_irq_handle(Context *c)
     }
   }
 
-  printf("user_handle()\n");
+  printf("hd: %08x\n", (uintptr_t)c);
   return c;
 }
 
