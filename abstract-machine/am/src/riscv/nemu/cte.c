@@ -29,7 +29,7 @@ Context* __am_irq_handle(Context *c)
     }
   }
 
-  // printf("hd: %08x\n", (uintptr_t)c);
+  printf("pc: %08x\n", c->mepc);
   return c;
 }
 
