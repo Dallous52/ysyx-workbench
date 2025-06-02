@@ -6,7 +6,7 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) 
 {
-  printf("old pc: %08x\n", (uintptr_t)c->mepc);
+  uintptr_t oldpc = c->mepc;
   if (user_handler)
   {
     Event ev = {0};
@@ -22,8 +22,12 @@ Context* __am_irq_handle(Context *c)
   
     switch (ev.event) 
     {
-    case EVENT_YIELD:
-      c->mepc += 4; printf("pc: %08x\n", c->mepc - 4); break;
+    case EVENT_YIELD:{
+      if (oldpc == c->mepc) 
+        c->mepc += 4; 
+      break;
+    }
+    
     default:break;
     }
   }
