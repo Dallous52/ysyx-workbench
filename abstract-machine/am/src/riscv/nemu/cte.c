@@ -6,6 +6,8 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) 
 {
+  printf("in hd: %08x\n", (uintptr_t)c);
+
   if (user_handler)
   {
     Event ev = {0};
@@ -16,7 +18,6 @@ Context* __am_irq_handle(Context *c)
       default: 
         ev.event = EVENT_ERROR; break;
     }
-
     c = user_handler(ev, c);
     assert(c != NULL);
   
