@@ -28,8 +28,8 @@ Context* __am_irq_handle(Context *c)
     default:break;
     }
   }
-
-  printf("pc: %08x\n", c->mepc);
+  
+  // printf("pc: %08x\n", c->mepc);
   return c;
 }
 
