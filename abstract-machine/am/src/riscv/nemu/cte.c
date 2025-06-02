@@ -24,7 +24,7 @@ Context* __am_irq_handle(Context *c)
     switch (ev.event) 
     {
     case EVENT_YIELD:
-      c->mepc += 4;
+      c->mepc += 4; printf("pc: %08x\n", c->mepc); break;
     default:break;
     }
   }
