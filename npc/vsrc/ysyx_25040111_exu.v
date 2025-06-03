@@ -65,8 +65,12 @@ module ysyx_25040111_exu(
     // ------------------------------------------------------- 
     //                        MEMORY
     // -------------------------------------------------------
-    wire [7:0] wmask;
-    ysyx_25040111_MuxKey #(4, 2, 8) c_wmask(wmask, opt[11:10], {
+    wire [1:0] mem_en, shif_en;
+    assign mem_en = opt[15] ? 2'b00 : opt[11:10];
+    assign shif_en = opt[15] ? 2'b00 : res[1:0];
+
+    wire [7:0] wmask;    
+    ysyx_25040111_MuxKey #(4, 2, 8) c_wmask(wmask, mem_en, {
         2'b00, 8'h00,
         2'b01, 8'b00000001 << res[1:0],
         2'b10, res[1] ? 8'b00001100 : 8'b00000011,
@@ -74,7 +78,7 @@ module ysyx_25040111_exu(
     });
 
     wire [31:0] wdata;
-    ysyx_25040111_MuxKey #(4, 2, 32) c_wt_data(wdata, res[1:0], {
+    ysyx_25040111_MuxKey #(4, 2, 32) c_wt_data(wdata, shif_en, {
         2'b00, rs2_d,
         2'b01, rs2_d << 8,
         2'b10, rs2_d << 16,
@@ -95,14 +99,14 @@ module ysyx_25040111_exu(
     end
 
     wire [31:0] offset;
-    ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, res[1:0], {
+    ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, shif_en, {
         2'b00, rd_dt,
         2'b01, rd_dt >> 8,
         2'b10, rd_dt >> 16,
         2'b11, rd_dt >> 24
     });
 
-    ysyx_25040111_MuxKey #(4, 2, 32) c_rdmem(rd_d, opt[11:10], {
+    ysyx_25040111_MuxKey #(4, 2, 32) c_rdmem(rd_d, mem_en, {
         2'b00, res,
         2'b01, {{24{offset[7] & opt[14]}}, offset[7:0]},
         2'b10, {{16{offset[15] & opt[14]}}, offset[15:0]},
