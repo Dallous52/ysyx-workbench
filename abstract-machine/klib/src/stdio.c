@@ -8,6 +8,7 @@
 
 
 int printf(const char *fmt, ...) {
+  assert(strlen(fmt) < 100);
   char out[100] = {};
   // 获取可变参数
   va_list args;
