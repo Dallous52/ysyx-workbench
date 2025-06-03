@@ -1,6 +1,7 @@
 #include <am.h>
 #include <riscv/riscv.h>
 #include <klib.h>
+#include <stdint.h>
 
 static Context* (*user_handler)(Event, Context*) = NULL;
 
@@ -51,7 +52,7 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) 
 {
-  Context* newc = (Context*)kstack.end - 1;
+  Context* newc = (Context*)((uintptr_t)kstack.end - sizeof(Context));
   newc->mstatus = 0x1800;
   newc->mepc = (uintptr_t)entry;
   newc->gpr[10] = (uintptr_t)arg;
