@@ -42,7 +42,7 @@ module ysyx_25040111_system(
 
     ysyx_25040111_MuxKeyWithDefault #(3, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
         3'b000, opt_t,
-        3'b001, `OPTG(`WXX, `RF_IM, `ADD, `SNPC, `WFX, `XXN),
+        3'b001, `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `WFX, `XXN),
         3'b010, `OPTG(`WXX, `RF_RS, `AND, `SNPC, `WFX, `EXN)
     });
 
