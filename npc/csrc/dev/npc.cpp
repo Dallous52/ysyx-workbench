@@ -100,7 +100,7 @@ int cpu_exec(uint64_t steps)
 
         // ftrace(currpc, top.pc);
         // check_wp();
-        // if (!difftest_step(currpc)) npc_stat = NPC_STOP;
+        if (!difftest_step(currpc)) npc_stat = NPC_STOP;
 
         switch (npc_stat)
         {
