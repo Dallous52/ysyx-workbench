@@ -307,7 +307,9 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 }
 
 
-void pc_print()
+void dbg_info()
 {
-    printf(ANSI_FMT("pc = 0x%08x\n", ANSI_FG_CYAN), top.pc);
+    char logbuf[128] = {};
+    print_exe_info(top.pc, paddr_read(top.pc, 4), logbuf, 128);
+    printf(ANSI_FMT("[debug] %s\n", ANSI_FG_RED), logbuf);   
 }
