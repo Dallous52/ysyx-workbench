@@ -36,13 +36,13 @@ static word_t instruct = 0;
 static void ftrace(paddr_t pc, paddr_t call)
 {
     const char* ftrace_get_name(paddr_t addr);
-    
+
     static const uint8_t jal = 0b1101111;
     static const uint8_t jalr = 0b1100111;
 
     uint8_t opt = BITS(instruct, 6, 0);
     uint8_t rd = BITS(instruct, 11, 7);
-    
+
     if (opt == jal || opt == jalr)
     {
         const char* dst = ftrace_get_name(call);
@@ -63,7 +63,7 @@ static void print_exe_info(word_t tpc, word_t tinst, char* logbuf, size_t buflen
     p += snprintf(p, buflen, "0x%08x: ", tpc);
 
     uint8_t *inst = (uint8_t *)&tinst;
-    for (int i = 3; i >= 0; i--) 
+    for (int i = 3; i >= 0; i--)
         p += snprintf(p, 4, " %02x", inst[i]);
 
     *p = '\t'; p++;
@@ -90,15 +90,15 @@ int cpu_exec(uint64_t steps)
     {
         currpc = top.pc;
         instruct = paddr_read(top.pc, 4);
-        print_exe_info(currpc, instruct, logbuf, 128);
-        printf("%s\n", logbuf);
+        // print_exe_info(currpc, instruct, logbuf, 128);
+        // printf("%s\n", logbuf);
 
         top.clk = 0; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
         top.clk = 1; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
 
-        ftrace(currpc, top.pc);
+        // ftrace(currpc, top.pc);
         // check_wp();
         // if (!difftest_step(currpc)) npc_stat = NPC_STOP;
 
@@ -140,7 +140,7 @@ void reg_print()
 // get regiestor value
 word_t reg_get_value(char* s, bool* success)
 {
-    if (s == NULL || success == NULL) 
+    if (s == NULL || success == NULL)
     {
         if (success == NULL) return 0;
 
@@ -204,7 +204,7 @@ void npc_init(bool vcd)
         top.trace(vtrace, 5);
         vtrace->open(VCD_PATH);
     }
-    
+
     top.pc = 0x80000000;
     npc_stat = NPC_RUN;
 }
@@ -214,7 +214,7 @@ void npc_init(bool vcd)
 void npc_free()
 {
     if (vtrace)
-    {    
+    {
         vtrace->close();
         delete vtrace;
     }
@@ -231,10 +231,10 @@ extern "C" void ebreak(int code)
         {
             char logbuf[128] = {};
             print_exe_info(top.pc, paddr_read(top.pc, 4), logbuf, 128);
-            printf(ANSI_FMT("[unrealized] %s\n", ANSI_FG_RED), logbuf);   
+            printf(ANSI_FMT("[unrealized] %s\n", ANSI_FG_RED), logbuf);
         }
     }
-    else 
+    else
         npc_stat = NPC_END;
 }
 
@@ -244,8 +244,8 @@ extern "C" int pmem_read(int raddr)
     paddr_t address = raddr & ~0x3u;
     word_t rdata = 0;
 
-    if (likely(in_pmem(address))) 
-        rdata = paddr_read(address, 4); 
+    if (likely(in_pmem(address)))
+        rdata = paddr_read(address, 4);
     else if (!device_call((paddr_t)raddr, &rdata, false))
         finalize(2);
 
@@ -256,7 +256,7 @@ extern "C" int pmem_read(int raddr)
     //     printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x;\n", ANSI_FG_CYAN),
     //         (word_t)raddr, rdata, top.pc);
     // }
-    
+
     // 总是读取地址为`raddr & ~0x3u`的4字节返回
     return (int)rdata;
 }
@@ -268,9 +268,9 @@ static void pmem_write_core(paddr_t address, int wdata, char wmask)
     word_t wdata_ = paddr_read(address, 4);
 
     // 使用掩码逐字节合成新的数据
-    for (int i = 0; i < 4; ++i) 
+    for (int i = 0; i < 4; ++i)
     {
-        if (wmask & (1 << i)) 
+        if (wmask & (1 << i))
         {
             // 替换 old_data 中对应字节为 wdata 中对应的字节
             uint8_t byte = ((word_t)wdata >> (8 * i)) & 0xFF;
@@ -278,20 +278,20 @@ static void pmem_write_core(paddr_t address, int wdata, char wmask)
             wdata_ |= ((word_t)byte << (8 * i));  // 写入对应字节
         }
     }
-    
+
     // 按4字节对齐写入
     paddr_write(address, 4, wdata_);
 }
 
 
-extern "C" void pmem_write(int waddr, int wdata, char wmask) 
+extern "C" void pmem_write(int waddr, int wdata, char wmask)
 {
     // 总是往地址为`waddr & ~0x3u`的4字节按写掩码`wmask`写入`wdata`
     // `wmask`中每比特表示`wdata`中1个字节的掩码
     // 如`wmask = 0x3`代表只写入最低2个字节, 内存中的其它字节保持不变
- 
+
     paddr_t address = waddr & ~0x3u;
-    
+
     // mtrace memory write
     // word_t minst = paddr_read(top.pc, 4);
     // if (0b0100011 == BITS(minst, 6, 0))
@@ -302,6 +302,6 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
     if (likely(in_pmem(address))) { pmem_write_core(address, wdata, wmask); return; }
     if (device_call((paddr_t)waddr, &wdata, true)) return;
-    
+
     finalize(2);
 }
