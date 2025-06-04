@@ -67,12 +67,12 @@ module ysyx_25040111_top(
     wire [31:0] rs1_d, rs2_d, rd_d;
     ysyx_25040111_RegisterFile #(5, 32) u_reg(
         .clk   	(clk    ),
-        .wen   	(opt[0]    ),
-        .ren   	(opt[2:1]  ),
+        .wen   	(opt[0] ),
+        .ren   	(opt[2:1]),
         .wdata 	(rd_d  ),
         .waddr 	(rd ),
-        .raddr 	({rs2, rs1}  ),
-        .rdata 	({rs1_d, rs2_dt} )
+        .raddr 	({rs2, rs1}),
+        .rdata 	({rs2_dt, rs1_d} )
     );
     
     wire [31:0] csrw_t;
