@@ -22,7 +22,7 @@ module ysyx_25040111_csr(
     // 写入
     always @(posedge clk) begin
         if (wen) begin
-            // $display("waddr: %d, wdata: %h\n", waddr, wdata);
+            $display("mtevc %h\n", csr[1]);
             case (waddr)
                 12'h300: csr[0] <= wdata;
                 12'h305: csr[1] <= wdata;
