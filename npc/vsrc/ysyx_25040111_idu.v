@@ -8,7 +8,8 @@ module ysyx_25040111_idu(
     output [4:0] rs2,
     output [4:0] rd,
     output [31:0] imm,
-    output [`OPT_HIGH:0] opt
+    output [`OPT_HIGH:0] opt,
+    output [11:0] csr [1:0]
 );
 
     // ------------------------------------------------------- 
@@ -111,7 +112,7 @@ module ysyx_25040111_idu(
     
 
     // ------------------------------------------------------- 
-    //                         STORE
+    //                         LOAD
     // -------------------------------------------------------
     wire [4:0] rs1_load;
     wire [4:0] rd_load;
@@ -145,12 +146,16 @@ module ysyx_25040111_idu(
     // ------------------------------------------------------- 
     //                         SYSTEM                       
     // -------------------------------------------------------
-    wire [4:0] rs1_system;
+    wire [4:0] rs1_system, rd_system;
     wire [`OPT_HIGH:0] opt_system;
+    wire [31:0] imm_system;
 
     ysyx_25040111_system u_ysyx_25040111_system(
-        .inst 	(inst[31:0]  ),
+        .inst 	(inst[31:7]  ),
         .rs1    (rs1_system),
+        .rd     (rd_system),
+        .csr    (csr),
+        .imm    (imm_system),
         .opt    (opt_system)
     );
 
@@ -190,7 +195,7 @@ module ysyx_25040111_idu(
         7'b0110111, rd_auipc_lui,
         7'b1100111, rd_jalr,
         7'b1101111, rd_jal,
-        7'b1110011, 5'b0,
+        7'b1110011, rd_system,
         7'b0100011, 5'b0,
         7'b0000011, rd_load,
         7'b0110011, rd_op,
@@ -203,7 +208,7 @@ module ysyx_25040111_idu(
         7'b0110111, imm_auipc_lui,
         7'b1100111, imm_jalr,
         7'b1101111, imm_jal,
-        7'b1110011, 32'b0,
+        7'b1110011, imm_system,
         7'b0100011, imm_store,
         7'b0000011, imm_load,
         7'b0110011, 32'b0,

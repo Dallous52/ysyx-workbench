@@ -15,15 +15,15 @@
 //              101 rshift
 //              110 compare
 //              111 equal
-//      [9:8]: pc update option
-//              00 empty
-//              01 pc + 4
-//              10 pc + imm
-//              11 rs1 + imm
-//      [12:10] memory control option
-//              000 empty
-//              001 sb
-//              010 sh
+//      [9:8]: pc update option             SYSTEM JUMP TYPE 
+//              00 empty                        00 empty
+//              01 pc + 4                       01 ecall
+//              10 pc + imm                     10 ??
+//              11 rs1 + imm                    11 ??
+//      [12:10] memory control option       SYSTEM
+//              000 empty                       [10] csr write en
+//              001 sb                          [11] csr read en
+//              010 sh                          [12] jump
 //              011 sw
 //              101 lb
 //              110 lh
@@ -44,10 +44,11 @@ module ysyx_25040111_top(
     wire [4:0] rs1;
     wire [4:0] rs2;
     wire [4:0] rd;
+    wire [11:0] csr [1:0];
     wire [31:0] imm;
     wire [`OPT_HIGH:0] opt;
     reg [31:0] inst;
-
+                                 
     always @(*) begin
         inst = pmem_read(pc);
     end
@@ -58,21 +59,39 @@ module ysyx_25040111_top(
         .rs2  	(rs2   ),
         .rd   	(rd    ),
         .imm  	(imm   ),
-        .opt  	(opt   )
+        .opt  	(opt   ),
+        .csr    (csr)
     );
 
+    wire [31:0] rs2_dt, rd_dt;
     wire [31:0] rs1_d, rs2_d, rd_d;
-
-    ysyx_25040111_RegisterFile #(5, 32) u_RegisterFile(
+    ysyx_25040111_RegisterFile #(5, 32) u_reg(
         .clk   	(clk    ),
         .wen   	(opt[0]    ),
         .ren   	(opt[2:1]  ),
         .wdata 	(rd_d  ),
         .waddr 	(rd ),
         .raddr 	({rs2, rs1}  ),
-        .rdata 	({rs2_d, rs1_d} )
+        .rdata 	({rs1_d, rs2_dt} )
     );
     
+    wire [31:0] csrw_t;
+    wire [31:0] csrw, csrd;
+    ysyx_25040111_csr u_csr(
+        .clk   	(clk    ),
+        .wen   	(opt[10] & opt[15]),
+        .ren   	(opt[11] & opt[15]),
+        .waddr 	(csr[0]),
+        .jtype  (opt[9:8]),
+        .wdata 	(csrw  ),
+        .raddr 	(csr[1]),
+        .rdata 	(csrd  )
+    );
+``
+    assign rs2_d = opt[15] & opt[11] ? csrd : rs2_dt;
+    assign rd_d = opt[15] & opt[10] ? csrw_t : rd_dt;
+    assign csrw = opt[15] & opt[10] ? rd_dt : 32'b0;
+
     wire [31:0] dnpc;
     ysyx_25040111_exu u_ysyx_25040111_exu(
         .opt   	(opt    ),
@@ -80,11 +99,11 @@ module ysyx_25040111_top(
         .rs2_d 	(rs2_d  ),
         .imm   	(imm    ),
         .pc     (pc     ),
-        .rd_d  	(rd_d   ),
-        .dnpc   (dnpc   )
+        .rd_d  	(rd_dt  ),
+        .dnpc   (dnpc   ),
+        .csrw   (csrw_t)
     );
-    
-    
+
     ysyx_25040111_Reg #(32, 32'h80000000) u_ysyx_25040111_Reg(
         .clk  	(clk   ),
         .rst  	(rst   ),

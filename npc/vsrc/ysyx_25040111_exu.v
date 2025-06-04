@@ -11,7 +11,8 @@ module ysyx_25040111_exu(
     input [31:0] imm,
     input [31:0] pc,
     output [31:0] rd_d,
-    output [31:0] dnpc
+    output [31:0] dnpc,
+    output [31:0] csrw
 );
     // ------------------------------------------------------- 
     //                        ALU
@@ -52,15 +53,17 @@ module ysyx_25040111_exu(
         2'b11, {rs1_d, imm}
     });
 
+    wire [31:0] dnpc_normal;
     ysyx_25040111_adder32 u_ysyx_25040111_adder32(
         .ina  	    (ina   ),
         .inb  	    (inb   ),
         .sub        (0),
-        .sout 	    (dnpc  ),
+        .sout 	    (dnpc_normal),
         .cout       (),
         .overflow   ()
     );
-    
+
+    assign dnpc = opt[15] & opt[12] ? rs1_d : dnpc_normal;
     
     // ------------------------------------------------------- 
     //                        MEMORY
@@ -87,7 +90,7 @@ module ysyx_25040111_exu(
 
     reg [31:0] rd_dt;
     always @(*) begin
-        if (|opt[11:10]) begin  // 有读写请求时
+        if (|mem_en) begin  // 有读写请求时
             rd_dt = pmem_read(res);
             if (~opt[12]) begin // 有写请求时
                 pmem_write(res, wdata, wmask);
@@ -117,11 +120,15 @@ module ysyx_25040111_exu(
     // ------------------------------------------------------- 
     //                         SYSTEM
     // -------------------------------------------------------
+    
+    assign csrw = rs2_d;
+
     wire [31:0] eret;
     assign eret = opt[15] ? rs1_d : 32'd9;
     always @(*) begin
         if (~(|opt[14:0]))
             ebreak(eret);
     end
+
 
 endmodule
