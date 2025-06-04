@@ -303,6 +303,11 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
     if (likely(in_pmem(address))) { pmem_write_core(address, wdata, wmask); return; }
     if (device_call((paddr_t)waddr, &wdata, true)) return;
     
-    printf(ANSI_FMT("pc = 0x%08x\n", ANSI_FG_CYAN), top.pc);
     finalize(2);
+}
+
+
+void pc_print()
+{
+    printf(ANSI_FMT("pc = 0x%08x\n", ANSI_FG_CYAN), top.pc);
 }
