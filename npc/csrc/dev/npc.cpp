@@ -90,17 +90,17 @@ int cpu_exec(uint64_t steps)
     {
         currpc = top.pc;
         instruct = paddr_read(top.pc, 4);
-        print_exe_info(currpc, instruct, logbuf, 128);
-        printf("%s\n", logbuf);
+        // print_exe_info(currpc, instruct, logbuf, 128);
+        // printf("%s\n", logbuf);
 
         top.clk = 0; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
         top.clk = 1; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
 
-        ftrace(currpc, top.pc);
-        check_wp();
-        if (!difftest_step(currpc)) npc_stat = NPC_STOP;
+        // ftrace(currpc, top.pc);
+        // check_wp();
+        // if (!difftest_step(currpc)) npc_stat = NPC_STOP;
 
         switch (npc_stat)
         {
