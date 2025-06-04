@@ -5,16 +5,33 @@
 static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) {
-  if (user_handler) {
+  uintptr_t oldpc = c->mepc;
+  if (user_handler)
+  {
     Event ev = {0};
-    switch (c->mcause) {
-      default: ev.event = EVENT_ERROR; break;
+    switch (c->mcause) 
+    {
+      case 11:
+        ev.event = EVENT_YIELD; break;
+      default: 
+        ev.event = EVENT_ERROR; break;
     }
-
     c = user_handler(ev, c);
     assert(c != NULL);
+  
+    switch (ev.event) 
+    {
+    case EVENT_YIELD:{
+      if (oldpc == c->mepc) 
+        c->mepc += 4; 
+      break;
+    }
+    
+    default:break;
+    }
   }
-
+  
+  // printf("pc: %08x\n", c->mepc);
   return c;
 }
 
@@ -31,7 +48,11 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 }
 
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
-  return NULL;
+  Context* newc = (Context*)((uintptr_t)kstack.end - sizeof(Context));
+  newc->mstatus = 0x1800;
+  newc->mepc = (uintptr_t)entry;
+  newc->gpr[10] = (uintptr_t)arg;
+  return newc;
 }
 
 void yield() {
