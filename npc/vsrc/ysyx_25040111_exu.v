@@ -63,7 +63,7 @@ module ysyx_25040111_exu(
         .overflow   ()
     );
 
-    assign dnpc = opt[15] & opt[12] ? rs1_d : dnpc_normal;
+    assign dnpc = opt[15] & opt[12] ? rs2_d : dnpc_normal;
     
     // ------------------------------------------------------- 
     //                        MEMORY
