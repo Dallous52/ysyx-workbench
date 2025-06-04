@@ -56,6 +56,6 @@ bool device_call(uint32_t addr, void *data, bool isw)
         }
     }
 
-    printf(ANSI_FMT("device address not found 0x%08x\n", ANSI_FG_CYAN), addr);
+    printf(ANSI_FMT("device address not found 0x%08x\n", ANSI_FG_RED), addr);
     return false;
 }

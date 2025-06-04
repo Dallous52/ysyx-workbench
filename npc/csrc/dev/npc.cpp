@@ -98,7 +98,7 @@ int cpu_exec(uint64_t steps)
         top.clk = 1; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
 
-        ftrace(currpc, top.pc);
+        // ftrace(currpc, top.pc);
         // check_wp();
         // if (!difftest_step(currpc)) npc_stat = NPC_STOP;
 
@@ -303,5 +303,6 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
     if (likely(in_pmem(address))) { pmem_write_core(address, wdata, wmask); return; }
     if (device_call((paddr_t)waddr, &wdata, true)) return;
     
+    printf(ANSI_FMT("pc = 0x%08x\n", ANSI_FG_CYAN), top.pc);
     finalize(2);
 }
