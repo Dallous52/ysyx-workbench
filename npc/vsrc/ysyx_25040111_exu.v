@@ -90,7 +90,6 @@ module ysyx_25040111_exu(
 
     reg [31:0] rd_dt;
     always @(*) begin
-        $display("%b  %d  %d  %d", opt, imm, rd_d, rs1_d);
         if (|mem_en) begin  // 有读写请求时
             rd_dt = pmem_read(res);
             if (~opt[12]) begin // 有写请求时
