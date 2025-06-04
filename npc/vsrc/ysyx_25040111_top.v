@@ -87,7 +87,7 @@ module ysyx_25040111_top(
         .raddr 	(csr[1]),
         .rdata 	(csrd  )
     );
-``
+
     assign rs2_d = opt[15] & opt[11] ? csrd : rs2_dt;
     assign rd_d = opt[15] & opt[10] ? csrw_t : rd_dt;
     assign csrw = opt[15] & opt[10] ? rd_dt : 32'b0;
