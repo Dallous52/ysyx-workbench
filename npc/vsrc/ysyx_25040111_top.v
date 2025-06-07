@@ -3,7 +3,7 @@
 //      [2:1]: reg read en [rs2, rs1]
 //      [4:3]: alu arguments
 //              00  empty
-//              01  pc, imm (alu opt == 111 ? imm = 4 : imm)
+//              01  pc, imm (alu-eopt == 100 ? imm = 4 : imm)
 //              10  rs1, rs2
 //              11  rs1, imm
 //      [7:5]: alu option
@@ -28,7 +28,7 @@
 //              101 lb
 //              110 lh
 //              111 lw
-//              100 pc + 4 [alu opt]
+//              100 pc + 4 [alu-eopt]
 //      [13]    [add:sub] | [and:or]
 //      [14]    signed enable
 //      [15]    [system opt] | [cmp-eq !res]
@@ -72,7 +72,7 @@ module ysyx_25040111_top(
         .wdata 	(rd_d  ),
         .waddr 	(rd ),
         .raddr 	({rs2, rs1}),
-        .rdata 	({rs2_dt, rs1_d} )
+        .rdata 	({rs2_dt, rs1_d})
     );
     
     wire [31:0] csrw_t;
