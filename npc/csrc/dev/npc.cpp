@@ -98,7 +98,7 @@ int cpu_exec(uint64_t steps)
         top.clk = 1; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
 
-        // ftrace(currpc, top.pc);
+        ftrace(currpc, top.pc);
         // check_wp();
         // if (!difftest_step(currpc)) npc_stat = NPC_STOP;
 
