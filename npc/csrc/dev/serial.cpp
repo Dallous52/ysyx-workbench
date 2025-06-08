@@ -14,6 +14,5 @@ void serial_handler(word_t addr, void* data, bool isw)
     else 
     {
         *((char*)data) = getchar();
-        printf("0x%08x\n", addr);
     }
 }
