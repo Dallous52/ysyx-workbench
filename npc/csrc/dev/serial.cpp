@@ -1,6 +1,7 @@
 #include "device.h"
 
 #include <cstdio>
+#include <iostream>
 
 void serial_handler(word_t addr, void* data, bool isw)
 {
@@ -8,10 +9,10 @@ void serial_handler(word_t addr, void* data, bool isw)
     {
         int* ch = (int*)data;
         putchar(*ch);
+        fflush(stdout);
     }
     else 
     {
-        // printf("getch\n");    
+         std::cin >> *((char*)data);
     }
-    fflush(stdout);
 }
