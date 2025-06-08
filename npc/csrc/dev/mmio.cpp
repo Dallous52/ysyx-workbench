@@ -47,6 +47,8 @@ void device_init()
 // mmio mapping : call device
 bool device_call(uint32_t addr, void *data, bool isw)
 {
+    printf("G->0x%08x\n", addr);
+
     for (int i = 0; i < mmio_idx; i++)
     {
         if (mmio_map[i].start <= addr && mmio_map[i].end >= addr)
