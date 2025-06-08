@@ -13,6 +13,6 @@ void serial_handler(word_t addr, void* data, bool isw)
     }
     else 
     {
-         std::cin >> *((char*)data);
+        std::cin >> *((char*)data);
     }
 }
