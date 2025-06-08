@@ -18,6 +18,10 @@ void putch(char ch) {
   outb(DEV_SERIAL, ch);
 }
 
+char getch(){
+  return (char)inb(DEV_SERIAL);
+}
+
 void halt(int code) {
   asm volatile("mv a0, %0; ebreak" : :"r"(code));
   while (1);

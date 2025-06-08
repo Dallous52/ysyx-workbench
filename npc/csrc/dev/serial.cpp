@@ -4,7 +4,14 @@
 
 void serial_handler(word_t addr, void* data, bool isw)
 {
-    int* ch = (int*)data;
-    putchar(*ch);
+    if (isw)
+    {
+        int* ch = (int*)data;
+        putchar(*ch);
+    }
+    else 
+    {
+        printf("getch\n");    
+    }
     fflush(stdout);
 }
