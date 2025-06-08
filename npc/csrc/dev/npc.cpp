@@ -3,7 +3,6 @@
 #include "npc.h"
 #include "memory.h"
 #include "device.h"
-#include "tpdef.h"
 #include "util.h"
 
 #include <verilated.h>
@@ -11,6 +10,12 @@
 
 #define VCD_PATH "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
 #define REG top.rootp->ysyx_25040111_top__DOT__u_reg__DOT__rf
+
+#define EN_TRACE
+#define ITRACE
+#define FTRACE
+#define MTRACE
+#define DIFFTEST
 
 static Vysyx_25040111_top top;
 static VerilatedVcdC *vtrace = nullptr;
@@ -87,17 +92,25 @@ int cpu_exec(uint64_t steps)
     {
         currpc = top.pc;
         instruct = paddr_read(top.pc, 4);
-        // print_exe_info(currpc, instruct, logbuf, 128);
-        // printf("%s\n", logbuf);
+#if defined(EN_TRACE) && defined(ITRACE)
+        print_exe_info(currpc, instruct, logbuf, 128);
+        printf("%s\n", logbuf);
+#endif // ITRACE
 
         top.clk = 0; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
         top.clk = 1; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
 
-        // ftrace(currpc, top.pc);
-        // check_wp();
-        // if (!difftest_step(currpc)) npc_stat = NPC_STOP;
+#if defined(EN_TRACE) && defined(FTRACE)
+        ftrace(currpc, top.pc);
+#endif // FTRACE
+
+        check_wp();
+
+#ifdef DIFFTEST
+        if (!difftest_step(currpc)) npc_stat = NPC_STOP;
+#endif // DIFFTEST
 
         switch (npc_stat)
         {
@@ -246,13 +259,15 @@ extern "C" int pmem_read(int raddr)
     else if (!device_call((paddr_t)raddr, &rdata, false))
         finalize(2);
 
+#if defined(EN_TRACE) && defined(MTRACE)
     // mtrace memory read
-    // word_t minst = paddr_read(top.pc, 4);
-    // if (raddr != top.pc && 0b0000011 == BITS(minst, 6, 0))
-    // {
-    //     printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x;\n", ANSI_FG_CYAN),
-    //         (word_t)raddr, rdata, top.pc);
-    // }
+    word_t minst = paddr_read(top.pc, 4);
+    if (raddr != top.pc && 0b0000011 == BITS(minst, 6, 0))
+    {
+        printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x;\n", ANSI_FG_CYAN),
+            (word_t)raddr, rdata, top.pc);
+    }
+#endif // MTRACE
 
     // 总是读取地址为`raddr & ~0x3u`的4字节返回
     return (int)rdata;
@@ -289,13 +304,15 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
     paddr_t address = waddr & ~0x3u;
 
+#if defined(EN_TRACE) && defined(MTRACE)
     // mtrace memory write
-    // word_t minst = paddr_read(top.pc, 4);
-    // if (0b0100011 == BITS(minst, 6, 0))
-    // {
-    //     printf(ANSI_FMT("[write mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x; mask: 0x%02x;\n", ANSI_FG_CYAN),
-    //        (paddr_t)waddr, (word_t)wdata, top.pc, wmask);
-    // }
+    word_t minst = paddr_read(top.pc, 4);
+    if (0b0100011 == BITS(minst, 6, 0))
+    {
+        printf(ANSI_FMT("[write mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x; mask: 0x%02x;\n", ANSI_FG_CYAN),
+           (paddr_t)waddr, (word_t)wdata, top.pc, wmask);
+    }
+#endif // MTRACE
 
     if (likely(in_pmem(address))) { pmem_write_core(address, wdata, wmask); return; }
     if (device_call((paddr_t)waddr, &wdata, true)) return;
