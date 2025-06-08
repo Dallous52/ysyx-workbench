@@ -244,8 +244,8 @@ extern "C" int pmem_read(int raddr)
     paddr_t address = raddr & ~0x3u;
     word_t rdata = 0;
     
-    printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x;\n", ANSI_FG_CYAN),
-        (word_t)raddr, rdata, top.pc);
+    // printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x;\n", ANSI_FG_CYAN),
+    //     (word_t)raddr, rdata, top.pc);
 
     if (likely(in_pmem(address)))
         rdata = paddr_read(address, 4);
@@ -253,12 +253,12 @@ extern "C" int pmem_read(int raddr)
         finalize(2);
 
     // mtrace memory read
-    // word_t minst = paddr_read(top.pc, 4);
-    // if (raddr != top.pc && 0b0000011 == BITS(minst, 6, 0))
-    // {
-    //     printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x;\n", ANSI_FG_CYAN),
-    //         (word_t)raddr, rdata, top.pc);
-    // }
+    word_t minst = paddr_read(top.pc, 4);
+    if (raddr != top.pc && 0b0000011 == BITS(minst, 6, 0))
+    {
+        printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x;\n", ANSI_FG_CYAN),
+            (word_t)raddr, rdata, top.pc);
+    }
 
     // 总是读取地址为`raddr & ~0x3u`的4字节返回
     return (int)rdata;
