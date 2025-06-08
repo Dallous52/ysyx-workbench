@@ -11,8 +11,10 @@ void serial_handler(word_t addr, void* data, bool isw)
         putchar(*ch);
         fflush(stdout);
     }
-    else 
-    {
-        *((char*)data) = getchar();
-    }
+    else printf("read\n");
+    
+    // else 
+    // {
+    //     *((char*)data) = getchar();
+    // }
 }
