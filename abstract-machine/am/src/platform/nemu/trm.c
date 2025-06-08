@@ -12,7 +12,7 @@ void putch(char ch) {
 }
 
 char getch(){
-  return (char)inb(SERIAL_PORT);
+  return (char)inb(SERIAL_PORT + 1);
 }
 
 void halt(int code) {
