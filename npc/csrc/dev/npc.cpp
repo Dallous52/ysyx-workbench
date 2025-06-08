@@ -6,11 +6,8 @@
 #include "tpdef.h"
 #include "util.h"
 
-#include <cstdint>
-#include <cstdio>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
-#include <iostream>
 
 #define VCD_PATH "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
 #define REG top.rootp->ysyx_25040111_top__DOT__u_reg__DOT__rf
