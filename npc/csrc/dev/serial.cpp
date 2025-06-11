@@ -1,7 +1,6 @@
 #include "device.h"
 
 #include <cstdio>
-#include <iostream>
 
 void serial_handler(word_t addr, void* data, bool isw)
 {
@@ -13,6 +12,6 @@ void serial_handler(word_t addr, void* data, bool isw)
     }
     else 
     {
-        *((char*)data) = getchar();
+        *((int*)data) = getchar();
     }
 }

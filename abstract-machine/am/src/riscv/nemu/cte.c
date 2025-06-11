@@ -8,7 +8,7 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 Context* __am_irq_handle(Context *c) 
 {
   uintptr_t oldpc = c->mepc;
-  if (user_handler)
+  if (user_handler) 
   {
     Event ev = {0};
     switch (c->mcause) 
