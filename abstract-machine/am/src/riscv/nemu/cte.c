@@ -50,12 +50,16 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 }
 
 
-Context *kcontext(Area kstack, void (*entry)(void *), void *arg) 
+Context *kcontext(
+  Area kstack, void (*entry)(void *), void *arg) 
 {
-  Context* newc = (Context*)((uintptr_t)kstack.end - sizeof(Context));
+  Context* newc = 
+    (Context*)((uintptr_t)kstack.end - sizeof(Context));
+
   newc->mstatus = 0x1800;
   newc->mepc = (uintptr_t)entry;
   newc->gpr[10] = (uintptr_t)arg;
+  
   return newc;
 }
 
