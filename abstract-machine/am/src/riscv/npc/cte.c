@@ -13,7 +13,7 @@ Context* __am_irq_handle(Context *c) {
     {
       case 11:
         ev.event = EVENT_YIELD; break;
-      default: 
+      default:
         ev.event = EVENT_ERROR; break;
     }
     c = user_handler(ev, c);
@@ -23,7 +23,7 @@ Context* __am_irq_handle(Context *c) {
     {
     case EVENT_YIELD:{
       if (oldpc == c->mepc) 
-        c->mepc += 4; 
+        c->mepc += 4;
       break;
     }
     
