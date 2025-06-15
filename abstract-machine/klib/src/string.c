@@ -74,7 +74,7 @@ void *memset(void *s, int c, size_t n)
 }
 
 
-void *memmove(void *dst, const void *src, size_t n) 
+void *memmove(void *dst, const void *src, size_t n)
 {
   uint8_t *d = dst;
   const uint8_t *s = src;

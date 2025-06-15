@@ -8,7 +8,7 @@ module ysyx_25040111_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
   output [DATA_WIDTH-1:0] rdata [1:0]
 );
 
-    reg [DATA_WIDTH-1:0] rf [2**ADDR_WIDTH-1:0];
+    reg [DATA_WIDTH-1:0] rf [15:0];
     wire [ADDR_WIDTH-1:0] raddr_m [1:0];
 
     // 写入
