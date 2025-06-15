@@ -65,11 +65,11 @@ module ysyx_25040111_top(
 
     wire [31:0] rs2_dt, rd_dt;
     wire [31:0] rs1_d, rs2_d, rd_d;
-    ysyx_25040111_RegisterFile #(5, 16) u_reg(
+    ysyx_25040111_RegisterFile #(5, 32) u_reg(
         .clk   	(clk    ),
         .wen   	(opt[0] ),
         .ren   	(opt[2:1]),
-        .wdata 	(rd_d  ),
+        .wdata 	(rd_d   ),
         .waddr 	(rd ),
         .raddr 	({rs2, rs1}),
         .rdata 	({rs2_dt, rs1_d})
