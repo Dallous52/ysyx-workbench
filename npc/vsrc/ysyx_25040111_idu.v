@@ -9,7 +9,7 @@ module ysyx_25040111_idu(
     output [4:0] rd,
     output [31:0] imm,
     output [`OPT_HIGH:0] opt,
-    output [11:0] csr [1:0]
+    output [11:0] csr1, csr2
 );
 
     // -------------------------------------------------------
@@ -154,7 +154,8 @@ module ysyx_25040111_idu(
         .inst 	(inst[31:7]  ),
         .rs1    (rs1_system),
         .rd     (rd_system),
-        .csr    (csr),
+        .csr2   (csr2),
+        .csr1   (csr1),
         .imm    (imm_system),
         .opt    (opt_system)
     );

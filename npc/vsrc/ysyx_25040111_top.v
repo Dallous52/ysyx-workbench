@@ -49,19 +49,21 @@ module ysyx_25040111_top(
     wire [`OPT_HIGH:0] opt;
     reg [31:0] inst;
                                  
-    // always @(*) begin
-    //     inst = pmem_read(pc);
-    // end
+    always @(*) begin
+        inst = pmem_read(pc);
+    end
     
-    ysyx_25040111_RegisterFile #(8, 32) u_rom_t(
-        .clk   	(clk    ),
-        .wen   	(0    ),
-        .ren   	(2'b01    ),
-        .wdata 	(  ),
-        .waddr 	(  ),
-        .raddr 	({0, pc[7:0]}),
-        .rdata 	({0, inst} )
-    );
+    // ysyx_25040111_RegisterFile #(8, 32) u_rom_t(
+    //     .clk   	(clk    ),
+    //     .wen   	(0    ),
+    //     .ren   	(2'b01    ),
+    //     .wdata 	(  ),
+    //     .waddr 	(  ),
+    //     .raddr1 (pc[8:0]),
+    //     .raddr2 (),
+    //     .rdata1 ( inst),
+    //     .rdata2 ()
+    // );
     
 
     ysyx_25040111_idu u_idu(
@@ -71,7 +73,8 @@ module ysyx_25040111_top(
         .rd   	(rd    ),
         .imm  	(imm   ),
         .opt  	(opt   ),
-        .csr    (csr)
+        .csr1   (csr[0]),
+        .csr2   (csr[1])
     );
 
     wire [31:0] rs2_dt, rd_dt;
@@ -82,8 +85,10 @@ module ysyx_25040111_top(
         .ren   	(opt[2:1]),
         .wdata 	(rd_d   ),
         .waddr 	(rd[3:0] ),
-        .raddr 	({rs2[3:0], rs1[3:0]}),
-        .rdata 	({rs2_dt, rs1_d})
+        .raddr1 (rs1[3:0]),
+        .raddr2 (rs2[3:0]),
+        .rdata1 (rs1_d),
+        .rdata2 (rs2_dt)
     );
     
     wire [31:0] csrw_t;
