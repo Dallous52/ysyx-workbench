@@ -10,6 +10,7 @@ module ysyx_25040111_exu(
     input [31:0] rs2_d,
     input [31:0] imm,
     input [31:0] pc,
+    input clk,
     output [31:0] rd_d,
     output [31:0] dnpc,
     output [31:0] csrw
@@ -89,20 +90,31 @@ module ysyx_25040111_exu(
     });
 
     reg [31:0] rd_dt;
-    always @(*) begin
-        if (|mem_en) begin  
-            if (opt[12]) begin        // 有读写请求时
-                rd_dt = pmem_read(res);
-            end
-            else begin                // 有写请求时
-                pmem_write(res, wdata, wmask);
-                rd_dt = 0;
-            end
-        end
-        else begin
-            rd_dt = 0;
-        end
-    end
+    // always @(*) begin
+    //     if (|mem_en) begin  
+    //         if (opt[12]) begin        // 有读写请求时
+    //             rd_dt = pmem_read(res);
+    //         end
+    //         else begin                // 有写请求时
+    //             pmem_write(res, wdata, wmask);
+    //             rd_dt = 0;
+    //         end
+    //     end
+    //     else begin
+    //         rd_dt = 0;
+    //     end
+    // end
+
+    ysyx_25040111_RegisterFile #(8, 32) u_rom2_t(
+        .clk   	(clk    ),
+        .wen   	(|mem_en & ~opt[12]),
+        .ren   	({1'b0, opt[12] & |mem_en}),
+        .wdata 	(wdata),
+        .waddr 	(res[7:0]),
+        .raddr 	({0, res[7:0]}),
+        .rdata 	({0, rd_dt} )
+    );
+    
 
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, shif_en, {

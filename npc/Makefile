@@ -46,9 +46,8 @@ sim: $(VSRCS) $(CSRCS)
 		--exe -o top
 
 sta:
-	@echo $(RTL_FILE)
 	make -C/home/dallous/Documents/yosys-sta/ RTL_FILES="$(RTL_FILE)" \
-		DESIGN=ysyx_25040111_alu ANSWER_DIR=$(CURRDIR)/ sta
+		DESIGN=ysyx_25040111_top ANSWER_DIR=$(CURRDIR)/ sta
 
 # gtkwave
 gtkwave:

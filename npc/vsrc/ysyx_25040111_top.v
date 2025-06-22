@@ -49,9 +49,20 @@ module ysyx_25040111_top(
     wire [`OPT_HIGH:0] opt;
     reg [31:0] inst;
                                  
-    always @(*) begin
-        inst = pmem_read(pc);
-    end
+    // always @(*) begin
+    //     inst = pmem_read(pc);
+    // end
+    
+    ysyx_25040111_RegisterFile #(8, 32) u_rom_t(
+        .clk   	(clk    ),
+        .wen   	(0    ),
+        .ren   	(2'b01    ),
+        .wdata 	(  ),
+        .waddr 	(  ),
+        .raddr 	({0, pc[7:0]}),
+        .rdata 	({0, inst} )
+    );
+    
 
     ysyx_25040111_idu u_idu(
         .inst 	(inst[31:0]),
@@ -99,6 +110,7 @@ module ysyx_25040111_top(
         .rs2_d 	(rs2_d  ),
         .imm   	(imm    ),
         .pc     (pc     ),
+        .clk    (clk),
         .rd_d  	(rd_dt  ),
         .dnpc   (dnpc   ),
         .csrw   (csrw_t)
