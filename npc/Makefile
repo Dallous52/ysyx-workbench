@@ -17,12 +17,7 @@ ARGS ?=
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
 CURRDIR = /home/dallous/Documents/ysyx-workbench/npc
-RTL_FILE = $(CURRDIR)/vsrc/ysyx_25040111_alu.v
-RTL_FILE += $(CURRDIR)/vsrc/ysyx_25040111_adder32.v
-RTL_FILE += $(CURRDIR)/vsrc/ysyx_25040111_adder4.v
-RTL_FILE += $(CURRDIR)/vsrc/ysyx_25040111_MuxKeyInternal.v
-RTL_FILE += $(CURRDIR)/vsrc/ysyx_25040111_MuxKey.v
-RTL_FILE += $(CURRDIR)/vsrc/ysyx_25040111_carry.v
+RTL_FILE = $(VSRCS)
 
 # 获取所有 C/C++ 源文件（`csrc` 目录下的 `.c`、`.cc`、`.cpp` 文件）
 CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
@@ -51,6 +46,7 @@ sim: $(VSRCS) $(CSRCS)
 		--exe -o top
 
 sta:
+	@echo $(RTL_FILE)
 	make -C/home/dallous/Documents/yosys-sta/ RTL_FILES="$(RTL_FILE)" \
 		DESIGN=ysyx_25040111_alu ANSWER_DIR=$(CURRDIR)/ sta
 
