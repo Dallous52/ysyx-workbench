@@ -1,3 +1,5 @@
+import "DPI-C" function int pmem_read(input int raddr);
+
 module ysyx_25040111_ifu (
     input  clk,
     input  ready,
