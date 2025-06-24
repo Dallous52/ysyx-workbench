@@ -71,7 +71,7 @@ module ysyx_25040111_top(
     );
 
     always @(posedge clk) begin
-        $display("opt:%b\n", opt);
+        $display("opt:%b", opt);
     end
 
     wire [31:0] rs2_dt, rd_dt;

@@ -7,7 +7,7 @@ module ysyx_25040111_ifu (
 );
 
     always @(posedge clk) begin
-        $display("pc:%h  vaild:%b  ready:%b\n", pc, valid, ready);
+        $display("pc:%h  vaild:%b  ready:%b", pc, valid, ready);
         if (ready) begin
             inst  <= pmem_read(pc);
             valid <= 1;
