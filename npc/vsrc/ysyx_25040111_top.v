@@ -50,30 +50,18 @@ module ysyx_25040111_top(
     wire [31:0] inst;
     
     wire valid;
+    initial valid = 0;
     
-    ysyx_25040111_ifu u_ysyx_25040111_ifu(
+    ysyx_25040111_ifu u_ifu (
+        .clk    (clk    ),
+        .ready  (~valid ),
         .pc    	(pc     ),
         .inst  	(inst   ),
         .valid 	(valid  )
     );
-    
 
-    
-    // ysyx_25040111_RegisterFile #(8, 32) u_rom_t(
-    //     .clk   	(clk    ),
-    //     .wen   	(0    ),
-    //     .ren   	(2'b01    ),
-    //     .wdata 	(  ),
-    //     .waddr 	(  ),
-    //     .raddr1 (pc[8:0]),
-    //     .raddr2 (),
-    //     .rdata1 ( inst),
-    //     .rdata2 ()
-    // );
-    
-
-    ysyx_25040111_idu u_idu(
-        .inst 	(inst[31:0]),
+    ysyx_25040111_idu u_idu (
+        .inst 	(valid ? inst : 32'b0),
         .rs1  	(rs1   ),
         .rs2  	(rs2   ),
         .rd   	(rd    ),
@@ -100,14 +88,14 @@ module ysyx_25040111_top(
     wire [31:0] csrw_t;
     wire [31:0] csrw, csrd;
     ysyx_25040111_csr u_csr(
-        .clk   	(clk    ),
+        .clk   	(clk     ),
         .wen   	(opt[10] & opt[15]),
         .ren   	(opt[11] & opt[15]),
-        .waddr 	(csr[0]),
+        .waddr 	(csr[0]  ),
         .jtype  (opt[9:8]),
-        .wdata 	(csrw  ),
-        .raddr 	(csr[1]),
-        .rdata 	(csrd  )
+        .wdata 	(csrw    ),
+        .raddr 	(csr[1]  ),
+        .rdata 	(csrd    )
     );
 
     assign rs2_d = opt[15] & opt[11] ? csrd : rs2_dt;
@@ -121,18 +109,31 @@ module ysyx_25040111_top(
         .rs2_d 	(rs2_d  ),
         .imm   	(imm    ),
         .pc     (pc     ),
-        .clk    (clk),
+        .clk    (clk    ),
         .rd_d  	(rd_dt  ),
         .dnpc   (dnpc   ),
-        .csrw   (csrw_t)
+        .csrw   (csrw_t )
     );
 
     ysyx_25040111_Reg #(32, 32'h80000000) u_ysyx_25040111_Reg(
         .clk  	(clk   ),
         .rst  	(rst   ),
-        .din  	(dnpc),
-        .dout 	(pc  ),
-        .wen  	(1   )
+        .din  	(dnpc  ),
+        .dout 	(pc    ),
+        .wen  	(1     )
     );
 
 endmodule
+
+    // ysyx_25040111_RegisterFile #(8, 32) u_rom_t(
+    //     .clk   	(clk    ),
+    //     .wen   	(0    ),
+    //     .ren   	(2'b01    ),
+    //     .wdata 	(  ),
+    //     .waddr 	(  ),
+    //     .raddr1 (pc[8:0]),
+    //     .raddr2 (),
+    //     .rdata1 ( inst),
+    //     .rdata2 ()
+    // );
+    
