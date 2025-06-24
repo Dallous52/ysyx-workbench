@@ -3,7 +3,6 @@
 
 #include "tpdef.h"
 
-
 // initialize npc resource
 void npc_init(bool vcd);
 

@@ -47,11 +47,17 @@ module ysyx_25040111_top(
     wire [11:0] csr [1:0];
     wire [31:0] imm;
     wire [`OPT_HIGH:0] opt;
-    reg [31:0] inst;
-                                 
-    always @(*) begin
-        inst = pmem_read(pc);
-    end
+    wire [31:0] inst;
+    
+    wire valid;
+    
+    ysyx_25040111_ifu u_ysyx_25040111_ifu(
+        .pc    	(pc     ),
+        .inst  	(inst   ),
+        .valid 	(valid  )
+    );
+    
+
     
     // ysyx_25040111_RegisterFile #(8, 32) u_rom_t(
     //     .clk   	(clk    ),
