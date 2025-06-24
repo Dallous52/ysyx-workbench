@@ -100,7 +100,7 @@ module ysyx_25040111_top(
     assign rs2_d = opt[15] & opt[11] ? csrd : rs2_dt;
     assign rd_d = opt[15] & opt[10] ? csrw_t : rd_dt;
     assign csrw = opt[15] & opt[10] ? rd_dt : 32'b0;
-
+    
     wire [31:0] dnpc;
     ysyx_25040111_exu u_ysyx_25040111_exu(
         .opt   	(opt    ),
