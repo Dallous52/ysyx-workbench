@@ -1,5 +1,3 @@
-import "DPI-C" function int pmem_read(input int raddr);
-
 module ysyx_25040111_ifu (
     input  clk,
     input  ready,
@@ -9,6 +7,7 @@ module ysyx_25040111_ifu (
 );
 
     always @(posedge clk) begin
+        $display("pc:%h  vaild:%b  ready:%b\n", pc, valid, ready);
         if (ready) begin
             inst  <= pmem_read(pc);
             valid <= 1;
