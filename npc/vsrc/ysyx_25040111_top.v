@@ -50,7 +50,6 @@ module ysyx_25040111_top(
     wire [31:0] inst;
     
     wire valid;
-    initial valid = 0;
     
     ysyx_25040111_ifu u_ifu (
         .clk    (clk    ),
