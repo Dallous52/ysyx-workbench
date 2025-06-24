@@ -70,9 +70,9 @@ module ysyx_25040111_top(
         .csr2   (csr[1])
     );
 
-    always @(posedge clk) begin
-        $display("opt:%b", opt);
-    end
+    // always @(posedge clk) begin
+    //     $display("opt:%b", opt);
+    // end
 
     wire [31:0] rs2_dt, rd_dt;
     wire [31:0] rs1_d, rs2_d, rd_d;
