@@ -5,12 +5,13 @@ import "DPI-C" function int pmem_read(input int raddr);
 import "DPI-C" function void pmem_write(input int waddr, input int wdata, input byte wmask);
 
 module ysyx_25040111_exu(
+    input valid,
+    input clk,
     input [`OPT_HIGH:0] opt,
     input [31:0] rs1_d,
     input [31:0] rs2_d,
     input [31:0] imm,
     input [31:0] pc,
-    input clk,
     output [31:0] rd_d,
     output [31:0] dnpc,
     output [31:0] csrw
@@ -44,9 +45,10 @@ module ysyx_25040111_exu(
     // -------------------------------------------------------
     wire [31:0] ina;
     wire [31:0] inb;
-    wire [1:0] pc_ctl;
+    wire [1:0] pc_ctl, pc_tmp;
     
-    assign pc_ctl = |opt[9:8] ? opt[9:8] : res[0] ? `INPC : `SNPC;
+    assign pc_tmp = |opt[9:8] ? opt[9:8] : res[0] ? `INPC : `SNPC;
+    assign pc_ctl = valid ? pc_tmp : 2'b0;
     ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, pc_ctl, {
         2'b00, 64'd0,
         2'b01, {pc, 32'd4},

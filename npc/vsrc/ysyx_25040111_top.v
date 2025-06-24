@@ -107,12 +107,13 @@ module ysyx_25040111_top(
     
     wire [31:0] dnpc;
     ysyx_25040111_exu u_ysyx_25040111_exu(
+        .valid  (valid  ),
+        .clk    (clk    ),
         .opt   	(opt    ),
         .rs1_d 	(rs1_d  ),
         .rs2_d 	(rs2_d  ),
         .imm   	(imm    ),
         .pc     (pc     ),
-        .clk    (clk    ),
         .rd_d  	(rd_dt  ),
         .dnpc   (dnpc   ),
         .csrw   (csrw_t )
