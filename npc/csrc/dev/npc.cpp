@@ -111,7 +111,8 @@ int cpu_exec(uint64_t steps)
 
 #ifdef DIFFTEST
         printf("currpc : %08x\n", currpc);
-        if (!device_visit() && !difftest_step(currpc)) npc_stat = NPC_STOP;
+        if (device_visit()) difftest_nop(currpc + 4);
+        else if (!difftest_step(currpc)) npc_stat = NPC_STOP;
 #endif // DIFFTEST
         }
         

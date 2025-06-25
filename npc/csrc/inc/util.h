@@ -1,7 +1,7 @@
 #ifndef NPC_DISASM
 #define NPC_DISASM
 
-#include <stdint.h>
+#include "tpdef.h"
 
 enum { DIFFTEST_TO_DUT, DIFFTEST_TO_REF };
 
@@ -19,5 +19,8 @@ void init_difftest(long img_size, int port);
 
 // difftest step
 bool difftest_step(uint32_t pc);
+
+// difftest nop
+void difftest_nop(word_t pc);
 
 #endif // NPC_DISASM
