@@ -63,7 +63,7 @@ bool difftest_step(paddr_t pc)
     ref_difftest_regcpy(nemu_reg, DIFFTEST_TO_DUT);
     reg_value(npc_reg);
 
-    for (int i = 0; i < 32; i++)
+    for (int i = 0; i < 16; i++)
     {
         if (nemu_reg[i] != npc_reg[i])
         {
