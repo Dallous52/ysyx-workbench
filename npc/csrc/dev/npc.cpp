@@ -11,11 +11,11 @@
 #define VCD_PATH "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
 #define REG top.rootp->ysyx_25040111_top__DOT__u_reg__DOT__rf
 
-// #define EN_TRACE
+#define EN_TRACE
 #define ITRACE
 // #define FTRACE
 // #define MTRACE
-// #define DIFFTEST
+#define DIFFTEST
 
 static Vysyx_25040111_top top;
 static VerilatedVcdC *vtrace = nullptr;
@@ -101,7 +101,8 @@ int cpu_exec(uint64_t steps)
         if (vtrace) vtrace->dump(sim_time++);
         top.clk = 1; top.eval();
         if (vtrace) vtrace->dump(sim_time++);
-
+        
+        if (top.pc != currpc) {
 #if defined(EN_TRACE) && defined(FTRACE)
         ftrace(currpc, top.pc);
 #endif // FTRACE
@@ -111,7 +112,8 @@ int cpu_exec(uint64_t steps)
 #ifdef DIFFTEST
         if (!difftest_step(currpc)) npc_stat = NPC_STOP;
 #endif // DIFFTEST
-
+        }
+        
         switch (npc_stat)
         {
         case NPC_RUN:
