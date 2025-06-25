@@ -11,9 +11,9 @@
 #define VCD_PATH "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
 #define REG top.rootp->ysyx_25040111_top__DOT__u_reg__DOT__rf
 
-// #define EN_TRACE
-#define ITRACE
-// #define FTRACE
+#define EN_TRACE
+// #define ITRACE
+#define FTRACE
 // #define MTRACE
 #define DIFFTEST
 
