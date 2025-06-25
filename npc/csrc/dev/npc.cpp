@@ -110,7 +110,7 @@ int cpu_exec(uint64_t steps)
         check_wp();
 
 #ifdef DIFFTEST
-        if (!device_visit() && !difftest_step(currpc)) npc_stat = NPC_STOP;
+        if (!difftest_step(currpc)) npc_stat = NPC_STOP;
 #endif // DIFFTEST
         }
         
