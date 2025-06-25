@@ -69,6 +69,12 @@ __EXPORT void difftest_exec(uint64_t n) {
   cpu_exec(n);
 }
 
+
+__EXPORT void difftest_nop(word_t pc) {
+  cpu.pc = pc;
+}
+
+
 __EXPORT void difftest_raise_intr(word_t NO) {
   assert(0);
 }
