@@ -11,4 +11,6 @@ void device_init();
 
 bool device_call(uint32_t addr, void* data, bool isw);
 
+bool device_visit();
+
 #endif

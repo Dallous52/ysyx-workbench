@@ -16,6 +16,7 @@ typedef struct
 
 static map mmio_map[16];
 static int mmio_idx = 0;
+static bool visit = false; 
 
 // add new device
 static void device_add(uint32_t addr, uint32_t len, callback handler)
@@ -47,6 +48,7 @@ void device_init()
 // mmio mapping : call device
 bool device_call(uint32_t addr, void *data, bool isw)
 {
+    visit = true;
     for (int i = 0; i < mmio_idx; i++)
     {
         if (mmio_map[i].start <= addr && mmio_map[i].end >= addr)
@@ -58,4 +60,12 @@ bool device_call(uint32_t addr, void *data, bool isw)
 
     printf(ANSI_FMT("device address not found 0x%08x\n", ANSI_FG_RED), addr);
     return false;
+}
+
+
+bool device_visit()
+{
+    bool ret = visit;
+    visit = false;
+    return ret;
 }
