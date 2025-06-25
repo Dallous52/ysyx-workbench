@@ -9,7 +9,7 @@
 #include <verilated_vcd_c.h>
 
 #define VCD_PATH "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
-#define REG top.rootp->ysyx_25040111_top__DOT__u_reg__DOT__rf
+#define REG (top.rootp->ysyx_25040111_top__DOT__u_reg__DOT__rf)
 
 #define EN_TRACE
 // #define ITRACE
@@ -27,8 +27,8 @@ static vluint64_t sim_time = 0;
 static const char *regs[] = {
     "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
     "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
-    "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
-    "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
+    // "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
+    // "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
 };
 
 uint32_t npc_stat = -1;

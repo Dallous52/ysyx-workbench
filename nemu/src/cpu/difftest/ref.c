@@ -50,7 +50,7 @@ __EXPORT void difftest_regcpy(void *dut, bool direction)
   if (direction == DIFFTEST_TO_REF)
   {
     int i = 0;
-    for (i = 0; i < ARRLEN(cpu.gpr); i++)
+    for (i = 0; i < 16; i++)
     {
       cpu.gpr[i] = regs[i];
     }  
@@ -58,7 +58,7 @@ __EXPORT void difftest_regcpy(void *dut, bool direction)
   else 
   {
     int i = 0;
-    for (i = 0; i < ARRLEN(cpu.gpr); i++)
+    for (i = 0; i < 16; i++)
     {
       regs[i] = cpu.gpr[i];
     }  
@@ -70,8 +70,14 @@ __EXPORT void difftest_exec(uint64_t n) {
 }
 
 
-__EXPORT void difftest_nop(word_t pc) {
-  cpu.pc = pc;
+__EXPORT void difftest_nop(void *dut, word_t dnpc) {
+  uint32_t* regs = (uint32_t*)dut;
+  int i = 0;
+  for (i = 0; i < 16; i++)
+  {
+    cpu.gpr[i] = regs[i];
+  }  
+  cpu.pc = dnpc;
 }
 
 

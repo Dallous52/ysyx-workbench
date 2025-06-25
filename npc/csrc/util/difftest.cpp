@@ -19,7 +19,7 @@ typedef void (*diff_exec)(uint64_t);
 diff_exec ref_difftest_exec = nullptr;
 typedef void (*diff_raise_intr)(uint64_t);
 diff_raise_intr ref_difftest_raise_intr = nullptr;
-typedef void (*diff_nop)(word_t);
+typedef void (*diff_nop)(void*, word_t);
 diff_nop ref_difftest_nop = nullptr;
 typedef void (*diff_init)(int);
 
@@ -83,5 +83,7 @@ bool difftest_step(paddr_t pc)
 
 void difftest_nop(word_t pc)
 {
-    ref_difftest_nop(pc);
+    word_t regs[16] = { 0 };
+    reg_value(regs);
+    ref_difftest_nop(regs, pc);
 }
