@@ -219,6 +219,10 @@ void npc_init(bool vcd)
 
     top.pc = 0x80000000;
     npc_stat = NPC_RUN;
+    for (int i = 0; i < ARRLEN(regs); i++)
+    {
+        REG[i] = 0;
+    }
 }
 
 
