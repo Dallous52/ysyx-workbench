@@ -95,7 +95,6 @@ module ysyx_25040111_exu(
         if (|mem_en) begin
             if (~opt[12]) begin // 有写请求时
                 pmem_write(res, wdata, wmask);
-                rd_dt <= 0;
             end
             else begin          // 有读请求时\
                 rd_dt <= pmem_read(res);
