@@ -102,7 +102,6 @@ module ysyx_25040111_exu(
                 ready <= 1;
             end
         end
-        else rd_dt <= 0;
         $display("res:%h rd_dt:%h", res, rd_dt);
 
         if (ready) ready <= 0;
