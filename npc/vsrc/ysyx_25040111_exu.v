@@ -98,6 +98,7 @@ module ysyx_25040111_exu(
                 rd_dt <= 0;
             end
             else begin          // 有读请求时
+                $display("%h", res);
                 rd_dt <= pmem_read(res);
                 ready <= 1;
             end
