@@ -122,7 +122,7 @@ module ysyx_25040111_top(
     );
 
     always @(posedge clk) begin
-        $display("pc_next:%b", pc_next);
+        $display("pc_next:%b  dnpc:%h", pc_next, dnpc);
     end
     
     // pc update
