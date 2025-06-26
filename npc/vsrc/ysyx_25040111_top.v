@@ -28,7 +28,7 @@
 //              101 lb
 //              110 lh
 //              111 lw
-//              100 pc + 4 [alu-eopt]
+//              100 pc + 4 [alu-opt]
 //      [13]    [add:sub] | [and:or]
 //      [14]    signed enable
 //      [15]    [system opt] | [cmp-eq !res]
@@ -80,7 +80,7 @@ module ysyx_25040111_top(
     wire [31:0] rs1_d, rs2_d, rd_d;
     wire valid_next, pc_next;
 
-    assign pc_next = ~opt[12] | valid_next | ~|opt[11:10];
+    assign pc_next = ~opt[12] | ~(|opt[11:10]) | valid_next;
     ysyx_25040111_RegisterFile #(4, 32) u_reg(
         .clk   	(clk     ),
         .wen   	(opt[0] & pc_next),
