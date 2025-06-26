@@ -50,6 +50,9 @@ module ysyx_25040111_top(
     wire [31:0] inst;
     
     reg valid, ready;
+    initial begin
+        ready = 1'b1;
+    end
     
     ysyx_25040111_ifu u_ifu (
         .clk    (clk    ),
