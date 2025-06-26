@@ -48,7 +48,7 @@ module ysyx_25040111_exu(
     assign pc_tmp = |opt[9:8] ? opt[9:8] : res[0] ? `INPC : `SNPC;
     assign pc_ctl = valid ? pc_tmp : 2'b0; 
     ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, pc_ctl, {
-        2'b00, {pc, 32'b0},
+        2'b00, {dnpc, 32'b0},
         2'b01, {pc, 32'd4},
         2'b10, {pc, imm},
         2'b11, {rs1_d, imm}
