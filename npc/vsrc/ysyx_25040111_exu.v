@@ -88,7 +88,7 @@ module ysyx_25040111_exu(
         2'b01, rs2_d << 8,
         2'b10, rs2_d << 16,
         2'b11, rs2_d << 24
-    });
+    }); 
     
     reg [31:0] rd_dt;
     always @(posedge clk) begin

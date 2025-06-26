@@ -80,7 +80,7 @@ module ysyx_25040111_top(
     wire [31:0] rs1_d, rs2_d, rd_d;
     wire valid_next, pc_next;
 
-    assign pc_next = ~opt[12] | valid_next;
+    assign pc_next = ~opt[12] | valid_next | ~|opt[11:10];
     ysyx_25040111_RegisterFile #(4, 32) u_reg(
         .clk   	(clk     ),
         .wen   	(opt[0] & pc_next),
