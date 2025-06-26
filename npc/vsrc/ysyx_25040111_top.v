@@ -121,9 +121,9 @@ module ysyx_25040111_top(
         .ready  (valid_next)
     );
 
-    // always @(posedge clk) begin
-    //     $display("pc_next:%b  dnpc:%h", pc_next, dnpc);
-    // end
+    always @(posedge clk) begin
+        $display("pc_next:%b  dnpc:%h", pc_next, dnpc);
+    end
     
     // pc update
     always @(posedge clk) begin
