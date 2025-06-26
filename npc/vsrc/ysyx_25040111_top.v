@@ -122,14 +122,6 @@ module ysyx_25040111_top(
         .csrw   (csrw_t )
     );
 
-    ysyx_25040111_Reg #(32, 32'h80000000) u_ysyx_25040111_Reg(
-        .clk  	(clk   ),
-        .rst  	(rst   ),
-        .din  	(dnpc  ),
-        .dout 	(pc    ),
-        .wen  	(valid )
-    );
-
     always @(posedge clk) begin
         if (valid) begin 
             pc <= dnpc;
