@@ -127,10 +127,13 @@ module ysyx_25040111_top(
     
     // pc update
     always @(posedge clk) begin
-        if (pc_next) begin 
+        if (valid)
             pc <= dnpc;
+
+        if (pc_next) begin 
             ready <= 1;
         end
+        
         if (ready) begin
             ready <= 0;
         end
