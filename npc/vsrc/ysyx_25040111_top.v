@@ -37,7 +37,6 @@
 
 module ysyx_25040111_top(
     input clk,
-    input rst,
     output reg [31:0] pc
 );
    
@@ -79,9 +78,12 @@ module ysyx_25040111_top(
 
     wire [31:0] rs2_dt, rd_dt;
     wire [31:0] rs1_d, rs2_d, rd_d;
+    wire valid_next, pc_next;
+
+    assign pc_next = ~opt[12] | valid_next;
     ysyx_25040111_RegisterFile #(4, 32) u_reg(
         .clk   	(clk     ),
-        .wen   	(opt[0]  ),
+        .wen   	(opt[0] & pc_next),
         .ren   	(opt[2:1]),
         .wdata 	(rd_d    ),
         .waddr 	(rd[3:0] ),
@@ -119,11 +121,13 @@ module ysyx_25040111_top(
         .pc     (pc     ),
         .rd_d  	(rd_dt  ),
         .dnpc   (dnpc   ),
-        .csrw   (csrw_t )
+        .csrw   (csrw_t ),
+        .ready  (valid_next)
     );
 
+    // pc update
     always @(posedge clk) begin
-        if (valid) begin 
+        if (pc_next) begin 
             pc <= dnpc;
             ready <= 1;
         end

@@ -11,7 +11,8 @@ module ysyx_25040111_exu(
     input [31:0] pc,
     output [31:0] rd_d,
     output [31:0] dnpc,
-    output [31:0] csrw
+    output [31:0] csrw,
+    output reg ready
 );
     // ------------------------------------------------------- 
     //                        ALU
@@ -88,23 +89,24 @@ module ysyx_25040111_exu(
         2'b10, rs2_d << 16,
         2'b11, rs2_d << 24
     });
-
-    reg [31:0] rd_dt;
-    always @(*) begin
-        if (|mem_en) begin  
-            if (opt[12]) begin        // 有读写请求时
-                rd_dt = pmem_read(res);
-            end
-            else begin                // 有写请求时
-                pmem_write(res, wdata, wmask);
-                rd_dt = 0;
-            end
-        end
-        else begin
-            rd_dt = 0;
-        end
-    end
     
+    reg [31:0] rd_dt;
+    always @(posedge clk) begin
+        if (|mem_en) begin
+            if (~opt[12]) begin // 有写请求时
+                pmem_write(res, wdata, wmask);
+                rd_dt <= 0;
+            end
+            else begin          // 有读请求时
+                rd_dt <= pmem_read(res);
+                ready <= 1;
+            end
+        end
+        else rd_dt <= 0;
+
+        if (ready) ready <= 0;
+    end
+
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, shif_en, {
         2'b00, rd_dt,
