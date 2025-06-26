@@ -12,10 +12,10 @@
 #define REG (top.rootp->ysyx_25040111_top__DOT__u_reg__DOT__rf)
 
 #define EN_TRACE
-// #define ITRACE
+#define ITRACE
 // #define FTRACE
 // #define MTRACE
-#define DIFFTEST
+// #define DIFFTEST
 
 static Vysyx_25040111_top top;
 static VerilatedVcdC *vtrace = nullptr;
