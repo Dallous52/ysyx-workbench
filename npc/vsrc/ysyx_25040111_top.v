@@ -38,7 +38,7 @@
 module ysyx_25040111_top(
     input clk,
     input rst,
-    output [31:0] pc
+    output reg [31:0] pc
 );
    
     wire [4:0] rs1;
@@ -49,11 +49,11 @@ module ysyx_25040111_top(
     wire [`OPT_HIGH:0] opt;
     wire [31:0] inst;
     
-    wire valid;
+    reg valid, ready;
     
     ysyx_25040111_ifu u_ifu (
         .clk    (clk    ),
-        .ready  (~valid ),
+        .ready  (ready  ),
         .pc    	(pc     ),
         .inst  	(inst   ),
         .valid 	(valid  )
@@ -77,10 +77,10 @@ module ysyx_25040111_top(
     wire [31:0] rs2_dt, rd_dt;
     wire [31:0] rs1_d, rs2_d, rd_d;
     ysyx_25040111_RegisterFile #(4, 32) u_reg(
-        .clk   	(clk    ),
-        .wen   	(opt[0] ),
+        .clk   	(clk     ),
+        .wen   	(opt[0]  ),
         .ren   	(opt[2:1]),
-        .wdata 	(rd_d   ),
+        .wdata 	(rd_d    ),
         .waddr 	(rd[3:0] ),
         .raddr1 (rs1[3:0]),
         .raddr2 (rs2[3:0]),
@@ -124,8 +124,19 @@ module ysyx_25040111_top(
         .rst  	(rst   ),
         .din  	(dnpc  ),
         .dout 	(pc    ),
-        .wen  	(1     )
+        .wen  	(valid )
     );
+
+    always @(posedge clk) begin
+        if (valid) begin 
+            pc <= dnpc;
+            ready <= 1;
+        end
+        if (ready) begin
+            ready <= 0;
+        end
+    end
+
 
 endmodule
 

@@ -14,9 +14,6 @@ module ysyx_25040111_ifu (
             inst  <= pmem_read(pc);
             valid <= 1;
         end
-    end
-
-    always @(posedge clk) begin
         if (valid)
             valid <= 0;
     end
