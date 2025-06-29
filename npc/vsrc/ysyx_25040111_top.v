@@ -74,11 +74,12 @@ module ysyx_25040111_top(
 
     wire [31:0] rs2_dt, rd_dt;
     wire [31:0] rs1_d, rs2_d, rd_d;
-    wire valid_next;
+    wire valid_next, pc_next;
 
+    assign pc_next = ~opt[12] | ~(|opt[11:10]) | valid_next;
     ysyx_25040111_RegisterFile #(4, 32) u_reg(
         .clk   	(clk     ),
-        .wen   	(opt[0] & valid_next),
+        .wen   	(opt[0] & pc_next),
         .ren   	(opt[2:1]),
         .wdata 	(rd_d    ),
         .waddr 	(rd[3:0] ),
@@ -121,7 +122,7 @@ module ysyx_25040111_top(
     );
 
     always @(posedge clk) begin
-        $display("dnpc:%h  rd:%h", dnpc, rd_d);
+        $display("pc_next:%b  dnpc:%h  rd:%h", pc_next, dnpc, rd_d);
     end
     
     // pc update
@@ -129,7 +130,7 @@ module ysyx_25040111_top(
         if (valid)
             pc <= dnpc;
 
-        if (valid_next) begin  
+        if (pc_next) begin 
             ready <= 1;
         end
 
