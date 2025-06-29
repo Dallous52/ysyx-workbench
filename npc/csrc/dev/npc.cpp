@@ -15,7 +15,7 @@
 #define ITRACE
 // #define FTRACE
 // #define MTRACE
-// #define DIFFTEST
+#define DIFFTEST
 
 static Vysyx_25040111_top top;
 static VerilatedVcdC *vtrace = nullptr;
