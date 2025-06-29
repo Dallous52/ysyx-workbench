@@ -131,7 +131,7 @@ module ysyx_25040111_top(
         if (valid)
             pc <= dnpc;
 
-        if (pc_next) begin 
+        if (pc_next) begin
             ready <= 1;
         end
 
