@@ -62,7 +62,7 @@ module ysyx_25040111_top(
     );
 
     ysyx_25040111_idu u_idu (
-        .inst 	(valid ? inst : 32'b0),
+        .inst 	(inst  ),
         .rs1  	(rs1   ),
         .rs2  	(rs2   ),
         .rd   	(rd    ),
@@ -74,19 +74,18 @@ module ysyx_25040111_top(
 
     wire [31:0] rs2_dt, rd_dt;
     wire [31:0] rs1_d, rs2_d, rd_d;
-    wire valid_next, pc_next;
+    wire valid_next;
 
-    assign pc_next = ~opt[12] | ~(|opt[11:10]) | valid_next;
     ysyx_25040111_RegisterFile #(4, 32) u_reg(
         .clk   	(clk     ),
-        .wen   	(opt[0] & pc_next),
+        .wen   	(opt[0] & valid_next),
         .ren   	(opt[2:1]),
         .wdata 	(rd_d    ),
         .waddr 	(rd[3:0] ),
         .raddr1 (rs1[3:0]),
         .raddr2 (rs2[3:0]),
-        .rdata1 (rs1_d),
-        .rdata2 (rs2_dt)
+        .rdata1 (rs1_d   ),
+        .rdata2 (rs2_dt  )
     );
     
     wire [31:0] csrw_t;
@@ -122,7 +121,7 @@ module ysyx_25040111_top(
     );
 
     always @(posedge clk) begin
-        $display("pc_next:%b  dnpc:%h  rd:%h", pc_next, dnpc, rd_d);
+        $display("dnpc:%h  rd:%h", dnpc, rd_d);
     end
     
     // pc update
@@ -130,7 +129,7 @@ module ysyx_25040111_top(
         if (valid)
             pc <= dnpc;
 
-        if (pc_next) begin 
+        if (valid_next) begin  
             ready <= 1;
         end
 
