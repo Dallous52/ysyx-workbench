@@ -35,8 +35,10 @@ module ysyx_25040111_lsu (
 
     reg [31:0] rmem;
     always @(*) begin
-        if (ren)
+        if (ren) begin
+            $display("rmem: %h  rdata: %h", rmem, rdata);
             rmem = pmem_read(addr);
+        end
         else 
             rmem = 32'b0;
     end
