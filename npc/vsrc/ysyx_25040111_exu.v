@@ -11,8 +11,7 @@ module ysyx_25040111_exu(
     input [31:0] pc,
     output [31:0] rd_d,
     output [31:0] dnpc,
-    output [31:0] csrw,
-    output reg ready
+    output [31:0] csrw
 );
     // -------------------------------------------------------
     //                        ALU
@@ -43,10 +42,9 @@ module ysyx_25040111_exu(
     // -------------------------------------------------------
     wire [31:0] ina;
     wire [31:0] inb;
-    wire [1:0] pc_ctl, pc_tmp;
+    wire [1:0] pc_ctl;
     
-    assign pc_tmp = |opt[9:8] ? opt[9:8] : res[0] ? `INPC : `SNPC;
-    assign pc_ctl = valid ? pc_tmp : 2'b0; 
+    assign pc_ctl = |opt[9:8] ? opt[9:8] : res[0] ? `INPC : `SNPC;
     ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, pc_ctl, {
         2'b00, {pc, 32'b0},
         2'b01, {pc, 32'd4},
@@ -91,19 +89,18 @@ module ysyx_25040111_exu(
     }); 
     
     reg [31:0] rd_dt;
-    always @(posedge clk) begin
+    always @(*) begin
         if (|mem_en) begin
             if (~opt[12]) begin // 有写请求时
                 pmem_write(res, wdata, wmask);
+                rd_dt = 0;
             end
-            else if (~ready) begin          // 有读请求时
-                $display("res:%h rd_dt:%h", res, rd_dt);
-                rd_dt <= pmem_read(res);
-                ready <= 1;
+            else begin          // 有读请求时
+                // $display("res:%h rd_dt:%h", res, rd_dt);
+                rd_dt = pmem_read(res);
             end
         end
-
-        if (ready) ready <= 0;
+        else rd_dt = 0;
     end
 
     wire [31:0] offset;

@@ -47,18 +47,13 @@ module ysyx_25040111_top(
     wire [31:0] imm;
     wire [`OPT_HIGH:0] opt;
     wire [31:0] inst;
-    
-    reg valid, ready;
-    initial begin
-        ready = 1'b1;
-    end
 
     ysyx_25040111_ifu u_ifu (
         .clk    (clk    ),
-        .ready  (ready  ),
+        .ready  (1  ),
         .pc    	(pc     ),
         .inst  	(inst   ),
-        .valid 	(valid  )
+        .valid 	(  )
     );
 
     ysyx_25040111_idu u_idu (
@@ -74,12 +69,10 @@ module ysyx_25040111_top(
 
     wire [31:0] rs2_dt, rd_dt;
     wire [31:0] rs1_d, rs2_d, rd_d;
-    wire valid_next, pc_next;
 
-    assign pc_next = ~opt[12] | ~(|opt[11:10]) | valid_next;
     ysyx_25040111_RegisterFile #(4, 32) u_reg(
         .clk   	(clk     ),
-        .wen   	(opt[0] & pc_next),
+        .wen   	(opt[0]),
         .ren   	(opt[2:1]),
         .wdata 	(rd_d    ),
         .waddr 	(rd[3:0] ),
@@ -108,7 +101,7 @@ module ysyx_25040111_top(
     
     wire [31:0] dnpc;
     ysyx_25040111_exu u_ysyx_25040111_exu(
-        .valid  (valid  ),
+        .valid  (1  ),
         .clk    (clk    ),
         .opt   	(opt    ),
         .rs1_d 	(rs1_d  ),
@@ -117,27 +110,27 @@ module ysyx_25040111_top(
         .pc     (pc     ),
         .rd_d  	(rd_dt  ),
         .dnpc   (dnpc   ),
-        .csrw   (csrw_t ),
-        .ready  (valid_next)
+        .csrw   (csrw_t )
     );
 
-    always @(posedge clk) begin
-        $display("opt: %b", opt);
-        $display("pc_next:%b  dnpc:%h  rd:%h", pc_next, dnpc, rd_d);
-    end
+    // always @(posedge clk) begin
+    //     $display("opt: %b", opt);
+    //     $display("pc_next:%b  dnpc:%h  rd:%h", pc_next, dnpc, rd_d);
+    // end
     
     // pc update
     always @(posedge clk) begin
-        if (valid)
-            pc <= dnpc;
+        // if (valid)
+        //     pc <= dnpc;
 
-        if (pc_next) begin
-            ready <= 1;
-        end
+        // if (pc_next) begin
+        //     ready <= 1;
+        // end
 
-        if (ready) begin
-            ready <= 0;
-        end
+        // if (ready) begin
+        //     ready <= 0;
+        // end
+        pc <= dnpc;
     end
 
 
