@@ -68,9 +68,8 @@ module ysyx_25040111_top(
         .ren   	(opt[12] & mem_en),
         .sign  	(opt[14]    ),
         .mask  	(opt[11:10] ),
-        .shift 	(rd_dt[1:0] ),
         .addr  	(rd_dt      ),
-        .wdata 	(rs2_dt      ),
+        .wdata 	(rs2_d      ),
         .rdata 	(rdata      )
     );
 

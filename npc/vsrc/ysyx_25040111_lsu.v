@@ -6,7 +6,6 @@ module ysyx_25040111_lsu (
     input ren,          // 读使能 
     input sign,         // 有无符号标志
     input [1:0] mask,   // 掩码选择
-    input [1:0] shift,  // 数据移位标志
     input [31:0] addr,  // 内存操作地址
     input [31:0] wdata, // 写入数据
     output [31:0] rdata // 读出数据
@@ -21,7 +20,7 @@ module ysyx_25040111_lsu (
     });
 
     wire [31:0] wmem;
-    ysyx_25040111_MuxKey #(4, 2, 32) c_wt_data(wmem, shift, {
+    ysyx_25040111_MuxKey #(4, 2, 32) c_wt_data(wmem, addr[1:0], {
         2'b00, wdata,
         2'b01, wdata << 8,
         2'b10, wdata << 16,
@@ -44,7 +43,7 @@ module ysyx_25040111_lsu (
     end
 
     wire [31:0] offset;
-    ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, shift, {
+    ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
         2'b00, rmem,
         2'b01, rmem >> 8,
         2'b10, rmem >> 16,
