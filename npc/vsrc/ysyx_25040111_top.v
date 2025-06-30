@@ -34,6 +34,7 @@
 //      [15]    [system opt] | [cmp-eq !res]
 
 `include "ysyx_25040111_inc.vh" 
+`include "IDU/ysyx_25040111_idu.v"
 
 module ysyx_25040111_top(
     input clk,

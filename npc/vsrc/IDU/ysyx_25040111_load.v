@@ -1,4 +1,5 @@
 `include "../ysyx_25040111_inc.vh"
+`include "../ysyx_25040111_MuxKeyWithDefault.v"
 
 module ysyx_25040111_load (
     input [31:7] inst,
