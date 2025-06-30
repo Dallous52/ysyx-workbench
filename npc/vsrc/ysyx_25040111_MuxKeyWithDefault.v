@@ -1,3 +1,6 @@
+`ifndef MUXKEYWITHDEFAULT_V
+`define MUXKEYWITHDEFAULT_V
+
 // 带默认值的选择器模板
 module ysyx_25040111_MuxKeyWithDefault #(NR_KEY = 2, KEY_LEN = 1, DATA_LEN = 1) (
   output [DATA_LEN-1:0] out,
@@ -9,3 +12,5 @@ module ysyx_25040111_MuxKeyWithDefault #(NR_KEY = 2, KEY_LEN = 1, DATA_LEN = 1) 
   ysyx_25040111_MuxKeyInternal #(NR_KEY, KEY_LEN, DATA_LEN, 1) i0 (out, key, default_out, lut);
 
 endmodule
+
+`endif
