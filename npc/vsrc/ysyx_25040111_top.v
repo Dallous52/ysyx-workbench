@@ -14,7 +14,7 @@ module ysyx_25040111_top(
     wire [`OPT_HIGH:0] opt;
     wire [31:0] inst;
 
-    wire inst_ok, args_ok, next_ok;
+    reg inst_ok, args_ok, next_ok;
     initial begin
         next_ok = 1;
         inst_ok = 0;
