@@ -70,7 +70,7 @@ module ysyx_25040111_top(
         .mask  	(opt[11:10] ),
         .shift 	(rd_dt[1:0] ),
         .addr  	(rd_dt      ),
-        .wdata 	(rs2_d      ),
+        .wdata 	(rs2_dt      ),
         .rdata 	(rdata      )
     );
 
