@@ -1,4 +1,4 @@
-`include "ysyx_25040111_inc.vh"
+`include "../ysyx_25040111_inc.vh"
 
 `define SYS_EBREAk 12'h001
 `define SYS_ECALL  12'h000

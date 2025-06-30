@@ -1,4 +1,4 @@
-`include "ysyx_25040111_inc.vh"
+`include "../ysyx_25040111_inc.vh"
 
 `define OPCODE_NUM 10
 
