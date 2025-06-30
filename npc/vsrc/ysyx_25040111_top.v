@@ -84,7 +84,8 @@ module ysyx_25040111_top(
     );
 
     assign rs2_d = opt[15] & opt[11] ? csrd : rs2_dt;
-    assign rd_d = opt[15] & opt[10] ? rs2_d : mem_en & opt[12] ? rdata : rd_dt;
+    assign rd_d = opt[15] & opt[10] ? rs2_d : 
+        mem_en & opt[12] ? rdata : rd_dt;
     assign csrw = opt[15] & opt[10] ? rd_dt : 32'b0;
     
     ysyx_25040111_exu u_ysyx_25040111_exu(
