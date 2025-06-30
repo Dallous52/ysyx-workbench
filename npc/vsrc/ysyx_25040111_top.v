@@ -75,7 +75,6 @@ module ysyx_25040111_top(
         .imm   	(imm    ),
         .pc     (pc     ),
         .rd_d  	(rd_dt  ),
-        .dnpc   (dnpc   ),
         .csrw   (csrw_t )
     );
 
