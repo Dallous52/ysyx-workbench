@@ -1,5 +1,6 @@
 `include "ysyx_25040111_inc.vh"
 `include "ysyx_20540111_dpic.vh"
+`include "ALU/ysyx_25040111_alu.v"
 
 module ysyx_25040111_exu(
     input valid,
