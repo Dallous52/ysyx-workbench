@@ -1,3 +1,6 @@
+`ifndef NPC_ADDER32
+`define NPC_ADDER32
+
 module ysyx_25040111_adder32 (
     input [31:0] ina,
     input [31:0] inb,
@@ -31,3 +34,5 @@ module ysyx_25040111_adder32 (
     assign overflow = (~(ina[31] ^ inbt[31])) & (ina[31] ^ sout[31]);
 
 endmodule
+
+`endif

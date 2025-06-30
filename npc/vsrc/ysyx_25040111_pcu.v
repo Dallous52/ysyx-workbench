@@ -1,0 +1,46 @@
+`include "HDR/ysyx_25040111_inc.vh"
+`include "MOD/ysyx_25040111_MuxKey.v"
+`include "ALU/ysyx_25040111_adder32.v"
+
+module ysyx_25040111_pcu(
+    input  clk,
+    input  brench,          // 分支判断结果
+    input  [9:8] opt,       // pc 跳转类型
+    input  mret,            // 是否为 mret
+    input [31:0] mret_addr, // mret 跳转地址
+    input [31:0] imm,       // 立即数
+    input [31:0] rs1_d,     // rs1 数据
+    output reg [31:0] pc
+);
+
+    wire [31:0] ina;
+    wire [31:0] inb;
+    wire [1:0] pc_ctl;
+    
+    assign pc_ctl = |opt[9:8] ? opt[9:8] : brench ? `INPC : `SNPC;
+    ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, pc_ctl, {
+        2'b00, {pc, 32'b0},
+        2'b01, {pc, 32'd4},
+        2'b10, {pc, imm},
+        2'b11, {rs1_d, imm}
+    });
+
+    wire [31:0] dnpc_normal;
+    ysyx_25040111_adder32 u_ysyx_25040111_adder32(
+        .ina  	    (ina   ),
+        .inb  	    (inb   ),
+        .sub        (0),
+        .sout 	    (dnpc_normal),
+        .cout       (),
+        .overflow   ()
+    );
+
+    // mret
+    wire [31:0] dnpc;
+    assign dnpc = mret ? mret_addr : dnpc_normal;
+
+    always @(posedge clk) begin
+        pc <= dnpc;
+    end
+
+endmodule

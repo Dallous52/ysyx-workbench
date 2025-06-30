@@ -11,7 +11,6 @@ module ysyx_25040111_exu(
     input [31:0] imm,
     input [31:0] pc,
     output [31:0] rd_d,
-    output [31:0] dnpc,
     output [31:0] csrw
 );
     // -------------------------------------------------------
@@ -41,30 +40,30 @@ module ysyx_25040111_exu(
     // ------------------------------------------------------- 
     //                        PC UPDATE
     // -------------------------------------------------------
-    wire [31:0] ina;
-    wire [31:0] inb;
-    wire [1:0] pc_ctl;
+    // wire [31:0] ina;
+    // wire [31:0] inb;
+    // wire [1:0] pc_ctl;
     
-    assign pc_ctl = |opt[9:8] ? opt[9:8] : res[0] ? `INPC : `SNPC;
-    ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, pc_ctl, {
-        2'b00, {pc, 32'b0},
-        2'b01, {pc, 32'd4},
-        2'b10, {pc, imm},
-        2'b11, {rs1_d, imm}
-    });
+    // assign pc_ctl = |opt[9:8] ? opt[9:8] : res[0] ? `INPC : `SNPC;
+    // ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, pc_ctl, {
+    //     2'b00, {pc, 32'b0},
+    //     2'b01, {pc, 32'd4},
+    //     2'b10, {pc, imm},
+    //     2'b11, {rs1_d, imm}
+    // });
 
-    wire [31:0] dnpc_normal;
-    ysyx_25040111_adder32 u_ysyx_25040111_adder32(
-        .ina  	    (ina   ),
-        .inb  	    (inb   ),
-        .sub        (0),
-        .sout 	    (dnpc_normal),
-        .cout       (),
-        .overflow   ()
-    );
+    // wire [31:0] dnpc_normal;
+    // ysyx_25040111_adder32 u_ysyx_25040111_adder32(
+    //     .ina  	    (ina   ),
+    //     .inb  	    (inb   ),
+    //     .sub        (0),
+    //     .sout 	    (dnpc_normal),
+    //     .cout       (),
+    //     .overflow   ()
+    // );
 
-    // mret
-    assign dnpc = opt[15] & opt[12] ? rs2_d : dnpc_normal;
+    // // mret
+    // assign dnpc = opt[15] & opt[12] ? rs2_d : dnpc_normal;
     
     // -------------------------------------------------------
     //                        MEMORY

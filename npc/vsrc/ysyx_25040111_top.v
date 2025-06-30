@@ -85,19 +85,31 @@ module ysyx_25040111_top(
     // end
     
     // pc update
-    always @(posedge clk) begin
-        // if (valid)
-        //     pc <= dnpc;
+    // always @(posedge clk) begin
+    //     // if (valid)
+    //     //     pc <= dnpc;
 
-        // if (pc_next) begin
-        //     ready <= 1;
-        // end
+    //     // if (pc_next) begin
+    //     //     ready <= 1;
+    //     // end
 
-        // if (ready) begin
-        //     ready <= 0;
-        // end
-        pc <= dnpc;
-    end
+    //     // if (ready) begin
+    //     //     ready <= 0;
+    //     // end
+    //     pc <= dnpc;
+    // end
+    
+    ysyx_25040111_pcu u_ysyx_25040111_pcu(
+        .clk       	(clk        ),
+        .brench    	(rd_dt[0]   ),
+        .opt       	(opt[9:8]   ),
+        .mret      	(opt[15] & opt[12] ),
+        .mret_addr 	(rs2_d  ),
+        .imm       	(imm        ),
+        .rs1_d     	(rs1_d      ),
+        .pc        	(pc         )
+    );
+    
 
 
 endmodule
