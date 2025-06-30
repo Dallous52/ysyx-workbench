@@ -3,8 +3,6 @@
 `include "ALU/ysyx_25040111_alu.v"
 
 module ysyx_25040111_exu(
-    input valid,
-    input clk,
     input [`OPT_HIGH:0] opt,
     input [31:0] rs1_d,
     input [31:0] rs2_d,
@@ -37,65 +35,11 @@ module ysyx_25040111_exu(
     );
     
     assign rd_d = res;
-    // -------------------------------------------------------
-    //                        MEMORY
-    // -------------------------------------------------------
-    // wire [1:0] mem_en, shif_en;
-    // assign mem_en = opt[15] ? 2'b00 : opt[11:10];
-    // assign shif_en = opt[15] ? 2'b00 : res[1:0];
 
-    // wire [7:0] wmask;
-    // ysyx_25040111_MuxKey #(4, 2, 8) c_wmask(wmask, mem_en, {
-    //     2'b00, 8'h00,
-    //     2'b01, 8'b00000001 << res[1:0],
-    //     2'b10, res[1] ? 8'b00001100 : 8'b00000011,
-    //     2'b11, 8'b00001111
-    // });
-
-    // wire [31:0] wdata;
-    // ysyx_25040111_MuxKey #(4, 2, 32) c_wt_data(wdata, shif_en, {
-    //     2'b00, rs2_d,
-    //     2'b01, rs2_d << 8,
-    //     2'b10, rs2_d << 16,
-    //     2'b11, rs2_d << 24
-    // });
-    
-    // reg [31:0] rd_dt;
-    // always @(*) begin
-    //     if (|mem_en) begin
-    //         if (~opt[12]) begin // 有写请求时
-    //             pmem_write(res, wdata, wmask);
-    //             rd_dt = 0;
-    //         end
-    //         else begin          // 有读请求时
-    //             // $display("res:%h rd_dt:%h", res, rd_dt);
-    //             rd_dt = pmem_read(res);
-    //         end
-    //     end
-    //     else rd_dt = 0;
-    // end
-
-    // wire [31:0] offset;
-    // ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, shif_en, {
-    //     2'b00, rd_dt,
-    //     2'b01, rd_dt >> 8,
-    //     2'b10, rd_dt >> 16,
-    //     2'b11, rd_dt >> 24
-    // });
-
-    // ysyx_25040111_MuxKey #(4, 2, 32) c_rdmem(rd_d, mem_en, {
-    //     2'b00, res,
-    //     2'b01, {{24{offset[7] & opt[14]}}, offset[7:0]},
-    //     2'b10, {{16{offset[15] & opt[14]}}, offset[15:0]},
-    //     2'b11, offset
-    // });
-
-    
     // ------------------------------------------------------- 
     //                         SYSTEM
     // -------------------------------------------------------
     
-
     wire [31:0] eret;
     assign eret = opt[15] ? rs1_d : 32'd9;
     always @(*) begin

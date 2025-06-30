@@ -2,13 +2,16 @@
 `include "MOD/ysyx_25040111_MuxKey.v"
 
 module ysyx_25040111_lsu (
+    input clk,          // 时钟
+    input ready,        
     input wen,          // 写使能
     input ren,          // 读使能 
     input sign,         // 有无符号标志
     input [1:0] mask,   // 掩码选择
     input [31:0] addr,  // 内存操作地址
     input [31:0] wdata, // 写入数据
-    output [31:0] rdata // 读出数据
+    output [31:0] rdata,// 读出数据
+    output valid
 );
 
     wire [7:0] wmask;    
@@ -34,13 +37,24 @@ module ysyx_25040111_lsu (
     end
 
     reg [31:0] rmem;
-    always @(*) begin
+    reg valid_t;
+    always @(posedge clk) begin
         if (ren) begin
-            rmem = pmem_read(addr);
+            if (ready) begin
+                rmem <= pmem_read(addr);
+                valid_t <= 1;                
+            end
+            else
+                rmem <= rmem;
         end
         else 
-            rmem = 32'b0;
+            rmem <= 32'b0;
+
+        if (valid_t)
+            valid_t <= 0;
     end
+    
+    assign valid = ren ? valid_t : 1;
 
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {

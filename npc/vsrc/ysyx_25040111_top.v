@@ -14,12 +14,19 @@ module ysyx_25040111_top(
     wire [`OPT_HIGH:0] opt;
     wire [31:0] inst;
 
+    wire inst_ok, args_ok, next_ok;
+    initial begin
+        next_ok = 1;
+        inst_ok = 0;
+        args_ok = 0;
+    end
+
     ysyx_25040111_ifu u_ifu (
         .clk    (clk    ),
-        .ready  (1  ),
+        .ready  (next_ok),
         .pc    	(pc     ),
         .inst  	(inst   ),
-        .valid 	(  )
+        .valid 	(inst_ok)
     );
 
     ysyx_25040111_idu u_idu (
@@ -38,7 +45,7 @@ module ysyx_25040111_top(
 
     ysyx_25040111_RegisterFile #(4, 32) u_reg(
         .clk   	(clk     ),
-        .wen   	(opt[0]),
+        .wen   	(opt[0] & args_ok),
         .ren   	(opt[2:1]),
         .wdata 	(rd_d    ),
         .waddr 	(rd[3:0] ),
@@ -51,7 +58,7 @@ module ysyx_25040111_top(
     wire [31:0] csrw, csrd;
     ysyx_25040111_csr u_csr(
         .clk   	(clk     ),
-        .wen   	(opt[10] & opt[15]),
+        .wen   	(opt[10] & opt[15] & args_ok),
         .ren   	(opt[11] & opt[15]),
         .waddr 	(csr[0]  ),
         .jtype  (opt[9:8]),
@@ -64,13 +71,16 @@ module ysyx_25040111_top(
     wire mem_en;
     assign mem_en = |opt[11:10] & ~opt[15];
     ysyx_25040111_lsu u_ysyx_25040111_lsu(
+        .clk    (clk),
+        .ready  (inst_ok),
         .wen   	(~opt[12] & mem_en),
         .ren   	(opt[12] & mem_en),
         .sign  	(opt[14]    ),
         .mask  	(opt[11:10] ),
         .addr  	(rd_dt      ),
         .wdata 	(rs2_d      ),
-        .rdata 	(rdata      )
+        .rdata 	(rdata      ),
+        .valid  (args_ok)
     );
 
     assign rs2_d = opt[15] & opt[11] ? csrd : rs2_dt;
@@ -78,8 +88,6 @@ module ysyx_25040111_top(
     assign csrw = opt[15] & opt[10] ? rd_dt : 32'b0;
     
     ysyx_25040111_exu u_ysyx_25040111_exu(
-        .valid  (1  ),
-        .clk    (clk    ),
         .opt   	(opt    ),
         .rs1_d 	(rs1_d  ),
         .rs2_d 	(rs2_d  ),
@@ -95,16 +103,17 @@ module ysyx_25040111_top(
     
     ysyx_25040111_pcu u_ysyx_25040111_pcu(
         .clk       	(clk        ),
+        .ready      (args_ok    ),
         .brench    	(rd_dt[0]   ),
         .opt       	(opt[9:8]   ),
         .mret      	(opt[15] & opt[12] ),
-        .mret_addr 	(rs2_d  ),
+        .mret_addr 	(rs2_d      ),
         .imm       	(imm        ),
         .rs1_d     	(rs1_d      ),
-        .pc        	(pc         )
+        .pc        	(pc         ),
+        .valid      (next_ok)
     );
     
-
 
 endmodule
 

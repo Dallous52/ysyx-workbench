@@ -8,17 +8,17 @@ module ysyx_25040111_ifu (
     output reg valid
 );
 
-    always @(*) begin
+    always @(posedge clk) begin
         // $display("pc:%h  vaild:%b  ready:%b", pc, valid, ready);
-        // if (ready) begin
-            inst  = pmem_read(pc);
-        // end
-        // else begin
-        //     inst <= inst;
-        // end
+        if (ready) begin
+            inst <= pmem_read(pc);
+        end
+        else begin
+            inst <= inst;
+        end
 
-        // if (valid)
-        //     valid <= 0;
+        if (valid)
+            valid <= 0;
     end
 
 endmodule

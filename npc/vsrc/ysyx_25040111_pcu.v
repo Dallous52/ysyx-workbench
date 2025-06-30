@@ -3,14 +3,16 @@
 `include "ALU/ysyx_25040111_adder32.v"
 
 module ysyx_25040111_pcu(
-    input  clk,
+    input  clk,             // 时钟
+    input ready,            
     input  brench,          // 分支判断结果
     input  [9:8] opt,       // pc 跳转类型
     input  mret,            // 是否为 mret
     input [31:0] mret_addr, // mret 跳转地址
     input [31:0] imm,       // 立即数
     input [31:0] rs1_d,     // rs1 数据
-    output reg [31:0] pc
+    output reg [31:0] pc,
+    output reg valid
 );
 
     wire [31:0] ina;
@@ -40,7 +42,15 @@ module ysyx_25040111_pcu(
     assign dnpc = mret ? mret_addr : dnpc_normal;
 
     always @(posedge clk) begin
-        pc <= dnpc;
+        if (ready) begin
+            pc <= dnpc;
+            valid <= 1;            
+        end
+        else
+            pc <= pc;
+
+        if (valid)
+            valid <= 0; 
     end
 
 endmodule
