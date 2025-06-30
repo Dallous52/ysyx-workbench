@@ -10,7 +10,7 @@ module ysyx_25040111_exu(
     input [31:0] rs2_d,
     input [31:0] imm,
     input [31:0] pc,
-    output [31:0] rd_d,
+    output [31:0] rd_d
 );
     // -------------------------------------------------------
     //                        ALU
