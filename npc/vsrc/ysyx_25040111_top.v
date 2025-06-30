@@ -48,7 +48,6 @@ module ysyx_25040111_top(
         .rdata2 (rs2_dt  )
     );
     
-    wire [31:0] csrw_t;
     wire [31:0] csrw, csrd;
     ysyx_25040111_csr u_csr(
         .clk   	(clk     ),
@@ -61,11 +60,24 @@ module ysyx_25040111_top(
         .rdata 	(csrd    )
     );
 
+    wire [31:0] rdata;
+    wire mem_en;
+    assign mem_en = |opt[11:10] & ~opt[15];
+    ysyx_25040111_lsu u_ysyx_25040111_lsu(
+        .wen   	(~opt[12] & mem_en),
+        .ren   	(opt[12] & mem_en),
+        .sign  	(opt[14]    ),
+        .mask  	(opt[11:10] ),
+        .shift 	(rd_dt[1:0] ),
+        .addr  	(rd_dt      ),
+        .wdata 	(rs2_d      ),
+        .rdata 	(rdata      )
+    );
+
     assign rs2_d = opt[15] & opt[11] ? csrd : rs2_dt;
-    assign rd_d = opt[15] & opt[10] ? csrw_t : rd_dt;
+    assign rd_d = opt[15] & opt[10] ? rs2_d : ~opt[15] & opt[10] ? rdata : rd_dt;
     assign csrw = opt[15] & opt[10] ? rd_dt : 32'b0;
     
-    wire [31:0] dnpc;
     ysyx_25040111_exu u_ysyx_25040111_exu(
         .valid  (1  ),
         .clk    (clk    ),
@@ -75,27 +87,11 @@ module ysyx_25040111_top(
         .imm   	(imm    ),
         .pc     (pc     ),
         .rd_d  	(rd_dt  ),
-        .csrw   (csrw_t )
     );
 
     // always @(posedge clk) begin
     //     $display("opt: %b", opt);
     //     $display("pc_next:%b  dnpc:%h  rd:%h", pc_next, dnpc, rd_d);
-    // end
-    
-    // pc update
-    // always @(posedge clk) begin
-    //     // if (valid)
-    //     //     pc <= dnpc;
-
-    //     // if (pc_next) begin
-    //     //     ready <= 1;
-    //     // end
-
-    //     // if (ready) begin
-    //     //     ready <= 0;
-    //     // end
-    //     pc <= dnpc;
     // end
     
     ysyx_25040111_pcu u_ysyx_25040111_pcu(

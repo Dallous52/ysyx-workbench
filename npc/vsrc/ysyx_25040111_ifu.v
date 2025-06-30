@@ -14,7 +14,7 @@ module ysyx_25040111_ifu (
             inst  = pmem_read(pc);
         // end
         // else begin
-        //     inst <= inst;    
+        //     inst <= inst;
         // end
 
         // if (valid)
