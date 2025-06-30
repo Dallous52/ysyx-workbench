@@ -37,6 +37,8 @@ module ysyx_25040111_lsu (
     always @(*) begin
         if (ren)
             rmem = pmem_read(addr);
+        else 
+            rmem = 32'b0;
     end
 
     wire [31:0] offset;
