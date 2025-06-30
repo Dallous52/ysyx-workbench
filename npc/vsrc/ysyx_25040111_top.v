@@ -1,39 +1,4 @@
-// OPT [15:0]
-//      [0]: reg wirte en (write to rd)
-//      [2:1]: reg read en [rs2, rs1]
-//      [4:3]: alu arguments
-//              00  empty
-//              01  pc, imm (alu-eopt == 100 ? imm = 4 : imm)
-//              10  rs1, rs2
-//              11  rs1, imm
-//      [7:5]: alu option
-//              000 empty
-//              001 add [13] sub
-//              010 and [13] or
-//              011 xor
-//              100 lshift
-//              101 rshift
-//              110 compare
-//              111 equal
-//      [9:8]: pc update option             SYSTEM JUMP TYPE 
-//              00 empty                        00 empty
-//              01 pc + 4                       01 ecall
-//              10 pc + imm                     10 ??
-//              11 rs1 + imm                    11 ??
-//      [12:10] memory control option       SYSTEM
-//              000 empty                       [10] csr write en
-//              001 sb                          [11] csr read en
-//              010 sh                          [12] jump
-//              011 sw
-//              101 lb
-//              110 lh
-//              111 lw
-//              100 pc + 4 [alu-opt]
-//      [13]    [add:sub] | [and:or]
-//      [14]    signed enable
-//      [15]    [system opt] | [cmp-eq !res]
-
-`include "ysyx_25040111_inc.vh" 
+`include "HDR/ysyx_25040111_inc.vh" 
 `include "IDU/ysyx_25040111_idu.v"
 
 module ysyx_25040111_top(

@@ -1,4 +1,4 @@
-`include "../ysyx_25040111_inc.vh"
+`include "../HDR/ysyx_25040111_inc.vh"
 
 module ysyx_25040111_jalr(
     input [31:7] inst,

@@ -1,4 +1,4 @@
-`include "../ysyx_25040111_inc.vh"
+`include "../HDR/ysyx_25040111_inc.vh"
 `include "../ysyx_25040111_MuxKeyWithDefault.v"
 
 module ysyx_25040111_store(
