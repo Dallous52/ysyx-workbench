@@ -1,5 +1,5 @@
 `include "../HDR/ysyx_25040111_inc.vh"
-`include "../ysyx_25040111_MuxKeyWithDefault.v"
+`include "../MOD/ysyx_25040111_MuxKeyWithDefault.v"
 
 module ysyx_25040111_branch(
     input [31:7] inst,

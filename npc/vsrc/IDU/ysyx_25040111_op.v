@@ -1,5 +1,5 @@
 `include "../HDR/ysyx_25040111_inc.vh"
-`include "../ysyx_25040111_MuxKeyWithDefault.v"
+`include "../MOD/ysyx_25040111_MuxKeyWithDefault.v"
 
 `define OP_ADD  10'b0000000_000
 `define OP_SUB  10'b0100000_000

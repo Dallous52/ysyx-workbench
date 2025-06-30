@@ -1,3 +1,5 @@
+`include "MOD/ysyx_25040111_MuxKeyWithDefault.v"
+
 module ysyx_25040111_csr(
     input clk,
     input wen,
