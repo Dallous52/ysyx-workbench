@@ -86,7 +86,7 @@ module ysyx_25040111_top(
         .rs2_d 	(rs2_d  ),
         .imm   	(imm    ),
         .pc     (pc     ),
-        .rd_d  	(rd_dt  ),
+        .rd_d  	(rd_dt  )
     );
 
     // always @(posedge clk) begin
