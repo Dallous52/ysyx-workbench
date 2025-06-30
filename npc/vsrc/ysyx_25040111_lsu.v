@@ -54,7 +54,7 @@ module ysyx_25040111_lsu (
             valid_t <= 0;
     end
     
-    assign valid = ren ? valid_t : 1;
+    assign valid = ren ? valid_t : ready;
 
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
