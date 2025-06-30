@@ -1,3 +1,6 @@
+`ifndef NPC_IDU
+`define NPC_IDU
+
 `include "../ysyx_25040111_inc.vh"
 
 `define OPCODE_NUM 10
@@ -230,3 +233,5 @@ module ysyx_25040111_idu(
     });
 
 endmodule
+
+`endif
