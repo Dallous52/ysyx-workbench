@@ -31,7 +31,7 @@ module ysyx_25040111_lsu (
     }); 
 
     always @(*) begin
-        if (wen) begin
+        if (ready) begin
             pmem_write(addr, wmem, wmask);          
         end
     end
