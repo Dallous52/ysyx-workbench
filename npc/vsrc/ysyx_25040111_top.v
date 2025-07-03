@@ -115,7 +115,6 @@ module ysyx_25040111_top(
         .valid      (next_ok)
     );
     
-
 endmodule
 
     // ysyx_25040111_RegisterFile #(8, 32) u_rom_t(
