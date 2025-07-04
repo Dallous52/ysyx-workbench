@@ -30,32 +30,106 @@ module ysyx_25040111_lsu (
         2'b11, wdata << 24
     }); 
 
-    always @(*) begin
-        if (ready & wen) begin
-            pmem_write(addr, wmem, wmask);          
+    // always @(*) begin
+    //     if (ready & wen) begin
+    //         pmem_write(addr, wmem, wmask);          
+    //     end
+    // end
+
+    // reg [31:0] rmem;
+    // reg valid_t;
+    // always @(posedge clk) begin
+    //     if (ren) begin
+    //         if (ready) begin
+    //             rmem <= pmem_read(addr);
+    //             valid_t <= 1;                
+    //         end
+    //         else
+    //             rmem <= rmem;
+    //     end
+    //     else 
+    //         rmem <= 32'b0;
+
+    //     if (valid_t)
+    //         valid_t <= 0;
+    // end
+    
+    // assign valid = ren ? valid_t : ready;
+
+    // output declaration of module ysyx_25040111_sram
+    reg [31:0] rmem;
+    wire [1:0] rresp;
+    reg rvalid, arvalid;
+    reg arready, rready;
+    wire [1:0] bresp;
+    wire bvalid;
+    reg awvalid, wvalid;
+    reg awready, wready;
+    reg bready;
+
+    // memory read
+    always @(posedge clk) begin
+        // 地址有效
+        if (ren & ready)
+            arvalid <= 1;
+        
+        if (arvalid & arready)
+            arvalid <= 0;
+
+        // 读取数据
+        if (rvalid) rready <= 1;
+
+        if (rvalid & rready) begin
+            valid <= 1;
+            rready <= 0;            
         end
     end
 
-    reg [31:0] rmem;
-    reg valid_t;
+    // memory write
     always @(posedge clk) begin
-        if (ren) begin
-            if (ready) begin
-                rmem <= pmem_read(addr);
-                valid_t <= 1;                
-            end
-            else
-                rmem <= rmem;
-        end
-        else 
-            rmem <= 32'b0;
+        // 地址有效
+        if (wen & ready)
+            awvalid <= 1;
 
-        if (valid_t)
-            valid_t <= 0;
+        if (awvalid & awready) begin
+            awvalid <= 0;
+            wvalid <= 1;
+        end
+
+        // 写入参数
+        if (wvalid & wready) begin
+            wvalid <= 0;           
+        end
+
+        if (bvalid) bready <= 1;
+
+        if (bready & bvalid) begin 
+            bready <= 0;
+            valid <= 1;
+        end
     end
     
-    assign valid = ren ? valid_t : ready;
- 
+    ysyx_25040111_sram u_ysyx_25040111_sram(
+        .clk     	(clk      ),
+        .araddr  	(addr   ),
+        .arvalid 	(arvalid),
+        .arready 	(arready  ),
+        .rdata   	(rmem    ),
+        .rresp   	(rresp    ),
+        .rvalid  	(rvalid   ),
+        .rready  	(rready   ),
+        .awaddr  	(addr   ),
+        .awvalid 	(awvalid  ),
+        .awready 	(awready  ),
+        .wdata   	(wmem    ),
+        .wstrb   	(wmask[3:0]),
+        .wvalid  	(wvalid   ),
+        .wready  	(wready   ),
+        .bresp   	(bresp    ),
+        .bvalid  	(bvalid   ),
+        .bready  	(bready   )
+    );
+    
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
         2'b00, rmem,

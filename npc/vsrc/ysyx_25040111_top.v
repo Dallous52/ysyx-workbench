@@ -107,7 +107,7 @@ module ysyx_25040111_top(
         .ready      (args_ok    ),
         .brench    	(rd_dt[0]   ),
         .opt       	(opt[9:8]   ),
-        .mret      	(opt[15] & opt[12] ),
+        .mret      	(opt[15] & opt[12]),
         .mret_addr 	(rs2_d      ),
         .imm       	(imm        ),
         .rs1_d     	(rs1_d      ),
