@@ -108,6 +108,10 @@ module ysyx_25040111_lsu (
             valid <= 1;
         end
     end
+
+    always @(posedge clk) begin
+        if (valid) valid <= 0;
+    end
     
     ysyx_25040111_sram u_ysyx_25040111_sram(
         .clk     	(clk      ),
