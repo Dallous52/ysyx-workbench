@@ -115,7 +115,7 @@ module ysyx_25040111_lsu (
         if (valid_t) valid_t <= 0;
     end
     
-    assign valid = wen | ren ? valid_t : 1;
+    assign valid = wen | ren ? valid_t : ready;
 
     ysyx_25040111_sram u_ysyx_25040111_sram(
         .clk     	(clk      ),
