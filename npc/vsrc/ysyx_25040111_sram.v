@@ -31,9 +31,11 @@ module ysyx_25040111_sram(
     reg rdstart;
     reg [4:0] count;
     reg [31:0] rdata_t;
+
+    assign arready = 1;
     always @(posedge clk) begin
         // 地址读取
-        if (arvalid) arready <= 1;
+        // if (arvalid) arready <= 1;
 
         // 准备开始
         if (arvalid & arready) begin
