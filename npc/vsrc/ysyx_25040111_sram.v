@@ -69,20 +69,22 @@ module ysyx_25040111_sram(
     wire [7:0] wmask;
     assign wmask = {4'b0, wstrb};
 
+    assign awready = 1;
+    assign wready = 1;
     always @(posedge clk) begin
         // 地址读取
-        if (awvalid) awready <= 1;
+        //if (awvalid) awready <= 1;
 
         // 写入参数读取准备
         if (awvalid & awready) begin
-           awready <= 0;
+           // awready <= 0;
            wtstart <= 1;
         end
 
         if (wtstart & wvalid) begin
             if (count == `READ_TIME) begin
                 pmem_write(awaddr, wdata, wmask);
-                wready <= 1;
+                // wready <= 1;
                 wtstart <= 0;       
             end
             else count <= count + 1;   
@@ -90,7 +92,7 @@ module ysyx_25040111_sram(
 
         // 读取结束
         if (wvalid & wready) begin
-            wready <= 0;
+            // wready <= 0;
             bvalid <= 1;
         end
 
