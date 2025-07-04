@@ -1,6 +1,6 @@
 `include "HDR/ysyx_20540111_dpic.vh"
 
-`define READ_TIME 5'd1
+`define READY_TIME 5'd1
 
 module ysyx_25040111_sram(
     input clk,
@@ -32,14 +32,14 @@ module ysyx_25040111_sram(
     reg [4:0] count;
     reg [31:0] rdata_t;
 
-    assign arready = 1;
+    // assign arready = 1;
     always @(posedge clk) begin
         // 地址读取
-        // if (arvalid) arready <= 1;
+        if (arvalid) arready <= 1;
 
         // 准备开始
         if (arvalid & arready) begin
-            // arready <= 0;
+            arready <= 0;
             rdstart <= 1;
             rvalid <= 0;
             count <= 5'b0;
@@ -47,7 +47,7 @@ module ysyx_25040111_sram(
 
         // 数据读取
         if (rdstart) begin
-            if (count == `READ_TIME) begin
+            if (count == `READY_TIME) begin
                 rdata_t <= pmem_read(araddr);
                 rvalid <= 1; // 读取完毕
                 rdstart <= 0;            
@@ -69,22 +69,22 @@ module ysyx_25040111_sram(
     wire [7:0] wmask;
     assign wmask = {4'b0, wstrb};
 
-    assign awready = 1;
-    assign wready = 1;
+    // assign awready = 1;
+    // assign wready = 1;
     always @(posedge clk) begin
         // 地址读取
-        //if (awvalid) awready <= 1;
+        if (awvalid) awready <= 1;
 
         // 写入参数读取准备
         if (awvalid & awready) begin
-           // awready <= 0;
+           awready <= 0;
            wtstart <= 1;
         end
 
         if (wtstart & wvalid) begin
-            if (count == `READ_TIME) begin
+            if (count == `READY_TIME) begin
                 pmem_write(awaddr, wdata, wmask);
-                // wready <= 1;
+                wready <= 1;
                 wtstart <= 0;       
             end
             else count <= count + 1;   
@@ -92,7 +92,7 @@ module ysyx_25040111_sram(
 
         // 读取结束
         if (wvalid & wready) begin
-            // wready <= 0;
+            wready <= 0;
             bvalid <= 1;
         end
 

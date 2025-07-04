@@ -80,11 +80,11 @@ module ysyx_25040111_lsu (
             arvalid <= 0;
 
         // 读取数据
-        // if (rvalid) rready <= 1;
+        if (rvalid) rready <= 1;
 
         if (rvalid & rready) begin
             valid_t <= 1;
-            // rready <= 0;            
+            rready <= 0;            
         end
     end
 
@@ -105,10 +105,11 @@ module ysyx_25040111_lsu (
             wvalid <= 0;           
         end
 
-        // if (bvalid) bready <= 1;
+        if (bvalid) bready <= 1;
 
+        // 写回复信息
         if (bready & bvalid) begin 
-            // bready <= 0;
+            bready <= 0;
             valid_t <= 1;
         end
     end
