@@ -11,7 +11,7 @@ module ysyx_25040111_lsu (
     input [31:0] addr,  // 内存操作地址
     input [31:0] wdata, // 写入数据
     output [31:0] rdata,// 读出数据
-    output valid
+    output reg valid
 );
 
     wire [7:0] wmask;    
