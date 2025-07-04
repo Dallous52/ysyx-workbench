@@ -11,7 +11,7 @@ module ysyx_25040111_lsu (
     input [31:0] addr,  // 内存操作地址
     input [31:0] wdata, // 写入数据
     output [31:0] rdata,// 读出数据
-    output reg valid
+    output valid
 );
 
     wire [7:0] wmask;    
@@ -67,6 +67,8 @@ module ysyx_25040111_lsu (
     reg awready, wready;
     reg bready;
 
+    reg valid_t;
+
     // memory read
     always @(posedge clk) begin
         // 地址有效
@@ -80,7 +82,7 @@ module ysyx_25040111_lsu (
         if (rvalid) rready <= 1;
 
         if (rvalid & rready) begin
-            valid <= 1;
+            valid_t <= 1;
             rready <= 0;            
         end
     end
@@ -105,15 +107,16 @@ module ysyx_25040111_lsu (
 
         if (bready & bvalid) begin 
             bready <= 0;
-            valid <= 1;
+            valid_t <= 1;
         end
     end
 
     always @(posedge clk) begin
-        if (valid) valid <= 0;
-        else valid <= wen | ren ? valid : 1;
+        if (valid_t) valid_t <= 0;
     end
     
+    assign valid = wen | ren ? valid_t : 1;
+
     ysyx_25040111_sram u_ysyx_25040111_sram(
         .clk     	(clk      ),
         .araddr  	(addr   ),
