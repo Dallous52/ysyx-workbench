@@ -1,6 +1,6 @@
 `include "HDR/ysyx_20540111_dpic.vh"
 
-`define READY_TIME 5'd20
+`define READY_TIME 8'd20
 
 module ysyx_25040111_sram(
     input clk,
@@ -27,9 +27,12 @@ module ysyx_25040111_sram(
     input bready
 );
 
+    // LFSP 随机数发生器
+    reg [7:0] nums;
+
     // memory read
     reg rdstart;
-    reg [4:0] count;
+    reg [7:0] count;
     reg [31:0] rdata_t;
 
     // assign arready = 1;
@@ -37,17 +40,23 @@ module ysyx_25040111_sram(
         // 地址读取
         if (arvalid) arready <= 1;
 
+        // LFSP INIT
+        if (~|nums) nums <= 8'b00000001;
+
         // 准备开始
         if (arvalid & arready) begin
             arready <= 0;
             rdstart <= 1;
             rvalid <= 0;
-            count <= 5'b0;
+            count <= 8'b0;
+
+            // LFSP UPDATE
+            nums <= {^nums[4:2] ^ nums[0], nums[7:1]};
         end
 
         // 数据读取
         if (rdstart) begin
-            if (count == `READY_TIME) begin
+            if (count == nums) begin
                 rdata_t <= pmem_read(araddr);
                 rvalid <= 1; // 读取完毕
                 rdstart <= 0;            
@@ -77,12 +86,15 @@ module ysyx_25040111_sram(
 
         // 写入参数读取准备
         if (awvalid & awready) begin
-           awready <= 0;
-           wtstart <= 1;
+            awready <= 0;
+            wtstart <= 1;
+
+            // LFSP UPDATE
+            nums <= {^nums[4:2] ^ nums[0], nums[7:1]};
         end
 
         if (wtstart & wvalid) begin
-            if (count == `READY_TIME) begin
+            if (count == nums) begin
                 pmem_write(awaddr, wdata, wmask);
                 wready <= 1;
                 wtstart <= 0;       
