@@ -93,7 +93,7 @@ module ysyx_25040111_sram(
         end
 
         // 读回复信号
-        if (bvalid & bready) begin 
+        if (bvalid & bready) begin
             bresp <= 2'b0;
             bvalid <= 0;
         end
