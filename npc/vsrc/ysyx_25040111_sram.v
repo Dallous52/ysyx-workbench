@@ -1,6 +1,6 @@
 `include "HDR/ysyx_20540111_dpic.vh"
 
-`define READY_TIME 5'd1
+`define READY_TIME 5'd5
 
 module ysyx_25040111_sram(
     input clk,
