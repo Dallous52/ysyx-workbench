@@ -95,7 +95,7 @@ module ysyx_25040111_lsu (
             awvalid <= 0;
             wvalid <= 1;
         end
-
+    
         // 写入参数
         if (wvalid & wready) begin
             wvalid <= 0;           
