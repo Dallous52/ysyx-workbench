@@ -144,7 +144,7 @@ void reg_print()
     {
         int j = i + 4;
         for (; i < j; ++i)
-            printf("[%s]\t0x%08x\t", regs[i], REG[i]);
+            printf("[%s] 0x%08x\t", regs[i], REG[i]);
         putchar('\n');
         --i;
     }
