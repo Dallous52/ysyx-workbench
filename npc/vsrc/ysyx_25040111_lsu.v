@@ -111,6 +111,7 @@ module ysyx_25040111_lsu (
 
     always @(posedge clk) begin
         if (valid) valid <= 0;
+        else valid <= wen | ren ? valid : 1;
     end
     
     ysyx_25040111_sram u_ysyx_25040111_sram(
