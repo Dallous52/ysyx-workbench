@@ -84,7 +84,7 @@ module ysyx_25040111_lsu (
 
         if (rvalid & rready) begin
             valid_t <= 1;
-            rready <= 0;            
+            // rready <= 0;            
         end
     end
 

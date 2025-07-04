@@ -39,7 +39,7 @@ module ysyx_25040111_sram(
 
         // 准备开始
         if (arvalid & arready) begin
-            arready <= 0;
+            // arready <= 0;
             rdstart <= 1;
             rvalid <= 0;
             count <= 5'b0;
