@@ -21,11 +21,14 @@ module ysyx_25040111_top(
         args_ok = 0;
     end
 
+    wire if_falg;
     ysyx_25040111_ifu u_ifu (
         .clk    (clk    ),
         .ready  (next_ok),
-        .pc    	(pc     ),
+        .if_flag (if_falg),
+        .inst_t (lsu_rdata),
         .inst  	(inst   ),
+        .if_ok  (lsu_ok),
         .valid 	(inst_ok)
     );
 
@@ -70,6 +73,21 @@ module ysyx_25040111_top(
     wire [31:0] rdata;
     wire mem_en;
     assign mem_en = |opt[11:10] & ~opt[15];
+    
+    // simple arbiter
+    wire lsu_ready;
+    assign isu_ready = if_flag ? next_ok : inst_ok;
+    wire lsu_wen;
+    assign isu_wen = if_flag ? 0 : ~opt[12] & mem_en;
+    wire lsu_ren;
+    assign lsu_ren = if_flag ? 1 : opt[12] & mem_en;
+    wire [1:0] lsu_mask;
+    assign lsu_mask = if_flag ? 2'b11 : opt[11:10];
+    wire [31:0] lsu_addr;
+    assign lsu_addr = if_flag ? pc : rd_dt;
+    wire [31:0] lsu_rdata;
+    wire lsu_ok;
+
     ysyx_25040111_lsu u_ysyx_25040111_lsu(
         .clk    (clk),
         .ready  (inst_ok),
@@ -79,9 +97,12 @@ module ysyx_25040111_top(
         .mask  	(opt[11:10] ),
         .addr  	(rd_dt      ),
         .wdata 	(rs2_d      ),
-        .rdata 	(rdata      ),
-        .valid  (args_ok)
+        .rdata 	(lsu_rdata      ),
+        .valid  (lsu_ok)
     );
+
+    assign rdata = if_flag ? 32'b0 : lsu_rdata;
+    assign args_ok = if_flag ? 0 : lsu_ok;
 
     assign rs2_d = opt[15] & opt[11] ? csrd : rs2_dt;
     assign rd_d = opt[15] & opt[10] ? rs2_d : 

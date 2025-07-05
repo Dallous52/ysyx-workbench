@@ -3,20 +3,33 @@
 module ysyx_25040111_ifu (
     input  clk,
     input  ready,
-    input  [31:0] pc,
+    output reg if_flag,
+    input [31:0] inst_t,
     output reg [31:0] inst,
+    input if_ok,
     output reg valid
 );
 
     always @(posedge clk) begin
         // $display("pc:%h  vaild:%b  ready:%b", pc, valid, ready);
-        if (ready) begin
-            inst <= pmem_read(pc);
+        // if (ready) begin
+        //     inst <= pmem_read(pc);
+        //     valid <= 1;
+        // end
+        // else begin
+        //     inst <= inst;
+        // end
+
+        // if (valid)
+        //     valid <= 0;
+        if (ready) if_flag <= 1;
+
+        if (if_ok) begin
+            inst <= inst_t;
+            if_flag <= 0;
             valid <= 1;
         end
-        else begin
-            inst <= inst;
-        end
+        else inst <= inst;
 
         if (valid)
             valid <= 0;

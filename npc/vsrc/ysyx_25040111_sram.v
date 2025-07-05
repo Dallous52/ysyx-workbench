@@ -56,7 +56,7 @@ module ysyx_25040111_sram(
 
         // 数据读取
         if (rdstart) begin
-            if (count == `READY_TIME) begin
+            if (count == `READY_TIME) begin // nums) begin
                 rdata_t <= pmem_read(araddr);
                 rvalid <= 1; // 读取完毕
                 rdstart <= 0;            

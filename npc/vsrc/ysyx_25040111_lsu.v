@@ -28,33 +28,7 @@ module ysyx_25040111_lsu (
         2'b01, wdata << 8,
         2'b10, wdata << 16,
         2'b11, wdata << 24
-    }); 
-
-    // always @(*) begin
-    //     if (ready & wen) begin
-    //         pmem_write(addr, wmem, wmask);          
-    //     end
-    // end
-
-    // reg [31:0] rmem;
-    // reg valid_t;
-    // always @(posedge clk) begin
-    //     if (ren) begin
-    //         if (ready) begin
-    //             rmem <= pmem_read(addr);
-    //             valid_t <= 1;                
-    //         end
-    //         else
-    //             rmem <= rmem;
-    //     end
-    //     else 
-    //         rmem <= 32'b0;
-
-    //     if (valid_t)
-    //         valid_t <= 0;
-    // end
-    
-    // assign valid = ren ? valid_t : ready;
+    });
 
     // output declaration of module ysyx_25040111_sram
     reg [31:0] rmem;
