@@ -120,6 +120,7 @@ module ysyx_25040111_top(
 
     always @(posedge clk) begin
         $display("opt: %b", opt);
+        $display("ready:%b  ren:%b  addr:%h", lsu_ready, lsu_ren, lsu_addr);
         $display("inst:%b  args:%b  next:%b", inst_ok, args_ok, next_ok);
     end
     
