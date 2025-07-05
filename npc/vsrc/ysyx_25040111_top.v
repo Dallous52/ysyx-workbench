@@ -78,7 +78,7 @@ module ysyx_25040111_top(
     wire lsu_ready;
     assign lsu_ready = if_flag ? next_ok : inst_ok;
     wire lsu_wen;
-    assign isu_wen = if_flag ? 0 : ~opt[12] & mem_en;
+    assign lsu_wen = if_flag ? 0 : ~opt[12] & mem_en;
     wire lsu_ren;
     assign lsu_ren = if_flag ? 1 : opt[12] & mem_en;
     wire [1:0] lsu_mask;
