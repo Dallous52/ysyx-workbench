@@ -90,12 +90,12 @@ module ysyx_25040111_top(
 
     ysyx_25040111_lsu u_ysyx_25040111_lsu(
         .clk    (clk),
-        .ready  (inst_ok),
-        .wen   	(~opt[12] & mem_en),
-        .ren   	(opt[12] & mem_en),
+        .ready  (lsu_ready),
+        .wen   	(isu_wen),
+        .ren   	(lsu_ren),
         .sign  	(opt[14]    ),
-        .mask  	(opt[11:10] ),
-        .addr  	(rd_dt      ),
+        .mask  	(lsu_mask),
+        .addr  	(lsu_addr      ),
         .wdata 	(rs2_d      ),
         .rdata 	(lsu_rdata      ),
         .valid  (lsu_ok)
