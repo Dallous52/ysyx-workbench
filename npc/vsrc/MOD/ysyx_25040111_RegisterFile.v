@@ -1,3 +1,6 @@
+`ifndef REGISTERFILE_V
+`define REGISTERFILE_V
+
 module ysyx_25040111_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
   input clk,
   input wen,
@@ -29,3 +32,5 @@ module ysyx_25040111_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
     assign rdata2 = raddr_m[1] == {ADDR_WIDTH{1'b0}} ? {DATA_WIDTH{1'b0}} : rf[raddr_m[1]];
 
 endmodule
+
+`endif

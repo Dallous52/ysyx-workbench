@@ -140,15 +140,3 @@ module ysyx_25040111_top(
     );
     
 endmodule
-
-    // ysyx_25040111_RegisterFile #(8, 32) u_rom_t(
-    //     .clk   	(clk    ),
-    //     .wen   	(0    ),
-    //     .ren   	(2'b01    ),
-    //     .wdata 	(  ),
-    //     .waddr 	(  ),
-    //     .raddr1 (pc[8:0]),
-    //     .raddr2 (),
-    //     .rdata1 ( inst),
-    //     .rdata2 ()
-    // );

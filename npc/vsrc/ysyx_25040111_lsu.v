@@ -44,7 +44,7 @@ module ysyx_25040111_lsu (
     reg valid_t;
 
     // memory read
-    assign rready = 1;
+    // assign rready = 1;
     always @(posedge clk) begin
         // 地址有效
         if (ren & ready)
@@ -63,7 +63,7 @@ module ysyx_25040111_lsu (
     end
 
     // memory write
-    assign bready = 1;
+    // assign bready = 1;
     always @(posedge clk) begin
         // 地址有效
         if (wen & ready)
