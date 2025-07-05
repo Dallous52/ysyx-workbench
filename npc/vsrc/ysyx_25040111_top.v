@@ -21,11 +21,11 @@ module ysyx_25040111_top(
         args_ok = 0;
     end
 
-    wire if_falg;
+    wire if_flag;
     ysyx_25040111_ifu u_ifu (
         .clk    (clk    ),
         .ready  (next_ok),
-        .if_flag (if_falg),
+        .if_flag (if_flag),
         .inst_t (lsu_rdata),
         .inst  	(inst   ),
         .if_ok  (lsu_ok),
