@@ -125,7 +125,7 @@ static char* rl_gets()
     line_read = nullptr;
   }
 
-  line_read = readline(ANSI_FMT("(npc) ", ANSI_FG_MAGENTA));
+  line_read = readline(ANSI_FMT("(npc) ", ANSI_FG_CYAN));
 
   if (line_read && *line_read)
     add_history(line_read);
