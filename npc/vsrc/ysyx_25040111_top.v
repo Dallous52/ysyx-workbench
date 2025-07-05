@@ -76,7 +76,7 @@ module ysyx_25040111_top(
     
     // simple arbiter
     wire lsu_ready;
-    assign isu_ready = if_flag ? next_ok : inst_ok;
+    assign lsu_ready = if_flag ? next_ok : inst_ok;
     wire lsu_wen;
     assign isu_wen = if_flag ? 0 : ~opt[12] & mem_en;
     wire lsu_ren;
