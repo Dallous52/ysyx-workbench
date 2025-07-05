@@ -91,7 +91,7 @@ module ysyx_25040111_top(
     ysyx_25040111_lsu u_ysyx_25040111_lsu(
         .clk    (clk),
         .ready  (lsu_ready),
-        .wen   	(isu_wen),
+        .wen   	(lsu_wen),
         .ren   	(lsu_ren),
         .sign  	(opt[14]    ),
         .mask  	(lsu_mask),
