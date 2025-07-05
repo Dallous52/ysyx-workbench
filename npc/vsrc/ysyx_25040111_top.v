@@ -22,10 +22,12 @@ module ysyx_25040111_top(
     end
 
     wire if_flag;
+    wire if_start;
     ysyx_25040111_ifu u_ifu (
         .clk    (clk    ),
         .ready  (next_ok),
         .if_flag (if_flag),
+        .if_start (if_start),
         .inst_t (lsu_rdata),
         .inst  	(inst   ),
         .if_ok  (lsu_ok),
@@ -76,7 +78,7 @@ module ysyx_25040111_top(
     
     // simple arbiter
     wire lsu_ready;
-    assign lsu_ready = if_flag ? next_ok : inst_ok;
+    assign lsu_ready = if_flag ? if_start : inst_ok;
     wire lsu_wen;
     assign lsu_wen = if_flag ? 0 : ~opt[12] & mem_en;
     wire lsu_ren;
