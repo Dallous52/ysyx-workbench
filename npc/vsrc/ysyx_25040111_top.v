@@ -30,7 +30,7 @@ module ysyx_25040111_top(
         .if_start (if_start),
         .inst_t (lsu_rdata),
         .inst  	(inst   ),
-        .if_ok  (lsu_ok),
+        .if_ok  (if_flag ? lsu_ok : 0),
         .valid 	(inst_ok)
     );
 
