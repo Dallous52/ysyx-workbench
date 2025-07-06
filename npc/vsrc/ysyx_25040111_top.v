@@ -15,11 +15,11 @@ module ysyx_25040111_top(
     wire [31:0] inst;
 
     reg inst_ok, args_ok, next_ok;
-    initial begin
-        next_ok = 1;
-        inst_ok = 0;
-        args_ok = 0;
-    end
+    // initial begin
+    //     next_ok = 1;
+    //     inst_ok = 0;
+    //     args_ok = 0;
+    // end
 
     wire if_flag;
     wire if_start;
