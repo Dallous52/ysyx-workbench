@@ -1,5 +1,5 @@
 `include "HDR/ysyx_20540111_dpic.vh"
-`include "MOD/ysyx_25040111_RegisterFile.v"
+// `include "MOD/ysyx_25040111_RegisterFile.v"
 
 `define READY_TIME 8'd1
 
