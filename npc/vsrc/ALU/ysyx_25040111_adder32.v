@@ -37,7 +37,7 @@ module ysyx_25040111_adder32 (
     assign inbt = sub ? ~inb : inb;
     
     // 无符号数进位
-    assign {cout, sout} = ina + inbt;
+    assign {cout, sout} = ina + inbt + sub;
     // 有符号溢出：两个操作数符号相同，结果符号不同
     assign overflow = (~(ina[31] ^ inbt[31])) & (ina[31] ^ sout[31]);
 
