@@ -45,7 +45,11 @@ module ysyx_25040111_alu (
     //     3'b111, {31'b0, (~(|dxor)) ^ negate}
     // });
     
-    wire [31:0] b, add_result;
+    wire [31:0] b;
+    wire [31:0] add_result;
+    wire [31:0] dxor;
+    wire lt;
+
     assign b = ext ? var2 : ~var2;
     wire carry;
     assign carry = ext ? 1'b0 : 1'b1;
