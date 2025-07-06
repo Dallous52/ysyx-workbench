@@ -14,14 +14,14 @@
     ysyx_25040111_``dev u_ysyx_25040111_``dev( \
         .clk     	(clk), \
         .araddr  	(addr), \
-        .arvalid 	(arvalid), \
+        .arvalid 	(Xbar[num] ? arvalid : 0), \
         .arready 	(Xbar[num] ? arready : arready_``dev), \
         .rdata   	(Xbar[num] ? rmem : rmem_``dev), \
         .rresp   	(Xbar[num] ? rresp : rresp_``dev), \
         .rvalid  	(Xbar[num] ? rvalid : rvalid_``dev), \
         .rready  	(rready   ), \
         .awaddr  	(addr   ), \
-        .awvalid 	(awvalid  ), \
+        .awvalid 	(Xbar[num] ? awvalid : 0), \
         .awready 	(Xbar[num] ? awready : awready_``dev), \
         .wdata   	(wmem    ), \
         .wstrb   	(wmask[3:0]), \
