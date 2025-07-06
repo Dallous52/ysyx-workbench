@@ -77,7 +77,6 @@ module ysyx_25040111_uart(
         if (wtstart & wvalid) begin
             if (count == 0) begin
                 $write("%c", wdata[7:0]);
-                pmem_write(awaddr, wdata, wmask);
                 wready <= 1;
                 wtstart <= 0;       
             end
