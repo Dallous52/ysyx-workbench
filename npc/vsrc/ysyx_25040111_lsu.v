@@ -15,7 +15,7 @@
         .clk     	(Xbar[num] ? clk : 0), \
         .araddr  	(addr), \
         .arvalid 	(arvalid), \
-        .arready 	(arready  ), \
+        .arready 	(Xbar[num] ? arready : arready_``dev), \
         .rdata   	(Xbar[num] ? rmem : rmem_``dev), \
         .rresp   	(Xbar[num] ? rresp : rresp_``dev), \
         .rvalid  	(Xbar[num] ? rvalid : rvalid_``dev), \
