@@ -1,7 +1,10 @@
 `include "HDR/ysyx_20540111_dpic.vh"
 `include "MOD/ysyx_25040111_MuxKey.v"
 
-`define DEV_SERIAL (32'ha00003f8)
+`define DEV_SERIAL  (32'ha00003f8)
+`define DEV_TIMER   (32'ha0000048)
+`define DEV_TIMER_END  (32'ha000004f)
+
 
 `define DEVICE_MODULE(dev, num) \
     wire [31:0] rmem_``dev; \
@@ -49,6 +52,8 @@ module ysyx_25040111_lsu (
     always @(*) begin
         if (addr == `DEV_SERIAL)
             Xbar = 3'b010;
+        else if (addr >= `DEV_TIMER && addr <= `DEV_TIMER_END)
+            Xbar = 3'b100;
         else 
             Xbar = 3'b001;
     end
@@ -137,6 +142,7 @@ module ysyx_25040111_lsu (
 
     `DEVICE_MODULE(sram, 0);
     `DEVICE_MODULE(uart, 1);
+    `DEVICE_MODULE(clint, 2);
 
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
