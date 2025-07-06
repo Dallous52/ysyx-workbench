@@ -52,8 +52,8 @@ module ysyx_25040111_lsu (
     always @(*) begin
         if (addr == `DEV_SERIAL)
             Xbar = 3'b010;
-        else if (addr >= `DEV_TIMER && addr <= `DEV_TIMER_END)
-            Xbar = 3'b100;
+        // else if (addr >= `DEV_TIMER && addr <= `DEV_TIMER_END)
+        //     Xbar = 3'b100;
         else 
             Xbar = 3'b001;
     end
