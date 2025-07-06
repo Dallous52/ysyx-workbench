@@ -52,8 +52,8 @@ module ysyx_25040111_lsu (
     always @(*) begin
         if (addr == `DEV_SERIAL)
             Xbar = 3'b010;
-        // else if (addr >= `DEV_TIMER && addr <= `DEV_TIMER_END)
-        //     Xbar = 3'b100;
+        else if (addr >= `DEV_TIMER && addr <= `DEV_TIMER_END)
+            Xbar = 3'b100;
         else 
             Xbar = 3'b001;
     end
@@ -142,7 +142,7 @@ module ysyx_25040111_lsu (
 
     `DEVICE_MODULE(sram, 0);
     `DEVICE_MODULE(uart, 1);
-    // `DEVICE_MODULE(clint, 2);
+    `DEVICE_MODULE(clint, 2);
 
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
