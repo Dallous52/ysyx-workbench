@@ -142,7 +142,7 @@ module ysyx_25040111_lsu (
 
     `DEVICE_MODULE(sram, 0);
     `DEVICE_MODULE(uart, 1);
-    `DEVICE_MODULE(clint, 2);
+    // `DEVICE_MODULE(clint, 2);
 
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
