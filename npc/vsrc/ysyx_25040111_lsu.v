@@ -4,11 +4,11 @@
 `define DEV_SERIAL (32'ha00003f8)
 
 `define DEVICE_MODULE(dev, num) \
-    reg [31:0] rmem_``dev; \
+    wire [31:0] rmem_``dev; \
     wire [1:0] rresp_``dev; \
-    reg arready_``dev, awready_``dev; \
-    reg rvalid_``dev; \
-    reg wready_``dev; \
+    wire arready_``dev, awready_``dev; \
+    wire rvalid_``dev; \
+    wire wready_``dev; \
     wire bvalid_``dev; \
     wire [1:0] bresp_``dev; \
     ysyx_25040111_``dev u_ysyx_25040111_``dev( \
@@ -136,9 +136,7 @@ module ysyx_25040111_lsu (
     assign valid = wen | ren ? valid_t : ready;
 
     `DEVICE_MODULE(sram, 0);
-    
     `DEVICE_MODULE(uart, 1);
-    
 
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
