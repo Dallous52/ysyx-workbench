@@ -1,11 +1,13 @@
 `include "HDR/ysyx_20540111_dpic.vh"
 `include "MOD/ysyx_25040111_MuxKey.v"
 
+`define DEV_SERIAL (32'ha00003f8)
+
 module ysyx_25040111_lsu (
     input clk,          // 时钟
     input ready,        
     input wen,          // 写使能
-    input ren,          // 读使能 
+    input ren,          // 读使能
     input sign,         // 有无符号标志
     input [1:0] mask,   // 掩码选择
     input [31:0] addr,  // 内存操作地址
@@ -13,6 +15,14 @@ module ysyx_25040111_lsu (
     output [31:0] rdata,// 读出数据
     output valid
 );
+
+    wire [2:0] Xbar;
+    always @(*) begin
+        if (addr == `DEV_SERIAL)
+            Xbar = 3'b010;
+        else 
+            Xbar = 3'b001;
+    end
 
     wire [7:0] wmask;    
     ysyx_25040111_MuxKey #(4, 2, 8) c_wmask(wmask, mask, {
@@ -95,13 +105,13 @@ module ysyx_25040111_lsu (
     assign valid = wen | ren ? valid_t : ready;
 
     ysyx_25040111_sram u_ysyx_25040111_sram(
-        .clk     	(clk      ),
-        .araddr  	(addr   ),
+        .clk     	(Xbar[0] ? clk : 0),
+        .araddr  	(addr),
         .arvalid 	(arvalid),
         .arready 	(arready  ),
         .rdata   	(rmem    ),
         .rresp   	(rresp    ),
-        .rvalid  	(rvalid   ),
+        .rvalid  	(rvalid   ),                       
         .rready  	(rready   ),
         .awaddr  	(addr   ),
         .awvalid 	(awvalid  ),
@@ -115,6 +125,28 @@ module ysyx_25040111_lsu (
         .bready  	(bready   )
     );
     
+    ysyx_25040111_uart u_ysyx_25040111_uart(
+       .clk     	(Xbar[1] ? clk : 0),
+        .araddr  	(addr),
+        .arvalid 	(arvalid),
+        .arready 	(arready  ),
+        .rdata   	(rmem    ),
+        .rresp   	(rresp    ),
+        .rvalid  	(rvalid   ),                       
+        .rready  	(rready   ),
+        .awaddr  	(addr   ),
+        .awvalid 	(awvalid  ),
+        .awready 	(awready  ),
+        .wdata   	(wmem    ),
+        .wstrb   	(wmask[3:0]),
+        .wvalid  	(wvalid   ),
+        .wready  	(wready   ),
+        .bresp   	(bresp    ),
+        .bvalid  	(bvalid   ),
+        .bready  	(bready   )
+    );
+    
+
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
         2'b00, rmem,
