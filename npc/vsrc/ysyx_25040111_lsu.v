@@ -12,7 +12,7 @@
     wire bvalid_``dev; \
     wire [1:0] bresp_``dev; \
     ysyx_25040111_``dev u_ysyx_25040111_``dev( \
-        .clk     	(Xbar[num] ? clk : 0), \
+        .clk     	(clk), \
         .araddr  	(addr), \
         .arvalid 	(arvalid), \
         .arready 	(Xbar[num] ? arready : arready_``dev), \

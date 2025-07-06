@@ -1,6 +1,4 @@
-`include "HDR/ysyx_20540111_dpic.vh"
-
-module ysyx_25040111_uart(
+module ysyx_25040111_clint(
     input clk,
     input [31:0] araddr,
     input arvalid,
@@ -24,11 +22,15 @@ module ysyx_25040111_uart(
     output bvalid,
     input bready
 );
-    // memory read
+
+      // memory read
     reg rdstart;
     reg [31:0] rdata_t;
+    reg [63:0] mtime;
 
     always @(posedge clk) begin
+        mtime <= mtime + 1;
+
         // 地址读取
         if (arvalid) arready <= 1;
 
@@ -41,7 +43,7 @@ module ysyx_25040111_uart(
 
         // 数据读取
         if (rdstart) begin
-            rdata_t <= pmem_read(araddr);
+            rdata_t <= araddr == 32'ha0000048 ? mtime[31:0] : mtime[63:32];
             rvalid <= 1; // 读取完毕
             rdstart <= 0;            
         end
@@ -68,7 +70,6 @@ module ysyx_25040111_uart(
         end
 
         if (wtstart & wvalid) begin
-            $write("%c", wdata[7:0]);
             wready <= 1;
             wtstart <= 0;       
         end
