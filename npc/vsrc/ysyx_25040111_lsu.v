@@ -16,7 +16,7 @@ module ysyx_25040111_lsu (
     output valid
 );
 
-    wire [2:0] Xbar;
+    reg [2:0] Xbar;
     always @(*) begin
         if (addr == `DEV_SERIAL)
             Xbar = 3'b010;
