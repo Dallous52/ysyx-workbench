@@ -123,7 +123,7 @@ module ysyx_25040111_lsu (
         if (bvalid) bready <= 1;
 
         // 写回复信息
-        if (bready & bvalid) begin 
+        if (bready & bvalid) begin
             bready <= 0;
             valid_t <= 1;
         end
