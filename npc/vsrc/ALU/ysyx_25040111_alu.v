@@ -53,7 +53,7 @@ module ysyx_25040111_alu (
     assign b = ext ? var2 : ~var2;
     wire carry;
     assign carry = ext ? 1'b0 : 1'b1;
-    assign add_result = var1 + b + carry;
+    assign add_result = var1 + b + {31'b0, carry};
 
     assign dxor = (var1 ^ var2);
     assign lt = var1 < var2;
