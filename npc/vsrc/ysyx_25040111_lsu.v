@@ -3,6 +3,35 @@
 
 `define DEV_SERIAL (32'ha00003f8)
 
+`define DEVICE_MODULE(dev, num) \
+    reg [31:0] rmem_``dev; \
+    wire [1:0] rresp_``dev; \
+    reg arready_``dev, awready_``dev; \
+    reg rvalid_``dev; \
+    reg wready_``dev; \
+    wire bvalid_``dev; \
+    wire [1:0] bresp_``dev; \
+    ysyx_25040111_``dev u_ysyx_25040111_``dev( \
+        .clk     	(Xbar[num] ? clk : 0), \
+        .araddr  	(addr), \
+        .arvalid 	(arvalid), \
+        .arready 	(arready  ), \
+        .rdata   	(Xbar[num] ? rmem : rmem_``dev), \
+        .rresp   	(Xbar[num] ? rresp : rresp_``dev), \
+        .rvalid  	(Xbar[num] ? rvalid : rvalid_``dev), \
+        .rready  	(rready   ), \
+        .awaddr  	(addr   ), \
+        .awvalid 	(awvalid  ), \
+        .awready 	(Xbar[num] ? awready : awready_``dev), \
+        .wdata   	(wmem    ), \
+        .wstrb   	(wmask[3:0]), \
+        .wvalid  	(wvalid   ), \
+        .wready  	(Xbar[num] ? wready : wready_``dev), \
+        .bresp   	(Xbar[num] ? bresp : bresp_``dev), \
+        .bvalid  	(Xbar[num] ? bvalid : bvalid_``dev), \
+        .bready  	(bready   ) \
+    )
+
 module ysyx_25040111_lsu (
     input clk,          // 时钟
     input ready,        
@@ -41,18 +70,20 @@ module ysyx_25040111_lsu (
     });
 
     // output declaration of module ysyx_25040111_sram
-    reg [31:0] rmem;
-    wire [1:0] rresp;
-    reg rvalid, arvalid;
-    reg arready, rready;
-    wire [1:0] bresp;
-    wire bvalid;
+    reg arvalid;
+    reg  rready;
     reg awvalid, wvalid;
-    reg awready, wready;
     reg bready;
 
-    reg valid_t;
+    reg [31:0] rmem;
+    wire [1:0] rresp;
+    reg arready, awready;
+    reg rvalid;
+    reg wready;
+    wire bvalid;
+    wire [1:0] bresp;
 
+    reg valid_t;
     // memory read
     // assign rready = 1;
     always @(posedge clk) begin
@@ -104,47 +135,9 @@ module ysyx_25040111_lsu (
     
     assign valid = wen | ren ? valid_t : ready;
 
-    ysyx_25040111_sram u_ysyx_25040111_sram(
-        .clk     	(Xbar[0] ? clk : 0),
-        .araddr  	(addr),
-        .arvalid 	(arvalid),
-        .arready 	(arready  ),
-        .rdata   	(rmem    ),
-        .rresp   	(rresp    ),
-        .rvalid  	(rvalid   ),                       
-        .rready  	(rready   ),
-        .awaddr  	(addr   ),
-        .awvalid 	(awvalid  ),
-        .awready 	(awready  ),
-        .wdata   	(wmem    ),
-        .wstrb   	(wmask[3:0]),
-        .wvalid  	(wvalid   ),
-        .wready  	(wready   ),
-        .bresp   	(bresp    ),
-        .bvalid  	(bvalid   ),
-        .bready  	(bready   )
-    );
+    `DEVICE_MODULE(sram, 0);
     
-    ysyx_25040111_uart u_ysyx_25040111_uart(
-       .clk     	(Xbar[1] ? clk : 0),
-        .araddr  	(addr),
-        .arvalid 	(arvalid),
-        .arready 	(arready  ),
-        .rdata   	(rmem    ),
-        .rresp   	(rresp    ),
-        .rvalid  	(rvalid   ),                       
-        .rready  	(rready   ),
-        .awaddr  	(addr   ),
-        .awvalid 	(awvalid  ),
-        .awready 	(awready  ),
-        .wdata   	(wmem    ),
-        .wstrb   	(wmask[3:0]),
-        .wvalid  	(wvalid   ),
-        .wready  	(wready   ),
-        .bresp   	(bresp    ),
-        .bvalid  	(bvalid   ),
-        .bready  	(bready   )
-    );
+    `DEVICE_MODULE(uart, 1);
     
 
     wire [31:0] offset;
