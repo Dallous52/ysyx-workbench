@@ -32,6 +32,7 @@ module ysyx_25040111_alu (
     assign dxor = (var1 ^ var2);
     assign lt = sign ? res_add[31] ^ overflow : ~cout;
     wire signed [31:0] shiftrl;
+
     assign shiftrl = $signed({var1[31] & sign, 31'b0}) >>> var2[4:0];
 
     ysyx_25040111_MuxKey #(8, 3, 32) c_alu (res, opt, {
@@ -45,31 +46,6 @@ module ysyx_25040111_alu (
         3'b111, {31'b0, (~(|dxor)) ^ negate}
     });
     
-    // wire [31:0] b;
-    // wire [31:0] add_result;
-    // wire [31:0] dxor;
-    // wire lt;
-
-    // assign b = ext ? var2 : ~var2;
-    // wire carry;
-    // assign carry = ext ? 1'b0 : 1'b1;
-    // assign add_result = var1 + b + {31'b0, carry};
-
-    // assign dxor = (var1 ^ var2);
-    // assign lt = var1 < var2;
-    // wire signed [31:0] shiftrl;
-    // assign shiftrl = $signed({var1[31] & sign, 31'b0}) >>> var2[4:0];
-    // ysyx_25040111_MuxKey #(8, 3, 32) c_alu (res, opt, {
-    //     3'b000, var1,
-    //     3'b001, add_result, 
-    //     3'b010, ext ? (var1 | var2) : (var1 & var2),
-    //     3'b011, dxor,
-    //     3'b100, var1 << var2[4:0],
-    //     3'b101, (var1 >> var2[4:0]) | shiftrl,
-    //     3'b110, {31'b0, lt ^ negate},
-    //     3'b111, {31'b0, (~(|dxor)) ^ negate}
-    // });
-
 endmodule
 
 `endif
