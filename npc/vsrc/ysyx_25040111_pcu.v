@@ -1,6 +1,6 @@
 `include "HDR/ysyx_25040111_inc.vh"
 `include "MOD/ysyx_25040111_MuxKey.v"
-`include "ALU/ysyx_25040111_adder32.v"
+// `include "ALU/ysyx_25040111_adder32.v"
 
 module ysyx_25040111_pcu(
     input  clk,             // 时钟
@@ -28,14 +28,7 @@ module ysyx_25040111_pcu(
     });
 
     wire [31:0] dnpc_normal;
-    ysyx_25040111_adder32 u_ysyx_25040111_adder32(
-        .ina  	    (ina   ),
-        .inb  	    (inb   ),
-        .sub        (0),
-        .sout 	    (dnpc_normal),
-        .cout       (),
-        .overflow   ()
-    );
+    assign dnpc_normal = ina + inb;
 
     // mret
     wire [31:0] dnpc;

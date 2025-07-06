@@ -1,5 +1,5 @@
 `include "HDR/ysyx_20540111_dpic.vh"
-`include "MOD/ysyx_25040111_RegisterFile.v"
+// `include "MOD/ysyx_25040111_RegisterFile.v"
 
 `define READY_TIME 8'd1
 
@@ -58,7 +58,7 @@ module ysyx_25040111_sram(
         // 数据读取
         if (rdstart) begin
             if (count == `READY_TIME) begin // nums) begin
-                // rdata_t <= pmem_read(araddr);
+                rdata_t <= pmem_read(araddr);
                 rvalid <= 1; // 读取完毕
                 rdstart <= 0;            
             end
@@ -73,15 +73,15 @@ module ysyx_25040111_sram(
         end
     end
 
-    ysyx_25040111_RegisterFile #(8, 32) u_rom2_t(
-        .clk   	(clk    ),
-        .wen   	(wtstart & wvalid & (count == `READY_TIME)),
-        .ren   	({rdstart & (count == `READY_TIME), 1'b0}),
-        .wdata 	(wdata),
-        .waddr 	(awaddr[7:0]),
-        .raddr1 (araddr[7:0]),
-        .rdata1 (rdata_t)
-    );
+    // ysyx_25040111_RegisterFile #(8, 32) u_rom2_t(
+    //     .clk   	(clk    ),
+    //     .wen   	(wtstart & wvalid & (count == `READY_TIME)),
+    //     .ren   	({rdstart & (count == `READY_TIME), 1'b0}),
+    //     .wdata 	(wdata),
+    //     .waddr 	(awaddr[7:0]),
+    //     .raddr1 (araddr[7:0]),
+    //     .rdata1 (rdata_t)
+    // );
 
     // memory write
     reg wtstart;
@@ -105,7 +105,7 @@ module ysyx_25040111_sram(
 
         if (wtstart & wvalid) begin
             if (count == `READY_TIME) begin
-                // pmem_write(awaddr, wdata, wmask);
+                pmem_write(awaddr, wdata, wmask);
                 wready <= 1;
                 wtstart <= 0;       
             end

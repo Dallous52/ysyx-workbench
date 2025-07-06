@@ -2,8 +2,8 @@
 `include "MOD/ysyx_25040111_MuxKey.v"
 
 `define DEV_SERIAL  (32'ha00003f8)
-`define DEV_TIMER   (32'ha0000048)
-`define DEV_TIMER_END  (32'ha000004f)
+`define DEV_CLINT   (32'ha0000048)
+`define DEV_CLINT_END  (32'ha000004f)
 
 
 `define DEVICE_MODULE(dev, num) \
@@ -19,7 +19,7 @@
         .araddr  	(addr), \
         .arvalid 	(Xbar[num] ? arvalid : 0), \
         .arready 	(Xbar[num] ? arready : arready_``dev), \
-        .rdata   	(Xbar[num] ? rmem : rmem_``dev), \
+        .rdata   	(rmem_``dev), \
         .rresp   	(Xbar[num] ? rresp : rresp_``dev), \
         .rvalid  	(Xbar[num] ? rvalid : rvalid_``dev), \
         .rready  	(rready   ), \
@@ -50,12 +50,18 @@ module ysyx_25040111_lsu (
 
     reg [2:0] Xbar;
     always @(*) begin
-        if (addr == `DEV_SERIAL)
+        if (addr == `DEV_SERIAL) begin 
             Xbar = 3'b010;
-        else if (addr >= `DEV_TIMER && addr <= `DEV_TIMER_END)
+            rmem = rmem_uart;
+        end
+        else if (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END) begin
             Xbar = 3'b100;
-        else 
+            rmem = rmem_clint;
+        end
+        else begin
             Xbar = 3'b001;
+            rmem = rmem_sram;
+        end
     end
 
     wire [7:0] wmask;    

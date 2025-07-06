@@ -41,7 +41,7 @@ module ysyx_25040111_uart(
 
         // 数据读取
         if (rdstart) begin
-            // rdata_t <= pmem_read(araddr);
+            rdata_t <= pmem_read(araddr);
             rvalid <= 1; // 读取完毕
             rdstart <= 0;            
         end
@@ -68,7 +68,7 @@ module ysyx_25040111_uart(
         end
 
         if (wtstart & wvalid) begin
-            // s$write("%c", wdata[7:0]);
+            $write("%c", wdata[7:0]);
             wready <= 1;
             wtstart <= 0;       
         end
