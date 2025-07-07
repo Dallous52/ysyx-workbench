@@ -47,7 +47,7 @@ module ysyx_25040111_lsu (
     output [31:0] rdata,// 读出数据
     output valid
 );
-
+    
     reg [2:0] Xbar;
     always @(*) begin
         if (addr == `DEV_SERIAL) begin 
@@ -63,7 +63,7 @@ module ysyx_25040111_lsu (
             rmem = rmem_sram;
         end
     end
-
+    
     wire [7:0] wmask;    
     ysyx_25040111_MuxKey #(4, 2, 8) c_wmask(wmask, mask, {
         2'b00, 8'h00,
@@ -71,7 +71,7 @@ module ysyx_25040111_lsu (
         2'b10, addr[1] ? 8'b00001100 : 8'b00000011,
         2'b11, 8'b00001111
     });
-
+    
     wire [31:0] wmem;
     ysyx_25040111_MuxKey #(4, 2, 32) c_wt_data(wmem, addr[1:0], {
         2'b00, wdata,
@@ -113,7 +113,7 @@ module ysyx_25040111_lsu (
             rready <= 0;            
         end
     end
-
+    
     // memory write
     // assign bready = 1;
     always @(posedge clk) begin

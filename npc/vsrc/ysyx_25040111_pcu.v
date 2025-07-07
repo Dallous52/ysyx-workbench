@@ -4,7 +4,7 @@
 
 module ysyx_25040111_pcu(
     input  clk,             // 时钟
-    input ready,            
+    input ready,
     input  brench,          // 分支判断结果
     input  [9:8] opt,       // pc 跳转类型
     input  mret,            // 是否为 mret
@@ -15,6 +15,7 @@ module ysyx_25040111_pcu(
     output reg valid
 );
 
+    
     wire [31:0] ina;
     wire [31:0] inb;
     wire [1:0] pc_ctl;

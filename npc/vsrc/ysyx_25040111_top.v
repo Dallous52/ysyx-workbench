@@ -29,9 +29,9 @@ module ysyx_25040111_top(
         .if_flag (if_flag),
         .if_start (if_start),
         .inst_t (lsu_rdata),
-        .inst  	(inst   ),
+        .inst  (inst   ),
         .if_ok  (if_flag ? lsu_ok : 0),
-        .valid 	(inst_ok)
+        .valid (inst_ok)
     );
 
     ysyx_25040111_idu u_idu (
