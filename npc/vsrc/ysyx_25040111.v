@@ -1,7 +1,7 @@
 `include "HDR/ysyx_25040111_inc.vh" 
 `include "IDU/ysyx_25040111_idu.v"
 
-module ysyx_25040111_top(
+module ysyx_25040111(
     input clk,
     output reg [31:0] pc
 );
