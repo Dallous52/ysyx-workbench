@@ -10,7 +10,7 @@ VERILATOR_CFLAGS += -MMD --build -cc  \
 				-O3 --x-assign fast --x-initial fast --noassert
 
 # 顶层模块名称
-TOPNAME = ysyx_25040111_top
+TOPNAME = ysyx_25040111
 
 ARGS ?= 
 
