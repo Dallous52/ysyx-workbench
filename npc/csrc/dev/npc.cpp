@@ -1,6 +1,6 @@
 #include "npc.h"
-#include "Vysyx_25040111_top.h"
-#include "Vysyx_25040111_top___024root.h"
+#include "Vysyx_25040111.h"
+#include "Vysyx_25040111___024root.h"
 #include "device.h"
 #include "memory.h"
 #include "util.h"
@@ -17,7 +17,7 @@
 // #define MTRACE
 // #define DIFFTEST
 
-static Vysyx_25040111_top top;
+static Vysyx_25040111 top;
 static VerilatedVcdC *vtrace = nullptr;
 
 // 用于计数时钟边沿
