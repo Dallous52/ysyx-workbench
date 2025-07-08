@@ -141,6 +141,7 @@ module ysyx_25040111_lsu (
     // memory read
     // assign rready = 1;
     always @(posedge clk) begin
+        $display("arvalid:%b  arready:%b  rvalid:%b  rready:%b", arvalid, arready, rvalid, rready);
         // 地址有效
         if (ren & ready)
             arvalid <= 1;
