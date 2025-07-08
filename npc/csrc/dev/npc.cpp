@@ -1,6 +1,6 @@
 #include "npc.h"
-#include "Vysyx_25040111.h"
-#include "Vysyx_25040111___024root.h"
+#include "VysyxSoCFull.h"
+#include "VysyxSoCFull___024root.h"
 #include "device.h"
 #include "memory.h"
 #include "util.h"
@@ -9,7 +9,8 @@
 #include <verilated_vcd_c.h>
 
 #define VCD_PATH "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
-#define REG (top.rootp->ysyx_25040111__DOT__u_reg__DOT__rf)
+#define REG (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_reg__DOT__rf)
+#define CPU_PC (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
 
 // #define EN_TRACE
 // #define ITRACE
@@ -17,7 +18,7 @@
 // #define MTRACE
 // #define DIFFTEST
 
-static Vysyx_25040111 top;
+static VysyxSoCFull top;
 static VerilatedVcdC *vtrace = nullptr;
 
 // 用于计数时钟边沿
@@ -94,26 +95,26 @@ int cpu_exec(uint64_t steps)
 
   while (steps--) 
   {
-    currpc = top.pc;
-    instruct = paddr_read(top.pc, 4);
+    currpc = CPU_PC;
+    instruct = paddr_read(CPU_PC, 4);
 #if defined(EN_TRACE) && defined(ITRACE)
     print_exe_info(currpc, instruct, logbuf, 128);
     printf("%s\n", logbuf);
 #endif // ITRACE
 
-    top.clk = 0;
+    top.clock = 0;
     top.eval();
     if (vtrace)
       vtrace->dump(sim_time++);
-    top.clk = 1;
+    top.clock = 1;
     top.eval();
     if (vtrace)
       vtrace->dump(sim_time++);
 
-    if (top.pc != currpc) 
+    if (CPU_PC != currpc) 
     {
 #if defined(EN_TRACE) && defined(FTRACE)
-      ftrace(currpc, top.pc);
+      ftrace(currpc, CPU_PC);
 #endif // FTRACE
 
       check_wp();
@@ -178,7 +179,7 @@ word_t reg_get_value(char *s, bool *success)
   if (strcmp(s, "pc") == 0) 
   {
     *success = true;
-    return top.pc;
+    return CPU_PC;
   }
 
   int i = 0;
@@ -231,7 +232,7 @@ void npc_init(bool vcd, int argc, char** argv) {
   }
   
   Verilated::commandArgs(argc, argv);
-  top.pc = 0x80000000;
+  CPU_PC = 0x80000000;
   npc_stat = NPC_RUN;
 }
 
@@ -255,7 +256,7 @@ extern "C" void ebreak(int code) {
     if (code == 9) 
     {
       char logbuf[128] = {};
-      print_exe_info(top.pc, paddr_read(top.pc, 4), logbuf, 128);
+      print_exe_info(CPU_PC, paddr_read(CPU_PC, 4), logbuf, 128);
       printf(ANSI_FMT("[unrealized] %s\n", ANSI_FG_RED), logbuf);
     }
   } else
@@ -275,12 +276,12 @@ extern "C" int pmem_read(int raddr)
 
 #if defined(EN_TRACE) && defined(MTRACE)
   // mtrace memory read
-  word_t minst = paddr_read(top.pc, 4);
-  if (raddr != top.pc && 0b0000011 == BITS(minst, 6, 0)) 
+  word_t minst = paddr_read(CPU_PC, 4);
+  if (raddr != CPU_PC && 0b0000011 == BITS(minst, 6, 0)) 
   {
     printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x;\n",
                     ANSI_FG_CYAN),
-           (word_t)raddr, rdata, top.pc);
+           (word_t)raddr, rdata, CPU_PC);
   }
 #endif // MTRACE
 
@@ -321,13 +322,13 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
 #if defined(EN_TRACE) && defined(MTRACE)
   // mtrace memory write
-  word_t minst = paddr_read(top.pc, 4);
+  word_t minst = paddr_read(CPU_PC, 4);
   if (0b0100011 == BITS(minst, 6, 0)) 
   {
     printf(ANSI_FMT("[write mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x; "
                     "mask: 0x%02x;\n",
                     ANSI_FG_CYAN),
-           (paddr_t)waddr, (word_t)wdata, top.pc, wmask);
+           (paddr_t)waddr, (word_t)wdata, CPU_PC, wmask);
   }
 #endif // MTRACE
 
