@@ -98,50 +98,44 @@ module ysyx_25040111_lsu (
                              2'b11, wdata << 24
                          });
 
-    always @(*) begin
-        if (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END) begin
-            arvalid_clint = arvalid;
-            arready = arready_clint;
-            rresp = rresp_clint;
-            rvalid = rvalid_clint;
-            rready_clint = rready;
-            rmem = rmem_clint;
-        end
-        else begin
-            arvalid_clint = 0;
 
-            awready = io_master_awready;
-            io_master_awvalid = awvalid;
-            io_master_awaddr = addr;
-            io_master_awid = 0;
-            io_master_awlen = 0;
-            io_master_awsize = tsize;
-            io_master_awburst = 0;
+    
+    wire is_clint;
+    assign is_clint = (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END);
 
-            wready = io_master_wready;
-            io_master_wvalid = wvalid;
-            io_master_wdata = wmem;
-            io_master_wstrb = wmask;
-            io_master_wlast = wlast;
+    assign arvalid_clint    = is_clint ? arvalid         : 1'b0;
+    assign arready          = is_clint ? arready_clint   : io_master_arready;
+    assign rresp            = is_clint ? rresp_clint     : io_master_rresp;
+    assign rvalid           = is_clint ? rvalid_clint    : io_master_rvalid;
+    assign rmem             = is_clint ? rmem_clint      : io_master_rdata;
+    assign rready_clint     = is_clint ? rready          : 1'b0;
 
-            io_master_bready = bready;
-            bvalid = io_master_bvalid;
-            bresp = io_master_bresp;
+    assign awready           = is_clint ? 1'b0 : io_master_awready;
+    assign io_master_awvalid = is_clint ? 1'b0 : awvalid;
+    assign io_master_awaddr  = is_clint ? 32'b0 : addr;
+    assign io_master_awid    = 4'b0;
+    assign io_master_awlen   = 8'b0;
+    assign io_master_awsize  = is_clint ? 3'b0 : tsize;
+    assign io_master_awburst = 2'b0;
 
-            arready = io_master_arready;
-            io_master_arvalid = arvalid;
-            io_master_araddr = addr;
-            io_master_arid = 0;
-            io_master_arlen = 0;
-            io_master_arsize = tsize;
-            io_master_arburst = 0;
+    assign wready             = is_clint ? 1'b0 : io_master_wready;
+    assign io_master_wvalid   = is_clint ? 1'b0 : wvalid;
+    assign io_master_wdata    = is_clint ? 32'b0 : wmem;
+    assign io_master_wstrb    = is_clint ? 4'b0 : wmask;
+    assign io_master_wlast    = is_clint ? 1'b0 : wlast;
 
-            io_master_rready = rready;
-            rvalid = io_master_rvalid;
-            rresp = io_master_rresp;
-            rmem = io_master_rdata;
-        end
-    end
+    assign io_master_bready   = is_clint ? 1'b0 : bready;
+    assign bvalid             = is_clint ? 1'b0 : io_master_bvalid;
+    assign bresp              = is_clint ? 2'b0 : io_master_bresp;
+
+    assign io_master_arvalid  = is_clint ? 1'b0 : arvalid;
+    assign io_master_araddr   = is_clint ? 32'b0 : addr;
+    assign io_master_arid     = 4'b0;
+    assign io_master_arlen    = 8'b0;
+    assign io_master_arsize   = is_clint ? 3'b0 : tsize;
+    assign io_master_arburst  = 2'b0;
+
+    assign io_master_rready   = is_clint ? 1'b0 : rready;
 
     reg valid_t;
     // memory read
@@ -228,3 +222,48 @@ module ysyx_25040111_lsu (
                          });
 
 endmodule
+
+    // always @(*) begin
+    //     if (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END) begin
+    //         arvalid_clint = arvalid;
+    //         arready = arready_clint;
+    //         rresp = rresp_clint;
+    //         rvalid = rvalid_clint;
+    //         rready_clint = rready;
+    //         rmem = rmem_clint;
+    //     end
+    //     else begin
+    //         arvalid_clint = 0;
+
+    //         awready = io_master_awready;
+    //         io_master_awvalid = awvalid;
+    //         io_master_awaddr = addr;
+    //         io_master_awid = 0;
+    //         io_master_awlen = 0;
+    //         io_master_awsize = tsize;
+    //         io_master_awburst = 0;
+
+    //         wready = io_master_wready;
+    //         io_master_wvalid = wvalid;
+    //         io_master_wdata = wmem;
+    //         io_master_wstrb = wmask;
+    //         io_master_wlast = wlast;
+
+    //         io_master_bready = bready;
+    //         bvalid = io_master_bvalid;
+    //         bresp = io_master_bresp;
+
+    //         arready = io_master_arready;
+    //         io_master_arvalid = arvalid;
+    //         io_master_araddr = addr;
+    //         io_master_arid = 0;
+    //         io_master_arlen = 0;
+    //         io_master_arsize = tsize;
+    //         io_master_arburst = 0;
+
+    //         io_master_rready = rready;
+    //         rvalid = io_master_rvalid;
+    //         rresp = io_master_rresp;
+    //         rmem = io_master_rdata;
+    //     end
+    // end
