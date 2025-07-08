@@ -221,11 +221,11 @@ module ysyx_25040111(
         .rd_d  	(rd_dt  )
     );
 
-    // always @(posedge clock) begin
-    //     $display("opt: %b", opt);
-    //     $display("ready:%b  ren:%b  wen:%b  addr:%h  if_ok:%b", lsu_ready, lsu_ren, lsu_wen, lsu_addr, lsu_ok);
-    //     $display("inst:%b  args:%b  next:%b", inst_ok, args_ok, next_ok);
-    // end
+    always @(posedge clock) begin
+        $display("opt: %b", opt);
+        $display("ready:%b  ren:%b  wen:%b  addr:%h  if_ok:%b", lsu_ready, lsu_ren, lsu_wen, lsu_addr, lsu_ok);
+        $display("inst:%b  args:%b  next:%b", inst_ok, args_ok, next_ok);
+    end
 
     ysyx_25040111_pcu u_ysyx_25040111_pcu(
         .clk          (clock        ),
