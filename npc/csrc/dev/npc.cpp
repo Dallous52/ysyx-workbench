@@ -38,19 +38,28 @@ static word_t instruct = 0;
 
 
 // initialize npc resource
-void npc_init(bool vcd, int argc, char** argv) {
-  if (vcd) 
-  {
-    // set vcd
-    Verilated::traceEverOn(true);
-    vtrace = new VerilatedVcdC;
-    top.trace(vtrace, 5);
-    vtrace->open(VCD_PATH);
-  }
-  
-  Verilated::commandArgs(argc, argv);
-  CPU_PC = 0x20000000;
-  npc_stat = NPC_RUN;
+void npc_init(bool vcd, int argc, char** argv) 
+{
+	if (vcd) 
+	{
+		// set vcd
+		Verilated::traceEverOn(true);
+		vtrace = new VerilatedVcdC;
+		top.trace(vtrace, 5);
+		vtrace->open(VCD_PATH);
+	}
+	
+	top.reset = 1;
+	for (int i = 0; i < 10; i++)
+	{
+		top.clock = 0; top.eval();
+		top.clock = 1; top.eval();
+	}
+	top.reset = 0;
+
+	Verilated::commandArgs(argc, argv);
+	CPU_PC = 0x20000000;
+	npc_stat = NPC_RUN;
 }
 
 
