@@ -162,17 +162,47 @@ module ysyx_25040111(
     wire lsu_ok;
 
     ysyx_25040111_lsu u_ysyx_25040111_lsu(
-                          .clk    (clock),
-                          .ready  (lsu_ready),
-                          .wen   	(lsu_wen),
-                          .ren   	(lsu_ren),
-                          .sign  	(opt[14]    ),
-                          .mask  	(lsu_mask),
-                          .addr  	(lsu_addr      ),
-                          .wdata 	(rs2_d      ),
-                          .rdata 	(lsu_rdata      ),
-                          .valid  (lsu_ok)
-                      );
+        .clk    (clock),
+        .ready  (lsu_ready),
+        .wen   	(lsu_wen),
+        .ren   	(lsu_ren),
+        .sign  	(opt[14]    ),
+        .mask  	(lsu_mask),
+        .addr  	(lsu_addr      ),
+        .wdata 	(rs2_d      ),
+        .rdata 	(lsu_rdata      ),
+        .valid  (lsu_ok),
+        .io_master_awready 	(io_master_awready  ),
+        .io_master_awvalid 	(io_master_awvalid  ),
+        .io_master_awaddr  	(io_master_awaddr   ),
+        .io_master_awid    	(io_master_awid     ),
+        .io_master_awlen   	(io_master_awlen    ),
+        .io_master_awsize  	(io_master_awsize   ),
+        .io_master_awburst 	(io_master_awburst  ),
+        .io_master_wready  	(io_master_wready   ),
+        .io_master_wvalid  	(io_master_wvalid   ),
+        .io_master_wdata   	(io_master_wdata    ),
+        .io_master_wstrb   	(io_master_wstrb    ),
+        .io_master_wlast   	(io_master_wlast    ),
+        .io_master_bready  	(io_master_bready   ),
+        .io_master_bvalid  	(io_master_bvalid   ),
+        .io_master_bresp   	(io_master_bresp    ),
+        .io_master_bid     	(io_master_bid      ),
+        .io_master_arready 	(io_master_arready  ),
+        .io_master_arvalid 	(io_master_arvalid  ),
+        .io_master_araddr  	(io_master_araddr   ),
+        .io_master_arid    	(io_master_arid     ),
+        .io_master_arlen   	(io_master_arlen    ),
+        .io_master_arsize  	(io_master_arsize   ),
+        .io_master_arburst 	(io_master_arburst  ),
+        .io_master_rready  	(io_master_rready   ),
+        .io_master_rvalid  	(io_master_rvalid   ),
+        .io_master_rresp   	(io_master_rresp    ),
+        .io_master_rdata   	(io_master_rdata    ),
+        .io_master_rlast   	(io_master_rlast    ),
+        .io_master_rid     	(io_master_rid      )
+    );
+    
 
     assign rdata = if_flag ? 32'b0 : lsu_rdata;
     assign args_ok = if_flag ? 0 : lsu_ok;
