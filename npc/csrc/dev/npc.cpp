@@ -12,11 +12,11 @@
 #define REG (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_reg__DOT__rf)
 #define CPU_PC (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
 
-// #define EN_TRACE
-// #define ITRACE
-// #define FTRACE
+#define EN_TRACE
+#define ITRACE
+#define FTRACE
 // #define MTRACE
-// #define DIFFTEST
+#define DIFFTEST
 
 static VysyxSoCFull top;
 static VerilatedVcdC *vtrace = nullptr;
