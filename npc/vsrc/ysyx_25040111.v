@@ -203,6 +203,9 @@ module ysyx_25040111(
         .io_master_rid     	(io_master_rid      )
     );
     
+    always @(*) begin
+        $$display("io_master_arready:%b ", io_master_arready);
+    end
 
     assign rdata = if_flag ? 32'b0 : lsu_rdata;
     assign args_ok = if_flag ? 0 : lsu_ok;
