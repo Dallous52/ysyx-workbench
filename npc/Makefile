@@ -7,15 +7,22 @@
 # --x-initial fast: 允许 X 初值优化
 # --noassert: 关闭 Verilator 内部的 assert
 VERILATOR_CFLAGS += -MMD --build -cc  \
-				-O3 --x-assign fast --x-initial fast --noassert
+				-O3 --x-assign fast --x-initial fast --noassert \
+				--timescale "1ns/1ns" --no-timing
 
 # 顶层模块名称
-TOPNAME = ysyx_25040111
+TOPNAME = ysyxSoCFull
+
+# ysyxSoC 目录
+SOC_DIR = /home/dallous/Documents/ysyx-workbench/ysyxSoC
 
 ARGS ?= 
 
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
+VSRCS += $(shell find $(SOC_DIR)/perip -name "*.v")
+VSRCS += $(SOC_DIR)/build/ysyxSoCFull.v
+
 CURRDIR = /home/dallous/Documents/ysyx-workbench/npc
 RTL_FILE = $(VSRCS)
 
@@ -29,10 +36,13 @@ INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/nemu/tools/capstone/repo/in
 
 
 # - `-DTOP_NAME="V$(TOPNAME)"` 定义宏 `TOP_NAME`，用于 Verilator 生成的顶层模块
-CXXFLAGS += $(INCFLAGS) -g
+CXXFLAGS += $(INCFLAGS) # -g
 VERILATOR_CFLAGS +=	-Wno-UNOPTFLAT \
 					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/ \
-					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/IDU
+					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/IDU \
+					-I$(SOC_DIR)/perip/uart16550/rtl \
+					-I$(SOC_DIR)/perip/spi/rtl
+
 # LDFLAGS 添加链接库
 LDFLAGS += -L/usr/lib/x86_64-linux-gnu -lreadline -lhistory
 

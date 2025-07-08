@@ -5,36 +5,6 @@
 `define DEV_CLINT   (32'ha0000048)
 `define DEV_CLINT_END  (32'ha000004f)
 
-
-`define DEVICE_MODULE(dev, num) \
-    wire [31:0] rmem_``dev; \
-    wire [1:0] rresp_``dev; \
-    wire arready_``dev, awready_``dev; \
-    wire rvalid_``dev; \
-    wire wready_``dev; \
-    wire bvalid_``dev; \
-    wire [1:0] bresp_``dev; \
-    ysyx_25040111_``dev u_ysyx_25040111_``dev( \
-        .clk     	(clk), \
-        .araddr  	(addr), \
-        .arvalid 	(Xbar[num] ? arvalid : 0), \
-        .arready 	(Xbar[num] ? arready : arready_``dev), \
-        .rdata   	(rmem_``dev), \
-        .rresp   	(Xbar[num] ? rresp : rresp_``dev), \
-        .rvalid  	(Xbar[num] ? rvalid : rvalid_``dev), \
-        .rready  	(rready   ), \
-        .awaddr  	(addr   ), \
-        .awvalid 	(Xbar[num] ? awvalid : 0), \
-        .awready 	(Xbar[num] ? awready : awready_``dev), \
-        .wdata   	(wmem    ), \
-        .wstrb   	(wmask[3:0]), \
-        .wvalid  	(wvalid   ), \
-        .wready  	(Xbar[num] ? wready : wready_``dev), \
-        .bresp   	(Xbar[num] ? bresp : bresp_``dev), \
-        .bvalid  	(Xbar[num] ? bvalid : bvalid_``dev), \
-        .bready  	(bready   ) \
-    )
-
 module ysyx_25040111_lsu (
         input clk,          // 时钟
         input ready,
@@ -45,31 +15,79 @@ module ysyx_25040111_lsu (
         input [31:0] addr,  // 内存操作地址
         input [31:0] wdata, // 写入数据
         output [31:0] rdata,// 读出数据
-        output valid
+        output valid,
+
+        input io_master_awready,
+        output io_master_awvalid,
+        output [31:0] io_master_awaddr,
+        output [3:0] io_master_awid,
+        output [7:0] io_master_awlen,
+        output [2:0] io_master_awsize,
+        output [1:0] io_master_awburst,
+
+        input io_master_wready,
+        output io_master_wvalid,
+        output [31:0] io_master_wdata,
+        output [3:0] io_master_wstrb,
+        output io_master_wlast,
+
+        output io_master_bready,
+        input io_master_bvalid,
+        input [1:0] io_master_bresp,
+        input [3:0] io_master_bid,
+
+        input io_master_arready,
+        output io_master_arvalid,
+        output [31:0] io_master_araddr,
+        output [3:0] io_master_arid,
+        output [7:0] io_master_arlen,
+        output [2:0] io_master_arsize,
+        output [1:0] io_master_arburst,
+
+        output io_master_rready,
+        input io_master_rvalid,
+        input [1:0] io_master_rresp,
+        input [31:0] io_master_rdata,
+        input io_master_rlast,
+        input [3:0] io_master_rid
     );
 
-    reg [2:0] Xbar;
-    always @(*) begin
-        if (addr == `DEV_SERIAL) begin
-            Xbar = 3'b010;
-            rmem = rmem_uart;
-        end
-        else if (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END) begin
-            Xbar = 3'b100;
-            rmem = rmem_clint;
-        end
-        else begin
-            Xbar = 3'b001;
-            rmem = rmem_sram;
-        end
-    end
+    reg arvalid;
+    reg  rready;
+    reg awvalid, wvalid;
+    reg bready;
+    wire [1:0] rresp;
+    reg arready, awready;
+    reg rvalid;
+    reg wready, wlast;
+    wire bvalid;
+    wire [1:0] bresp;
+    reg [31:0] rmem;
 
-    wire [7:0] wmask;
-    ysyx_25040111_MuxKey #(4, 2, 8) c_wmask(wmask, mask, {
-                                                2'b00, 8'h00,
-                                                2'b01, 8'b00000001 << addr[1:0],
-                                                2'b10, addr[1] ? 8'b00001100 : 8'b00000011,
-                                                2'b11, 8'b00001111
+    wire arvalid_clint, rready_clint;
+    wire [1:0] rresp_clint;
+    wire arready_clint, awready_clint;
+    wire rvalid_clint;
+    wire wready_clint;
+    wire bvalid_clint;
+    wire [1:0] bresp_clint;
+    reg [31:0] rmem_clint;
+
+
+    wire [3:0] wmask;
+    ysyx_25040111_MuxKey #(4, 2, 4) c_wmask(wmask, mask, {
+                                                2'b00, 4'h0,
+                                                2'b01, 4'b0001 << addr[1:0],
+                                                2'b10, addr[1] ? 4'b1100 : 4'b0011,
+                                                2'b11, 4'b1111
+                                            });
+
+    wire [2:0] tsize;
+    ysyx_25040111_MuxKey #(4, 2, 3) c_tsize(tsize, mask, {
+                                                2'b00, 3'b0,
+                                                2'b01, 3'b000,
+                                                2'b10, 3'b001,
+                                                2'b11, 3'b010
                                             });
 
     wire [31:0] wmem;
@@ -80,19 +98,50 @@ module ysyx_25040111_lsu (
                              2'b11, wdata << 24
                          });
 
-    // output declaration of module ysyx_25040111_sram
-    reg arvalid;
-    reg  rready;
-    reg awvalid, wvalid;
-    reg bready;
+    always @(*) begin
+        if (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END) begin
+            arvalid_clint = arvalid;
+            arready = arready_clint;
+            rresp = rresp_clint;
+            rvalid = rvalid_clint;
+            rready_clint = rready;
+            rmem = rmem_clint;
+        end
+        else begin
+            arvalid_clint = 0;
 
-    reg [31:0] rmem;
-    wire [1:0] rresp;
-    reg arready, awready;
-    reg rvalid;
-    reg wready;
-    wire bvalid;
-    wire [1:0] bresp;
+            awready = io_master_awready;
+            io_master_awvalid = awvalid;
+            io_master_awaddr = addr;
+            io_master_awid = 0;
+            io_master_awlen = 0;
+            io_master_awsize = tsize;
+            io_master_awburst = 0;
+
+            wready = io_master_wready;
+            io_master_wvalid = wvalid;
+            io_master_wdata = wmem;
+            io_master_wstrb = wmask;
+            io_master_wlast = wlast;
+
+            io_master_bready = bready;
+            bvalid = io_master_bvalid;
+            bresp = io_master_bresp;
+
+            arready = io_master_arready;
+            io_master_arvalid = arvalid;
+            io_master_araddr = addr;
+            io_master_arid = 0;
+            io_master_arlen = 0;
+            io_master_arsize = tsize;
+            io_master_arburst = 0;
+
+            io_master_rready = rready;
+            rvalid = io_master_rvalid;
+            rresp = io_master_rresp;
+            rmem = io_master_rdata;
+        end
+    end
 
     reg valid_t;
     // memory read
@@ -130,7 +179,10 @@ module ysyx_25040111_lsu (
         // 写入参数
         if (wvalid & wready) begin
             wvalid <= 0;
+            wlast <= 1;
         end
+        else
+            wlast <= 0;
 
         if (bvalid)
             bready <= 1;
@@ -149,9 +201,16 @@ module ysyx_25040111_lsu (
 
     assign valid = wen | ren ? valid_t : ready;
 
-    `DEVICE_MODULE(sram, 0);
-    `DEVICE_MODULE(uart, 1);
-    `DEVICE_MODULE(clint, 2);
+    ysyx_25040111_clint u_ysyx_25040111_clint(
+                            .clk     	(clk),
+                            .araddr  	(addr),
+                            .arvalid 	(arvalid_clint),
+                            .arready 	(arready_clint),
+                            .rdata   	(rmem_clint),
+                            .rresp   	(rresp_clint),
+                            .rvalid  	(rvalid_clint),
+                            .rready  	(rready_clint)
+                        );
 
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {

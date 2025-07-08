@@ -67,7 +67,7 @@ bool initialize(int argc, char** argv)
 
   device_init();
 
-  npc_init(use_vcd);
+  npc_init(use_vcd, argc, argv);
 
   return true;
 }

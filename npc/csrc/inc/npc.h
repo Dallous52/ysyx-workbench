@@ -4,7 +4,7 @@
 #include "tpdef.h"
 
 // initialize npc resource
-void npc_init(bool vcd);
+void npc_init(bool vcd, int argc, char** argv);
 
 // execute npc steps
 int cpu_exec(uint64_t steps);
