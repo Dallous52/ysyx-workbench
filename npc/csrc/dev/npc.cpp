@@ -113,7 +113,9 @@ int cpu_exec(uint64_t steps)
   while (steps--) 
   {
     currpc = CPU_PC;
+#ifdef EN_TRACE
     instruct = paddr_read(CPU_PC, 4);
+#endif
 #if defined(EN_TRACE) && defined(ITRACE)
     print_exe_info(currpc, instruct, logbuf, 128);
     printf("%s\n", logbuf);
