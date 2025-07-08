@@ -204,7 +204,7 @@ module ysyx_25040111(
     );
     
     always @(*) begin
-        $$display("io_master_arready:%b ", io_master_arready);
+        $display("io_master_arready:%b ", io_master_arready);
     end
 
     assign rdata = if_flag ? 32'b0 : lsu_rdata;
