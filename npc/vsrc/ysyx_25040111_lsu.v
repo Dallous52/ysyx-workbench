@@ -130,7 +130,7 @@ module ysyx_25040111_lsu (
 
     assign io_master_arvalid  = is_clint ? 1'b0 : arvalid;
     assign io_master_araddr   = is_clint ? 32'b0 : addr;
-    assign io_master_arid     = 4'b0;
+    assign io_master_arid     = 4'b0001;
     assign io_master_arlen    = 8'b0;
     assign io_master_arsize   = is_clint ? 3'b0 : tsize;
     assign io_master_arburst  = 2'b0;
