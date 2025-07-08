@@ -141,7 +141,7 @@ module ysyx_25040111_lsu (
     // memory read
     // assign rready = 1;
     always @(posedge clk) begin
-        $display("is_clint:%b  arvalid:%b  arready:%b  rvalid:%b  rready:%b", is_clint, arvalid, arready, rvalid, rready);
+        $display("is_clint:%b  arvalid:%b  arready:%b  rvalid:%b  rready:%b", is_clint, arvalid, arready, io_master_rvalid, rready);
         // 地址有效
         if (ren & ready)
             arvalid <= 1;
