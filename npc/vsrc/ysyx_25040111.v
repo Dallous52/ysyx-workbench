@@ -161,7 +161,7 @@ module ysyx_25040111(
     wire [31:0] lsu_rdata;
     wire lsu_ok;
 
-    ysyx_25040111_lsu u_ysyx_25040111_lsu(
+    ysyx_25040111_lsu u_lsu(
         .clk    (clock),
         .ready  (lsu_ready),
         .wen   	(lsu_wen),
@@ -212,7 +212,7 @@ module ysyx_25040111(
            mem_en & opt[12] ? rdata : rd_dt;
     assign csrw = opt[15] & opt[10] ? rd_dt : 32'b0;
 
-    ysyx_25040111_exu u_ysyx_25040111_exu(
+    ysyx_25040111_exu u_exu(
         .opt   	(opt    ),
         .rs1_d 	(rs1_d  ),
         .rs2_d 	(rs2_d  ),
@@ -227,7 +227,7 @@ module ysyx_25040111(
         $display("inst:%b  args:%b  next:%b", inst_ok, args_ok, next_ok);
     end
 
-    ysyx_25040111_pcu u_ysyx_25040111_pcu(
+    ysyx_25040111_pcu u_pcu(
         .clk          (clock        ),
         .ready        (args_ok    ),
         .brench    	(rd_dt[0]   ),
