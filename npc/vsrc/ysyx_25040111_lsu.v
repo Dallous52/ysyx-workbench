@@ -145,8 +145,8 @@ module ysyx_25040111_lsu (
         if (ren & ready)
             arvalid <= 1;
 
-        if (arvalid & arready)
-            arvalid <= 0;
+        // if (arvalid & arready)
+            // arvalid <= 0;
 
         // 读取数据
         if (rvalid)
