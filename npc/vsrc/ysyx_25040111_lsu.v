@@ -111,16 +111,16 @@ module ysyx_25040111_lsu (
     assign awready           = is_clint ? 1'b0 : io_master_awready;
     assign io_master_awvalid = is_clint ? 1'b0 : awvalid;
     assign io_master_awaddr  = is_clint ? 32'b0 : addr;
-    assign io_master_awid    = 4'b0001;
+    assign io_master_awid    = 4'b0;
     assign io_master_awlen   = 8'b0;
     assign io_master_awsize  = is_clint ? 3'b0 : tsize;
     assign io_master_awburst = 2'b0;
 
-    assign wready             = is_clint ? 1'b0 : io_master_wready;
-    assign io_master_wvalid   = is_clint ? 1'b0 : wvalid;
+    assign wready             = is_clint ? 1'b0  : io_master_wready;
+    assign io_master_wvalid   = is_clint ? 1'b0  : wvalid;
     assign io_master_wdata    = is_clint ? 32'b0 : wmem;
-    assign io_master_wstrb    = is_clint ? 4'b0 : wmask;
-    assign io_master_wlast    = is_clint ? 1'b0 : wlast;
+    assign io_master_wstrb    = is_clint ? 4'b0  : wmask;
+    assign io_master_wlast    = is_clint ? 1'b0  : wlast;
 
     assign io_master_bready   = is_clint ? 1'b0 : bready;
     assign bvalid             = is_clint ? 1'b0 : io_master_bvalid;
@@ -128,7 +128,7 @@ module ysyx_25040111_lsu (
 
     assign io_master_arvalid  = is_clint ? 1'b0 : arvalid;
     assign io_master_araddr   = is_clint ? 32'b0 : addr;
-    assign io_master_arid     = 4'b0001;
+    assign io_master_arid     = 4'b0;
     assign io_master_arlen    = 8'b0;
     assign io_master_arsize   = is_clint ? 3'b0 : tsize;
     assign io_master_arburst  = 2'b0;
@@ -138,6 +138,7 @@ module ysyx_25040111_lsu (
     reg valid_t;
     // memory read
     assign rready = 1;
+
     always @(posedge clk) begin
         $display("io_master_rid = %h", io_master_rid);
         $display("is_clint:%b  arvalid:%b  arready:%b  rvalid:%b  rready:%b  rmem:%b", is_clint, arvalid, arready, io_master_rvalid, rready, io_master_rdata);
@@ -154,7 +155,7 @@ module ysyx_25040111_lsu (
 
         if (rvalid & rready) begin
             valid_t <= 1;
-            rready <= 0;
+            // rready <= 0;
         end
     end
 
