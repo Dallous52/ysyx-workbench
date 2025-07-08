@@ -37,6 +37,23 @@ static word_t currpc = 0;
 static word_t instruct = 0;
 
 
+// initialize npc resource
+void npc_init(bool vcd, int argc, char** argv) {
+  if (vcd) 
+  {
+    // set vcd
+    Verilated::traceEverOn(true);
+    vtrace = new VerilatedVcdC;
+    top.trace(vtrace, 5);
+    vtrace->open(VCD_PATH);
+  }
+  
+  Verilated::commandArgs(argc, argv);
+  CPU_PC = 0x20000000;
+  npc_stat = NPC_RUN;
+}
+
+
 static void ftrace(paddr_t pc, paddr_t call) 
 {
   const char *ftrace_get_name(paddr_t addr);
@@ -217,23 +234,6 @@ const char *reg_name(int idx) {
     return regs[idx];
   }
   return "???";
-}
-
-
-// initialize npc resource
-void npc_init(bool vcd, int argc, char** argv) {
-  if (vcd) 
-  {
-    // set vcd
-    Verilated::traceEverOn(true);
-    vtrace = new VerilatedVcdC;
-    top.trace(vtrace, 5);
-    vtrace->open(VCD_PATH);
-  }
-  
-  Verilated::commandArgs(argc, argv);
-  CPU_PC = 0x80000000;
-  npc_stat = NPC_RUN;
 }
 
 
