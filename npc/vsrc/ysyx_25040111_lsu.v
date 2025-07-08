@@ -98,8 +98,6 @@ module ysyx_25040111_lsu (
                              2'b11, wdata << 24
                          });
 
-
-    
     wire is_clint;
     assign is_clint = (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END);
 
@@ -113,7 +111,7 @@ module ysyx_25040111_lsu (
     assign awready           = is_clint ? 1'b0 : io_master_awready;
     assign io_master_awvalid = is_clint ? 1'b0 : awvalid;
     assign io_master_awaddr  = is_clint ? 32'b0 : addr;
-    assign io_master_awid    = 4'b0;
+    assign io_master_awid    = 4'b0001;
     assign io_master_awlen   = 8'b0;
     assign io_master_awsize  = is_clint ? 3'b0 : tsize;
     assign io_master_awburst = 2'b0;
