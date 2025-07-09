@@ -4,6 +4,7 @@
 
 module ysyx_25040111_pcu(
     input  clk,             // 时钟
+    input reset,
     input ready,
     input  brench,          // 分支判断结果
     input  [9:8] opt,       // pc 跳转类型
@@ -36,6 +37,10 @@ module ysyx_25040111_pcu(
     assign dnpc = mret ? mret_addr : dnpc_normal;
 
     always @(posedge clk) begin
+        if (reset) begin
+            pc <= 32'h20000000;
+            valid <= 1;    
+        end 
         if (ready) begin
             pc <= dnpc;
             valid <= 1;            

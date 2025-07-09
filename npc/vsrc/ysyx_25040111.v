@@ -86,11 +86,6 @@ module ysyx_25040111(
     wire [31:0] inst;
 
     reg inst_ok, args_ok, next_ok;
-    initial begin
-        next_ok = 1;
-        inst_ok = 0;
-        args_ok = 0;
-    end
 
     wire if_flag;
     wire if_start;
@@ -228,6 +223,7 @@ module ysyx_25040111(
 
     ysyx_25040111_pcu u_pcu(
         .clk          (clock        ),
+        .reset        (reset),
         .ready        (args_ok    ),
         .brench    	(rd_dt[0]   ),
         .opt       	(opt[9:8]   ),

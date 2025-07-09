@@ -49,16 +49,16 @@ void npc_init(bool vcd, int argc, char** argv)
 		vtrace->open(VCD_PATH);
 	}
 	
-	// top.reset = 1;
-	// for (int i = 0; i < 10; i++)
-	// {
-	// 	top.clock = 0; top.eval();
-	// 	top.clock = 1; top.eval();
-	// }
-	// top.reset = 0;
+  // reset
+	top.reset = 1;
+	for (int i = 0; i < 10; i++)
+	{
+		top.clock = 0; top.eval();
+		top.clock = 1; top.eval();
+	}
+	top.reset = 0;
 
 	Verilated::commandArgs(argc, argv);
-	CPU_PC = 0x20000000;
 	npc_stat = NPC_RUN;
 }
 
