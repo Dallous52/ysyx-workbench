@@ -105,7 +105,6 @@ module ysyx_25040111_lsu (
     assign arready          = is_clint ? arready_clint   : io_master_arready;
     assign rresp            = is_clint ? rresp_clint     : io_master_rresp;
     assign rvalid           = is_clint ? rvalid_clint    : io_master_rvalid;
-    assign rmem             = is_clint ? rmem_clint      : io_master_rdata;
     assign rready_clint     = is_clint ? rready          : 1'b0;
 
     assign awready           = is_clint ? 1'b0 : io_master_awready;
@@ -154,6 +153,7 @@ module ysyx_25040111_lsu (
 
         if (rvalid & rready) begin
             valid_t <= 1;
+            rmem <= is_clint ? rmem_clint : io_master_rdata;
             // rready <= 0;
         end
     end
