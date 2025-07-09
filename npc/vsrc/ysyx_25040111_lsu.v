@@ -140,7 +140,7 @@ module ysyx_25040111_lsu (
     assign rready = 1;
     always @(posedge clk) begin
         $display("io_master_rid = %h", io_master_rid);
-        $display("is_clint:%b  arvalid:%b  arready:%b  rvalid:%b  rready:%b  rmem:%h", is_clint, arvalid, io_master_arready, io_master_rvalid, rready, io_master_rdata);
+        $display("is_clint:%b  arvalid:%b  arready:%b  rvalid:%b  rready:%b  rmem:%h", is_clint, arvalid, io_master_arready, io_master_rvalid, rready, rmem);
         // 地址有效
         if (ren & ready)
             arvalid <= 1;
@@ -150,7 +150,7 @@ module ysyx_25040111_lsu (
 
         // 读取数据
         // if (rvalid)
-        //     rready <= 1;si
+        //     rready <= 1;
 
         if (rvalid & rready) begin
             valid_t <= 1;
