@@ -2,6 +2,7 @@
 
 module ysyx_25040111_ifu (
     input  clk,
+    input  reset,
     input  ready,
     output reg if_start,
     output reg if_flag,
@@ -23,7 +24,11 @@ module ysyx_25040111_ifu (
 
         // if (valid)
         //     valid <= 0;
-        if (ready) begin 
+        if (reset) begin
+            if_flag <= 0;
+            if_start <= 0;
+        end
+        else if (ready) begin 
             if_flag <= 1;
             if_start <= 1;
         end

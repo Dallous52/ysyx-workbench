@@ -91,6 +91,7 @@ module ysyx_25040111(
     wire if_start;
     ysyx_25040111_ifu u_ifu (
         .clk    (clock    ),
+        .reset  (reset),
         .ready  (next_ok),
         .if_flag (if_flag),
         .if_start (if_start),
