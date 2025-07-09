@@ -150,7 +150,7 @@ module ysyx_25040111_lsu (
 
         // 读取数据
         // if (rvalid)
-        //     rready <= 1;
+        //     rready <= 1;si
 
         if (rvalid & rready) begin
             valid_t <= 1;
