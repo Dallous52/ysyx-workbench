@@ -41,7 +41,7 @@ module ysyx_25040111_pcu(
             pc <= 32'h20000000;
             valid <= 1;    
         end 
-        if (ready) begin
+        else if (ready) begin
             pc <= dnpc;
             valid <= 1;            
         end
