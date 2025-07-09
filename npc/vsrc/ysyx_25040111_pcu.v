@@ -48,7 +48,7 @@ module ysyx_25040111_pcu(
         else
             pc <= pc;
 
-        if (valid)
+        if (valid & ~reset)
             valid <= 0; 
     end
 
