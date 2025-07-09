@@ -217,7 +217,7 @@ module ysyx_25040111(
     );
 
     always @(posedge clock) begin
-        $display("opt: %b", opt);
+        $display("opt: %b  reset:%b", opt, reset);
         $display("ready:%b  ren:%b  wen:%b  addr:%h  if_ok:%b", lsu_ready, lsu_ren, lsu_wen, lsu_addr, lsu_ok);
         $display("inst:%b  args:%b  next:%b", inst_ok, args_ok, next_ok);
     end
