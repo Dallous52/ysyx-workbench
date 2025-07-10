@@ -138,8 +138,10 @@ module ysyx_25040111_lsu (
     // memory read
     assign rready = 1;
     always @(posedge clk) begin
-        $display("io_master_rid = %h", io_master_rid);
-        $display("is_clint:%b  arvalid:%b  arready:%b  rvalid:%b  rready:%b  rmem:%h", is_clint, arvalid, io_master_arready, io_master_rvalid, rready, rmem);
+        // $display("io_master_rid = %h", io_master_rid);
+        // $display("is_clint:%b  arvalid:%b  arready:%b", is_clint, arvalid, io_master_arready);
+        // $display("rvalid:%b  rready:%b  rmem:%h", io_master_rvalid, rready, rmem);
+        
         // 地址有效
         if (ren & ready)
             arvalid <= 1;
