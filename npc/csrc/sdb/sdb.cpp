@@ -95,7 +95,7 @@ void sdb_mainloop()
     // extract the first token as the command
     char *cmd = strtok(str, " ");
     if (cmd == nullptr) { continue; }
-    printf("const char *__restrict format, ...");
+
     // get args of cmd
     char *args = cmd + strlen(cmd) + 1;
     if (args >= str_end) 
@@ -122,6 +122,7 @@ void sdb_mainloop()
 static char* rl_gets() 
 {
   static char *line_read = nullptr;
+  printf("const char *__restrict format, ...\n");
 
   if (line_read)
   {
