@@ -3,6 +3,7 @@
 #include "VysyxSoCFull___024root.h"
 #include "device.h"
 #include "memory.h"
+#include "tpdef.h"
 #include "util.h"
 
 #include <verilated.h>
@@ -356,5 +357,12 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
 extern "C" void mrom_read(int32_t addr, int32_t *data) 
 {
-	*data = 0b00000000000100000000000001110011;
+  paddr_t real_addr = addr + 0x60000000;
+	if (likely(in_pmem(real_addr)))
+  {
+    *data = paddr_read(real_addr, 4);
+    return;
+  }
+
+	finalize(2);
 }
