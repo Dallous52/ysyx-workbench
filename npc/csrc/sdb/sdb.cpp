@@ -91,6 +91,7 @@ void sdb_mainloop()
   for (char *str; (str = rl_gets()) != nullptr; ) 
   {
     char *str_end = str + strlen(str);
+    printf("%s\n", str);
 
     // extract the first token as the command
     char *cmd = strtok(str, " ");
@@ -134,6 +135,5 @@ static char* rl_gets()
   if (line_read && *line_read)
     add_history(line_read);
 
-  printf("%s\n", line_read);
   return line_read;
 }
