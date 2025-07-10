@@ -161,7 +161,7 @@ module ysyx_25040111_lsu (
     end
 
     // memory write
-    // assign bready = 1;
+    assign bready = 1;
     always @(posedge clk) begin
         // 地址有效
         if (wen & ready)
@@ -180,8 +180,8 @@ module ysyx_25040111_lsu (
         else
             wlast <= 0;
 
-        if (bvalid)
-            bready <= 1;
+        // if (bvalid)
+        //     bready <= 1;
 
         // 写回复信息
         if (bready & bvalid) begin
@@ -193,6 +193,9 @@ module ysyx_25040111_lsu (
     always @(posedge clk) begin
         if (valid_t)
             valid_t <= 0;
+
+        if (|rresp | |bresp)
+            ebreak(5);
     end
 
     assign valid = wen | ren ? valid_t : ready;
