@@ -6,7 +6,7 @@
 # --x-assign fast: 允许 X 值快速赋值，提高仿真效率
 # --x-initial fast: 允许 X 初值优化
 # --noassert: 关闭 Verilator 内部的 assert
-VERILATOR_CFLAGS += -MMD --build -cc  \
+VERILATOR_CFLAGS += -MMD --build -cc  --stdout-flush \
 				-O3 --x-assign fast --x-initial fast --noassert \
 				--timescale "1ns/1ns" --no-timing
 
