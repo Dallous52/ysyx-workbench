@@ -167,7 +167,7 @@ int cmd_d(char* args)
 {
   void free_wp(int num);
 
-  if (args == nullptr) printf("haosdfasdfjaklsdfjlasdfjsdff");
+  printf("%s\n", args);
 
   int si_num = 0;
   if (sscanf(args, "%d", &si_num) == 1)
