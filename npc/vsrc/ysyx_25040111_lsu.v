@@ -214,9 +214,9 @@ module ysyx_25040111_lsu (
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
                              2'b00, rmem,
-                             2'b01, rmem >> 8,
-                             2'b10, rmem >> 16,
-                             2'b11, rmem >> 24
+                             2'b01, rmem << 8,
+                             2'b10, rmem << 16,
+                             2'b11, rmem << 24
                          });
 
     ysyx_25040111_MuxKey #(4, 2, 32) c_rdmem(rdata, mask, {
