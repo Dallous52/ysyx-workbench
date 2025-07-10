@@ -52,8 +52,11 @@ void npc_init(bool vcd, int argc, char** argv)
 	
   // reset
 	top.reset = 1;
-  top.clock = 0; top.eval();
-  top.clock = 1; top.eval();
+  for (int i = 0; i < 10; i++)
+  {
+    top.clock = 0; top.eval();
+    top.clock = 1; top.eval();
+  }
 	top.reset = 0;
 
 	Verilated::commandArgs(argc, argv);
