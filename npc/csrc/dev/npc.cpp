@@ -21,6 +21,8 @@
 
 static VysyxSoCFull top;
 static VerilatedVcdC *vtrace = nullptr;
+static bool vstart = false;
+void start_v() {vstart = true;}
 
 // 用于计数时钟边沿
 static vluint64_t sim_time = 0;
@@ -62,6 +64,9 @@ void npc_init(bool vcd, int argc, char** argv)
 	Verilated::commandArgs(argc, argv);
 	npc_stat = NPC_RUN;
 }
+
+
+
 
 
 static void ftrace(paddr_t pc, paddr_t call) 
@@ -133,11 +138,11 @@ int cpu_exec(uint64_t steps)
 
     top.clock = 0;
     top.eval();
-    if (vtrace)
+    if (vtrace && vstart)
       vtrace->dump(sim_time++);
     top.clock = 1;
     top.eval();
-    if (vtrace)
+    if (vtrace && vstart)
       vtrace->dump(sim_time++);
 
     if (CPU_PC != currpc) 

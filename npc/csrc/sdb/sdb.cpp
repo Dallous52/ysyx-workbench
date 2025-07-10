@@ -16,6 +16,8 @@ int cmd_x(char* args);
 int cmd_p(char* args);
 int cmd_w(char* args);
 int cmd_d(char* args);
+int cmd_v(char* args);
+
 
 // command table <name describe fuction> 
 static struct 
@@ -33,7 +35,8 @@ static struct
     { "x", "Four bytes of memory after scanning", cmd_x},
     { "p", "Find the value of the provided expression", cmd_p},
     { "w", "Stop program when ${EXPR} change", cmd_w},
-    { "d", "Delete watch point with wp NO", cmd_d}
+    { "d", "Delete watch point with wp NO", cmd_d},
+    { "v", "Start vcd trace create.", cmd_v}
     /* TODO: Add more commands */
 };
 

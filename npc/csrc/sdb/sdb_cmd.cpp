@@ -175,3 +175,12 @@ int cmd_d(char* args)
 
   return 0;
 }
+
+
+// start vcd wavefrom
+int cmd_v(char* args)
+{
+  void start_v();
+  start_v();
+  return 0;
+}
