@@ -19,6 +19,13 @@
 #include <isa.h>
 #include <debug.h>
 
+
+#define MROM_START  0x20000000
+#define MROM_END    0x20000fff
+
+#define SRAM_START  0xf000000
+#define SRAM_END    0xf001fff
+
 #if   defined(CONFIG_PMEM_MALLOC)
 static uint8_t *pmem = NULL;
 #else // CONFIG_PMEM_GARRAY
@@ -66,6 +73,17 @@ void init_mem()
 }
 
 
+static paddr_t npc_addr_map(paddr_t addr)
+{
+  if (addr >= MROM_START && addr <= MROM_END) 
+    return addr + 0x60000000;
+  else if (addr >= SRAM_START && addr <= SRAM_END)
+    return addr + 0x74000000;
+  
+  return 0;
+}
+
+
 word_t paddr_read(paddr_t addr, int len) 
 {
 #if defined(CONFIG_MTRACE) && CONFIG_MTRACE == 1
@@ -77,6 +95,8 @@ word_t paddr_read(paddr_t addr, int len)
   }
 #endif // CONFIG_MTRACE
 
+  addr = npc_addr_map(addr);
+
   if (likely(in_pmem(addr))) return pmem_read(addr, len);
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
@@ -87,10 +107,11 @@ word_t paddr_read(paddr_t addr, int len)
 void paddr_write(paddr_t addr, int len, word_t data)
 {
 #if defined(CONFIG_MTRACE) && CONFIG_MTRACE == 1
-  printf("[write] address = " FMT_PADDR "; pc = " FMT_WORD "; len = %d; data = " FMT_WORD,
+  printf("[write] address = " FMT_PADDR "; pc = " FMT_WORD "; len = %d; data = \n" FMT_WORD,
     addr, cpu.pc, len, data);
-  putchar('\n');
 #endif // CONFIG_MTRACE
+
+  addr = npc_addr_map(addr);
 
   if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
