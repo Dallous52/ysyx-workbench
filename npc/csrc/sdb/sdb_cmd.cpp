@@ -167,8 +167,10 @@ int cmd_d(char* args)
 {
   void free_wp(int num);
 
+  if (args == nullptr) printf("haosdfasdfjaklsdfjlasdfjsdff");
+
   int si_num = 0;
-  if (*args && sscanf(args, "%d", &si_num) == 1)
+  if (sscanf(args, "%d", &si_num) == 1)
     free_wp(si_num);
   else
     printf("Please use \"d [N]\" to execute, N is the number of wp.\n");
