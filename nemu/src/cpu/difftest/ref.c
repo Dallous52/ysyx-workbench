@@ -90,4 +90,5 @@ __EXPORT void difftest_init(int port) {
   init_mem();
   /* Perform ISA dependent initialization. */
   init_isa();
+  cpu.pc = 0x20000000;
 }
