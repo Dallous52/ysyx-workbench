@@ -1,6 +1,6 @@
 #include "npc.h"
 #include "VysyxSoCFull.h"
-#include "VysyxSoCFull___024root.h"
+#include "VysyxSoCFull___024root.h"ls
 #include "device.h"
 #include "memory.h"
 #include "tpdef.h"
