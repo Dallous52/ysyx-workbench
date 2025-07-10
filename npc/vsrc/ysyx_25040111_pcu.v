@@ -37,6 +37,7 @@ module ysyx_25040111_pcu(
     assign dnpc = mret ? mret_addr : dnpc_normal;
 
     always @(posedge clk) begin
+        $display("reset:%b", reset);
         if (reset) begin
             pc <= 32'h20000000;
             valid <= 1;    
