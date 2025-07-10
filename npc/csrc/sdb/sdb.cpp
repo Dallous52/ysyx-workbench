@@ -91,11 +91,11 @@ void sdb_mainloop()
   for (char *str; (str = rl_gets()) != nullptr; ) 
   {
     char *str_end = str + strlen(str);
-    printf("%s\n", str);
 
     // extract the first token as the command
     char *cmd = strtok(str, " ");
     if (cmd == nullptr) { continue; }
+    printf("%s\n", str);
 
     // get args of cmd
     char *args = cmd + strlen(cmd) + 1;
