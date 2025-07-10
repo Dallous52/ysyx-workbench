@@ -14,10 +14,12 @@
 #define likely(cond)   __builtin_expect(cond, 1)
 
 // 内存大小
-#define MSIZE 0x8000000
+// #define MSIZE 0x8000000
+#define MSIZE 0xfff
 
 // 内存起始地址
-#define MBASE 0x80000000
+// #define MBASE 0x80000000
+#define MBASE 0x20000000
 
 // 内存初始化
 bool pmem_init(const char* fbin);
