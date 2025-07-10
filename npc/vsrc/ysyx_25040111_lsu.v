@@ -90,13 +90,13 @@ module ysyx_25040111_lsu (
                                                 2'b11, 3'b010
                                             });
 
-    // wire [31:0] wmem;
-    // ysyx_25040111_MuxKey #(4, 2, 32) c_wt_data(wmem, addr[1:0], {
-    //                          2'b00, wdata,
-    //                          2'b01, wdata << 8,
-    //                          2'b10, wdata << 16,
-    //                          2'b11, wdata << 24
-    //                      });
+    wire [31:0] wmem;
+    ysyx_25040111_MuxKey #(4, 2, 32) c_wt_data(wmem, addr[1:0], {
+                             2'b00, wdata,
+                             2'b01, wdata << 8,
+                             2'b10, wdata << 16,
+                             2'b11, wdata << 24
+                         });
 
     wire is_clint;
     assign is_clint = (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END);
@@ -117,7 +117,7 @@ module ysyx_25040111_lsu (
 
     assign wready             = is_clint ? 1'b0  : io_master_wready;
     assign io_master_wvalid   = is_clint ? 1'b0  : wvalid;
-    assign io_master_wdata    = is_clint ? 32'b0 : wdata;
+    assign io_master_wdata    = is_clint ? 32'b0 : wmem;
     assign io_master_wstrb    = is_clint ? 4'b0  : wmask;
     assign io_master_wlast    = is_clint ? 1'b0  : wlast;
 
