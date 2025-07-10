@@ -217,9 +217,9 @@ module ysyx_25040111(
     );
 
     always @(posedge clock) begin
-        $display("opt: %b  reset:%b rdata:%h", opt, reset, lsu_rdata);
+        $display("opt: %h  reset:%b rdata:%h", opt, reset, lsu_rdata);
         $display("ready:%b  ren:%b  wen:%b  addr:%h  if_ok:%b", lsu_ready, lsu_ren, lsu_wen, lsu_addr, lsu_ok);
-        $display("inst:%b  args:%b  next:%b", inst_ok, args_ok, next_ok);
+        $display("pc:%h  inst:%b  args:%b  next:%b", pc, inst_ok, args_ok, next_ok);
     end
 
     ysyx_25040111_pcu u_pcu(
