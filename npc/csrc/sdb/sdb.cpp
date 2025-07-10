@@ -122,7 +122,6 @@ void sdb_mainloop()
 static char* rl_gets() 
 {
   static char *line_read = nullptr;
-  printf("const char *__restrict format, ...\n");
 
   if (line_read)
   {
@@ -135,5 +134,6 @@ static char* rl_gets()
   if (line_read && *line_read)
     add_history(line_read);
 
+  printf("%s\n", line_read);
   return line_read;
 }
