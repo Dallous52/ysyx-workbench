@@ -100,8 +100,6 @@ void sdb_mainloop()
     char *args = cmd + strlen(cmd) + 1;
     if (args >= str_end) 
     {
-    printf("%s %s\n", str, cmd);
-
       args = nullptr;
     }
 
