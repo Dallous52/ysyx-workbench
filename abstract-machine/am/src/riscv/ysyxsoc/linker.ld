@@ -13,7 +13,7 @@ SECTIONS {
   .rodata : {
     *(.rodata*)
   }
-  .data : {
+  .data : ALIGN(4) {
     *(.data)
   } : data
   edata = .;
