@@ -211,19 +211,19 @@ module ysyx_25040111_lsu (
                             .rready  	(rready_clint)
                         );
 
-    wire [31:0] offset;
-    ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
-                             2'b00, rmem,
-                             2'b01, rmem >> 8,
-                             2'b10, rmem >> 16,
-                             2'b11, rmem >> 24
-                         });
+    // wire [31:0] offset;
+    // ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
+    //                          2'b00, rmem,
+    //                          2'b01, rmem >> 8,
+    //                          2'b10, rmem >> 16,
+    //                          2'b11, rmem >> 24
+    //                      });
 
     ysyx_25040111_MuxKey #(4, 2, 32) c_rdmem(rdata, mask, {
                              2'b00, 32'b0,
-                             2'b01, {{24{offset[7] & sign}}, offset[7:0]},
-                             2'b10, {{16{offset[15] & sign}}, offset[15:0]},
-                             2'b11, offset
+                             2'b01, {{24{rmem[7] & sign}}, rmem[7:0]},
+                             2'b10, {{16{rmem[15] & sign}}, rmem[15:0]},
+                             2'b11, rmem
                          });
 
 endmodule
