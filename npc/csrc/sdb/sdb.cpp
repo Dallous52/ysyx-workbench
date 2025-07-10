@@ -1,5 +1,6 @@
 #include "tpdef.h"
 
+#include <cstdio>
 #include <iostream>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -94,7 +95,7 @@ void sdb_mainloop()
     // extract the first token as the command
     char *cmd = strtok(str, " ");
     if (cmd == nullptr) { continue; }
-
+    printf("const char *__restrict format, ...");
     // get args of cmd
     char *args = cmd + strlen(cmd) + 1;
     if (args >= str_end) 
