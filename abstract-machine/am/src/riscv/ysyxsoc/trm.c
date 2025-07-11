@@ -39,7 +39,7 @@ void bootloader()
 {
   // if ((uintptr_t)&_load_start == 0X200001dc) halt(1);
   // if ((uintptr_t)&_load_end == 0X200001dc) halt(1);
-  memcpy((void*)DEV_SRAM, &_load_start, 50);
+  memcpy((void*)DEV_SRAM, &_load_start, 80);
 }
 
 
