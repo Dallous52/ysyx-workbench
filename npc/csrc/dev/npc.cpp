@@ -370,9 +370,11 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
 extern "C" void mrom_read(int32_t addr, int32_t *data) 
 {
-	if (likely(in_pmem(addr)))
+	paddr_t address = addr & ~0x3u;
+
+	if (likely(in_pmem(address)))
   {
-    *data = paddr_read(addr, 4);
+    *data = paddr_read(address, 4);
     return;
   }
 
