@@ -72,6 +72,7 @@ __EXPORT void difftest_exec(uint64_t n) {
 
 
 __EXPORT void difftest_nop(void *dut, word_t dnpc) {
+  printf("nume:pc %08x\n", cpu.pc);
   uint32_t* regs = (uint32_t*)dut;
   int i = 0;
   for (i = 0; i < 16; i++)
