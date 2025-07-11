@@ -1,7 +1,9 @@
 #include "device.h"
 #include "tpdef.h"
 
+#include <cstdint>
 #include <cstdio>
+#include <sys/types.h>
 
 typedef  void (*callback)(word_t, void*, bool);
 
@@ -63,11 +65,20 @@ bool device_call(uint32_t addr, void *data, bool isw)
 }
 
 
-bool device_visit(paddr_t addr)
+bool device_visit(paddr_t addr, uint32_t inst)
 {
+    static const uint8_t load = 0b0000011;
+    static const uint8_t store = 0b0100011;
+
+    uint8_t opt = BITS(inst, 6, 0);
+
+    if (opt != load && opt != store)
+        return false;
+
     if (addr >= MROM_START && addr <= MROM_END) 
         return false;
-    else if (addr >= SRAM_START && addr <= SRAM_END)
+    
+    if (addr >= SRAM_START && addr <= SRAM_END)
         return false;
   
     return true;

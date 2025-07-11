@@ -2,6 +2,7 @@
 #define NPC_DEVICE
 
 #include "tpdef.h"
+#include <cstdint>
 
 #define DEV_SERIAL (0xa00003f8)
 #define DEV_TIMER  (0xa0000048)
@@ -16,6 +17,6 @@ void device_init();
 
 bool device_call(uint32_t addr, void* data, bool isw);
 
-bool device_visit(paddr_t addr);
+bool device_visit(paddr_t addr, uint32_t inst);
 
 #endif
