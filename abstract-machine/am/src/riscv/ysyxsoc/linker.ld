@@ -18,12 +18,13 @@ SECTIONS {
   } > mrom
 
   /* 可读写全局变量 */
-  _load_start = .;
-  .data : {
-  _data_start = .;
+  .data : AT(ADDR(.data)) {
+    _data_start = .;
     *(.data)
-  _data_end = .;
-  } > sram AT> mrom
+    _data_end = .;
+  } > sram
+
+  _load_start = LOADADDR(.data);
 
   .bss : {
     *(.bss*)
