@@ -138,7 +138,7 @@ module ysyx_25040111_lsu (
     // memory read
     assign rready = 1;
     always @(posedge clk) begin
-        $display("rmem = %h", rmem);
+        // $display("rmem = %h", rmem);
         // $display("is_clint:%b  arvalid:%b  arready:%b", is_clint, arvalid, io_master_arready);
         // $display("rvalid:%b  rready:%b  rresp:%h", io_master_rvalid, rready, rresp);
         
