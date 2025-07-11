@@ -16,7 +16,7 @@
 
 #define EN_TRACE
 #define ITRACE
-// #define FTRACE
+#define FTRACE
 // #define MTRACE
 // #define DIFFTEST
 
