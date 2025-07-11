@@ -37,7 +37,7 @@ void halt(int code)
 
 void bootloader()
 {
-  if ((uintptr_t)&_load_start >= 0X20000400) halt(1);
+  if ((uintptr_t)&_load_start >= 0X20000100) halt(1);
   memcpy((void*)DEV_SRAM, &_load_start, &_load_end - &_load_start);
 }
 
