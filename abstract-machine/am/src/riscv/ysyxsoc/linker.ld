@@ -11,7 +11,7 @@ SECTIONS {
   .text : {
     *(entry) /* 把名为 entry 的自定义段放最前面 */
     *(.text*)
-  } > mrom AT> mrom : text
+  } > mrom AT> mrom :text
 
   /* 只读全局变量 */
   .rodata : {
@@ -19,17 +19,18 @@ SECTIONS {
   } > mrom : text
 
   /* 可读写全局变量 */
-  _load_start = .;
-  .data : {
+  .data : AT(ADDR(.rodata) + SIZEOF(.rodata)) {
+    _data_load_start = LOADADDR(.data);
+    _data_start = .;
     *(.data)
-  } > sram AT> mrom : data
-  _load_end = .;
+    _data_end = .;
+  } > sram :data
 
   .bss : {
-    *(.bss*)
-    *(.sbss*)
-    *(.scommon)
-  } > sram : data
+    _bss_start = .;
+    *(.bss*) *(.sbss*) *(.scommon)
+    _bss_end = .;
+  } > sram :data
 
   _heap_start = 0xF000800;
   _heap_end = 0xF001400;
