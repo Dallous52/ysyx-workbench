@@ -141,14 +141,14 @@ int cpu_exec(uint64_t steps)
 
     if (CPU_PC != currpc) 
     {
-#if defined(EN_TRACE) && defined(FTRACE)
-      ftrace(currpc, CPU_PC);
-#endif // FTRACE
-
 #if defined(EN_TRACE) && defined(ITRACE)
       print_exe_info(currpc, instruct, logbuf, 128);
       printf("%s\n", logbuf);
 #endif // ITRACE
+
+#if defined(EN_TRACE) && defined(FTRACE)
+      ftrace(currpc, CPU_PC);
+#endif // FTRACE
 
       check_wp();
 
