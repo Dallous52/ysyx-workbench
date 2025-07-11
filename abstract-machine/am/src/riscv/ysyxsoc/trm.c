@@ -6,9 +6,13 @@
 extern char _heap_start;
 extern char _heap_end;
 
-extern char _load_start;
-extern char _data_end;
-extern char _data_start;
+// 这些符号由链接脚本提供
+extern uint8_t _data_load_start[];
+extern uint8_t _data_start[];
+extern uint8_t _data_end[];
+
+extern uint8_t _bss_start[];
+extern uint8_t _bss_end[];
 
 int main(const char *args);
 
@@ -38,7 +42,15 @@ void halt(int code)
 
 void bootloader()
 {
-  memcpy((void*)DEV_SRAM, &_load_start, &_data_end - &_data_start);
+  // 拷贝 .data 段内容，从 ROM 到 RAM
+  size_t data_size = _data_end - _data_start;
+  memcpy(_data_start, _data_load_start, data_size);
+
+  // 清零 .bss 段
+  size_t bss_size = _bss_end - _bss_start;
+  for (size_t i = 0; i < bss_size; i++) {
+      _bss_start[i] = 0;
+  }
 }
 
 

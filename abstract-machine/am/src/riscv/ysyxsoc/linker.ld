@@ -19,17 +19,17 @@ SECTIONS {
   } > mrom :text
 
   /* 可读写全局变量 */
-  _load_start = .;
-  .data : {
+  .data : AT(ADDR(.rodata) + SIZEOF(.rodata)) {
+    _data_load_start = LOADADDR(.data);
     _data_start = .;
     *(.data)
     _data_end = .;
-  } > sram AT> mrom :data
+  } > sram :data
 
   .bss : {
-    *(.bss*)
-    *(.sbss*)
-    *(.scommon)
+    _bss_start = .;
+    *(.bss*) *(.sbss*) *(.scommon)
+    _bss_end = .;
   } > sram :data
 
   _heap_start = 0xF000800;
