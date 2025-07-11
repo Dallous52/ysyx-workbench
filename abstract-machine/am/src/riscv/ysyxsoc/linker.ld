@@ -16,7 +16,7 @@ SECTIONS {
   /* 只读全局变量 */
   .rodata : {
     *(.rodata*)
-  } > mrom
+  } > mrom : text
 
   /* 可读写全局变量 */
   _load_start = .;
@@ -29,7 +29,7 @@ SECTIONS {
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > sram
+  } > sram : data
 
   _heap_start = 0xF000800;
   _heap_end = 0xF001400;
