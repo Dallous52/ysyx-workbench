@@ -157,7 +157,7 @@ module ysyx_25040111_lsu (
             valid_t <= 1;
             rmem <= is_clint ? rmem_clint : io_master_rdata;
             // rready <= 0;
-            $display("raddr:%h  rdata:%h  rmem:%h  mrdata:%h", addr, rdata, rmem, io_master_rdata);
+            $display("raddr:%h  rdata:%h", addr, io_master_rdata);
         end
     end
 
