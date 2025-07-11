@@ -9,9 +9,10 @@
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
-#define VCD_PATH "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
-#define REG (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_reg__DOT__rf)
-#define CPU_PC (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
+#define VCD_PATH  "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
+#define REG       (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_reg__DOT__rf)
+#define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
+#define ADDR     (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
 
 #define EN_TRACE
 #define ITRACE
@@ -155,7 +156,7 @@ int cpu_exec(uint64_t steps)
 
 #ifdef DIFFTEST
       // printf("currpc : %08x\n", currpc);
-      if (device_visit())
+      if (device_visit(ADDR))
         difftest_nop(currpc + 4);
       else if (!difftest_step(currpc))
         npc_stat = NPC_STOP;

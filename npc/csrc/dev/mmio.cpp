@@ -63,9 +63,18 @@ bool device_call(uint32_t addr, void *data, bool isw)
 }
 
 
-bool device_visit()
+#define MROM_START  0x20000000
+#define MROM_END    0x20000fff
+
+#define SRAM_START  0xf000000
+#define SRAM_END    0xf001fff
+
+bool device_visit(paddr_t addr)
 {
-    bool ret = visit;
-    visit = false;
-    return ret;
+    if (addr >= MROM_START && addr <= MROM_END) 
+        return false;
+    else if (addr >= SRAM_START && addr <= SRAM_END)
+        return false;
+  
+    return true;
 }
