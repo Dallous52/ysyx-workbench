@@ -41,7 +41,7 @@ void bootloader()
 {
   // if ((uintptr_t)&_load_start == 0X200001dc) halt(1);
   size_t wsize = &_data_end - &_data_start;
-  if (wsize == 50) halt(1);
+  if (wsize == 0) halt(1);
   memcpy((void*)DEV_SRAM, &_load_start, wsize);
 }
 
