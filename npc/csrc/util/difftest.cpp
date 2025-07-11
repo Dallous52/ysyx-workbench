@@ -76,7 +76,7 @@ bool difftest_step(paddr_t pc)
             ret = false;
         }
     }
-
+    
     return ret;
 }
 
