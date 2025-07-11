@@ -43,7 +43,7 @@ void bootloader()
 {
   // 拷贝 .data 段内容，从 ROM 到 RAM
   size_t data_size = _data_end - _data_start;
-  memcpy(_data_start, _data_load_start, data_size);
+  memcpy((void*)DEV_SRAM, _data_load_start, data_size);
 
   // 清零 .bss 段
   size_t bss_size = _bss_end - _bss_start;
