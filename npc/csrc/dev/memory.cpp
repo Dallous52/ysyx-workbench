@@ -147,7 +147,9 @@ bool pmem_init(const char* fbin)
   
   imgsize = sizeof(img);
   if (fbin == NULL || !load_binary(fbin))
-    memcpy(pmem, img, sizeof(img));
+  {
+    printf(ANSI_FMT("load img file failed.\n", ANSI_FG_RED));
+  }
 
   return true;
 }
