@@ -1,33 +1,48 @@
 #include <am.h>
+#include <klib.h>
 #include <klib-macros.h>
 #include "../riscv.h"
 
 extern char _heap_start;
+extern char _heap_end;
+
+extern char _load_start;
+extern char _load_end;
+
 int main(const char *args);
 
-#define DEV_SERIAL (0x10000000)
+#define DEV_SERIAL  (0x10000000)
+#define DEV_SRAM    (0x0f000000)
 
-extern char _pmem_start;
-#define PMEM_SIZE (128 * 1024 * 1024)
-#define PMEM_END  ((uintptr_t)&_pmem_start + PMEM_SIZE)
-
-Area heap = RANGE(&_heap_start, PMEM_END);
+Area heap = RANGE(&_heap_start, &_heap_end);
 static const char mainargs[MAINARGS_MAX_LEN] = MAINARGS_PLACEHOLDER; // defined in CFLAGS
+
 
 void putch(char ch) {
   outb(DEV_SERIAL, ch);
 }
 
+
 char getch(){
   return (char)inb(DEV_SERIAL);
 }
 
-void halt(int code) {
+
+void halt(int code) 
+{
   asm volatile("mv a0, %0; ebreak" : :"r"(code));
   while (1);
 }
 
+
+void bootloader()
+{
+  memcpy((void*)DEV_SRAM, &_heap_start, &_heap_end - &_heap_start);
+}
+
+
 void _trm_init() {
+  bootloader();
   int ret = main(mainargs);
   halt(ret);
 }
