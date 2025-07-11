@@ -138,7 +138,7 @@ module ysyx_25040111_lsu (
     // memory read
     assign rready = 1;
     always @(posedge clk) begin
-        $display("rmem = %h", rmem);
+        // $display("rmem = %h", rmem);
         // $display("is_clint:%b  arvalid:%b  arready:%b", is_clint, arvalid, io_master_arready);
         // $display("rvalid:%b  rready:%b  rresp:%h", io_master_rvalid, rready, rresp);
         
@@ -157,6 +157,7 @@ module ysyx_25040111_lsu (
             valid_t <= 1;
             rmem <= is_clint ? rmem_clint : io_master_rdata;
             // rready <= 0;
+            $display("raddr:%h  rdata:%h", addr, io_master_rdata);
         end
     end
 
@@ -174,6 +175,7 @@ module ysyx_25040111_lsu (
 
         // 写入参数
         if (wvalid & wready) begin
+            $display("waddr:%h  wdata:%h", addr, io_master_wdata);
             wvalid <= 0;
             wlast <= 1;
         end
