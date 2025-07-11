@@ -18,7 +18,7 @@
 // #define ITRACE
 // #define FTRACE
 // #define MTRACE
-// #define DIFFTEST
+#define DIFFTEST
 
 static VysyxSoCFull top;
 static VerilatedVcdC *vtrace = nullptr;
@@ -65,9 +65,6 @@ void npc_init(bool vcd, int argc, char** argv)
 	Verilated::commandArgs(argc, argv);
 	npc_stat = NPC_RUN;
 }
-
-
-
 
 
 static void ftrace(paddr_t pc, paddr_t call) 
