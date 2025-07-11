@@ -37,6 +37,7 @@ void halt(int code)
 
 void bootloader()
 {
+  printf("%08x %08x", &_load_start, &_load_end);
   memcpy((void*)DEV_SRAM, &_load_start, &_load_end - &_load_start);
 }
 
