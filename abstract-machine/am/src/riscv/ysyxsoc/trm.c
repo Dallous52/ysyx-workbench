@@ -1,15 +1,13 @@
 #include <am.h>
 #include <klib.h>
 #include <klib-macros.h>
-#include <stddef.h>
 #include "../riscv.h"
 
 extern char _heap_start;
 extern char _heap_end;
 
 extern char _load_start;
-extern char _data_end;
-extern char _data_start;
+extern char _load_end;
 
 int main(const char *args);
 
@@ -40,9 +38,8 @@ void halt(int code)
 void bootloader()
 {
   // if ((uintptr_t)&_load_start == 0X200001dc) halt(1);
-  size_t wsize = &_data_end - &_data_start;
-  if (wsize == 0) halt(1);
-  memcpy((void*)DEV_SRAM, &_load_start, wsize);
+  // if ((uintptr_t)&_load_end == 0X200001dc) halt(1);
+  memcpy((void*)DEV_SRAM, &_load_start, 50);
 }
 
 

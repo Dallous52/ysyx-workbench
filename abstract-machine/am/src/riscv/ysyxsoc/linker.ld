@@ -21,10 +21,9 @@ SECTIONS {
   /* 可读写全局变量 */
   _load_start = .;
   .data : {
-    _data_start = .;
     *(.data)
-    _data_end = .;
   } > sram AT> mrom :data
+  _load_end = .;
 
   .bss : {
     *(.bss*)
