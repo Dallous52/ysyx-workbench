@@ -153,10 +153,10 @@ int cpu_exec(uint64_t steps)
 
       check_wp();
 
-// #ifdef EN_TRACE
-//       if (ADDR >= SRAM_START && ADDR <= SRAM_END)
-//         printf(ANSI_FMT("addr: 0x%08x\n", ANSI_FG_MAGENTA), ADDR);
-// #endif
+#ifdef EN_TRACE
+      if (ADDR >= SRAM_START && ADDR <= SRAM_END)
+        printf(ANSI_FMT("addr: 0x%08x\n", ANSI_FG_MAGENTA), ADDR);
+#endif
 
 #ifdef DIFFTEST
       // printf("currpc : %08x\n", currpc);
