@@ -15,9 +15,9 @@
 #define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
 #define ADDR     (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
 
-// #define EN_TRACE
-// #define ITRACE
-// #define FTRACE
+#define EN_TRACE
+#define ITRACE
+#define FTRACE
 // #define MTRACE
 #define DIFFTEST
 
@@ -153,7 +153,7 @@ int cpu_exec(uint64_t steps)
 
       check_wp();
 
-#ifdef EN_TRACE
+#ifdef EN_TRAC
       if (ADDR >= SRAM_START && ADDR <= SRAM_END)
         printf(ANSI_FMT("addr: 0x%08x\n", ANSI_FG_MAGENTA), ADDR);
 #endif
