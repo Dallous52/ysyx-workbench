@@ -45,13 +45,13 @@ void bootloader()
 
 void uart_init()
 {
-  // uint8_t* uart_lcr = (uint8_t*)(DEV_SERIAL + 3);
-  // *uart_lcr = 0b10000011;
+  uint8_t* uart_lcr = (uint8_t*)(DEV_SERIAL + 3);
+  *uart_lcr = 0b10000011;
 
-  // uint16_t* uart_divisor = (uint16_t*)DEV_SERIAL;
-  // *uart_divisor = 0;
+  uint16_t* uart_divisor = (uint16_t*)DEV_SERIAL;
+  *uart_divisor = 326;
 
-  // *uart_lcr = 0b00000011;
+  *uart_lcr = 0b00000011;
 }
 
 
