@@ -22,7 +22,7 @@ static const char mainargs[MAINARGS_MAX_LEN] = MAINARGS_PLACEHOLDER; // defined 
 
 void putch(char ch) {
   volatile uint8_t* uart_lsr = (volatile uint8_t*)(DEV_SERIAL + 5);
-  while (!(*uart_lsr & 0x20));
+  while (!(*uart_lsr & 0x00));
   outb(DEV_SERIAL, ch);
 }
 
