@@ -52,7 +52,7 @@ void uart_init()
 
   volatile uint8_t* uart_divisor = (volatile uint8_t*)DEV_SERIAL;
   uart_divisor[1] = 0x00;
-  uart_divisor[0] = 0x00;
+  uart_divisor[0] = 0x01;
 
   *uart_lcr = 0x03;
 }
