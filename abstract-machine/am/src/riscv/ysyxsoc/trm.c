@@ -21,7 +21,7 @@ static const char mainargs[MAINARGS_MAX_LEN] = MAINARGS_PLACEHOLDER; // defined 
 
 
 void putch(char ch) {
-  uint8_t* uart_lsr = (uint8_t*)(DEV_SERIAL + 5);
+  volatile uint8_t* uart_lsr = (volatile uint8_t*)(DEV_SERIAL + 5);
   while (*uart_lsr & 0x02);
   outb(DEV_SERIAL, ch);
 }
@@ -47,12 +47,12 @@ void bootloader()
 
 void uart_init()
 {
-  volatile uint8_t* uart_lcr = (uint8_t*)(DEV_SERIAL + 3);
+  volatile uint8_t* uart_lcr = (volatile uint8_t*)(DEV_SERIAL + 3);
   *uart_lcr = 0x83;
 
-  volatile uint8_t* uart_divisor = (uint8_t*)DEV_SERIAL;
-  uart_divisor[1] = 0x00;
-  uart_divisor[0] = 0x53;
+  volatile uint8_t* uart_divisor = (volatile uint8_t*)DEV_SERIAL;
+  uart_divisor[1] = 0x01;
+  uart_divisor[0] = 0x46;
 
   *uart_lcr = 0x03;
 }
