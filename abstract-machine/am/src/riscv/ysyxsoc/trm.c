@@ -65,7 +65,7 @@ void spi_init()
   spi_ctrl[3] = 0x00;
   spi_ctrl[2] = 0x00;
   spi_ctrl[1] = 0x28;
-  spi_ctrl[0] = 0x10;
+  spi_ctrl[0] = 0x08;
   
   volatile uint8_t* spi_divider = (volatile uint8_t*)(DEV_SPI + 0x14);
   spi_divider[3] = 0;
