@@ -21,6 +21,8 @@ static const char mainargs[MAINARGS_MAX_LEN] = MAINARGS_PLACEHOLDER; // defined 
 
 
 void putch(char ch) {
+  uint8_t* uart_lcr = (uint8_t*)(DEV_SERIAL + 5);
+  while (*uart_lcr & 0x02);
   outb(DEV_SERIAL, ch);
 }
 
