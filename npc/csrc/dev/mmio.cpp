@@ -72,6 +72,8 @@ bool device_visit(paddr_t addr, uint32_t inst)
 
     uint8_t opt = BITS(inst, 6, 0);
 
+    printf(ANSI_FMT("visit inst 0x%08x\n", ANSI_FG_GREEN), inst);
+
     if (opt != load && opt != store)
         return false;
 
