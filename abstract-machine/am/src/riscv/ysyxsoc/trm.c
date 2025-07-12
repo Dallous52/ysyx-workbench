@@ -49,8 +49,8 @@ void uart_init()
   *uart_lcr = 0x83;
 
   uint8_t* uart_divisor = (uint8_t*)DEV_SERIAL;
-  uart_divisor[0] = 0x01;
-  uart_divisor[1] = 0x46;
+  uart_divisor[1] = 0x01;
+  uart_divisor[0] = 0x46;
 
   *uart_lcr = 0x03;
 }
