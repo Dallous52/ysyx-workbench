@@ -127,7 +127,7 @@ int cpu_exec(uint64_t steps)
   while (steps--) 
   {
     currpc = CPU_PC;
-#ifdef EN_TRACE
+#if defined(EN_TRACE) || defined(DIFFTEST)
     instruct = paddr_read(CPU_PC, 4);
 #endif
 
