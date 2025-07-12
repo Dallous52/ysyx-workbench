@@ -70,12 +70,12 @@ bool device_visit(paddr_t addr, uint32_t inst)
     static const uint8_t load = 0b0000011;
     static const uint8_t store = 0b0100011;
 
-    printf(ANSI_FMT("visit memory 0x%08x\n", ANSI_FG_RED), addr);
-
     uint8_t opt = BITS(inst, 6, 0);
 
     if (opt != load && opt != store)
         return false;
+
+    printf(ANSI_FMT("visit memory 0x%08x\n", ANSI_FG_RED), addr);
 
     if (addr >= MROM_START && addr <= MROM_END) 
         return false;
