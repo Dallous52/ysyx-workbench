@@ -1,6 +1,7 @@
 #include <am.h>
 #include <klib.h>
 #include <klib-macros.h>
+#include <stdint.h>
 #include "../riscv.h"
 
 extern char _heap_start;
@@ -44,11 +45,18 @@ void bootloader()
 
 void uart_init()
 {
-  
+  uint8_t* uart_lcr = (uint8_t*)(DEV_SERIAL + 3);
+  *uart_lcr = 0b10000011;
+
+  uint16_t* uart_divisor = (uint16_t*)DEV_SERIAL;
+  *uart_divisor = 326;
+
+  *uart_lcr = 0b00000011;
 }
 
 
-void _trm_init() {
+void _trm_init() 
+{
   bootloader();
   uart_init();
   int ret = main(mainargs);
