@@ -49,7 +49,7 @@ void uart_init()
   *uart_lcr = 0b10000011;
 
   uint16_t* uart_divisor = (uint16_t*)DEV_SERIAL;
-  *uart_divisor = 1200;
+  *uart_divisor = 326;
 
   *uart_lcr = 0b00000011;
 }
