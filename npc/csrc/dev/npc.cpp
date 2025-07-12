@@ -367,7 +367,14 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 }
 
 
-extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
+extern "C" void flash_read(int32_t addr, int32_t *data) 
+{ 
+  static int i = 0;
+  printf(ANSI_FMT("flash addr:%08x\n", ANSI_FG_GREEN), addr);
+  *data = i++;
+}
+
+
 extern "C" void mrom_read(int32_t addr, int32_t *data) 
 {
 	paddr_t address = addr & ~0x3u;
