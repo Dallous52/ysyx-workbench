@@ -7,7 +7,7 @@ void flash_spi_init()
   device_ctrl spi_ctrl = (device_ctrl)(DEV_SPI + 0x10);
   spi_ctrl[3] = 0x00;
   spi_ctrl[2] = 0x00;
-  spi_ctrl[1] = 0x20;
+  spi_ctrl[1] = 0x28;
   spi_ctrl[0] = 0x40;
   
   device_ctrl spi_divider = (device_ctrl)(DEV_SPI + 0x14);
@@ -34,9 +34,9 @@ uint32_t flash_read(uint32_t addr)
     spi_tx[3] = 0x03;
 
     device_ctrl spi_ctrl = (device_ctrl)(DEV_SPI + 0x10);
-    spi_ctrl[1] = 0x21;
+    spi_ctrl[1] = 0x29;
 
-    while (spi_ctrl[1] == 0x21);
+    while (spi_ctrl[1] == 0x29);
 
     device_ctrl spi_rx = (device_ctrl)(DEV_SPI + 4);
     uint32_t ret = 0;
