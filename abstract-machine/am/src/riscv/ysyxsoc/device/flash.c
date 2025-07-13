@@ -20,7 +20,7 @@ void flash_spi_init()
   spi_ss[3] = 0;
   spi_ss[2] = 0;
   spi_ss[1] = 0;
-  spi_ss[0] = 0;
+  spi_ss[0] = 1;
 }
 
 
