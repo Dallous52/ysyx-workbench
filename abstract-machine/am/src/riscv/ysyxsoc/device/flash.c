@@ -28,9 +28,9 @@ uint32_t flash_read(uint32_t addr)
 {
     uint8_t* addr_t = (uint8_t*)&addr;
     device_ctrl spi_tx = (device_ctrl)(DEV_SPI);
-    spi_tx[0] = 0xc0;
-    spi_tx[1] = 0xc0;
-    spi_tx[2] = 0xc0;
+    spi_tx[0] = 0x00;
+    spi_tx[1] = 0x00;
+    spi_tx[2] = 0x00;
     spi_tx[3] = 0xc0;
 
     device_ctrl spi_ctrl = (device_ctrl)(DEV_SPI + 0x10);
