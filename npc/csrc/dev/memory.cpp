@@ -107,7 +107,7 @@ static bool load_binary(const char* fbin, uint8_t* mem)
   }
 
   file.close();
-  imgsize = fsize;
+  if (mem == pmem) imgsize = fsize;
 
   return true;
 }
