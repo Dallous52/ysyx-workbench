@@ -369,9 +369,15 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
 extern "C" void flash_read(int32_t addr, int32_t *data) 
 {
-  static int i = 0x6699aaee;
-  printf(ANSI_FMT("flash addr:%08x, i:%d\n", ANSI_FG_GREEN), addr, i);
-  *data = i;
+	paddr_t address = (addr + 0x20000000) & ~0x3u;
+
+	if (likely(in_pmem(address)))
+  {
+    *data = paddr_read(address, 4);
+    return;
+  }
+
+	finalize(2);
 }
 
 
