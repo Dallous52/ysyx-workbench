@@ -15,9 +15,9 @@
 #define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
 #define ADDR     (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
 
-// #define EN_TRACE
-// #define ITRACE
-// #define FTRACE
+#define EN_TRACE
+#define ITRACE
+#define FTRACE
 // #define MTRACE
 // #define DIFFTEST
 
