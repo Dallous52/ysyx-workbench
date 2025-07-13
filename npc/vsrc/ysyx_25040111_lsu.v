@@ -72,7 +72,6 @@ module ysyx_25040111_lsu (
     wire bvalid_clint;
     wire [1:0] bresp_clint;
     reg [31:0] rmem_clint;
-    // 0000 1101 0011 1110
 
     wire [3:0] wmask;
     ysyx_25040111_MuxKey #(4, 2, 4) c_wmask(wmask, mask, {
