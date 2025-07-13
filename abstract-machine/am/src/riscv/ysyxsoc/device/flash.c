@@ -16,11 +16,11 @@ void flash_spi_init()
   spi_divider[1] = 0;
   spi_divider[0] = 0x01;
 
-  // device_ctrl spi_ss = (device_ctrl)(DEV_SPI + 0x18);
-  // spi_ss[3] = 0;
-  // spi_ss[2] = 0;
-  // spi_ss[1] = 0;
-  // spi_ss[0] = 1;
+  device_ctrl spi_ss = (device_ctrl)(DEV_SPI + 0x18);
+  spi_ss[3] = 0;
+  spi_ss[2] = 0;
+  spi_ss[1] = 0;
+  spi_ss[0] = 1;
 }
 
 
