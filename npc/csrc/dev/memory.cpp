@@ -11,6 +11,7 @@
 
 // virtual device
 static uint8_t pmem[MSIZE] __attribute((aligned(4096))) = {};
+static uint8_t pflash[512]  __attribute((aligned(4096))) = {};
 
 // img size
 static size_t imgsize = 0;
@@ -77,7 +78,7 @@ static void out_of_bound(paddr_t addr)
 
 
 // load binary file to execute
-static bool load_binary(const char* fbin)
+static bool load_binary(const char* fbin, uint8_t* mem)
 {
   printf("[execute file] %s\n", fbin);
 
@@ -99,7 +100,7 @@ static bool load_binary(const char* fbin)
       return false;
   }
 
-  if (!file.read((char*)pmem, fsize))
+  if (!file.read((char*)mem, fsize))
   {
     printf("read %s failed\n", fbin);
     return false;
@@ -146,10 +147,39 @@ bool pmem_init(const char* fbin)
   };
   
   imgsize = sizeof(img);
-  if (fbin == NULL || !load_binary(fbin))
+  if (fbin == NULL || !load_binary(fbin, pmem))
   {
     printf(ANSI_FMT("load img file failed.\n", ANSI_FG_RED));
   }
 
+  load_binary("/home/dallous/Documents/ysyx-workbench/am-kernels/kernels/hello/build/hello-riscv32e-ysyxsoc.bin", pflash);
+
   return true;
+}
+
+
+extern "C" void flash_read(int32_t addr, int32_t *data) 
+{
+  uint32_t address = addr & ~0x3u;
+	if (addr < 512)
+  {
+    memcpy(data, pflash + addr, 4);
+    return;
+  }
+
+	finalize(2);
+}
+
+
+extern "C" void mrom_read(int32_t addr, int32_t *data) 
+{
+	paddr_t address = addr & ~0x3u;
+
+	if (likely(in_pmem(address)))
+  {
+    *data = paddr_read(address, 4);
+    return;
+  }
+
+	finalize(2);
 }
