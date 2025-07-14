@@ -66,7 +66,7 @@ __EXPORT void difftest_regcpy(void *dut, bool direction)
 }
 
 __EXPORT void difftest_exec(uint64_t n) {
-  printf("nume exec:pc %08x\n", cpu.pc);
+  // printf("nume exec:pc %08x\n", cpu.pc);
   cpu_exec(n);
 }
 
@@ -92,5 +92,5 @@ __EXPORT void difftest_init(int port) {
   init_mem();
   /* Perform ISA dependent initialization. */
   init_isa();
-  cpu.pc = 0x20000000;
+  cpu.pc = 0x30000000;
 }
