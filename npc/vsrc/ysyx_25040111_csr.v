@@ -56,7 +56,7 @@ module ysyx_25040111_csr(
     // MEPC	    0x341
     // MCAUSE	0x342
     // 读取
-    ysyx_25040111_MuxKeyWithDefault #(4, 12, 32) imm_c (rdata, raddr_m, 32'b0, {
+    ysyx_25040111_MuxKeyWithDefault #(6, 12, 32) imm_c (rdata, raddr_m, 32'b0, {
         12'h300, csr[0],
         12'h305, csr[1],
         12'h341, csr[2],
