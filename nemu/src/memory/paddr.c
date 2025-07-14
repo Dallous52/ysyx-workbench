@@ -78,6 +78,7 @@ void init_mem()
 
 static paddr_t npc_addr_map(paddr_t addr)
 {
+  printf("map address: %08x\n", addr);
   if (addr >= FLASH_START && addr <= FLASH_END)
     return addr + 0x51000000;
   else if (addr >= MROM_START && addr <= MROM_END) 
