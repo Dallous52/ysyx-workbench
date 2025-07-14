@@ -1,6 +1,10 @@
 AM_SRCS :=	riscv/ysyxsoc/start.S \
+			riscv/ysyxsoc/trap.S \
 			riscv/ysyxsoc/trm.c \
 			riscv/ysyxsoc/ioe.c \
+			riscv/ysyxsoc/vme.c \
+			riscv/ysyxsoc/mpe.c \
+			riscv/ysyxsoc/cte.c \
 			riscv/ysyxsoc/device/uart.c \
 			riscv/ysyxsoc/device/flash.c \
 			riscv/ysyxsoc/device/keyboard.c \
