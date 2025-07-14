@@ -85,7 +85,7 @@ module ysyx_25040111(
     wire [`OPT_HIGH:0] opt;
     wire [31:0] inst;
 
-    reg inst_ok, args_ok, next_ok;
+    wire inst_ok, args_ok, next_ok;
 
     wire if_flag;
     wire if_start;
