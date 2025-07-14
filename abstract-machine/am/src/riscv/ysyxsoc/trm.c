@@ -48,7 +48,7 @@ void devinfo_print()
     unsigned int value;
     asm volatile ("csrr %0, mvendorid" : "=r"(value));
     char* ysyx = (char*)&value;
-    putch(ysyx[0]); putch(ysyx[1]); putch(ysyx[2]); putch(ysyx[3]);
+    putch(ysyx[3]); putch(ysyx[2]); putch(ysyx[1]); putch(ysyx[0]);
     putch('_');
     asm volatile ("csrr %0, marchid" : "=r"(value));
     char id[9] = {}; 
