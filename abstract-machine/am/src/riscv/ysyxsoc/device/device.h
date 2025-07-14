@@ -6,8 +6,6 @@
 #define DEV_SPI     (0x10001000)
 #define DEV_FLASH   (0x30000000)
 
-void device_init();
-
 typedef volatile unsigned char* device_ctrl;
 
 #endif // YSYX_SOC_DEVICE

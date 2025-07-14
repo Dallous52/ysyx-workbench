@@ -1,8 +1,10 @@
 AM_SRCS :=	riscv/ysyxsoc/start.S \
 			riscv/ysyxsoc/trm.c \
-           	riscv/ysyxsoc/device/device.c \
+			riscv/ysyxsoc/ioe.c \
 			riscv/ysyxsoc/device/uart.c \
-			riscv/ysyxsoc/device/flash.c
+			riscv/ysyxsoc/device/flash.c \
+			riscv/ysyxsoc/device/keyboard.c \
+			riscv/ysyxsoc/device/timer.c
 
 CFLAGS    += -fdata-sections -ffunction-sections
 LDSCRIPTS += $(AM_HOME)/am/src/riscv/ysyxsoc/linker.ld

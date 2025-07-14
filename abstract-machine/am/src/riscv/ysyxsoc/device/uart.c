@@ -1,6 +1,6 @@
 #include "device.h"
 
-void uart_init()
+void __am_uart_init()
 {
   device_ctrl uart_lcr = (device_ctrl)(DEV_SERIAL + 3);
   *uart_lcr = 0x83;
