@@ -165,7 +165,7 @@ extern "C" void flash_read(int32_t addr, int32_t *data)
   uint32_t address = addr & ~0x3u;
 	if (addr < 512)
   {
-    memcpy(data, pflash + addr, 4);
+    memcpy(data, pmem + addr, 4);
     return;
   }
 
