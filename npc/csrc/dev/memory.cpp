@@ -80,7 +80,7 @@ static void out_of_bound(paddr_t addr)
 // load binary file to execute
 static bool load_binary(const char* fbin, uint8_t* mem)
 {
-  printf(ANSI_FMT("[execute file] %s\n", ANSI_BG_BLUE), fbin);
+  printf(ANSI_FMT("[execute file] %s\n", ANSI_FG_BLUE), fbin);
 
   std::ifstream file(fbin, std::ios::binary); 
   if (!file.is_open()) 
