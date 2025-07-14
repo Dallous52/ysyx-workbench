@@ -130,6 +130,7 @@ module ysyx_25040111(
     wire [31:0] csrw, csrd;
     ysyx_25040111_csr u_csr(
         .clk   	(clock     ),
+        .reset  (reset),
         .wen   	(opt[10] & opt[15] & args_ok),
         .ren   	(opt[11] & opt[15]),
         .waddr 	(csr[0]  ),

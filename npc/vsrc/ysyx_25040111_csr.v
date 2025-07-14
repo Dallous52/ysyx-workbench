@@ -4,6 +4,7 @@ module ysyx_25040111_csr(
     input clk,
     input wen,
     input ren,
+    input reset,
     input [11:0] waddr,
     input [31:0] wdata,
     input [11:0] raddr,
@@ -11,18 +12,19 @@ module ysyx_25040111_csr(
     output [31:0] rdata
 );
 
-    reg [31:0] csr[3:0];
+    reg [31:0] csr[5:0];
     wire [11:0] raddr_m;
-
-    initial begin
-        csr[0] = 32'h00001800;
-        csr[1] = 32'h00000000;
-        csr[2] = 32'h00000000;
-        csr[3] = 32'h00000000;
-    end
 
     // 写入
     always @(posedge clk) begin
+        if (reset) begin
+            csr[0] = 32'h00001800;
+            csr[1] = 32'h00000000;
+            csr[2] = 32'h00000000;
+            csr[3] = 32'h00000000;
+            csr[4] = 32'h79737978;  // mvendorid
+            csr[5] = 32'd25040111;  // marchid
+        end
         if (wen) begin
             // $display("mtevc %h\n", csr[1]);
             case (waddr)
@@ -58,7 +60,9 @@ module ysyx_25040111_csr(
         12'h300, csr[0],
         12'h305, csr[1],
         12'h341, csr[2],
-        12'h342, csr[3]
+        12'h342, csr[3],
+        12'hF11, csr[4],
+        12'hF12, csr[5]
     });
 
 endmodule

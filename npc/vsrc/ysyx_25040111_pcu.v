@@ -16,7 +16,6 @@ module ysyx_25040111_pcu(
     output reg valid
 );
 
-    
     wire [31:0] ina;
     wire [31:0] inb;
     wire [1:0] pc_ctl;

@@ -42,8 +42,21 @@ void bootloader()
 }
 
 
+void devinfo_print()
+{
+    unsigned int value;
+    asm volatile ("csrr %0, mvendorid" : "=r"(value));
+    char* ysyx = (char*)&value;
+    putch(ysyx[0]);
+    putch(ysyx[1]);
+    putch(ysyx[2]);
+    putch(ysyx[3]);
+}
+
+
 void _trm_init()
 {
+  devinfo_print();
   bootloader();
   __am_uart_init();
   int ret = main(mainargs);
