@@ -179,6 +179,7 @@ extern "C" void mrom_read(int32_t addr, int32_t *data)
 
 	if (likely(in_pmem(address)))
   {
+    
     *data = paddr_read(address, 4);
     return;
   }
