@@ -160,6 +160,8 @@ bool pmem_init(const char* fbin)
 
 extern "C" void flash_read(int32_t addr, int32_t *data) 
 {
+    printf(ANSI_FMT("load flash.\n", ANSI_FG_GREEN));
+
   uint32_t address = addr & ~0x3u;
 	if (addr < 512)
   {
