@@ -56,9 +56,9 @@ void devinfo_print()
 
 void _trm_init()
 {
-  devinfo_print();
   bootloader();
   __am_uart_init();
+  devinfo_print();
   int ret = main(mainargs);
   halt(ret);
 }
