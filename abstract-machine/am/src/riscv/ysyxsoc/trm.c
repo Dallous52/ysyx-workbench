@@ -51,12 +51,11 @@ void devinfo_print()
     putch(ysyx[3]); putch(ysyx[2]); putch(ysyx[1]); putch(ysyx[0]);
     putch('_');
     asm volatile ("csrr %0, marchid" : "=r"(value));
-    if (value != 25040111) halt(0);
     char id[9] = {}; 
     uint8_t i = 8;
     while (value)
     {
-       id[--i] = value % 10;
+       id[--i] = value % 10 + '0';
        value /= 10;
     }
     putstr(id); putch('\n');
