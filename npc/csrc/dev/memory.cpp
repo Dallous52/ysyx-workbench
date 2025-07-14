@@ -163,9 +163,9 @@ extern "C" void flash_read(int32_t addr, int32_t *data)
   printf(ANSI_FMT("load flash %08x.\n", ANSI_FG_GREEN), addr);
 
   uint32_t address = addr & ~0x3u;
-	if (addr < 512)
+	if (likely(in_pmem(address)))
   {
-    memcpy(data, pmem + addr, 4);
+    *data = paddr_read(address, 4);
     return;
   }
 
