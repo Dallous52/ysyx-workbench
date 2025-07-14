@@ -161,7 +161,7 @@ bool pmem_init(const char* fbin)
 extern "C" void flash_read(int32_t addr, int32_t *data) 
 {
   uint32_t address = (addr & ~0x3u) + MBASE;
-  // printf(ANSI_FMT("load flash 0x%08x.\n", ANSI_FG_GREEN), address);
+  printf(ANSI_FMT("load flash 0x%08x.\n", ANSI_FG_GREEN), address);
   if (likely(in_pmem(address)))
   {
     *data = paddr_read(address, 4);
