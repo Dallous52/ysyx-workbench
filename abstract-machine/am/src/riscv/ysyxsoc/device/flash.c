@@ -26,6 +26,8 @@ void flash_spi_init()
 
 uint32_t flash_read(uint32_t addr)
 {
+    void flash_spi_init();
+    flash_spi_init();
     uint8_t* addr_t = (uint8_t*)&addr;
     device_ctrl spi_tx = (device_ctrl)(DEV_SPI + 4);
     spi_tx[3] = 0x03;
