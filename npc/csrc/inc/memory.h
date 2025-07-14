@@ -15,7 +15,7 @@
 
 // 内存大小
 // #define MSIZE 0x8000000
-#define MSIZE 0xfff
+#define MSIZE 0xffffff
 
 // 内存起始地址
 // #define MBASE 0x80000000

@@ -48,7 +48,7 @@ void init_difftest(long img_size, int port)
     assert(ref_difftest_init);
 
     ref_difftest_init(port);
-    ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
+    // ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
     
     word_t regbuf[32] = {};
     reg_value(regbuf);
