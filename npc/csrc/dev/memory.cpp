@@ -80,7 +80,7 @@ static void out_of_bound(paddr_t addr)
 // load binary file to execute
 static bool load_binary(const char* fbin, uint8_t* mem)
 {
-  printf("[execute file] %s\n", fbin);
+  printf(ANSI_FMT("[execute file] %s\n", ANSI_BG_BLUE), fbin);
 
   std::ifstream file(fbin, std::ios::binary); 
   if (!file.is_open()) 
@@ -152,7 +152,7 @@ bool pmem_init(const char* fbin)
     printf(ANSI_FMT("load img file failed.\n", ANSI_FG_RED));
   }
   // "/home/dallous/Documents/ysyx-workbench/am-kernels/kernels/hello/build/hello-riscv32e-ysyxsoc.bin"
-  load_binary(fbin, pflash);
+  // load_binary(fbin, pflash);
 
   return true;
 }
