@@ -23,6 +23,9 @@
 #define MROM_START  0x20000000
 #define MROM_END    0x20000fff
 
+#define FLASH_START 0x30000000
+#define FLASH_END   0x30ffffff
+
 #define SRAM_START  0xf000000
 #define SRAM_END    0xf001fff
 
@@ -75,7 +78,9 @@ void init_mem()
 
 static paddr_t npc_addr_map(paddr_t addr)
 {
-  if (addr >= MROM_START && addr <= MROM_END) 
+  if (addr >= FLASH_START && addr <= FLASH_END)
+    return addr + 0x51000000;
+  else if (addr >= MROM_START && addr <= MROM_END) 
     return addr + 0x60000000;
   else if (addr >= SRAM_START && addr <= SRAM_END)
     return addr + 0x74000000;
