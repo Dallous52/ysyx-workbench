@@ -151,8 +151,8 @@ bool pmem_init(const char* fbin)
   {
     printf(ANSI_FMT("load img file failed.\n", ANSI_FG_RED));
   }
-
-  load_binary("/home/dallous/Documents/ysyx-workbench/am-kernels/kernels/hello/build/hello-riscv32e-ysyxsoc.bin", pflash);
+  // "/home/dallous/Documents/ysyx-workbench/am-kernels/kernels/hello/build/hello-riscv32e-ysyxsoc.bin"
+  load_binary(fbin, pflash);
 
   return true;
 }

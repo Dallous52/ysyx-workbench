@@ -19,7 +19,7 @@
 
 // 内存起始地址
 // #define MBASE 0x80000000
-#define MBASE 0x20000000
+#define MBASE 0x30000000
 
 // 内存初始化
 bool pmem_init(const char* fbin);

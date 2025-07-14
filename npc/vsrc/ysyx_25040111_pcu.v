@@ -38,7 +38,7 @@ module ysyx_25040111_pcu(
 
     always @(posedge clk) begin
         if (reset) begin
-            pc <= 32'h20000000;
+            pc <= 32'h30000000;
             valid <= 1;    
         end 
         else if (ready) begin
