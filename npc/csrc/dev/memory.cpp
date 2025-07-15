@@ -2,8 +2,6 @@
 #include "npc.h"
 #include "tpdef.h"
 
-#include <cstddef>
-#include <cstdint>
 #include <cstdio>
 #include <cstring>
 #include <fstream>
