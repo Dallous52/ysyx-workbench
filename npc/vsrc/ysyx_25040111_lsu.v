@@ -174,7 +174,7 @@ module ysyx_25040111_lsu (
 
         // 写入参数
         if (wvalid & wready) begin
-            // $display("waddr:%h  wdata:%h", addr, io_master_wdata);
+            if (addr >= 32'h8000_0000) $display("waddr:%h  wdata:%h", addr, io_master_wdata);
             wvalid <= 0;
             wlast <= 1;
         end
