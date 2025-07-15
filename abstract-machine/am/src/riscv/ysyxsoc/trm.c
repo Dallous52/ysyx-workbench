@@ -52,7 +52,7 @@ void devinfo_print()
     putch('_');
     asm volatile ("csrr %0, marchid" : "=r"(value));
     char id[9] = {}; 
-    uint8_t i = 7;
+    int8_t i = 7;
     for (; i >= 0; i--)
     {
        id[i] = value % 10 + '0';
