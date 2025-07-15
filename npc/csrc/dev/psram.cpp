@@ -19,7 +19,7 @@ extern "C" void psram_write(int32_t addr, int32_t data, int32_t len)
     uint32_t right = 24;
     while (len)
     {
-        printf("%08x  %08x\n", addr + len, data >> right);
+        // printf("%08x  %08x\n", addr + len, data >> right);
         psram[addr + len - 1] = data >> right;
         right -= 8;
         len--;         
