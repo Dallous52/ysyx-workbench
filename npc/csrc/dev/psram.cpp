@@ -20,8 +20,8 @@ extern "C" void psram_write(int32_t addr, int32_t data, int32_t len)
     uint32_t address = addr;
     while (len--)
     {
-        psram[address++] = data >> right;
         printf("%d\n", address);
+        psram[address++] = data >> right;
         right -= 8;         
     }
 
