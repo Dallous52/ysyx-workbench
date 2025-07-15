@@ -17,12 +17,12 @@ extern "C" void psram_read(int32_t addr, int32_t *data)
 extern "C" void psram_write(int32_t addr, int32_t data, int32_t len)
 {
     uint32_t right = 24;
-    uint32_t address = addr;
-    while (len--)
+    while (len)
     {
-        printf("%08x  %08x\n", address, data >> right);
-        psram[address++] = data >> right;
-        right -= 8;         
+        printf("%08x  %08x\n", addr + len, data >> right);
+        psram[addr + len] = data >> right;
+        right -= 8;
+        len--;         
     }
 
     printf(ANSI_FMT("[write psram] address: 0x%08x; data: 0x%08x;\n", ANSI_FG_CYAN),
