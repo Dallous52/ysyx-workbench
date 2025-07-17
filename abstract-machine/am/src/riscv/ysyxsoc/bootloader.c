@@ -13,7 +13,7 @@ extern char _code_end;
 typedef void (*voidfunc)();
 
 
-void _first_bootloader()
+__attribute__((section("entry"))) void _first_bootloader()
 {
     memcpy((void*)DEV_SRAM, &_ssbl_start, (&_ssbl_end - &_ssbl_start));
     voidfunc ssbl = (voidfunc)(DEV_SRAM);
@@ -21,7 +21,7 @@ void _first_bootloader()
 }
 
 
-void _second_bootloader()
+__attribute__((section("ssbl"))) void _second_bootloader()
 {
     memcpy((void*)DEV_PSRAM, &_code_start, (&_code_end - &_code_start));
     voidfunc start = (voidfunc)(DEV_PSRAM);
