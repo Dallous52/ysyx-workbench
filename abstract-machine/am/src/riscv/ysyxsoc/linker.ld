@@ -23,6 +23,7 @@ SECTIONS {
 
   _code_start = _ssbl_load + (_ssbl_ed - _ssbl_op);
   .text : { /* 代码段 */
+    _code_op = .;
     KEEP(*(.text._trm_init))
     KEEP(*(.text*))
   } > psram AT> flash
@@ -35,8 +36,8 @@ SECTIONS {
     KEEP(*(.data))
     KEEP(*(.data.*))
     KEEP(*(.sdata.*))
+    _code_ed = .;
   } > psram AT> flash
-  _code_end = .;
 
   .bss : {
     KEEP(*(.bss*))
