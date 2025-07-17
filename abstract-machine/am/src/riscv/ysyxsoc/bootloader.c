@@ -39,8 +39,8 @@ __attribute__((section("ssbl"))) void print_hex_(uint32_t num) {
 
 __attribute__((section("entry"))) void _first_bootloader()
 {
-    uint8_t *d = (uint8_t*)&_ssbl_load;
-    const uint8_t *s = (uint8_t*)DEV_SRAM;
+    uint8_t *d = (uint8_t*)DEV_SRAM;
+    const uint8_t *s = (uint8_t*)&_ssbl_load;
     uint32_t n = (uintptr_t)&_ssbl_ed - (uintptr_t)&_ssbl_op;
 
     while (n--) {
