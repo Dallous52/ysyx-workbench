@@ -16,7 +16,7 @@ SECTIONS {
   _ssbl_load = .;
   .ssbl : {
     _ssbl_op = .;
-    KEEP(*(ssbl._second_bootloader))
+    KEEP(*(ssbl.boot))
     KEEP(*(ssbl))
     _ssbl_ed = .;
   } > sram AT> flash
