@@ -6,7 +6,8 @@ module ysyx_25040111(
         input reset,
         input io_interrupt,
 
-        output reg [31:0] pc,
+        output [31:0] pc,
+        output [31:0] inst,
 
         input io_master_awready,
         output io_master_awvalid,
@@ -83,7 +84,6 @@ module ysyx_25040111(
     wire [11:0] csr [1:0];
     wire [31:0] imm;
     wire [`OPT_HIGH:0] opt;
-    wire [31:0] inst;
 
     wire inst_ok, args_ok, next_ok;
 
