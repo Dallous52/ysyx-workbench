@@ -14,12 +14,13 @@
 #define REG       (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_reg__DOT__rf)
 #define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
 #define ADDR     (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
+#define INST      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__inst)
 
 #define EN_TRACE
 #define ITRACE
 #define FTRACE
-// #define MTRACE
-// #define DIFFTEST
+#define MTRACE
+#define DIFFTEST
 
 static VysyxSoCFull top;
 static VerilatedVcdC *vtrace = nullptr;
@@ -39,8 +40,6 @@ static const char *regs[] = {
 
 uint32_t npc_stat = -1;
 static word_t currpc = 0;
-static word_t instruct = 0;
-
 
 // initialize npc resource
 void npc_init(bool vcd, int argc, char** argv) 
@@ -75,8 +74,8 @@ static void ftrace(paddr_t pc, paddr_t call)
   static const uint8_t jal = 0b1101111;
   static const uint8_t jalr = 0b1100111;
 
-  uint8_t opt = BITS(instruct, 6, 0);
-  uint8_t rd = BITS(instruct, 11, 7);
+  uint8_t opt = BITS(INST, 6, 0);
+  uint8_t rd = BITS(INST, 11, 7);
 
   if (opt == jal || opt == jalr) 
   {
@@ -127,10 +126,6 @@ int cpu_exec(uint64_t steps)
   while (steps--) 
   {
     currpc = CPU_PC;
-#if defined(EN_TRACE) || defined(DIFFTEST)
-    // printf(ANSI_FMT("pc : %08x\n", ANSI_FG_MAGENTA), currpc);
-    instruct = paddr_read(CPU_PC, 4);
-#endif
 
     top.clock = 0;
     top.eval();
@@ -144,7 +139,7 @@ int cpu_exec(uint64_t steps)
     if (CPU_PC != currpc) 
     {
 #if defined(EN_TRACE) && defined(ITRACE)
-      print_exe_info(currpc, instruct, logbuf, 128);
+      print_exe_info(currpc, INST, logbuf, 128);
       printf("%s\n", logbuf);
 #endif // ITRACE
 
@@ -161,7 +156,7 @@ int cpu_exec(uint64_t steps)
 
 #ifdef DIFFTEST
       // printf("currpc : %08x\n", currpc);
-      if (device_visit(ADDR, instruct))
+      if (device_visit(ADDR, INST))
         difftest_nop(currpc + 4);
       else if (!difftest_step(currpc))
         npc_stat = NPC_STOP;
