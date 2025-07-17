@@ -21,7 +21,7 @@ void putch_(char ch) {
 }
 
 
-__attribute__((section("entry"))) void print_hex_(uint32_t num) {
+__attribute__((section("ssbl"))) void print_hex_(uint32_t num) {
     // 每个 16 进制字符代表 4 位，一共 8 个 hex 字符
     for (int i = 7; i >= 0; i--) {
         uint8_t nibble = (num >> (i * 4)) & 0xF;  // 取出每 4 位
