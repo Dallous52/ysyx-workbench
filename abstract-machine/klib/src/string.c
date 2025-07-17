@@ -99,7 +99,10 @@ void *memcpy(void *out, const void *in, size_t n)
   uint8_t *d = out;
   const uint8_t *s = in;
 
-  while (n--) *d++ = *s++;
+  while (n--) {
+    printf("%08x\n", n);
+    *d++ = *s++;
+  }
 
   return out;
 }
