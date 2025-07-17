@@ -14,7 +14,7 @@ extern char _code_end;
 
 typedef void (*voidfunc)();
 
-void putch_(char ch) {
+__attribute__((section("ssbl"))) void putch_(char ch) {
   volatile uint8_t* uart_lsr = (volatile uint8_t*)(DEV_SERIAL + 5);
   while (!(*uart_lsr & 0x20));
   outb(DEV_SERIAL, ch);
