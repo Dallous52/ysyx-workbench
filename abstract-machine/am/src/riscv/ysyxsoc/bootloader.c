@@ -39,23 +39,11 @@ __attribute__((section("entry"))) void print_hex_(uint32_t num) {
 
 __attribute__((section("entry"))) void _first_bootloader()
 {
-    device_ctrl uart_lcr = (device_ctrl)(DEV_SERIAL + 3);
-    *uart_lcr = 0x83;
-
-    device_ctrl uart_divisor = (device_ctrl)DEV_SERIAL;
-    uart_divisor[1] = 0x00;
-    uart_divisor[0] = 0x01;
-
-    *uart_lcr = 0x03;
-
     uint8_t *d = (uint8_t*)&_ssbl_load;
     const uint8_t *s = (uint8_t*)DEV_SRAM;
     uint32_t n = (uintptr_t)&_ssbl_ed - (uintptr_t)&_ssbl_op;
-    print_hex_((uintptr_t)&_ssbl_ed);
-    print_hex_((uintptr_t)&_ssbl_op);
 
     while (n--) {
-        // print_hex_(n);
         *d++ = *s++;
     }
 
@@ -66,10 +54,20 @@ __attribute__((section("entry"))) void _first_bootloader()
 
 __attribute__((section("ssbl"))) void _second_bootloader()
 {
+    device_ctrl uart_lcr = (device_ctrl)(DEV_SERIAL + 3);
+    *uart_lcr = 0x83;
+
+    device_ctrl uart_divisor = (device_ctrl)DEV_SERIAL;
+    uart_divisor[1] = 0x00;
+    uart_divisor[0] = 0x01;
+
+    *uart_lcr = 0x03;
+
     uint8_t *d = (uint8_t*)&_code_start;
     const uint8_t *s = (uint8_t*)DEV_PSRAM;
     uint32_t n = (uintptr_t)&_code_end - (uintptr_t)&_code_start;
-
+    print_hex_((uintptr_t)&_code_start);
+    print_hex_((uintptr_t)&_code_end);
     while (n--) {
         *d++ = *s++;
     }
