@@ -19,8 +19,8 @@
 #define EN_TRACE
 #define ITRACE
 #define FTRACE
-#define MTRACE
-#define DIFFTEST
+// #define MTRACE
+// #define DIFFTEST
 
 static VysyxSoCFull top;
 static VerilatedVcdC *vtrace = nullptr;
