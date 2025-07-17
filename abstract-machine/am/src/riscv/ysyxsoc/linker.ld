@@ -29,6 +29,7 @@ SECTIONS {
   } > psram AT> flash
 
   .rodata : { /* 只读全局变量 */
+    KEEP(*(.rodata.mainargs))
     KEEP(*(.rodata*))
   } > psram AT> flash
 
