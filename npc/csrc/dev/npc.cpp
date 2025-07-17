@@ -128,7 +128,7 @@ int cpu_exec(uint64_t steps)
   {
     currpc = CPU_PC;
 #if defined(EN_TRACE) || defined(DIFFTEST)
-    printf(ANSI_FMT("pc : %08x\n", ANSI_FG_MAGENTA), currpc);
+    // printf(ANSI_FMT("pc : %08x\n", ANSI_FG_MAGENTA), currpc);
     instruct = paddr_read(CPU_PC, 4);
 #endif
 

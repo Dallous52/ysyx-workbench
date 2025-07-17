@@ -115,7 +115,6 @@ void *memcpy(void *out, const void *in, size_t n)
   const uint8_t *s = in;
 
   while (n--) {
-    // print_hex(n);
     *d++ = *s++;
   }
 
