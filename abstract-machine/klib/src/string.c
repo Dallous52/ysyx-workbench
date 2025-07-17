@@ -93,6 +93,21 @@ void *memmove(void *dst, const void *src, size_t n)
   return dst;
 }
 
+void print_hex(uint32_t num) {
+    // 每个 16 进制字符代表 4 位，一共 8 个 hex 字符
+    for (int i = 7; i >= 0; i--) {
+        uint8_t nibble = (num >> (i * 4)) & 0xF;  // 取出每 4 位
+        char hex_char;
+
+        if (nibble < 10)
+            hex_char = '0' + nibble;
+        else
+            hex_char = 'A' + (nibble - 10);
+
+        putch(hex_char);
+    }
+    putch('\n');
+}
 
 void *memcpy(void *out, const void *in, size_t n) 
 {
@@ -100,7 +115,7 @@ void *memcpy(void *out, const void *in, size_t n)
   const uint8_t *s = in;
 
   while (n--) {
-    printf("%08x\n", n);
+    print_hex(n);
     *d++ = *s++;
   }
 
