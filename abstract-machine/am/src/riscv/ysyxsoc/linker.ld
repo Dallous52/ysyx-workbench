@@ -8,16 +8,14 @@ MEMORY {
 
 SECTIONS {
   . = ORIGIN(flash);
-  
+
   .fsbl : {
     *(entry)
-    *(.entry)
   } > flash
   
   _ssbl_start = .;
   .ssbl : {
     *(ssbl)
-    *(.ssbl)
   } > sram AT> flash
   _ssbl_end = .;
 
