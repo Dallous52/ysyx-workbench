@@ -39,7 +39,6 @@ void halt(int code)
 
 void bootloader()
 {
-  printf("data_size: %08x\n", (&_data_end - &_data_start));
   memcpy((void*)DEV_PSRAM, &_load_start, (&_data_end - &_data_start));
 }
 
