@@ -1,6 +1,4 @@
-AM_SRCS :=	riscv/ysyxsoc/start.S \
-			riscv/ysyxsoc/fsbl.S \
-			riscv/ysyxsoc/ssbl.S \
+AM_SRCS :=	riscv/ysyxsoc/fsbl.S \
 			riscv/ysyxsoc/trap.S \
 			riscv/ysyxsoc/bootloader.c \
 			riscv/ysyxsoc/trm.c \
