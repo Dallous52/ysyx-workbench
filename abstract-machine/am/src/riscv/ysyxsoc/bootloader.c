@@ -50,9 +50,11 @@ __attribute__((section("entry"))) void _first_bootloader()
     uint8_t *d = (uint8_t*)&_ssbl_start;
     const uint8_t *s = (uint8_t*)DEV_SRAM;
     uint32_t n = (uintptr_t)&_ssbl_end - (uintptr_t)&_ssbl_start;
+    print_hex_((uintptr_t)&_ssbl_end);
+    print_hex_((uintptr_t)&_ssbl_start);
 
     while (n--) {
-        print_hex_(n);
+        // print_hex_(n);
         *d++ = *s++;
     }
 
