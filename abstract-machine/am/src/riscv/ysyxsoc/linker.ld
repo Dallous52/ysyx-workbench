@@ -21,7 +21,7 @@ SECTIONS {
     _ssbl_ed = .;
   } > sram AT> flash
 
-  _code_start = .;
+  _code_start = _ssbl_load + (_ssbl_ed - _ssbl_op);
   .text : { /* 代码段 */
     KEEP(*(.text._trm_init))
     KEEP(*(.text*))
