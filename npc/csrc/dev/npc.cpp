@@ -16,9 +16,9 @@
 #define ADDR     (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
 #define INST      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__inst)
 
-#define EN_TRACE
-#define ITRACE
-#define FTRACE
+// #define EN_TRACE
+// #define ITRACE
+// #define FTRACE
 // #define MTRACE
 // #define DIFFTEST
 
@@ -105,7 +105,6 @@ static void print_exe_info(word_t tpc, word_t tinst, char *logbuf, size_t buflen
   *p = '\t';
   p++;
 
-  printf(ANSI_FMT("inst: %08x\n", ANSI_FG_MAGENTA), tinst);
   disassemble(p, logbuf + buflen - p, tpc, (uint8_t *)&tinst, 4);
 }
 
