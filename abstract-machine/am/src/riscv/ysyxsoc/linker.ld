@@ -16,7 +16,6 @@ SECTIONS {
   _ssbl_load = .;
   .ssbl : {
     _ssbl_op = .;
-    KEEP(*(ssbl_top))
     KEEP(*(ssbl))
     _ssbl_ed = .;
   } > sram AT> flash
