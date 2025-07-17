@@ -28,7 +28,7 @@ SECTIONS {
     KEEP(*(.text*))
   } > psram AT> flash
 
-  .rodata : { /* 只读全局变量 */
+  .rodata ALIGN(4) : { /* 只读全局变量 */
     KEEP(*(.rodata*))
   } > psram AT> flash
 
