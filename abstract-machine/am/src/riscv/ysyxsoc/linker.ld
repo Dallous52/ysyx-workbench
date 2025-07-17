@@ -28,18 +28,18 @@ SECTIONS {
     KEEP(*(.text*))
   } > psram AT> flash
 
-  .rodata  ALIGN(4) : { /* 只读全局变量 */
+  .rodata : { /* 只读全局变量 */
     KEEP(*(.rodata*))
   } > psram AT> flash
 
-  .data  ALIGN(4) : { /* 可读写全局变量 */
+  .data : { /* 可读写全局变量 */
     KEEP(*(.data))
     KEEP(*(.data.*))
     KEEP(*(.sdata.*))
     _code_ed = .;
   } > psram AT> flash
 
-  .bss  ALIGN(4) : {
+  .bss : {
     KEEP(*(.bss*))
     KEEP(*(.sbss*))
     KEEP(*(.scommon))
