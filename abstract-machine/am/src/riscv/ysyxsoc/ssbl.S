@@ -1,4 +1,4 @@
-.section ssbl, "ax"
+.section ssbl_top, "ax"
 .globl _ssbl
 .type _ssbl, @function
 
