@@ -8,13 +8,12 @@ MEMORY {
 
 SECTIONS {
   . = ORIGIN(flash);
-  . = ALIGN(4); 
+  
   .fsbl : {
     *(entry)
     *(.entry)
   } > flash
   
-  . = ALIGN(4);
   _ssbl_start = .;
   .ssbl : {
     *(ssbl)
@@ -22,19 +21,16 @@ SECTIONS {
   } > sram AT> flash
   _ssbl_end = .;
 
-  . = ALIGN(4); 
   _code_start = .;
   .text : { /* 代码段 */
     *(code)
     *(.text*)
   } > psram AT> flash
 
-  . = ALIGN(4);
   .rodata : { /* 只读全局变量 */
     *(.rodata*)
   } > psram AT> flash
 
-  . = ALIGN(4);
   .data : { /* 可读写全局变量 */
     *(.data)
     *(.data.*)
@@ -42,7 +38,6 @@ SECTIONS {
   } > psram AT> flash
   _code_end = .;
 
-  . = ALIGN(4);
   .bss : {
     *(.bss*)
     *(.sbss*)
