@@ -1,4 +1,4 @@
-ENTRY(_start)
+ENTRY(_fsbl)
 
 MEMORY {
   flash : ORIGIN = 0x30000000, LENGTH = 16M
@@ -8,25 +8,33 @@ MEMORY {
 
 SECTIONS {
   . = ORIGIN(flash);
-  .text : {
-    *(entry) /* 把名为 entry 的自定义段放最前面 */
-    *(.text*)
-  } > flash AT> flash
-
-  /* 只读全局变量 */
-  .rodata : {
-    *(.rodata*)
+  
+  .fsbl : {
+    *(entry)
   } > flash
+  
+  _ssbl_start = .;
+  .ssbl : {
+    *(ssbl)
+  } > sram AT> flash
+  _ssbl_end = .;
 
-  /* 可读写全局变量 */
-  _load_start = .;
-  .data : {
-    _data_start = .;
+  _code_start = .;
+  .text : { /* 代码段 */
+    *(code)
+    *(.text*)
+  } > psram AT> flash
+
+  .rodata : { /* 只读全局变量 */
+    *(.rodata*)
+  } > psram AT> flash
+
+  .data : { /* 可读写全局变量 */
     *(.data)
     *(.data.*)
     *(.sdata.*)
-    _data_end = .;
   } > psram AT> flash
+  _code_end = .;
 
   .bss : {
     *(.bss*)
@@ -34,10 +42,9 @@ SECTIONS {
     *(.scommon)
   } > psram
 
-  _heap_start = 0x80100000;
+  _heap_start = 0x80300000;
   _heap_end = 0x80400000;
 
-  _stack_top = 0x0f000000;
-  . = _stack_top + 0x2000;
-  _stack_pointer = .;
+  _stack_top = 0x0f000400;
+  _stack_pointer = 0x0f002000;
 }

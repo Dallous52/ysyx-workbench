@@ -1,22 +1,18 @@
 #include <am.h>
 #include <klib.h>
 #include <klib-macros.h>
-#include <stdint.h>
 #include "../riscv.h"
 #include "device/device.h"
 
 extern char _heap_start;
 extern char _heap_end;
 
-extern char _load_start;
-extern char _data_end;
-extern char _data_start;
 void __am_uart_init();
 int main(const char *args);
 
 Area heap = RANGE(&_heap_start, &_heap_end);
-static const char mainargs[MAINARGS_MAX_LEN] = MAINARGS_PLACEHOLDER; // defined in CFLAGS
 
+static const char mainargs[MAINARGS_MAX_LEN] = MAINARGS_PLACEHOLDER; // defined in CFLAGS
 
 void putch(char ch) {
   volatile uint8_t* uart_lsr = (volatile uint8_t*)(DEV_SERIAL + 5);
@@ -34,12 +30,6 @@ void halt(int code)
 {
   asm volatile("mv a0, %0; ebreak" : :"r"(code));
   while (1);
-}
-
-
-void bootloader()
-{
-  memcpy((void*)DEV_PSRAM, &_load_start, (&_data_end - &_data_start));
 }
 
 
@@ -65,7 +55,6 @@ void devinfo_print()
 void _trm_init()
 {
   __am_uart_init();
-  bootloader();
   devinfo_print();
   int ret = main(mainargs);
   halt(ret);

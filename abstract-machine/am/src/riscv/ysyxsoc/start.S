@@ -1,4 +1,4 @@
-.section entry, "ax"
+.section code, "ax"
 .globl _start
 .type _start, @function
 
