@@ -16,13 +16,14 @@ SECTIONS {
   _ssbl_load = .;
   .ssbl : {
     _ssbl_op = .;
+    KEEP(*(ssbl._second_bootloader))
     KEEP(*(ssbl))
     _ssbl_ed = .;
   } > sram AT> flash
 
   _code_start = .;
   .text : { /* 代码段 */
-    KEEP(*(code))
+    KEEP(*(.text._trm_init))
     KEEP(*(.text*))
   } > psram AT> flash
 
