@@ -10,12 +10,12 @@ SECTIONS {
   . = ORIGIN(flash);
   
   .fsbl : {
-    *(entry)
+     KEEP(*(.entry))
   } > flash
   
   _ssbl_start = .;
   .ssbl : {
-    *(ssbl)
+    KEEP(*(.ssbl))
   } > sram AT> flash
   _ssbl_end = .;
 
