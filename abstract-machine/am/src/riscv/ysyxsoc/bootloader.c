@@ -52,7 +52,7 @@ __attribute__((section("entry"))) void _first_bootloader()
 }
 
 
-__attribute__((section("ssbl"))) void _second_bootloader()
+__attribute__((section("ssbl.boot"))) void _second_bootloader()
 {
     device_ctrl uart_lcr = (device_ctrl)(DEV_SERIAL + 3);
     *uart_lcr = 0x83;
