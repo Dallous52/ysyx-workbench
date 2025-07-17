@@ -2,6 +2,7 @@ AM_SRCS :=	riscv/ysyxsoc/start.S \
 			riscv/ysyxsoc/fsbl.S \
 			riscv/ysyxsoc/ssbl.S \
 			riscv/ysyxsoc/trap.S \
+			riscv/ysyxsoc/bootloader.c \
 			riscv/ysyxsoc/trm.c \
 			riscv/ysyxsoc/ioe.c \
 			riscv/ysyxsoc/vme.c \
