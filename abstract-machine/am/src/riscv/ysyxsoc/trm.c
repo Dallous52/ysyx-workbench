@@ -39,7 +39,7 @@ void halt(int code)
 
 void bootloader()
 {
-  memcpy((void*)DEV_SRAM, &_load_start, (&_data_end - &_data_start));
+  memcpy((void*)DEV_PSRAM, &_load_start, (&_data_end - &_data_start));
 }
 
 
