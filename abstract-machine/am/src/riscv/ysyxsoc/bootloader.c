@@ -71,6 +71,7 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     print_hex_((uintptr_t)&_code_op);
     print_hex_((uintptr_t)&_code_ed);
     while (n--) {
+        print_hex_(n);
         *d++ = *s++;
     }
 
