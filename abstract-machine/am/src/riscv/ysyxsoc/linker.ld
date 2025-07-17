@@ -21,25 +21,25 @@ SECTIONS {
 
   _code_start = .;
   .text : { /* 代码段 */
-    *(code)
-    *(.text*)
+    KEEP(*(code))
+    KEEP(*(.text*))
   } > psram AT> flash
 
   .rodata : { /* 只读全局变量 */
-    *(.rodata*)
+    KEEP(*(.rodata*))
   } > psram AT> flash
 
   .data : { /* 可读写全局变量 */
-    *(.data)
-    *(.data.*)
-    *(.sdata.*)
+    KEEP(*(.data))
+    KEEP(*(.data.*))
+    KEEP(*(.sdata.*))
   } > psram AT> flash
   _code_end = .;
 
   .bss : {
-    *(.bss*)
-    *(.sbss*)
-    *(.scommon)
+    KEEP(*(.bss*))
+    KEEP(*(.sbss*))
+    KEEP(*(.scommon))
   } > psram
 
   _heap_start = 0x80300000;
