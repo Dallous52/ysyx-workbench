@@ -67,6 +67,7 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     uint8_t *d = (uint8_t*)&_code_start;
     const uint8_t *s = (uint8_t*)DEV_PSRAM;
     uint32_t n = (uintptr_t)&_code_ed - (uintptr_t)&_code_op;
+    print_hex_((uintptr_t)&_code_start);
     print_hex_((uintptr_t)&_code_op);
     print_hex_((uintptr_t)&_code_ed);
     while (n--) {
