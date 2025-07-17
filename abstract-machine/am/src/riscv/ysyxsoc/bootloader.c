@@ -5,8 +5,9 @@
 
 #include "device/device.h"
 
-extern char _ssbl_start;
-extern char _ssbl_end;
+extern char _ssbl_load;
+extern char _ssbl_op;
+extern char _ssbl_ed;
 
 extern char _code_start;
 extern char _code_end;
@@ -47,11 +48,11 @@ __attribute__((section("entry"))) void _first_bootloader()
 
     *uart_lcr = 0x03;
 
-    uint8_t *d = (uint8_t*)&_ssbl_start;
+    uint8_t *d = (uint8_t*)&_ssbl_load;
     const uint8_t *s = (uint8_t*)DEV_SRAM;
-    uint32_t n = (uintptr_t)&_ssbl_end - (uintptr_t)&_ssbl_start;
-    print_hex_((uintptr_t)&_ssbl_end);
-    print_hex_((uintptr_t)&_ssbl_start);
+    uint32_t n = (uintptr_t)&_ssbl_ed - (uintptr_t)&_ssbl_op;
+    print_hex_((uintptr_t)&_ssbl_ed);
+    print_hex_((uintptr_t)&_ssbl_op);
 
     while (n--) {
         // print_hex_(n);

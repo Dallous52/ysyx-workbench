@@ -13,11 +13,12 @@ SECTIONS {
     KEEP(*(entry))
   } > flash
   
-  _ssbl_start = .;
+  _ssbl_load = .;
   .ssbl : {
+    _ssbl_op = .;
     KEEP(*(ssbl))
+    _ssbl_ed = .;
   } > sram AT> flash
-  _ssbl_end = .;
 
   _code_start = .;
   .text : { /* 代码段 */
