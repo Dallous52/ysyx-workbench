@@ -90,20 +90,26 @@ void sdb_mainloop()
     return;
   }
 
+  int previous = -1;
+
   for (char *str; (str = rl_gets()) != nullptr; ) 
   {
     char *str_end = str + strlen(str);
 
     // extract the first token as the command
     char *cmd = strtok(str, " ");
-    if (cmd == nullptr) { putchar('d'); continue; }
+    if (cmd == nullptr) 
+    { 
+      if (previous == 1 || previous == 3 || previous == 10) {
+        cmd_table[previous].handler(NULL);
+      }      
+      continue; 
+    }
 
     // get args of cmd
     char *args = cmd + strlen(cmd) + 1;
     if (args >= str_end) 
-    {
       args = nullptr;
-    }
 
     int i = 0;
     for (; i < CMD_LEN; i ++) 
