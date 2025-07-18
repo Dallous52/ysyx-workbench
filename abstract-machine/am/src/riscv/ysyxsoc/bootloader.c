@@ -13,6 +13,9 @@ extern char _code_start;
 extern char _code_op;
 extern char _code_ed;
 
+extern char _rodata_op;
+extern char _rodata_ed;
+
 typedef void (*voidfunc)();
 
 __attribute__((section("ssbl"))) void putch_(char ch) {
@@ -64,13 +67,12 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
 
     *uart_lcr = 0x03;
 
-    uint8_t *d = (uint8_t*)DEV_PSRAM;
+    uint8_t *d = (uint8_t*)&_code_op;
     const uint8_t *s = (uint8_t*)&_code_start;
     uint32_t n = (uintptr_t)&_code_ed - (uintptr_t)&_code_op;
 
-    print_hex_((uintptr_t)&_code_start);
-    print_hex_((uintptr_t)&_code_op);
-    print_hex_((uintptr_t)&_code_ed);
+    print_hex_((uintptr_t)&_rodata_op);
+    print_hex_((uintptr_t)&_rodata_ed);
     
     while (n--) {
         *d++ = *s++;
