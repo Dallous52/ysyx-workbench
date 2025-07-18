@@ -96,7 +96,7 @@ void sdb_mainloop()
 
     // extract the first token as the command
     char *cmd = strtok(str, " ");
-    if (cmd == nullptr) { continue; }
+    if (cmd == nullptr) { putchar('d'); continue; }
 
     // get args of cmd
     char *args = cmd + strlen(cmd) + 1;
