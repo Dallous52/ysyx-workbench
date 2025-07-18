@@ -36,6 +36,7 @@ SECTIONS {
     *(.data*)
     *(.data.*)
     *(.sdata.*)
+    *(.data.extra)
     _code_ed = .;
   } > psram AT> flash
 
