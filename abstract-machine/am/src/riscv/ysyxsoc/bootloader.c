@@ -30,21 +30,21 @@ __attribute__((section("ssbl"))) void putch_(char ch) {
 }
 
 
-// __attribute__((section("ssbl"))) void print_hex_(uint32_t num) {
-//     // 每个 16 进制字符代表 4 位，一共 8 个 hex 字符
-//     for (int i = 7; i >= 0; i--) {
-//         uint8_t nibble = (num >> (i * 4)) & 0xF;  // 取出每 4 位
-//         char hex_char;
+__attribute__((section("ssbl"))) void print_hex_(uint32_t num) {
+    // 每个 16 进制字符代表 4 位，一共 8 个 hex 字符
+    for (int i = 7; i >= 0; i--) {
+        uint8_t nibble = (num >> (i * 4)) & 0xF;  // 取出每 4 位
+        char hex_char;
 
-//         if (nibble < 10)
-//             hex_char = '0' + nibble;
-//         else
-//             hex_char = 'A' + (nibble - 10);
+        if (nibble < 10)
+            hex_char = '0' + nibble;
+        else
+            hex_char = 'A' + (nibble - 10);
 
-//         putch_(hex_char);
-//     }
-//     putch_('\n');
-// }
+        putch_(hex_char);
+    }
+    putch_('\n');
+}
 
 __attribute__((section("entry"))) void _first_bootloader()
 {
@@ -72,6 +72,8 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
 
     *uart_lcr = 0x03;
     
+    print_hex_(0);
+
     // 代码加载
     uint8_t *d = (uint8_t*)&_code_op;
     const uint8_t *s = (uint8_t*)&_code_start;
@@ -79,6 +81,8 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     while (n--) {
         *d++ = *s++;
     }
+    print_hex_(1);
+
 
     // 只读全局变量加载
     d = (uint8_t*)&_rodata_op;
@@ -87,6 +91,7 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     while (n--) {
         *d++ = *s++;
     }
+    print_hex_(2);
 
     // 全局变量加载
     d = (uint8_t*)&_data_op;
@@ -95,14 +100,9 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     while (n--) {
         *d++ = *s++;
     }
+    print_hex_(3);
 
     voidfunc start = (voidfunc)(&_code_op);
-    char notice[] = "bootloader success, call to program.";
-    char* put = notice;
-    while (*put)
-    {
-        putch_(*put);
-        put++;
-    } 
+
     start();
 }
