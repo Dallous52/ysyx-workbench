@@ -29,6 +29,7 @@ SECTIONS {
 
   .rodata : { /* 只读全局变量 */
     *(.rodata*)
+    *(.srodata*)
   } > psram AT> flash
 
   .data : { /* 可读写全局变量 */
