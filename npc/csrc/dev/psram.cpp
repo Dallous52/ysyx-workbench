@@ -6,6 +6,13 @@
 
 static uint8_t psram[4*1024*1024]  __attribute((aligned(4096))) = {};
 
+
+word_t psram_read_expr(word_t addr)
+{
+    return *((word_t*)(psram + addr));
+}
+
+
 extern "C" void psram_read(int32_t addr, int32_t *data)
 {
     memcpy(data, psram + addr, 4);

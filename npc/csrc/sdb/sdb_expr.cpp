@@ -177,7 +177,6 @@ word_t prase_reg(char* e, int p, int q)
 // dereference 
 word_t dereference(char* e, int p, int q)
 {
-  void psram_read(int32_t addr, int32_t *data);
   paddr_t x_addr = expr_core(e, p, q);
   if (!e[0]) return 0;
 
@@ -187,9 +186,8 @@ word_t dereference(char* e, int p, int q)
   }
   else if (x_addr >= 0x80000000 && x_addr < 0x80400000)
   {
-    int32_t tmp;
-    psram_read(x_addr - 0x80000000, &tmp);
-    return (word_t)tmp;
+    word_t psram_read_expr(word_t addr);
+    return psram_read_expr(x_addr - 0x80000000);
   }
 
   printf("Memory access out of bounds.\n");
