@@ -29,11 +29,12 @@ SECTIONS {
 
   .rodata : { /* 只读全局变量 */
     KEEP(*(.rodata*))
+    KEEP(*(.srodata*))
   } > psram AT> flash
 
   .data : { /* 可读写全局变量 */
     KEEP(*(.data))
-    KEEP(*(.data.*))
+    KEEP(*(.data*))
     KEEP(*(.sdata.*))
     _code_ed = .;
   } > psram AT> flash
