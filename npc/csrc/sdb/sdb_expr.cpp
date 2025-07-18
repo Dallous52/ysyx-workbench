@@ -1,5 +1,6 @@
 #include "npc.h"
 #include "memory.h"
+#include "tpdef.h"
 
 #include <cstring>
 #include <iostream>
@@ -176,12 +177,19 @@ word_t prase_reg(char* e, int p, int q)
 // dereference 
 word_t dereference(char* e, int p, int q)
 {
+  void psram_read(int32_t addr, int32_t *data);
   paddr_t x_addr = expr_core(e, p, q);
   if (!e[0]) return 0;
 
   if (likely(in_pmem(x_addr)))
   {
     return paddr_read(x_addr, 4);
+  }
+  else if (x_addr >= 0x80000000 && x_addr < 0x80400000)
+  {
+    int32_t tmp;
+    psram_read(x_addr - 0x80000000, &tmp);
+    return (word_t)tmp;
   }
 
   printf("Memory access out of bounds.\n");
