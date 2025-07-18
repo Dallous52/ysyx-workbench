@@ -10,7 +10,7 @@ SECTIONS {
   . = ORIGIN(flash);
 
   .fsbl : {
-    KEEP(*(entry))
+    *(entry)
   } > flash
   
   _ssbl_load = .;
@@ -23,26 +23,24 @@ SECTIONS {
   _code_start = _ssbl_load + (_ssbl_ed - _ssbl_op);
   .text : { /* 代码段 */
     _code_op = .;
-    *(.text._trm_init)
+    KEEP(*(.text._trm_init))
     *(.text*)
   } > psram AT> flash
 
   .rodata : { /* 只读全局变量 */
-    KEEP(*(.rodata*))
-    KEEP(*(.srodata*))
+    *(.rodata*)
   } > psram AT> flash
 
   .data : { /* 可读写全局变量 */
-    KEEP(*(.data))
-    KEEP(*(.data*))
-    KEEP(*(.sdata.*))
+    *(.data*)
+    *(.sdata.*)
     _code_ed = .;
   } > psram AT> flash
 
   .bss : {
-    KEEP(*(.bss*))
-    KEEP(*(.sbss*))
-    KEEP(*(.scommon))
+    *(.bss*)
+    *(.sbss*)
+    *(.scommon)
   } > psram
 
   _heap_start = 0x80300000;
