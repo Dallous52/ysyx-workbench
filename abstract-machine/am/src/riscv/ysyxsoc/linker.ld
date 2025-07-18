@@ -17,6 +17,7 @@ SECTIONS {
   .ssbl : {
     _ssbl_op = .;
     KEEP(*(ssbl.boot))
+    KEEP(*(ssbl*))
     _ssbl_ed = .;
   } > sram AT> flash
 
