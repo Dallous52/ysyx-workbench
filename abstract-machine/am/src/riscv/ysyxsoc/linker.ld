@@ -23,8 +23,8 @@ SECTIONS {
   _code_start = _ssbl_load + (_ssbl_ed - _ssbl_op);
   .text : { /* 代码段 */
     _code_op = .;
-    KEEP(*(.text._trm_init))
-    KEEP(*(.text*))
+    *(.text._trm_init)
+    *(.text*)
   } > psram AT> flash
 
   .rodata : { /* 只读全局变量 */
