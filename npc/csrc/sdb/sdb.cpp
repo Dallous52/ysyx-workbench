@@ -117,6 +117,7 @@ void sdb_mainloop()
       if (strcmp(cmd, cmd_table[i].name) == 0) 
       {
         if (cmd_table[i].handler(args) < 0) { return; }
+        previous = i;
         break;
       }
     }
