@@ -33,6 +33,7 @@ SECTIONS {
 
   .data : { /* 可读写全局变量 */
     *(.data*)
+    *(.data.*)
     *(.sdata.*)
     _code_ed = .;
   } > psram AT> flash
