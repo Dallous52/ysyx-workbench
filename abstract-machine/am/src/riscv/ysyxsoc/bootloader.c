@@ -21,8 +21,6 @@ extern char _data_start;
 extern char _data_op;
 extern char _data_ed;
 
-extern char __fsymtab_end;
-
 typedef void (*voidfunc)();
 
 __attribute__((section("ssbl"))) void putch_(char ch) {
@@ -73,7 +71,6 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     uart_divisor[0] = 0x01;
 
     *uart_lcr = 0x03;
-    print_hex_(__fsymtab_end);
     // 代码加载
     uint8_t *d = (uint8_t*)&_code_op;
     const uint8_t *s = (uint8_t*)&_code_start;
