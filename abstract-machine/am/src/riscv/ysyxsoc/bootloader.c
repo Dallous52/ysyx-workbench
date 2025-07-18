@@ -23,28 +23,28 @@ extern char _data_ed;
 
 typedef void (*voidfunc)();
 
-__attribute__((section("ssbl"))) void putch_(char ch) {
-  volatile uint8_t* uart_lsr = (volatile uint8_t*)(DEV_SERIAL + 5);
-  while (!(*uart_lsr & 0x20));
-  outb(DEV_SERIAL, ch);
-}
+// __attribute__((section("ssbl"))) void putch_(char ch) {
+//   volatile uint8_t* uart_lsr = (volatile uint8_t*)(DEV_SERIAL + 5);
+//   while (!(*uart_lsr & 0x20));
+//   outb(DEV_SERIAL, ch);
+// }
 
 
-__attribute__((section("ssbl"))) void print_hex_(uint32_t num) {
-    // 每个 16 进制字符代表 4 位，一共 8 个 hex 字符
-    for (int i = 7; i >= 0; i--) {
-        uint8_t nibble = (num >> (i * 4)) & 0xF;  // 取出每 4 位
-        char hex_char;
+// __attribute__((section("ssbl"))) void print_hex_(uint32_t num) {
+//     // 每个 16 进制字符代表 4 位，一共 8 个 hex 字符
+//     for (int i = 7; i >= 0; i--) {
+//         uint8_t nibble = (num >> (i * 4)) & 0xF;  // 取出每 4 位
+//         char hex_char;
 
-        if (nibble < 10)
-            hex_char = '0' + nibble;
-        else
-            hex_char = 'A' + (nibble - 10);
+//         if (nibble < 10)
+//             hex_char = '0' + nibble;
+//         else
+//             hex_char = 'A' + (nibble - 10);
 
-        putch_(hex_char);
-    }
-    putch_('\n');
-}
+//         putch_(hex_char);
+//     }
+//     putch_('\n');
+// }
 
 __attribute__((section("entry"))) void _first_bootloader()
 {
@@ -63,14 +63,15 @@ __attribute__((section("entry"))) void _first_bootloader()
 
 __attribute__((section("ssbl.boot"))) void _second_bootloader()
 {
-    device_ctrl uart_lcr = (device_ctrl)(DEV_SERIAL + 3);
-    *uart_lcr = 0x83;
+    // device_ctrl uart_lcr = (device_ctrl)(DEV_SERIAL + 3);
+    // *uart_lcr = 0x83;
 
-    device_ctrl uart_divisor = (device_ctrl)DEV_SERIAL;
-    uart_divisor[1] = 0x00;
-    uart_divisor[0] = 0x01;
+    // device_ctrl uart_divisor = (device_ctrl)DEV_SERIAL;
+    // uart_divisor[1] = 0x00;
+    // uart_divisor[0] = 0x01;
 
-    *uart_lcr = 0x03;
+    // *uart_lcr = 0x03;
+    
     // 代码加载
     uint8_t *d = (uint8_t*)&_code_op;
     const uint8_t *s = (uint8_t*)&_code_start;
@@ -87,7 +88,7 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
         *d++ = *s++;
     }
 
-    // 普通全局变量加载
+    // 全局变量加载
     d = (uint8_t*)&_data_op;
     s = (uint8_t*)&_data_start;
     n = (uintptr_t)&_data_ed - (uintptr_t)&_data_op;
