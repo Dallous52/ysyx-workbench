@@ -26,8 +26,10 @@ SECTIONS {
     _code_op = .;
     KEEP(*(.text._trm_init))
     *(.text*)
+    _code_ed = .;
   } > psram AT> flash
 
+  _rodata_start = _code_start + (_code_ed - _code_op);
   .rodata : { /* 只读全局变量 */
     _rodata_op = .;
     *(.rodata*)
@@ -35,11 +37,13 @@ SECTIONS {
     _rodata_ed = .;
   } > psram AT> flash
 
+  _data_start = _rodata_start + (_rodata_ed - _rodata_op);
   .data : { /* 可读写全局变量 */
+    _data_op = .;
     *(.data*)
     *(.data.*)
     *(.sdata.*)
-    _code_ed = .;
+    _data_ed = .;
   } > psram AT> flash
 
   .bss : {
