@@ -29,6 +29,8 @@ void start_v() {vstart = true;}
 
 // 用于计数时钟边沿
 static vluint64_t sim_time = 0;
+static uint64_t inst_num = 0;
+uint64_t get_inst_num() { return inst_num; }
 
 // regiestor name
 static const char *regs[] = {
@@ -138,6 +140,8 @@ int cpu_exec(uint64_t steps)
 
     if (CPU_PC != currpc) 
     {
+      inst_num++;
+
 #if defined(EN_TRACE) && defined(ITRACE)
       print_exe_info(currpc, INST, logbuf, 128);
       printf("%s\n", logbuf);

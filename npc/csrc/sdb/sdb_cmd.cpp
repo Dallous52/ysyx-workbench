@@ -2,6 +2,7 @@
 #include "memory.h"
 #include "tpdef.h"
 
+#include <cstdint>
 #include <cstdio>
 #include <iostream>
 #include <cstring>
@@ -42,6 +43,19 @@ int cmd_si(char* args)
   }
 
   return 0;
+}
+
+
+// run and when pc change, stop it
+uint64_t get_inst_num();
+
+int cmd_n(char* args)
+{
+  uint64_t curnum = get_inst_num();
+  while (get_inst_num() == curnum)
+    cpu_exec(1);
+
+  return 0; 
 }
 
 
