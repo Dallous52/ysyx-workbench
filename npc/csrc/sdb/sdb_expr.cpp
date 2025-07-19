@@ -189,6 +189,7 @@ word_t dereference(char* e, int p, int q)
     word_t psram_read_expr(word_t addr);
     return psram_read_expr(x_addr - 0x80000000);
   }
+  else if (x_addr >= 0xa0000000 && x_addr < 0xa2000000)
 
   printf("Memory access out of bounds.\n");
   return e[0] = 0;
