@@ -26,6 +26,7 @@ extern "C" void sdram_row_load(int8_t bank, int16_t row, int16_t *data)
 
 extern "C" void sdram_row_store(int8_t bank, int16_t row, int16_t *data)
 {
+    printf("%04x %04x", data[1], data[0]);
     memcpy(&sdram[bank][row][0], data, 512 * sizeof(uint16_t));
     printf(ANSI_FMT("[write sdram] bank:%d  row:0x%04x;\n", ANSI_FG_CYAN),
 			bank, row);
