@@ -4,6 +4,9 @@
 #include <cstdio>
 #include <cstring>
 
+#include <sys/types.h>
+#include <verilated.h>
+
 static uint16_t sdram[4][8192][512] __attribute((aligned(4096))) = {};
 
 
@@ -13,25 +16,17 @@ word_t sdram_read_expr(word_t addr)
 }
 
 
-// extern "C" void psram_read(int32_t addr, int32_t *data)
-// {
-//     memcpy(data, psram + addr, 4);
-//     // printf(ANSI_FMT("[read psram] address: 0x%08x; data: 0x%08x;\n", ANSI_FG_CYAN),
-// 	// 		(paddr_t)addr, *data);
-// }
+extern "C" void sdram_row_load(int8_t bank, int16_t row, int16_t *data)
+{
+    memcpy(data, &sdram[bank][row][0], 512 * sizeof(uint16_t));
+    printf(ANSI_FMT("[read sdram] bank:%d  row:0x%04x;\n", ANSI_FG_CYAN),
+			bank, row);
+}
 
 
-// extern "C" void psram_write(int32_t addr, int32_t data, int32_t len)
-// {
-//     uint32_t right = 24;
-//     while (len)
-//     {
-//         // printf("%08x  %08x\n", addr + len, data >> right);
-//         psram[addr + len - 1] = data >> right;
-//         right -= 8;
-//         len--;
-//     }
-
-//     // printf(ANSI_FMT("[write psram] address: 0x%08x; data: 0x%08x;\n", ANSI_FG_CYAN),
-//     //     (paddr_t)addr, data);
-// }
+extern "C" void sdram_row_store(int8_t bank, int16_t row, int16_t *data)
+{
+    memcpy(&sdram[bank][row][0], data, 512 * sizeof(uint16_t));
+    printf(ANSI_FMT("[write sdram] bank:%d  row:0x%04x;\n", ANSI_FG_CYAN),
+			bank, row);
+}

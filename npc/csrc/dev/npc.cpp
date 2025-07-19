@@ -3,6 +3,7 @@
 #include "VysyxSoCFull___024root.h"
 #include "device.h"
 #include "memory.h"
+#include "svdpi.h"
 #include "tpdef.h"
 #include "util.h"
 
@@ -13,7 +14,7 @@
 #define VCD_PATH  "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
 #define REG       (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_reg__DOT__rf)
 #define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
-#define ADDR     (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
+#define ADDR      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
 #define INST      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__inst)
 
 // #define EN_TRACE
