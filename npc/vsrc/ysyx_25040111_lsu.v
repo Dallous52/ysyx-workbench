@@ -1,7 +1,6 @@
 `include "HDR/ysyx_20540111_dpic.vh"
 `include "MOD/ysyx_25040111_MuxKey.v"
 
-`define DEV_SERIAL  (32'ha00003f8)
 `define DEV_CLINT   (32'h02000048)
 `define DEV_CLINT_END  (32'h0200004f)
 
