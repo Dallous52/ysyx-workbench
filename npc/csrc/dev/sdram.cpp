@@ -24,9 +24,9 @@ extern "C" void sdram_row_load(int8_t bank, int16_t row, int16_t *data)
 }
 
 
-extern "C" void sdram_row_store(int8_t bank, int16_t row, int16_t *data)
+extern "C" void sdram_row_store(int8_t bank, int16_t row, int16_t **data)
 {
-    for (int i = 0; i < 512; i++) sdram[bank][row][i] = data[i];
+    for (int i = 0; i < 512; i++) sdram[bank][row][i] = (*data)[i];
     printf(ANSI_FMT("[write sdram] bank:%d  row:0x%04x;\n", ANSI_FG_CYAN),
 			bank, row);
 }
