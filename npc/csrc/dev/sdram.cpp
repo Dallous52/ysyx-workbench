@@ -5,7 +5,7 @@
 #include <cstring>
 
 #include <sys/types.h>
-#include <verilated.h>
+#include <svdpi.h>
 
 static uint16_t sdram[4][8192][512] __attribute((aligned(4096))) = {};
 
@@ -18,16 +18,24 @@ word_t sdram_read_expr(word_t addr)
 
 extern "C" void sdram_row_load(int8_t bank, int16_t row, int16_t *data)
 {
-    memcpy(data, &sdram[bank][row][0], 512 * sizeof(uint16_t));
-    printf(ANSI_FMT("[read sdram] bank:%d  row:0x%04x;\n", ANSI_FG_CYAN),
-			bank, row);
+    int n = svSize(data, 1);
+    uint16_t *p0 = (uint16_t*)svGetArrayPtr(data);
+
+    for (int i = 0; i < n; i++) p0[i] = sdram[bank][row][i];
+ 
+    printf(ANSI_FMT("[read sdram] bank:%d  row:0x%04x  num:%d;\n", ANSI_FG_CYAN),
+			bank, row, n);
 }
 
 
-extern "C" void sdram_row_store(int8_t bank, int16_t row, int16_t *data)
+extern "C" void sdram_row_store(int8_t bank, int16_t row, const svOpenArrayHandle data)
 {
-    printf("%04x %04x\n", data[1], data[0]);
-    memcpy(&sdram[bank][row][0], data, 512 * sizeof(uint16_t));
-    printf(ANSI_FMT("[write sdram] bank:%d  row:0x%04x;\n", ANSI_FG_CYAN),
-			bank, row);
+    int n = svSize(data, 1);
+    uint16_t *p0 = (uint16_t*)svGetArrayPtr(data);
+
+    for (int i = 0; i < n; i++) sdram[bank][row][i] = p0[i];
+
+    printf("%04x %04x\n", p0[1], p0[0]);
+    printf(ANSI_FMT("[write sdram] bank:%d  row:0x%04x  num:%d;\n", ANSI_FG_CYAN),
+			bank, row, n);
 }
