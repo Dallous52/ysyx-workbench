@@ -2,8 +2,8 @@
 `include "MOD/ysyx_25040111_MuxKey.v"
 
 `define DEV_SERIAL  (32'ha00003f8)
-`define DEV_CLINT   (32'ha0000048)
-`define DEV_CLINT_END  (32'ha000004f)
+`define DEV_CLINT   (32'h02000048)
+`define DEV_CLINT_END  (32'h0200004f)
 
 module ysyx_25040111_lsu (
         input clk,          // 时钟

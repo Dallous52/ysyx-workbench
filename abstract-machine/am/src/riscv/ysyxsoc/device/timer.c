@@ -1,7 +1,7 @@
 #include <am.h>
 #include "../../riscv.h"
 
-#define DEV_TIMMER        (0xa0000048)
+#define DEV_TIMMER        (0x02000048)
 
 void __am_timer_init() {
 }
