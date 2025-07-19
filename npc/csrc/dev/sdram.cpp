@@ -24,7 +24,7 @@ extern "C" void sdram_row_load(int8_t bank, int16_t row, int16_t *data)
 }
 
 
-extern "C" void sdram_row_store(int8_t bank, int16_t row, uint16_t data[512])
+extern "C" void sdram_row_store(int8_t bank, int16_t row, const uint16_t* data)
 {
     printf("%04x %04x\n", data[1], data[0]);
     for (int i = 0; i < 512; i++) sdram[bank][row][i] = data[i];
