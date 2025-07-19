@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstring>
 
-static uint8_t sdram[4 * 8192 * 1024] __attribute((aligned(4096))) = {};
+static uint16_t sdram[4][8192][512] __attribute((aligned(4096))) = {};
 
 
 word_t sdram_read_expr(word_t addr)
