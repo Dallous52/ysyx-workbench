@@ -4,7 +4,6 @@ MEMORY {
   flash : ORIGIN = 0x30000000, LENGTH = 16M
   sram  : ORIGIN = 0x0f000000, LENGTH = 8K
   psram : ORIGIN = 0x80000000, LENGTH = 4M
-  sdram : ORIGIN = 0xa0000000, LENGTH = 32M
 }
 
 SECTIONS {
@@ -28,7 +27,7 @@ SECTIONS {
     KEEP(*(.text._trm_init))
     *(.text*)
     _code_ed = .;
-  } > sdram AT> flash
+  } > psram AT> flash
 
   _rodata_start = _code_start + (_code_ed - _code_op);
   .rodata : { /* 只读全局变量 */
@@ -36,7 +35,7 @@ SECTIONS {
     *(.rodata*)
     *(.srodata*)
     _rodata_ed = .;
-  } > sdram AT> flash
+  } > psram AT> flash
 
   _data_start = _rodata_start + (_rodata_ed - _rodata_op);
   .data : { /* 可读写全局变量 */
@@ -75,17 +74,17 @@ SECTIONS {
     *(.sdata.*)
 
     _data_ed = .;
-  } > sdram AT> flash
+  } > psram AT> flash
 
   .bss : {
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > sdram
+  } > psram
 
-  _heap_start = 0x80000000;
+  _heap_start = 0x80300000;
   _heap_end = 0x80400000;
 
-  _stack_top = 0x0f000200;
+  _stack_top = 0x0f000400;
   _stack_pointer = 0x0f002000;
 }
