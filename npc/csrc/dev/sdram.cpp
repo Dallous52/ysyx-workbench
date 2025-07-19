@@ -18,16 +18,15 @@ word_t sdram_read_expr(word_t addr)
 
 extern "C" void sdram_row_load(int8_t bank, int16_t row, int16_t *data)
 {
-    for (int i = 0; i < 512; i++) data[i] = sdram[bank][row][i];
+    memcpy(data, &sdram[bank][row][0], 512 * sizeof(uint16_t));
     printf(ANSI_FMT("[read sdram] bank:%d  row:0x%04x;\n", ANSI_FG_CYAN),
 			bank, row);
 }
 
 
-extern "C" void sdram_row_store(int8_t bank, int16_t row, const uint16_t* data)
+extern "C" void sdram_row_store(int8_t bank, int16_t row, int16_t *data)
 {
-    printf("%04x %04x\n", data[1], data[0]);
-    for (int i = 0; i < 512; i++) sdram[bank][row][i] = data[i];
+    memcpy(&sdram[bank][row][0], data, 512 * sizeof(uint16_t));
     printf(ANSI_FMT("[write sdram] bank:%d  row:0x%04x;\n", ANSI_FG_CYAN),
 			bank, row);
 }
