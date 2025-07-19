@@ -34,7 +34,6 @@ extern "C" void sdram_row_store(int8_t bank, int16_t row, const svOpenArrayHandl
 
     for (int i = 0; i < n; i++) sdram[bank][row][i] = p0[i];
 
-    printf("%04x %04x\n", p0[1], p0[0]);
     printf(ANSI_FMT("[write sdram] bank:%d  row:0x%04x  num:%d;\n", ANSI_FG_CYAN),
 			bank, row, n);
 }
