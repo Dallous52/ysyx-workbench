@@ -4,7 +4,6 @@
 #include <cstdio>
 #include <cstring>
 
-#include <sys/types.h>
 #include <svdpi.h>
 
 static uint16_t sdram[4][8192][512] __attribute((aligned(4096))) = {};
