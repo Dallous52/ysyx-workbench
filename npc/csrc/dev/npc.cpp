@@ -153,11 +153,6 @@ int cpu_exec(uint64_t steps)
 
       check_wp();
 
-#ifdef EN_TRAC
-      if (ADDR >= SRAM_START && ADDR <= SRAM_END)
-        printf(ANSI_FMT("addr: 0x%08x\n", ANSI_FG_MAGENTA), ADDR);
-#endif
-
 #ifdef DIFFTEST
       // printf("currpc : %08x\n", currpc);
       if (device_visit(ADDR, INST))
