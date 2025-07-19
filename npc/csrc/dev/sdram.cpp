@@ -21,9 +21,9 @@ extern "C" void sdram_row_load(int8_t bank, int16_t row, int16_t *data)
     uint16_t *p0 = (uint16_t*)svGetArrayPtr(data);
 
     for (int i = 0; i < n; i++) p0[i] = sdram[bank][row][i];
- 
-    printf(ANSI_FMT("[read sdram] bank:%d  row:0x%04x  num:%d;", ANSI_FG_CYAN "\r"),
-			bank, row, n);
+
+    // printf(ANSI_FMT("[read sdram] bank:%d  row:0x%04x  num:%d;", ANSI_FG_CYAN "\r"),
+	// 		bank, row, n);
 }
 
 
