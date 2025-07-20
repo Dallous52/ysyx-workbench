@@ -31,7 +31,7 @@ module ysyx_25040111_clint(
 
         // 数据读取
         if (rdstart) begin
-            rdata_t <= araddr == 32'ha0000048 ? mtime[31:0] : mtime[63:32];
+            rdata_t <= araddr == 32'h02000048 ? mtime[31:0] : mtime[63:32];
             rvalid <= 1; // 读取完毕
             rdstart <= 0;
         end
