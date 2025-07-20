@@ -155,8 +155,8 @@ module ysyx_25040111_lsu (
             valid_t <= 1;
             rmem <= is_clint ? rmem_clint : io_master_rdata;
             // rready <= 0;
-            if (addr >= 32'ha000_0000 & addr <= 32'ha001_0000)
-                $display("raddr:%h  rdata:%h", addr, io_master_rdata);
+            // if (addr >= 32'ha000_0000& addr <= 32'ha001_0000)
+            //     $display("raddr:%h  rdata:%h", addr, io_master_rdata);
         end
     end
 
@@ -174,8 +174,8 @@ module ysyx_25040111_lsu (
 
         // 写入参数
         if (wvalid & wready) begin
-            if (addr >= 32'ha000_0000 & addr <= 32'ha001_0000) 
-                $display("waddr:%h  wdata:%h", addr, io_master_wdata);
+            // if (addr >= 32'ha000_0000 & addr <= 32'ha001_0000) 
+            //     $display("waddr:%h  wdata:%h", addr, io_master_wdata);
             wvalid <= 0;
             wlast <= 1;
         end
