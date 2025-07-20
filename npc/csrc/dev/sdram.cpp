@@ -12,6 +12,7 @@ static uint16_t sdram[4][8192][512] __attribute((aligned(4096))) = {};
 
 word_t sdram_read_expr(word_t addr)
 {
+    addr = addr / 2;
     int bank = (addr / 512) % 4;
     int row = addr / 2048;
     int idx = addr % 512;
