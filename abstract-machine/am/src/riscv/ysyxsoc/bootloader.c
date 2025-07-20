@@ -59,7 +59,6 @@ __attribute__((section("ssbl"))) void print_hex_(uint32_t num) {
 
         putch_(hex_char);
     }
-    putch_('\n');
 }
 
 
@@ -94,8 +93,11 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
 
     *uart_lcr = 0x03;
 
-    print_hex_((uintptr_t)&_code_op);
-    print_hex_((uintptr_t)&_code_ed);
+    putch_('c');putch_('o');putch_('d');putch_('e');
+    putch_(':');putch_(' ');
+    putch_('[');print_hex_((uintptr_t)&_code_op);putch_('-');
+    putch_('>');print_hex_((uintptr_t)&_code_ed);putch_(']');
+    putch_('\n');
 
     // 代码加载
     uint8_t *d = (uint8_t*)&_code_op;
@@ -103,8 +105,11 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     uint32_t n = (uintptr_t)&_code_ed - (uintptr_t)&_code_op;
     loader(d, s, n);
 
-    print_hex_((uintptr_t)&_rodata_op);
-    print_hex_((uintptr_t)&_rodata_ed);
+    putch_('r');putch_('o');putch_('d');putch_('a');putch_('t');putch_('a');
+    putch_(':');putch_(' ');
+    putch_('[');print_hex_((uintptr_t)&_rodata_op);putch_('-');
+    putch_('>');print_hex_((uintptr_t)&_rodata_ed);putch_(']');
+    putch_('\n');
 
     // 只读全局变量加载
     d = (uint8_t*)&_rodata_op;
@@ -112,15 +117,20 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     n = (uintptr_t)&_rodata_ed - (uintptr_t)&_rodata_op;
     loader(d, s, n);
 
-    print_hex_((uintptr_t)&_data_op);
-    print_hex_((uintptr_t)&_data_ed);
+    putch_('d');putch_('a');putch_('t');putch_('a');
+    putch_(':');putch_(' ');
+    putch_('[');print_hex_((uintptr_t)&_data_op);putch_('-');
+    putch_('>');print_hex_((uintptr_t)&_data_ed);putch_(']');
+    putch_('\n');
+
     // 全局变量加载
     d = (uint8_t*)&_data_op;
     s = (uint8_t*)&_data_start;
     n = (uintptr_t)&_data_ed - (uintptr_t)&_data_op;
     loader(d, s, n);
 
-    print_hex_(0);
+    putch_('o');putch_('k');putch_('e');putch_('y');
+    putch_('\n');
 
     voidfunc start = (voidfunc)(&_code_op);
 

@@ -86,6 +86,6 @@ SECTIONS {
   _heap_start = 0x80000000;
   _heap_end = 0x80400000;
 
-  _stack_top = 0x0f000300;
+  _stack_top = 0x0f000400;
   _stack_pointer = 0x0f002000;
 }
