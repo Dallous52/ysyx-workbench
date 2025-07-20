@@ -94,7 +94,7 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     *uart_lcr = 0x03;
 
     putch_('c');putch_('o');putch_('d');putch_('e');
-    putch_(':');putch_(' ');
+    putch_(':');putch_('\t');
     putch_('[');print_hex_((uintptr_t)&_code_op);putch_('-');
     putch_('>');print_hex_((uintptr_t)&_code_ed);putch_(']');
     putch_('\n');
@@ -106,7 +106,7 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     loader(d, s, n);
 
     putch_('r');putch_('o');putch_('d');putch_('a');putch_('t');putch_('a');
-    putch_(':');putch_(' ');
+    putch_(':');putch_('\t');
     putch_('[');print_hex_((uintptr_t)&_rodata_op);putch_('-');
     putch_('>');print_hex_((uintptr_t)&_rodata_ed);putch_(']');
     putch_('\n');
@@ -118,7 +118,7 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     loader(d, s, n);
 
     putch_('d');putch_('a');putch_('t');putch_('a');
-    putch_(':');putch_(' ');
+    putch_(':');putch_('\t');
     putch_('[');print_hex_((uintptr_t)&_data_op);putch_('-');
     putch_('>');print_hex_((uintptr_t)&_data_ed);putch_(']');
     putch_('\n');
