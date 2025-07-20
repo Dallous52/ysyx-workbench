@@ -117,7 +117,7 @@ word_t paddr_read(paddr_t addr, int len)
 #endif // CONFIG_MTRACE
 
   paddr_t address = npc_addr_map(addr);
-  printf(ANSI_FMT("[addr : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
+  printf(ANSI_FMT("[r : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
 
   if (likely(in_pmem(address))) return pmem_read(address, len);
   IFDEF(CONFIG_DEVICE, return mmio_read(address, len));
@@ -134,7 +134,7 @@ void paddr_write(paddr_t addr, int len, word_t data)
 #endif // CONFIG_MTRACE
 
   paddr_t address = npc_addr_map(addr);
-  printf(ANSI_FMT("[addr : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
+  printf(ANSI_FMT("[w : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
 
   if (likely(in_pmem(address))) { pmem_write(address, len, data); return; }
   IFDEF(CONFIG_DEVICE, mmio_write(address, len, data); return);
