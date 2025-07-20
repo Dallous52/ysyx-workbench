@@ -90,6 +90,8 @@ void init_mem()
 
 static paddr_t npc_addr_map(paddr_t addr)
 {
+  printf(ANSI_FMT("[addr : 0x%x]\n", ANSI_FG_CYAN), addr);
+  
   if (addr >= FLASH_START && addr < FLASH_END)
     return addr + 0x51000000;
   else if (addr >= MROM_START && addr < MROM_END) 
@@ -100,6 +102,7 @@ static paddr_t npc_addr_map(paddr_t addr)
     return addr;
   else if (addr >= SDRAM_START && addr < SDRAM_END)
     return addr - 0x1D000000;
+
   return 0;
 }
 
