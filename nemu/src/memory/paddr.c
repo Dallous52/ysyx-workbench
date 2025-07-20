@@ -89,9 +89,7 @@ void init_mem()
 
 
 static paddr_t npc_addr_map(paddr_t addr)
-{
-  printf(ANSI_FMT("[addr : 0x%x]\n", ANSI_FG_CYAN), addr);
-  
+{  
   if (addr >= FLASH_START && addr < FLASH_END)
     return addr + 0x51000000;
   else if (addr >= MROM_START && addr < MROM_END)
@@ -134,9 +132,10 @@ void paddr_write(paddr_t addr, int len, word_t data)
     addr, cpu.pc, len, data);
 #endif // CONFIG_MTRACE
 
-  addr = npc_addr_map(addr);
+  paddr_t address = npc_addr_map(addr);
+  printf(ANSI_FMT("[addr : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
 
-  if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
-  IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
-  out_of_bound(addr);
+  if (likely(in_pmem(address))) { pmem_write(address, len, data); return; }
+  IFDEF(CONFIG_DEVICE, mmio_write(address, len, data); return);
+  out_of_bound(address);
 }
