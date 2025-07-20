@@ -94,7 +94,7 @@ static paddr_t npc_addr_map(paddr_t addr)
   
   if (addr >= FLASH_START && addr < FLASH_END)
     return addr + 0x51000000;
-  else if (addr >= MROM_START && addr < MROM_END) 
+  else if (addr >= MROM_START && addr < MROM_END)
     return addr + 0x60404000;
   else if (addr >= SRAM_START && addr < SRAM_END)
     return addr + 0x71401000;
