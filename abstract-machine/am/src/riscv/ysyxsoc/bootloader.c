@@ -1,6 +1,7 @@
 #include <am.h>
 #include <klib.h>
 #include <klib-macros.h>
+#include <stdint.h>
 #include "../riscv.h"
 
 #include "device/device.h"
@@ -72,7 +73,8 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
 
     *uart_lcr = 0x03;
     
-    print_hex_(0);
+    print_hex_((uintptr_t)&_code_op);
+    print_hex_((uintptr_t)&_code_ed);
 
     // 代码加载
     uint8_t *d = (uint8_t*)&_code_op;
@@ -81,8 +83,9 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     while (n--) {
         *d++ = *s++;
     }
-    print_hex_(1);
 
+    print_hex_((uintptr_t)&_rodata_op);
+    print_hex_((uintptr_t)&_rodata_ed);
 
     // 只读全局变量加载
     d = (uint8_t*)&_rodata_op;
@@ -91,8 +94,9 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     while (n--) {
         *d++ = *s++;
     }
-    print_hex_(2);
-
+    
+    print_hex_((uintptr_t)&_data_op);
+    print_hex_((uintptr_t)&_data_ed);
     // 全局变量加载
     d = (uint8_t*)&_data_op;
     s = (uint8_t*)&_data_start;
@@ -100,7 +104,8 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     while (n--) {
         *d++ = *s++;
     }
-    print_hex_(3);
+
+    print_hex_(0);
 
     voidfunc start = (voidfunc)(&_code_op);
 

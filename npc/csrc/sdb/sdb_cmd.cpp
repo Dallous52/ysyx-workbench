@@ -51,6 +51,8 @@ uint64_t get_inst_num();
 
 int cmd_n(char* args)
 {
+  if (npc_stat == NPC_STOP) npc_stat = NPC_RUN;
+
   uint64_t curnum = get_inst_num();
   while (get_inst_num() == curnum)
     cpu_exec(1);
