@@ -75,10 +75,15 @@ bool device_visit(paddr_t addr, uint32_t inst)
     if (opt != load && opt != store)
         return false;
 
-    if (addr >= MROM_START && addr <= MROM_END) 
+    if (addr >= FLASH_START && addr < FLASH_END)
         return false;
-    
-    if (addr >= SRAM_START && addr <= SRAM_END)
+    else if (addr >= MROM_START && addr < MROM_END)
+        return false;
+    else if (addr >= SRAM_START && addr < SRAM_END)
+        return false;
+    else if (addr >= PSRAM_START && addr < PSRAM_END)
+        return false;
+    else if (addr >= SDRAM_START && addr < SDRAM_END)
         return false;
     
     return true;

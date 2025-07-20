@@ -21,24 +21,24 @@
 
 
 // 0x80404000 - 0x80405000
-#define MROM_START  0x20000000
-#define MROM_END    0x20001000
+#define MROM_START  (0x20000000)
+#define MROM_END    (0x20001000)
 
 // 0x81000000 - 0x82000000
-#define FLASH_START 0x30000000
-#define FLASH_END   0x31000000
+#define FLASH_START (0x30000000)
+#define FLASH_END   (0x31000000)
 
 // 0x80401000 - 0x80403000
-#define SRAM_START  0xf000000
-#define SRAM_END    0xf002000
+#define SRAM_START  (0xf000000)
+#define SRAM_END    (0xf002000)
 
 // 0x80000000 - 0x80400000 
-#define PSRAM_START 0x80000000  
-#define PSRAM_END   0x80400000
+#define PSRAM_START (0x80000000)  
+#define PSRAM_END   (0x80400000)
 
 // 0x83000000 - 0x85000000
-#define SDRAM_START 0xa0000000
-#define SDRAM_END   0xa2000000
+#define SDRAM_START (0xa0000000)
+#define SDRAM_END   (0xa2000000)
 
 
 #if   defined(CONFIG_PMEM_MALLOC)
@@ -118,8 +118,7 @@ word_t paddr_read(paddr_t addr, int len)
 
   paddr_t address = npc_addr_map(addr);
   printf(ANSI_FMT("[r : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
-  fflush(stdout);
-  
+
   if (likely(in_pmem(address))) return pmem_read(address, len);
   IFDEF(CONFIG_DEVICE, return mmio_read(address, len));
   out_of_bound(address);
@@ -136,7 +135,6 @@ void paddr_write(paddr_t addr, int len, word_t data)
 
   paddr_t address = npc_addr_map(addr);
   printf(ANSI_FMT("[w : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
-  fflush(stdout);
 
   if (likely(in_pmem(address))) { pmem_write(address, len, data); return; }
   IFDEF(CONFIG_DEVICE, mmio_write(address, len, data); return);
