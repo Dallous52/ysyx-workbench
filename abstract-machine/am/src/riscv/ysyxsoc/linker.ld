@@ -10,36 +10,36 @@ MEMORY {
 SECTIONS {
   . = ORIGIN(flash);
 
-  .fsbl : {
+  .fsbl : ALIGN(4) {
     *(entry)
   } > flash
   
   _ssbl_load = .;
-  .ssbl : {
+  .ssbl : ALIGN(4) {
     _ssbl_op = .;
     KEEP(*(ssbl.boot))
     KEEP(*(ssbl*))
     _ssbl_ed = .;
   } > sram AT> flash
 
-  _code_start = _ssbl_load + (_ssbl_ed - _ssbl_op);
-  .text : { /* 代码段 */
+  _code_start = LOADADDR(.text);
+  .text : ALIGN(4) { /* 代码段 */
     _code_op = .;
     KEEP(*(.text._trm_init))
     *(.text*)
     _code_ed = .;
   } > sdram AT> flash
 
-  _rodata_start = _code_start + (_code_ed - _code_op);
-  .rodata : { /* 只读全局变量 */
+  _rodata_start = LOADADDR(.rodata);
+  .rodata : ALIGN(4) { /* 只读全局变量 */
     _rodata_op = .;
     *(.rodata*)
     *(.srodata*)
     _rodata_ed = .;
   } > sdram AT> flash
 
-  _data_start = _rodata_start + (_rodata_ed - _rodata_op);
-  .data : { /* 可读写全局变量 */
+  _data_start = LOADADDR(.data);
+  .data : ALIGN(4) { /* 可读写全局变量 */
     _data_op = .;
     
     /* section information for finsh shell */

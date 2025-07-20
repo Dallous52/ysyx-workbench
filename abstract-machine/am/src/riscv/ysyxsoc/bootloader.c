@@ -94,6 +94,7 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
 
     *uart_lcr = 0x03;
     
+    print_hex_((uintptr_t)&_code_start);
     print_hex_((uintptr_t)&_code_op);
     print_hex_((uintptr_t)&_code_ed);
 
