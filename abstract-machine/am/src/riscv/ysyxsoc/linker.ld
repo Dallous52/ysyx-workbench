@@ -83,7 +83,7 @@ SECTIONS {
     *(.scommon)
   } > psram
 
-  _heap_start = 0x80002000;
+  _heap_start = 0x80300000;
   _heap_end = 0x80400000;
 
   _stack_top = 0x0f000200;
