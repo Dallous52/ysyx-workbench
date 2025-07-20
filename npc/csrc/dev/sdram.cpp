@@ -27,8 +27,8 @@ extern "C" void sdram_row_load(int8_t bank, int16_t row, int16_t *data)
 
     for (int i = 0; i < n; i++) p0[i] = sdram[bank][row][i];
  
-    // printf(ANSI_FMT("[read sdram] bank:%d  row:0x%04x  num:%d;\n", ANSI_FG_CYAN),
-	// 		bank, row, n);
+    printf(ANSI_FMT("[read sdram] bank:%d  row:0x%04x  num:%d;\n", ANSI_FG_CYAN),
+			bank, row, n);
 }
 
 
@@ -39,6 +39,6 @@ extern "C" void sdram_row_store(int8_t bank, int16_t row, const svOpenArrayHandl
 
     for (int i = 0; i < n; i++) sdram[bank][row][i] = p0[i];
 
-    // printf(ANSI_FMT("[write sdram] bank:%d  row:0x%04x  num:%d;\n", ANSI_FG_CYAN),
-	// 		bank, row, n);
+    printf(ANSI_FMT("[write sdram] bank:%d  row:0x%04x  num:%d;\n", ANSI_FG_CYAN),
+			bank, row, n);
 }
