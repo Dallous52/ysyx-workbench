@@ -17,11 +17,11 @@
 #define ADDR      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
 #define INST      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__inst)
 
-#define EN_TRACE
+// #define EN_TRACE
 // #define ITRACE
 // #define FTRACE
 // #define MTRACE
-#define DIFFTEST
+// #define DIFFTEST
 
 static VysyxSoCFull top;
 static VerilatedVcdC *vtrace = nullptr;
