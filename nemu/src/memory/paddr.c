@@ -116,11 +116,12 @@ word_t paddr_read(paddr_t addr, int len)
   }
 #endif // CONFIG_MTRACE
 
-  addr = npc_addr_map(addr);
+  paddr_t address = npc_addr_map(addr);
+  printf(ANSI_FMT("[addr : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
 
-  if (likely(in_pmem(addr))) return pmem_read(addr, len);
-  IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
-  out_of_bound(addr);
+  if (likely(in_pmem(address))) return pmem_read(address, len);
+  IFDEF(CONFIG_DEVICE, return mmio_read(address, len));
+  out_of_bound(address);
   return 0;
 }
 
