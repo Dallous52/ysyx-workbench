@@ -20,14 +20,26 @@
 #include <debug.h>
 
 
+// 0x80404000 - 0x80405000
 #define MROM_START  0x20000000
-#define MROM_END    0x20000fff
+#define MROM_END    0x20001000
 
+// 0x81000000 - 0x82000000
 #define FLASH_START 0x30000000
-#define FLASH_END   0x30ffffff
+#define FLASH_END   0x31000000
 
+// 0x80401000 - 0x80403000
 #define SRAM_START  0xf000000
-#define SRAM_END    0xf001fff
+#define SRAM_END    0xf002000
+
+// 0x80000000 - 0x80400000 
+#define PSRAM_START 0x80000000  
+#define PSRAM_END   0x80400000
+
+// 0x83000000 - 0x85000000
+#define SDRAM_START 0xa0000000
+#define SDRAM_END   0xa2000000
+
 
 #if   defined(CONFIG_PMEM_MALLOC)
 static uint8_t *pmem = NULL;
@@ -78,13 +90,16 @@ void init_mem()
 
 static paddr_t npc_addr_map(paddr_t addr)
 {
-  if (addr >= FLASH_START && addr <= FLASH_END)
+  if (addr >= FLASH_START && addr < FLASH_END)
     return addr + 0x51000000;
-  else if (addr >= MROM_START && addr <= MROM_END) 
-    return addr + 0x60000000;
-  else if (addr >= SRAM_START && addr <= SRAM_END)
-    return addr + 0x74000000;
-  
+  else if (addr >= MROM_START && addr < MROM_END) 
+    return addr + 0x60404000;
+  else if (addr >= SRAM_START && addr < SRAM_END)
+    return addr + 0x71401000;
+  else if (addr >= PSRAM_START && addr < PSRAM_END)
+    return addr;
+  else if (addr >= SDRAM_START && addr < SDRAM_END)
+    return addr - 0x1D000000;
   return 0;
 }
 
