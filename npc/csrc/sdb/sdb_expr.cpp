@@ -56,7 +56,7 @@ static int abnormal(char* e, int p, int q, int err)
 void init_regex()
 {
   static const oprt op[] = {
-    {'*', 1}, {'/', 1},
+    {'*', 1}, {'/', 1}, {'%', 1},
     {'+', 2}, {'-', 2}, 
     {'!', 3}, {'=',3}, 
     {'&', 4}
@@ -246,6 +246,9 @@ static word_t expr_core(char* e, int p, int q)
       case '*': return va * vb;
       case '/': 
         if (vb) return va / vb;
+        else return abnormal(e, p, q, 0);
+      case '%': 
+        if (vb) return va % vb;
         else return abnormal(e, p, q, 0);
       case '!': return va != vb;
       case '=': return va == vb;
