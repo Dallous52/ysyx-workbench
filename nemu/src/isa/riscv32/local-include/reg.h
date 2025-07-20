@@ -17,7 +17,7 @@
 #define __RISCV_REG_H__
 
 #include <common.h>
-
+#include <stdio.h>
 static inline int check_reg_idx(int idx) {
   IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < MUXDEF(CONFIG_RVE, 16, 32)));
   return idx;
@@ -44,6 +44,7 @@ extern word_t csr_reg[CSR_N][2];
 
 static inline int get_csr(word_t i)
 {
+  printf("[csr : 0x%08x]\n", i);
   word_t k = 0;
   for (; k < CSR_N; k++) 
   {
