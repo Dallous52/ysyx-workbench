@@ -36,7 +36,10 @@ static inline const char* reg_name(int idx) {
 #define MEPC	  0x341
 #define MCAUSE	0x342
 
-#define CSR_N   4
+#define MVENDORID 0xf11
+#define MARCHID   0xf12
+
+#define CSR_N   6
 extern word_t csr_reg[CSR_N][2];
 
 static inline int get_csr(word_t i)

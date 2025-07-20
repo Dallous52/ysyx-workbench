@@ -22,7 +22,9 @@ word_t csr_reg[CSR_N][2] = {
   {MSTATUS, 0x1800}, // mstatus
   {MTVEC, 0}, // mtvec
   {MEPC, 0}, // mepc
-  {MCAUSE, 0}  // mcause
+  {MCAUSE, 0},  // mcause
+  {MVENDORID, 0x79737978},
+  {MARCHID, 25040111},
 };
 
 #define R(i) gpr(i)
