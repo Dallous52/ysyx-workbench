@@ -1,3 +1,4 @@
+#include "device.h"
 #include "npc.h"
 #include "memory.h"
 #include "tpdef.h"
@@ -184,15 +185,15 @@ word_t dereference(char* e, int p, int q)
   {
     return paddr_read(x_addr, 4);
   }
-  else if (x_addr >= 0x80000000 && x_addr < 0x80400000)
+  else if (x_addr >= PSRAM_START && x_addr < PSRAM_END)
   {
     word_t psram_read_expr(word_t addr);
-    return psram_read_expr(x_addr - 0x80000000);
+    return psram_read_expr(x_addr - PSRAM_START);
   }
-  else if (x_addr >= 0xa0000000 && x_addr < 0xa2000000)
+  else if (x_addr >= SDRAM_START && x_addr < SDRAM_END)
   {
     word_t sdram_read_expr(word_t addr);
-    return sdram_read_expr(x_addr - 0xa0000000);
+    return sdram_read_expr(x_addr - SDRAM_START);
   }
 
   printf("Memory access out of bounds.\n");
