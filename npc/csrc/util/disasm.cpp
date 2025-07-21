@@ -60,7 +60,7 @@ void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte)
 {
 	cs_insn *insn;
 	size_t count = cs_disasm_dl(handle, code, nbyte, pc, 0, &insn);
-  if (count == 1) printf(ANSI_FMT("pc : %08x  inst: %08x", ANSI_FG_RED), (uint32_t)pc, *((uint32_t*)code));
+  if (count != 1) printf(ANSI_FMT("pc : %08x  inst: %08x", ANSI_FG_RED), (uint32_t)pc, *((uint32_t*)code));
   assert(count == 1);
 
   int ret = snprintf(str, size, "%s", insn->mnemonic);
