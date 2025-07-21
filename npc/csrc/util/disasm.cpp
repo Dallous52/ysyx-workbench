@@ -63,6 +63,7 @@ void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte)
   if (count != 1) 
   {
     printf(ANSI_FMT("pc : %08x  inst: %08x", ANSI_FG_RED), (uint32_t)pc, *((uint32_t*)code));
+    fflush(stdout);
     assert(count == 1);
   }
   
