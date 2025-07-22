@@ -15,15 +15,15 @@ word_t sdram_read_expr(word_t addr)
     addr = addr / 4;
     int bank = (addr / 512) % 4;
     int row = addr / 2048;
-    int idx = addr % 512;
-    int group = (unsigned)(addr & 0x0f000000) >> 26;
+    int idx = addr % 1024;
+    int group = idx >= 512;
     printf(ANSI_FMT("[read sdram] bank:%d  row:0x%04x  idx:%d;  data:%04x %04x\n", ANSI_FG_CYAN),
     		bank, row, idx, sdram[bank][row][idx][1][group], sdram[bank][row][idx][0][group]);
     return ((uint32_t)sdram[bank][row][idx][1][group] << 16) | (uint32_t)sdram[bank][row][idx][0][group];
 }
 
 
-extern "C" void sdram_row_load(int8_t bank, int16_t row, int16_t *data, int8_t raw, int8_t group)
+extern "C" void sdram_row_load(int8_t bank, int16_t row, int16_t *data, int8_t raw, svBit group)
 {
     int n = svSize(data, 1);
     uint16_t *p0 = (uint16_t*)svGetArrayPtr(data);
@@ -35,7 +35,7 @@ extern "C" void sdram_row_load(int8_t bank, int16_t row, int16_t *data, int8_t r
 }
 
 
-extern "C" void sdram_row_store(int8_t bank, int16_t row, const svOpenArrayHandle data, int8_t raw, int8_t group)
+extern "C" void sdram_row_store(int8_t bank, int16_t row, const svOpenArrayHandle data, int8_t raw, svBit group)
 {
     int n = svSize(data, 1);
     uint16_t *p0 = (uint16_t*)svGetArrayPtr(data);
