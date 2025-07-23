@@ -23,8 +23,10 @@ void putch(char ch) {
 
 char getch(){
   volatile uint8_t* uart_lsr = (volatile uint8_t*)(DEV_SERIAL + 5);
-  while (!(*uart_lsr & 0x01));
-  return inb(DEV_SERIAL);
+  if ((*uart_lsr & 0x01))
+    return inb(DEV_SERIAL);
+  else
+    return 0xff;
 }
 
 
