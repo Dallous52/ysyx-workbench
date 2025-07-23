@@ -33,7 +33,6 @@ CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*
 INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
 INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/npc/csrc/inc/
 INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/nemu/tools/capstone/repo/include/
-INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/nvboard/usr/include/
 
 
 # - `-DTOP_NAME="V$(TOPNAME)"` 定义宏 `TOP_NAME`，用于 Verilator 生成的顶层模块
@@ -47,10 +46,12 @@ VERILATOR_CFLAGS +=	-Wno-UNOPTFLAT \
 # LDFLAGS 添加链接库
 LDFLAGS += -L/usr/lib/x86_64-linux-gnu -lreadline -lhistory
 
+include $(NVBOARD_HOME)/scripts/nvboard.mk
+
 all: sim
 
 # simple sim test
-sim: $(VSRCS) $(CSRCS)
+sim: $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	verilator $(VERILATOR_CFLAGS) \
 		--trace --top-module ${TOPNAME} $^ \
