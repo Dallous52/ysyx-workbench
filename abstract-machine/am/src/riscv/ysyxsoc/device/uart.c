@@ -1,3 +1,5 @@
+#include <am.h>
+#include "amdev.h"
 #include "device.h"
 
 void __am_uart_init()
@@ -10,4 +12,10 @@ void __am_uart_init()
   uart_divisor[0] = 0x01;
 
   *uart_lcr = 0x03;
+}
+
+
+void __am_uart_rx(AM_UART_RX_T* rx)
+{
+  rx->data = getch();
 }

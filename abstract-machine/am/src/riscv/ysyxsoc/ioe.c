@@ -2,7 +2,7 @@
 #include <klib-macros.h>
 
 void __am_timer_init();
-void __am_uart_init();
+void __am_uart_rx();
 
 void __am_timer_rtc(AM_TIMER_RTC_T *);
 void __am_timer_uptime(AM_TIMER_UPTIME_T *);
@@ -20,6 +20,7 @@ static void *lut[128] = {
   [AM_INPUT_CONFIG] = __am_input_config,
   [AM_INPUT_KEYBRD] = __am_input_keybrd,
   [AM_UART_CONFIG]  = __am_uart_config,
+  [AM_UART_RX]      = __am_uart_rx,
 };
 
 static void fail(void *buf) { panic("access nonexist register"); }
