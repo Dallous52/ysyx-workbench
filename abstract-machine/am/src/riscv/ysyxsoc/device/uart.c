@@ -1,5 +1,5 @@
 #include <am.h>
-#include "amdev.h"
+#include <klib.h>
 #include "device.h"
 
 void __am_uart_init()
@@ -17,5 +17,6 @@ void __am_uart_init()
 
 void __am_uart_rx(AM_UART_RX_T* rx)
 {
+  printf("getch rx");
   rx->data = getch();
 }
