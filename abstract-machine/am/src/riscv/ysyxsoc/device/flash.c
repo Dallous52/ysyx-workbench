@@ -8,7 +8,7 @@ void flash_spi_init()
   spi_ctrl[3] = 0x00;
   spi_ctrl[2] = 0x00;
   spi_ctrl[1] = 0x20;
-  spi_ctrl[0] = 0x40;
+  spi_ctrl[0] = 0x40;//10000
   
   device_ctrl spi_divider = (device_ctrl)(DEV_SPI + 0x14);
   spi_divider[3] = 0;
