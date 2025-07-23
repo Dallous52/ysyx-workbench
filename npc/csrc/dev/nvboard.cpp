@@ -25,7 +25,7 @@ static void nvboard_bind_all_pins(VysyxSoCFull* top)
     nvboard_bind_pin( &top->externalPins_ps2_clk, 1, PS2_CLK);
     nvboard_bind_pin( &top->externalPins_ps2_data, 1, PS2_DAT);
     nvboard_bind_pin( &top->externalPins_uart_tx, 1, UART_TX);
-    nvboard_bind_pin( &top->externalPins_uart_tx, 1, UART_RX);
+    nvboard_bind_pin( &top->externalPins_uart_rx, 1, UART_RX);
 }
 
 
