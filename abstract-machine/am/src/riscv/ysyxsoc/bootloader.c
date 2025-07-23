@@ -106,7 +106,7 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     loader(d, s, n);
 
     putch_('r');putch_('o');putch_('d');putch_('a');putch_('t');putch_('a');
-    putch_(':');putch_('\t');
+    putch_(':');
     putch_('[');print_hex_((uintptr_t)&_rodata_op);putch_('-');
     putch_('>');print_hex_((uintptr_t)&_rodata_ed);putch_(']');
     putch_('\n');
