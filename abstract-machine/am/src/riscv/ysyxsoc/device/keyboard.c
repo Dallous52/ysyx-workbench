@@ -1,6 +1,7 @@
 #include <am.h>
 #include <klib.h>
 
+#include "amdev.h"
 #include "device.h"
 #include "../../riscv.h"
 
@@ -54,7 +55,7 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd)
   if (tcode[1] == 0xE0) // ext
   {
     keydown = tcode[2] == 0xF0;
-    keycode = 0;
+    keycode = AM_KEY_NONE;
   }
   else
   {
