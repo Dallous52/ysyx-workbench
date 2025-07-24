@@ -64,7 +64,7 @@ void npc_init(bool vcd, int argc, char** argv)
   
   // reset
 	top.reset = 1;
-  for (int i = 0; i < 12; i++)
+  for (int i = 0; i < 20; i++)
   {
     top.clock = 0; top.eval();
     top.clock = 1; top.eval();
