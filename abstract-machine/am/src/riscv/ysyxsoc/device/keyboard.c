@@ -1,5 +1,6 @@
 #include <am.h>
 #include <klib.h>
+#include <stdbool.h>
 
 #include "amdev.h"
 #include "device.h"
@@ -33,6 +34,7 @@ static int base_code[256] = {
     [0x22] = 0x58, // X
     [0x35] = 0x59, // Y
     [0x1A] = 0x5A, // Z
+    [0x45] = 0x30, // 0
     [0x16] = 0x31, // 1
     [0x1E] = 0x32, // 2
     [0x26] = 0x33, // 3
@@ -47,22 +49,33 @@ static int base_code[256] = {
 
 void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) 
 {
-  uint32_t ps2code = inl(DEV_KEYBOARD);
-  uint8_t* tcode = (uint8_t*)&ps2code;
-  bool keydown = 0;
-  int keycode = 0;
-
-  if (tcode[1] == 0xE0) // ext
+  bool down;
+  int code;
+  while (1) 
   {
-    keydown = tcode[2] == 0xF0;
-    keycode = AM_KEY_NONE;
-  }
-  else
-  {
-    keydown = tcode[1] == 0xF0;
-    keycode = base_code[tcode[0]];
+    uint8_t ps2code = inb(DEV_KEYBOARD);
+    if (ps2code == 0)
+    {
+      down = false; code = 0;
+      break; 
+    }
+    else if (ps2code == 0xF0)
+    {
+      down = false;
+    }
+    else if (ps2code == 0xE0) 
+    {
+      ps2code = inb(DEV_KEYBOARD);
+      code = 0; // ignore ext code
+      break;
+    }
+    else
+    {
+      code = base_code[ps2code];
+      break;
+    }
   }
 
-  kbd->keydown = keydown;
-  kbd->keycode = keycode;
+  kbd->keydown = down;
+  kbd->keycode = code;
 }
