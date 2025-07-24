@@ -27,12 +27,24 @@ typedef void (*voidfunc)();
 
 __attribute__((section("entry"))) void _first_bootloader()
 {
-    uint8_t *d = (uint8_t*)&_ssbl_op;
-    const uint8_t *s = (uint8_t*)&_ssbl_load;
-    uint32_t n = (uintptr_t)&_ssbl_ed - (uintptr_t)&_ssbl_op;
+    uint8_t *dst = (uint8_t*)&_ssbl_op;
+    const uint8_t *src = (uint8_t*)&_ssbl_load;
+    uint32_t len = (uintptr_t)&_ssbl_ed - (uintptr_t)&_ssbl_op;
 
-    while (n--) {
+    uint32_t *d = (uint32_t *)dst;
+    const uint32_t *s = (uint32_t *)src;
+    uintptr_t cnt32 = len / 4;
+
+    while (cnt32--) {
         *d++ = *s++;
+    }
+
+    dst = (uint8_t *)d;
+    src = (const uint8_t *)s;
+    uintptr_t rem = len % 4;
+
+    while (rem--) {
+        *dst++ = *src++;
     }
 
     voidfunc ssbl = (voidfunc)(&_ssbl_op);
