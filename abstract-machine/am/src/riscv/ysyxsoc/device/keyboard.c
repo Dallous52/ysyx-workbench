@@ -54,7 +54,6 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd)
   while (1)
   {
     uint8_t ps2code = inb(DEV_KEYBOARD);
-    printf("code: 0x%02x\n", ps2code);
     if (ps2code == 0)
     {
       down = false; code = 0;
@@ -73,6 +72,7 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd)
     else
     {
       code = base_code[ps2code];
+      printf("code: %c\n", code);
       break;
     }
   }
