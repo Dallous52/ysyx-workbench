@@ -73,9 +73,36 @@ static int base_code[256] = {
     [0x12] = AM_KEY_LSHIFT,
     [0x14] = AM_KEY_LCTRL,
     [0x11] = AM_KEY_LALT,
-    [0x29] = AM_KEY_SPACE
+    [0x29] = AM_KEY_SPACE,
+    [0x4E] = AM_KEY_MINUS,
+    [0X55] = AM_KEY_EQUALS,
+    [0x66] = AM_KEY_BACKSPACE,
+    [0x54] = AM_KEY_LEFTBRACKET,
+    [0x5B] = AM_KEY_RIGHTBRACKET,
+    [0x5D] = AM_KEY_BACKSLASH,
+    [0x4C] = AM_KEY_SEMICOLON,
+    [0x52] = AM_KEY_APOSTROPHE,
+    [0x5A] = AM_KEY_RETURN,
+    [0x41] = AM_KEY_COMMA,
+    [0x49] = AM_KEY_PERIOD,
+    [0x4A] = AM_KEY_SLASH,
+    [0x59] = AM_KEY_RSHIFT,
 };  
 
+static int ext_code[256] = {
+  [0x75] = AM_KEY_UP,
+  [0x72] = AM_KEY_DOWN,
+  [0x6B] = AM_KEY_LEFT,
+  [0x74] = AM_KEY_RIGHT,
+  [0x11] = AM_KEY_RALT,
+  [0x14] = AM_KEY_RCTRL,
+  [0x70] = AM_KEY_INSERT,
+  [0x71] = AM_KEY_DELETE,
+  [0x6C] = AM_KEY_HOME,
+  [0x69] = AM_KEY_END,
+  [0x7D] = AM_KEY_PAGEUP,
+  [0x7A] = AM_KEY_PAGEDOWN
+};
 
 
 
@@ -98,7 +125,7 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd)
     else if (ps2code == 0xE0) 
     {
       ps2code = inb(DEV_KEYBOARD);
-      code = AM_KEY_NONE; // ignore ext code
+      code = ext_code[ps2code];
       break;
     }
     else
