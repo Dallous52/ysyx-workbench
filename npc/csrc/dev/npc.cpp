@@ -49,6 +49,8 @@ static word_t currpc = 0;
 void nvboard_initialize(VysyxSoCFull *top);
 void npc_init(bool vcd, int argc, char** argv) 
 {
+	Verilated::commandArgs(argc, argv);
+
 	if (vcd) 
 	{
 		// set vcd
@@ -69,7 +71,6 @@ void npc_init(bool vcd, int argc, char** argv)
   }
 	top.reset = 0;
 
-	Verilated::commandArgs(argc, argv);
 	npc_stat = NPC_RUN;
 }
 
