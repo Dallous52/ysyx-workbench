@@ -110,30 +110,28 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd)
 {
   bool down = true;
   int code;
-  while (1)
+
+  uint8_t ps2code = inb(DEV_KEYBOARD);
+  if (ps2code == 0)
   {
-    uint8_t ps2code = inb(DEV_KEYBOARD);
-    if (ps2code == 0)
-    {
-      down = false; code = 0;
-      break; 
-    }
-    else if (ps2code == 0xF0)
-    {
-      down = false;
-    }
-    else if (ps2code == 0xE0) 
-    {
-      ps2code = inb(DEV_KEYBOARD);
-      if (ps2code == 0xF0) ps2code = inb(DEV_KEYBOARD);
-      code = ext_code[ps2code];
-      break;
-    }
-    else
-    {
-      code = base_code[ps2code];
-      break;
-    }
+    down = false; code = 0;
+  }
+  else if (ps2code == 0xF0)
+  {
+    down = false;
+    ps2code = inb(DEV_KEYBOARD);
+    code = base_code[ps2code];
+  }
+  else if (ps2code == 0xE0) 
+  {
+    ps2code = inb(DEV_KEYBOARD);
+    if (ps2code == 0xF0) ps2code = inb(DEV_KEYBOARD);
+    code = ext_code[ps2code];
+  }
+  else
+  {
+    down = true;
+    code = base_code[ps2code];
   }
 
   kbd->keydown = down;
