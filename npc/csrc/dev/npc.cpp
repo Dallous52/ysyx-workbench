@@ -50,7 +50,7 @@ void nvboard_initialize(VysyxSoCFull *top);
 void npc_init(bool vcd, int argc, char** argv) 
 {
 	Verilated::commandArgs(argc, argv);
-
+   
 	if (vcd) 
 	{
 		// set vcd
