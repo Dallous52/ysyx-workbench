@@ -105,7 +105,6 @@ static int ext_code[256] = {
 };
 
 
-
 void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) 
 {
   bool down = true;

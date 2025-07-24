@@ -9,6 +9,7 @@ AM_SRCS :=	riscv/ysyxsoc/fsbl.S \
 			riscv/ysyxsoc/device/uart.c \
 			riscv/ysyxsoc/device/flash.c \
 			riscv/ysyxsoc/device/keyboard.c \
+			riscv/ysyxsoc/device/gpu.c \
 			riscv/ysyxsoc/device/timer.c
 
 CFLAGS    += -fdata-sections -ffunction-sections
