@@ -33,7 +33,8 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl)
     {
         for (j = ctl->x; j < mx; j++)
         {
-        fb[i * w + j] = px[k++];
+            printf("do vga fbdraw");
+            fb[i * w + j] = px[k++];
         }
     }
     printf("out vga fbdraw");
