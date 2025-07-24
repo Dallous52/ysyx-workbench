@@ -49,12 +49,12 @@ static int base_code[256] = {
 
 void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) 
 {
-  printf("aaa\n");
   bool down;
   int code;
-  while (1) 
+  while (1)
   {
     uint8_t ps2code = inb(DEV_KEYBOARD);
+    printf("code: 0x%02x", ps2code);
     if (ps2code == 0)
     {
       down = false; code = 0;
