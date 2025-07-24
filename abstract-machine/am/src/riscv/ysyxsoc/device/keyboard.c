@@ -66,7 +66,7 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd)
     else if (ps2code == 0xE0) 
     {
       ps2code = inb(DEV_KEYBOARD);
-      code = 0; // ignore ext code
+      code = AM_KEY_NONE; // ignore ext code
       break;
     }
     else
