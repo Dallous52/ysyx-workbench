@@ -20,7 +20,6 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg)
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) 
 {
-    printf("in vga fbdraw");
     int i = 0, j = 0, k = 0;
     int w = 640;
     volatile uint32_t* fb = (volatile uint32_t*)(DEV_VGA);
@@ -33,9 +32,7 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl)
     {
         for (j = ctl->x; j < mx; j++)
         {
-            printf("do vga fbdraw");
             fb[i * w + j] = px[k++];
         }
     }
-    printf("out vga fbdraw");
 }
