@@ -125,6 +125,7 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd)
     else if (ps2code == 0xE0) 
     {
       ps2code = inb(DEV_KEYBOARD);
+      printf("E0 %02x\n", ps2code);
       code = ext_code[ps2code];
       break;
     }
