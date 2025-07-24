@@ -72,11 +72,11 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd)
     else
     {
       code = base_code[ps2code];
-      printf("code: %c\n", code);
       break;
     }
   }
 
   kbd->keydown = down;
   kbd->keycode = code;
+  printf("code: %c\n", code);
 }
