@@ -170,17 +170,15 @@ module ysyx_25040111_lsu (
         if (awvalid & awready) begin
             awvalid <= 0;
             wvalid <= 1;
+            wlast <= 1;
         end
 
         // 写入参数
         if (wvalid & wready) begin
             // if (addr >= 32'ha000_0000 & addr <= 32'ha001_0000) 
             //     $display("waddr:%h  wdata:%h", addr, io_master_wdata);
-            wlast <= 1;
-        end
-        else if (wvalid & wlast) begin
             wlast <= 0;
-            wvalid <= 0;            
+            wvalid <= 0;   
         end
 
         // if (bvalid)
@@ -188,7 +186,6 @@ module ysyx_25040111_lsu (
 
         // 写回复信息
         if (bready & bvalid) begin
-            bready <= 0;
             valid_t <= 1;
         end
     end
