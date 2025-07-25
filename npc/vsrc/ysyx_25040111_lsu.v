@@ -186,9 +186,6 @@ module ysyx_25040111_lsu (
 
         // 写回复信息
         if (bready & bvalid) begin
-            `ifdef PMC_EN
-                monitor_counter(`LSU);            
-            `endif
             valid_t <= 1;
         end
     end
