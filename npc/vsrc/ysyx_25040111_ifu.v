@@ -39,9 +39,6 @@ module ysyx_25040111_ifu (
             inst <= inst_t;
             if_flag <= 0;
             valid <= 1;
-        `ifdef PMC_EN
-            monitor_counter(`IFU);            
-        `endif
         end
         else inst <= inst;
 

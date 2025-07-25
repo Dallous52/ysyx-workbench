@@ -2,13 +2,11 @@
 #include <cstdio>
 
 enum {
-    IFU = 0, LSU, EXU,
-    IOPT, IJUMP, IMEM, ICSR,
+    IOPT = 0, IJUMP, IMEM, ICSR,
     EEND
 };
 
 static const char* type_name[EEND] = {
-    "IFU", "LSU", "!EXU", 
     "I-OPT", "I-JUMP", "I-MEM", "I-CSR"
 };
 
