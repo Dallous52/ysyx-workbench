@@ -45,16 +45,19 @@ void pmc_print()
 {
     int64_t all_inst = 0, all_cycle = 0;
 
-    printf(ANSI_FG_BLUE "type\tinst\tcycle\t\tcpi\n" ANSI_NONE);
-    for (int i = 0; i < EEND; i++)
+    printf(ANSI_FG_BLUE "%-6s\t%10s\t%10s\t%5s\n" ANSI_NONE,
+        "type", "inst", "cycle", "cpi");
+
+    for (int i = 0; i < EEND; i++) 
     {
         all_inst += counter[i];
         all_cycle += cycnum[i];
-        printf(ANSI_FMT("%s\t%d\t%ld\t\t%ld", ANSI_FG_BLUE) "\n", 
+        printf(ANSI_FMT("%-6s\t%10d\t%10ld\t%5ld", ANSI_FG_BLUE) "\n", 
             type_name[i], counter[i], cycnum[i], cycnum[i] / counter[i]);
     }
-    printf(ANSI_FMT("total\t%ld\t%ld\t\t%ld", ANSI_FG_BLUE) "\n", 
-        all_inst, all_cycle, all_cycle / all_inst);
+
+    printf(ANSI_FMT("%-6s\t%10ld\t%10ld\t%5ld", ANSI_FG_BLUE) "\n", 
+        "total", all_inst, all_cycle, all_cycle / all_inst);
 }
 
 /*
