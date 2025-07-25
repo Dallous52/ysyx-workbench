@@ -2,7 +2,6 @@
 `define NPC_IDU
 
 `include "../HDR/ysyx_25040111_inc.vh"
-`include "../HDR/ysyx_20540111_dpic.vh"
 
 `define OPCODE_NUM 10
 
