@@ -46,7 +46,7 @@ uint32_t npc_stat = -1;
 static word_t currpc = 0;
 
 // cpi 计算
-int cyc_num = 0;
+int64_t cyc_num = 0;
 
 
 // initialize npc resource
@@ -124,7 +124,7 @@ static void print_exe_info(word_t tpc, word_t tinst, char *logbuf, size_t buflen
 // execute
 void nvboard_renew();
 void pmc_print();
-void cycle_counter(word_t inst, int ncyc);
+void cycle_counter(word_t inst, int64_t ncyc);
 int cpu_exec(uint64_t steps) 
 {
   void check_wp();

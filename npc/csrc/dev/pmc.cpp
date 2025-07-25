@@ -12,7 +12,7 @@ static const char* type_name[EEND] = {
 };
 
 static int counter[EEND] = { 0 };
-static int cycnum[EEND] = { 0 };
+static int64_t cycnum[EEND] = { 0 };
 
 extern "C" void monitor_counter(int dtype)
 {
@@ -20,7 +20,7 @@ extern "C" void monitor_counter(int dtype)
 }
 
 
-void cycle_counter(word_t inst, int ncyc)
+void cycle_counter(word_t inst, int64_t ncyc)
 {
     uint8_t opt = BITS(inst, 6, 0);
 
