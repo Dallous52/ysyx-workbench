@@ -178,11 +178,11 @@ module ysyx_25040111_lsu (
             //     $display("waddr:%h  wdata:%h", addr, io_master_wdata);
             wlast <= 1;
         end
-        else begin
+        else if (wvalid & wlast) begin
             wlast <= 0;
-            wvalid <= 0;
+            wvalid <= 0;            
         end
-        
+
         // if (bvalid)
         //     bready <= 1;
 
