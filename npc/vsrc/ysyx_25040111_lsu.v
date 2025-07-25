@@ -176,12 +176,13 @@ module ysyx_25040111_lsu (
         if (wvalid & wready) begin
             // if (addr >= 32'ha000_0000 & addr <= 32'ha001_0000) 
             //     $display("waddr:%h  wdata:%h", addr, io_master_wdata);
-            wvalid <= 0;
             wlast <= 1;
         end
-        else
+        else begin
             wlast <= 0;
-
+            wvalid <= 0;
+        end
+        
         // if (bvalid)
         //     bready <= 1;
 
