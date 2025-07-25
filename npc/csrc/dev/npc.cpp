@@ -185,7 +185,7 @@ int cpu_exec(uint64_t steps)
       printf("ebreak [" ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED) "]\n");
       return step_ok;
     case NPC_END:
-      printf("ebreak [" ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) "]\n");
+      printf("ebreak [" ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) "]\t");
       printf("CPI: [" ANSI_FMT("%ld", ANSI_FG_GREEN) "]\n", cpi_cyc_num / inst_num);
       return step_ok;
     default:
