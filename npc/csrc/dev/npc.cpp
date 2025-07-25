@@ -123,6 +123,7 @@ static void print_exe_info(word_t tpc, word_t tinst, char *logbuf, size_t buflen
 
 // execute
 void nvboard_renew();
+void pmc_print();
 int cpu_exec(uint64_t steps) 
 {
   void check_wp();
@@ -187,6 +188,7 @@ int cpu_exec(uint64_t steps)
     case NPC_END:
       printf("ebreak [" ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) "]\t");
       printf("CPI [" ANSI_FMT("%ld", ANSI_FG_GREEN) "]\n", cpi_cyc_num / inst_num);
+      pmc_print();
       return step_ok;
     default:
       finalize(1);

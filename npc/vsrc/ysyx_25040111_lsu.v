@@ -157,6 +157,9 @@ module ysyx_25040111_lsu (
             // rready <= 0;
             // if (addr >= 32'ha000_0000& addr <= 32'ha001_0000)
             //     $display("raddr:%h  rdata:%h", addr, io_master_rdata);
+            `ifdef PMC_EN
+                monitor_counter(`LSU);            
+            `endif
         end
     end
 
@@ -186,6 +189,9 @@ module ysyx_25040111_lsu (
 
         // 写回复信息
         if (bready & bvalid) begin
+            `ifdef PMC_EN
+                monitor_counter(`LSU);            
+            `endif
             valid_t <= 1;
         end
     end
