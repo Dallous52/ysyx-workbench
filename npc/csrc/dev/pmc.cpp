@@ -26,16 +26,16 @@ void cycle_counter(word_t inst, int64_t ncyc)
 
     switch (opt) 
     {
-    case 0b0010011: cycnum[IOPT] += ncyc;            
-    case 0b0010111: cycnum[IOPT] += ncyc;            
-    case 0b0110111: cycnum[IOPT] += ncyc;            
-    case 0b1100111: cycnum[IJMP] += ncyc;            
-    case 0b1101111: cycnum[IJMP] += ncyc;            
-    case 0b1110011: cycnum[ICSR] += ncyc;            
-    case 0b0100011: cycnum[IMEM] += ncyc;            
-    case 0b0000011: cycnum[IMEM] += ncyc;            
-    case 0b0110011: cycnum[IOPT] += ncyc;            
-    case 0b1100011: cycnum[IJMP] += ncyc;            
+    case 0b0010011: cycnum[IOPT] += ncyc; break;            
+    case 0b0010111: cycnum[IOPT] += ncyc; break;            
+    case 0b0110111: cycnum[IOPT] += ncyc; break;            
+    case 0b1100111: cycnum[IJMP] += ncyc; break;            
+    case 0b1101111: cycnum[IJMP] += ncyc; break;            
+    case 0b1110011: cycnum[ICSR] += ncyc; break;            
+    case 0b0100011: cycnum[IMEM] += ncyc; break;            
+    case 0b0000011: cycnum[IMEM] += ncyc; break;            
+    case 0b0110011: cycnum[IOPT] += ncyc; break;            
+    case 0b1100011: cycnum[IJMP] += ncyc; break;            
     default: ;
     }
 }
