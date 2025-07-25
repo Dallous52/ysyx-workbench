@@ -189,7 +189,7 @@ int cpu_exec(uint64_t steps)
       printf("ebreak [" ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED) "]\n");
       return step_ok;
     case NPC_END:
-      printf("ebreak [" ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) "]\t");
+      printf("ebreak [" ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) "]\n");
       pmc_print();
       return step_ok;
     default:
