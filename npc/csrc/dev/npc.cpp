@@ -45,6 +45,10 @@ static const char *regs[] = {
 uint32_t npc_stat = -1;
 static word_t currpc = 0;
 
+// cpi 计算
+uint64_t cpi_cyc_num = 0;
+
+
 // initialize npc resource
 void nvboard_initialize(VysyxSoCFull *top);
 void npc_init(bool vcd, int argc, char** argv) 
@@ -143,6 +147,8 @@ int cpu_exec(uint64_t steps)
     top.clock = 1; top.eval();
     if (vtrace && vstart)
       vtrace->dump(sim_time++);
+    
+    cpi_cyc_num++;
 
     if (CPU_PC != currpc) 
     {
@@ -180,6 +186,7 @@ int cpu_exec(uint64_t steps)
       return step_ok;
     case NPC_END:
       printf("ebreak [" ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) "]\n");
+      printf(ANSI_FMT("CPI: %ld", ANSI_FG_GREEN) "\n", cpi_cyc_num / inst_num);
       return step_ok;
     default:
       finalize(1);
