@@ -45,7 +45,7 @@ void pmc_print()
 {
     int64_t all_inst = 0, all_cycle = 0;
 
-    printf(ANSI_FG_BLUE "%-6s\t%10s\t%10s\t%5s\n" ANSI_NONE,
+    printf(ANSI_FG_GREEN "%-6s\t%10s\t%10s\t%5s\n" ANSI_NONE,
         "type", "inst", "cycle", "cpi");
 
     for (int i = 0; i < EEND; i++) 
