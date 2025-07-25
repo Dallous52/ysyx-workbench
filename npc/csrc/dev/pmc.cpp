@@ -50,7 +50,7 @@ void pmc_print()
     {
         all_inst += counter[i];
         all_cycle += cycnum[i];
-        printf(ANSI_FMT("%s\t%d\t%d\t%d", ANSI_FG_BLUE) "\n", 
+        printf(ANSI_FMT("%s\t%d\t%ld\t%ld", ANSI_FG_BLUE) "\n", 
             type_name[i], counter[i], cycnum[i], cycnum[i] / counter[i]);
     }
     printf(ANSI_FMT("total\t%ld\t%ld\t%ld", ANSI_FG_BLUE) "\n", 
