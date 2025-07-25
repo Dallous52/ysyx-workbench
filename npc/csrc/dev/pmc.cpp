@@ -57,7 +57,7 @@ void pmc_print()
     }
 
     printf(ANSI_FMT("%-6s\t%10ld\t%10ld\t%5ld", ANSI_FG_GREEN) "\n", 
-        "total", all_inst, all_cycle, all_cycle / all_inst);
+        "ALL", all_inst, all_cycle, all_cycle / all_inst);
 }
 
 /*
