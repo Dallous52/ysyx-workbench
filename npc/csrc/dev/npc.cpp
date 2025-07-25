@@ -46,7 +46,7 @@ uint32_t npc_stat = -1;
 static word_t currpc = 0;
 
 // cpi 计算
-uint64_t cpi_cyc_num = 0;
+int cyc_num = 0;
 
 
 // initialize npc resource
@@ -124,6 +124,7 @@ static void print_exe_info(word_t tpc, word_t tinst, char *logbuf, size_t buflen
 // execute
 void nvboard_renew();
 void pmc_print();
+void cycle_counter(word_t inst, int ncyc);
 int cpu_exec(uint64_t steps) 
 {
   void check_wp();
@@ -149,10 +150,12 @@ int cpu_exec(uint64_t steps)
     if (vtrace && vstart)
       vtrace->dump(sim_time++);
     
-    cpi_cyc_num++;
+    cyc_num++;
 
     if (CPU_PC != currpc) 
     {
+      cycle_counter(INST, cyc_num);
+      cyc_num = 0;
       inst_num++;
 
 #if defined(EN_TRACE) && defined(ITRACE)
@@ -187,7 +190,6 @@ int cpu_exec(uint64_t steps)
       return step_ok;
     case NPC_END:
       printf("ebreak [" ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) "]\t");
-      printf("CPI [" ANSI_FMT("%ld", ANSI_FG_GREEN) "]\n", cpi_cyc_num / inst_num);
       pmc_print();
       return step_ok;
     default:
