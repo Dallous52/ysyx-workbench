@@ -3,13 +3,13 @@
 
 enum {
     IFU = 0, LSU, EXU,
-    IOPT, IJUMP, IMEM, ICSR, ISTORE, ILOAD,
+    IOPT, IJUMP, IMEM, ICSR,
     EEND
 };
 
 static const char* type_name[EEND] = {
     "IFU", "LSU", "!EXU", 
-    "I-OPT", "I-JUMP", "I-MEM", "I-CSR", "I-STORE", "I-LOAD"
+    "I-OPT", "I-JUMP", "I-MEM", "I-CSR"
 };
 
 static int counter[EEND] = { 0 };
@@ -25,7 +25,7 @@ void pmc_print()
 {
     for (int i = 0; i < EEND; i++)
     {
-        printf(ANSI_FMT("%s:\t %d", ANSI_BG_BLUE) "\n", 
+        printf(ANSI_FMT("%s:\t %d", ANSI_FG_BLUE) "\n", 
             type_name[i], counter[i]);
     }
 }
