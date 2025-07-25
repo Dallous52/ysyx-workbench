@@ -45,15 +45,15 @@ void pmc_print()
 {
     int64_t all_inst = 0, all_cycle = 0;
 
-    printf(ANSI_FG_BLUE "type\tinst\tcycle\tcpi\n" ANSI_NONE);
+    printf(ANSI_FG_BLUE "type\tinst\tcycle\t\tcpi\n" ANSI_NONE);
     for (int i = 0; i < EEND; i++)
     {
         all_inst += counter[i];
         all_cycle += cycnum[i];
-        printf(ANSI_FMT("%s\t%d\t%ld\t%ld", ANSI_FG_BLUE) "\n", 
+        printf(ANSI_FMT("%s\t%d\t%ld\t\t%ld", ANSI_FG_BLUE) "\n", 
             type_name[i], counter[i], cycnum[i], cycnum[i] / counter[i]);
     }
-    printf(ANSI_FMT("total\t%ld\t%ld\t%ld", ANSI_FG_BLUE) "\n", 
+    printf(ANSI_FMT("total\t%ld\t%ld\t\t%ld", ANSI_FG_BLUE) "\n", 
         all_inst, all_cycle, all_cycle / all_inst);
 }
 
