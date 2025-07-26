@@ -74,6 +74,10 @@ gtkwave:
 run: sim
 	./obj_dir/top $(ARGS)
 
+pref:
+	make -C/home/dallous/Documents/ysyx-workbench/am-kernels/benchmarks/microbench/ \
+		ARCH=riscv32e-ysyxsoc run mainargs=test
+
 clean:
 	@rm -rf obj_dir
 	@rm -f waveform.vcd
