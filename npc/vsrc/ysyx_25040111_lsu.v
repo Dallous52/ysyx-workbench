@@ -52,13 +52,12 @@ module ysyx_25040111_lsu (
     );
 
     reg arvalid;
-    reg  rready;
     reg awvalid, wvalid;
-    reg bready;
     wire [1:0] rresp;
-    reg arready, awready;
-    reg rvalid;
-    reg wready, wlast;
+    wire arready, awready;
+    wire rvalid, rready;
+    wire wready, bready; 
+    reg wlast;
     wire bvalid;
     wire [1:0] bresp;
     reg [31:0] rmem;
@@ -194,8 +193,10 @@ module ysyx_25040111_lsu (
         if (valid_t)
             valid_t <= 0;
 
-        if (|rresp | |bresp)
-            ebreak(5);
+        `ifndef YOSYS_STA
+            if (|rresp | |bresp)
+                ebreak(5);
+        `endif // YOSYS_STA
     end
 
     assign valid = wen | ren ? valid_t : ready;

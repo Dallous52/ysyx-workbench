@@ -18,12 +18,12 @@ module ysyx_25040111_csr(
     // 写入
     always @(posedge clk) begin
         if (reset) begin
-            csr[0] = 32'h00001800;
-            csr[1] = 32'h00000000;
-            csr[2] = 32'h00000000;
-            csr[3] = 32'h00000000;
-            csr[4] = 32'h79737978;  // mvendorid
-            csr[5] = 32'd25040111;  // marchid
+            csr[0] <= 32'h00001800;
+            csr[1] <= 32'h00000000;
+            csr[2] <= 32'h00000000;
+            csr[3] <= 32'h00000000;
+            csr[4] <= 32'h79737978;  // mvendorid
+            csr[5] <= 32'd25040111;  // marchid
         end
         if (wen) begin
             // $display("mtevc %h\n", csr[1]);

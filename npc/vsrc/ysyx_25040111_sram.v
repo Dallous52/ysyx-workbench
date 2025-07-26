@@ -1,3 +1,5 @@
+`ifndef YOSYS_STA
+
 `include "HDR/ysyx_20540111_dpic.vh"
 // `include "MOD/ysyx_25040111_RegisterFile.v"
 
@@ -126,3 +128,5 @@ module ysyx_25040111_sram(
     end
 
 endmodule
+
+`endif // YOSYS_STA

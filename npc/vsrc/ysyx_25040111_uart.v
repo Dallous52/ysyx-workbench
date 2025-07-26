@@ -1,3 +1,5 @@
+`ifndef YOSYS_STA
+
 `include "HDR/ysyx_20540111_dpic.vh"
 
 module ysyx_25040111_uart(
@@ -87,3 +89,5 @@ module ysyx_25040111_uart(
     end
 
 endmodule
+
+`endif // YOSYS_STA

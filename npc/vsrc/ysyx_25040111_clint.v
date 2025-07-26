@@ -5,8 +5,8 @@ module ysyx_25040111_clint(
         output reg arready,
 
         output reg [31:0] rdata,
-        output [1:0] rresp,
-        output rvalid,
+        output reg [1:0] rresp,
+        output reg rvalid,
         input rready
     );
 
