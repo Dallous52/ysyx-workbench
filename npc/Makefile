@@ -52,6 +52,7 @@ ifeq ($(TOPNAME), ysyxSoCFull)
 VERILATOR_CFLAGS +=	-I$(SOC_DIR)/perip/uart16550/rtl \
 					-I$(SOC_DIR)/perip/spi/rtl
 					-DRUNSOC=1
+CXXFLAGS += -DRUNSOC=1
 endif
 
 
