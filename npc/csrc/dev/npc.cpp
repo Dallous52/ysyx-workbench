@@ -1,12 +1,12 @@
 #include "npc.h"
 #include "device.h"
 #include "memory.h"
-#include "nvboard.h"
 #include "svdpi.h"
 #include "tpdef.h"
 #include "util.h"
 
 #ifdef RUNSOC
+#include "nvboard.h"
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull___024root.h"
 
