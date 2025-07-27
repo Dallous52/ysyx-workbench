@@ -16,9 +16,6 @@ module ysyx_25040111_lsu (
         output [31:0] rdata,// 读出数据
         output valid,
 
-`ifdef 
-    
-`endif
         input io_master_awready,
         output io_master_awvalid,
         output [31:0] io_master_awaddr,
