@@ -5,51 +5,53 @@
 `define DEV_CLINT_END  (32'h0200004f)
 
 module ysyx_25040111_lsu (
-        input clk,          // 时钟
-        input ready,
-        input wen,          // 写使能
-        input ren,          // 读使能
-        input sign,         // 有无符号标志
-        input [1:0] mask,   // 掩码选择
-        input [31:0] addr,  // 内存操作地址
-        input [31:0] wdata, // 写入数据
-        output [31:0] rdata,// 读出数据
-        output valid,
+    input clk,          // 时钟
+    input ready,
+    input wen,          // 写使能
+    input ren,          // 读使能
+    input sign,         // 有无符号标志
+    input [1:0] mask,   // 掩码选择
+    input [31:0] addr,  // 内存操作地址
+    input [31:0] wdata, // 写入数据
+    output [31:0] rdata,// 读出数据
+    output valid
 
-        input io_master_awready,
-        output io_master_awvalid,
-        output [31:0] io_master_awaddr,
-        output [3:0] io_master_awid,
-        output [7:0] io_master_awlen,
-        output [2:0] io_master_awsize,
-        output [1:0] io_master_awburst,
+`ifdef RUNSOC
+    ,input io_master_awready,
+    output io_master_awvalid,
+    output [31:0] io_master_awaddr,
+    output [3:0] io_master_awid,
+    output [7:0] io_master_awlen,
+    output [2:0] io_master_awsize,
+    output [1:0] io_master_awburst,
 
-        input io_master_wready,
-        output io_master_wvalid,
-        output [31:0] io_master_wdata,
-        output [3:0] io_master_wstrb,
-        output io_master_wlast,
+    input io_master_wready,
+    output io_master_wvalid,
+    output [31:0] io_master_wdata,
+    output [3:0] io_master_wstrb,
+    output io_master_wlast,
 
-        output io_master_bready,
-        input io_master_bvalid,
-        input [1:0] io_master_bresp,
-        input [3:0] io_master_bid,
+    output io_master_bready,
+    input io_master_bvalid,
+    input [1:0] io_master_bresp,
+    input [3:0] io_master_bid,
 
-        input io_master_arready,
-        output io_master_arvalid,
-        output [31:0] io_master_araddr,
-        output [3:0] io_master_arid,
-        output [7:0] io_master_arlen,
-        output [2:0] io_master_arsize,
-        output [1:0] io_master_arburst,
+    input io_master_arready,
+    output io_master_arvalid,
+    output [31:0] io_master_araddr,
+    output [3:0] io_master_arid,
+    output [7:0] io_master_arlen,
+    output [2:0] io_master_arsize,
+    output [1:0] io_master_arburst,
 
-        output io_master_rready,
-        input io_master_rvalid,
-        input [1:0] io_master_rresp,
-        input [31:0] io_master_rdata,
-        input io_master_rlast,
-        input [3:0] io_master_rid
-    );
+    output io_master_rready,
+    input io_master_rvalid,
+    input [1:0] io_master_rresp,
+    input [31:0] io_master_rdata,
+    input io_master_rlast,
+    input [3:0] io_master_rid
+`endif // RUNSOC
+);
 
     reg arvalid;
     reg awvalid, wvalid;
