@@ -88,7 +88,7 @@ gtkwave:
 
 # build and run
 run: sim
-	./obj_dir/top $(ARGS)
+	./build/$(TOPNAME)/top $(ARGS)
 
 pref:
 	make -C/home/dallous/Documents/ysyx-workbench/am-kernels/benchmarks/microbench/ \
