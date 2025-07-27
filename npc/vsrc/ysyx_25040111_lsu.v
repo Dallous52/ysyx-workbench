@@ -55,14 +55,15 @@ module ysyx_25040111_lsu (
 
     reg arvalid;
     reg awvalid, wvalid;
-    wire [1:0] rresp;
     wire arready, awready;
     wire rvalid, rready;
     wire wready, bready; 
-    reg wlast;
     wire bvalid;
-    wire [1:0] bresp;
+    wire [1:0] bresp, rresp;
+    reg wlast;
+
     reg [31:0] rmem;
+    reg valid_t;
 
     wire [3:0] wmask;
     ysyx_25040111_MuxKey #(4, 2, 4) c_wmask(wmask, mask, {
@@ -133,7 +134,6 @@ module ysyx_25040111_lsu (
     assign io_master_rready   = is_clint ? 1'b0 : rready;
 `endif // RUNSOC
   
-    reg valid_t;
     // memory read
     assign rready = 1;
     always @(posedge clk) begin
@@ -148,14 +148,9 @@ module ysyx_25040111_lsu (
         if (arvalid & arready)
             arvalid <= 0;
 
-        // 读取数据
-        // if (rvalid)
-        //     rready <= 1;
-
         if (rvalid & rready) begin
             valid_t <= 1;
             rmem <= is_clint ? rmem_clint : io_master_rdata;
-            // rready <= 0;
             // if (addr >= 32'ha000_0000& addr <= 32'ha001_0000)
             //     $display("raddr:%h  rdata:%h", addr, io_master_rdata);
         end
@@ -181,9 +176,6 @@ module ysyx_25040111_lsu (
             wlast <= 0;
             wvalid <= 0;   
         end
-
-        // if (bvalid)
-        //     bready <= 1;
 
         // 写回复信息
         if (bready & bvalid) begin
