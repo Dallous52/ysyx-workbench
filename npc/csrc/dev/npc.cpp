@@ -18,11 +18,10 @@
 #include "Vysyx_25040111.h"
 #include "Vysyx_25040111___024root.h"
 
-
 #define REG       (top.rootp->ysyx_25040111__DOT__u_reg__DOT__rf)
-#define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
-#define ADDR      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
-#define INST      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__inst)
+#define CPU_PC    (top.rootp->pc)
+#define ADDR      (top.rootp->ysyx_25040111__DOT__lsu_addr)
+#define INST      (top.rootp->inst)
 #endif // RUNSOC
 
 #include <cstdio>
