@@ -62,16 +62,6 @@ module ysyx_25040111_lsu (
     reg wlast;
     wire bvalid;
     wire [1:0] bresp;
-    reg [31:0] rmem;
-
-    wire arvalid_clint, rready_clint;
-    wire [1:0] rresp_clint;
-    wire arready_clint, awready_clint;
-    wire rvalid_clint;
-    wire wready_clint;
-    wire bvalid_clint;
-    wire [1:0] bresp_clint;
-    reg [31:0] rmem_clint;
 
     wire [3:0] wmask;
     ysyx_25040111_MuxKey #(4, 2, 4) c_wmask(wmask, mask, {
@@ -97,8 +87,16 @@ module ysyx_25040111_lsu (
                              2'b11, wdata << 24
                          });
 
-    wire is_clint;
-    assign is_clint = (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END);
+`ifdef RUNSOC
+    wire arvalid_clint, rready_clint;
+    wire [1:0] rresp_clint;
+    wire arready_clint, awready_clint;
+    wire rvalid_clint;
+    wire wready_clint;
+    wire bvalid_clint;
+    wire [1:0] bresp_clint;
+    reg [31:0] rmem_clint;
+    wire is_clint = (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END);
 
     assign arvalid_clint    = is_clint ? arvalid         : 1'b0;
     assign arready          = is_clint ? arready_clint   : io_master_arready;
@@ -132,7 +130,9 @@ module ysyx_25040111_lsu (
     assign io_master_arburst  = 2'b0;
 
     assign io_master_rready   = is_clint ? 1'b0 : rready;
-
+    wire [31:0] rmem = is_clint ? rmem_clint : io_master_rdata;
+`endif // RUNSOC
+  
     reg valid_t;
     // memory read
     assign rready = 1;
@@ -154,7 +154,6 @@ module ysyx_25040111_lsu (
 
         if (rvalid & rready) begin
             valid_t <= 1;
-            rmem <= is_clint ? rmem_clint : io_master_rdata;
             // rready <= 0;
             // if (addr >= 32'ha000_0000& addr <= 32'ha001_0000)
             //     $display("raddr:%h  rdata:%h", addr, io_master_rdata);
