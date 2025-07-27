@@ -69,7 +69,6 @@ int64_t cyc_num = 0;
 
 
 // initialize npc resource
-void nvboard_initialize(VysyxSoCFull *top);
 void npc_init(bool vcd, int argc, char** argv) 
 {
 	Verilated::commandArgs(argc, argv);
@@ -82,9 +81,12 @@ void npc_init(bool vcd, int argc, char** argv)
 		top.trace(vtrace, 5);
 		vtrace->open(VCD_PATH);
 	}
-	
+
+#ifdef RUNSOC
+  void nvboard_initialize(VysyxSoCFull *top);
   nvboard_initialize(&top);
-  
+#endif 
+
   // reset
 	top.reset = 1;
   for (int i = 0; i < 20; i++)
