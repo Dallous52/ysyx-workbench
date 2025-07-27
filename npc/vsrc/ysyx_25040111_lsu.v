@@ -1,8 +1,6 @@
+`include "HDR/ysyx_25040111_inc.vh"
 `include "HDR/ysyx_20540111_dpic.vh"
 `include "MOD/ysyx_25040111_MuxKey.v"
-
-`define DEV_CLINT   (32'h02000048)
-`define DEV_CLINT_END  (32'h0200004f)
 
 module ysyx_25040111_lsu (
     input clk,          // 时钟
@@ -128,6 +126,22 @@ module ysyx_25040111_lsu (
     always @(posedge clk) begin
         if (rvalid & rready)
             rmem <= is_clint ? rmem_clint : io_master_rdata;
+    end
+`else
+    reg [2:0] Xbar;
+    always @(*) begin
+        if (addr == `DEV_SERIAL) begin
+            Xbar = 3'b010;
+            rmem = rmem_uart;
+        end
+        else if (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END) begin
+            Xbar = 3'b100;
+            rmem = rmem_clint;
+        end
+        else begin
+            Xbar = 3'b001;
+            rmem = rmem_sram;
+        end
     end
 `endif // RUNSOC
   
