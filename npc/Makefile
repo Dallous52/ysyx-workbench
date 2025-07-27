@@ -11,7 +11,7 @@ VERILATOR_CFLAGS += -MMD --build -cc  --autoflush \
 				--timescale "1ns/1ns" --no-timing
 
 # 顶层模块名称
-TOPNAME = ysyxSoCFull
+TOPNAME ?= ysyx_25040111 # ysyxSoCFull
 
 # ysyxSoC 目录
 SOC_DIR = /home/dallous/Documents/ysyx-workbench/ysyxSoC
@@ -20,17 +20,25 @@ ARGS ?=
 
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
+
+ifeq ($(TOP_NAME), ysyxSoCFull)
 VSRCS += $(shell find $(SOC_DIR)/perip -name "*.v")
 VSRCS += $(SOC_DIR)/build/ysyxSoCFull.v
+endif
 
-CURRDIR = /home/dallous/Documents/ysyx-workbench/npc
+CURRDIR ?= /home/dallous/Documents/ysyx-workbench/npc
 RTL_FILE = $(VSRCS)
+
 
 # 获取所有 C/C++ 源文件（`csrc` 目录下的 `.c`、`.cc`、`.cpp` 文件）
 CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 
+
 # C++ 编译选项：
+ifeq ($(TOP_NAME), ysyxSoCFull)
 INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
+endif
+
 INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/npc/csrc/inc/
 INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/nemu/tools/capstone/repo/include/
 
@@ -40,13 +48,19 @@ CXXFLAGS += $(INCFLAGS) # -g
 VERILATOR_CFLAGS +=	-Wno-UNOPTFLAT \
 					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/ \
 					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/IDU \
-					-I$(SOC_DIR)/perip/uart16550/rtl \
+
+ifeq ($(TOP_NAME), ysyxSoCFull)
+VERILATOR_CFLAGS +=	-I$(SOC_DIR)/perip/uart16550/rtl \
 					-I$(SOC_DIR)/perip/spi/rtl
+endif
+
 
 # LDFLAGS 添加链接库
 LDFLAGS += -L/usr/lib/x86_64-linux-gnu -lreadline -lhistory
 
+ifeq ($(TOP_NAME), ysyxSoCFull)
 include $(NVBOARD_HOME)/scripts/nvboard.mk
+endif
 
 all: sim
 

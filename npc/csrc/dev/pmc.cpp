@@ -59,13 +59,3 @@ void pmc_print()
     printf(ANSI_FMT("%-6s\t%10ld\t%10ld\t%5ld", ANSI_FG_GREEN) "\n", 
         "ALL", all_inst, all_cycle, all_cycle / all_inst);
 }
-
-/*
-IFU:     597849
-LSU:     736430
-!EXU:    0
-I-OPT:   318034
-I-JUMP:  141231
-I-MEM:   138581
-I-CSR:   2
-*/
