@@ -67,6 +67,7 @@ all: sim
 
 # simple sim test
 sim: $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
+	@mkdir -p build
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	verilator $(VERILATOR_CFLAGS) \
 		--trace --top-module ${TOPNAME} $^ \
