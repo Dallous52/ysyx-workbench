@@ -132,6 +132,11 @@ module ysyx_25040111_lsu (
     assign io_master_arburst  = 2'b0;
 
     assign io_master_rready   = is_clint ? 1'b0 : rready;
+
+    always @(posedge clk) begin
+        if (rvalid & rready)
+            rmem <= is_clint ? rmem_clint : io_master_rdata;
+    end
 `endif // RUNSOC
   
     // memory read
@@ -150,7 +155,6 @@ module ysyx_25040111_lsu (
 
         if (rvalid & rready) begin
             valid_t <= 1;
-            rmem <= is_clint ? rmem_clint : io_master_rdata;
             // if (addr >= 32'ha000_0000& addr <= 32'ha001_0000)
             //     $display("raddr:%h  rdata:%h", addr, io_master_rdata);
         end
