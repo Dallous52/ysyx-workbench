@@ -142,7 +142,6 @@ static void print_exe_info(word_t tpc, word_t tinst, char *logbuf, size_t buflen
 
 
 // execute
-void nvboard_renew();
 void pmc_print();
 void cycle_counter(word_t inst, int64_t ncyc);
 int cpu_exec(uint64_t steps) 
@@ -162,7 +161,11 @@ int cpu_exec(uint64_t steps)
   {
     currpc = CPU_PC;
 
+#ifdef RUNSOC
+    void nvboard_renew();
     nvboard_renew();
+#endif
+
     top.clock = 0; top.eval();
     if (vtrace && vstart)
       vtrace->dump(sim_time++);
@@ -292,7 +295,6 @@ const char *reg_name(int idx) {
 
 
 // free npc resource
-void nvboard_free();
 void npc_free() 
 {
   if (vtrace) 
@@ -301,7 +303,10 @@ void npc_free()
     delete vtrace;
   }
 
+#ifdef RUNSOC
+  void nvboard_free();
   nvboard_quit();
+#endif 
 }
 
 
