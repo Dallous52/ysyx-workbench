@@ -21,7 +21,7 @@ ARGS ?=
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
 
-ifeq ($(TOP_NAME), ysyxSoCFull)
+ifeq ($(TOPNAME), ysyxSoCFull)
 VSRCS += $(shell find $(SOC_DIR)/perip -name "*.v")
 VSRCS += $(SOC_DIR)/build/ysyxSoCFull.v
 endif
@@ -35,7 +35,7 @@ CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*
 
 
 # C++ 编译选项：
-ifeq ($(TOP_NAME), ysyxSoCFull)
+ifeq ($(TOPNAME), ysyxSoCFull)
 INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
 endif
 
@@ -49,7 +49,7 @@ VERILATOR_CFLAGS +=	-Wno-UNOPTFLAT \
 					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/ \
 					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/IDU \
 
-ifeq ($(TOP_NAME), ysyxSoCFull)
+ifeq ($(TOPNAME), ysyxSoCFull)
 VERILATOR_CFLAGS +=	-I$(SOC_DIR)/perip/uart16550/rtl \
 					-I$(SOC_DIR)/perip/spi/rtl
 endif
@@ -58,7 +58,7 @@ endif
 # LDFLAGS 添加链接库
 LDFLAGS += -L/usr/lib/x86_64-linux-gnu -lreadline -lhistory
 
-ifeq ($(TOP_NAME), ysyxSoCFull)
+ifeq ($(TOPNAME), ysyxSoCFull)
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 endif
 
