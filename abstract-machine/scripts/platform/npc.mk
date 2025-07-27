@@ -29,6 +29,6 @@ image: image-dep
 
 run: insert-arg
 	@echo $(NPCFLAGS)
-	$(MAKE) -C/home/dallous/Documents/ysyx-workbench/npc/ run ARGS="$(NPCFLAGS)"
+	$(MAKE) -C/home/dallous/Documents/ysyx-workbench/npc/ run ARGS="$(NPCFLAGS)" TOPNAME=ysyx_25040111
 
 .PHONY: insert-arg
