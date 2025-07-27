@@ -90,14 +90,6 @@ module ysyx_25040111_lsu (
                          });
 
 `ifdef RUNSOC
-      wire arvalid_clint, rready_clint;
-    wire [1:0] rresp_clint;
-    wire arready_clint, awready_clint;
-    wire rvalid_clint;
-    wire wready_clint;
-    wire bvalid_clint;
-    wire [1:0] bresp_clint;
-    reg [31:0] rmem_clint;
     wire is_clint = (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END);
 
     assign arvalid_clint    = is_clint ? arvalid         : 1'b0;
@@ -142,9 +134,6 @@ module ysyx_25040111_lsu (
     // memory read
     assign rready = 1;
     always @(posedge clk) begin
-        // $display("rmem = %h", rmem);
-        // $display("is_clint:%b  arvalid:%b  arready:%b", is_clint, arvalid, io_master_arready);
-        // $display("rvalid:%b  rready:%b  rresp:%h", io_master_rvalid, rready, rresp);
         
         // 地址有效
         if (ren & ready)
@@ -155,8 +144,6 @@ module ysyx_25040111_lsu (
 
         if (rvalid & rready) begin
             valid_t <= 1;
-            // if (addr >= 32'ha000_0000& addr <= 32'ha001_0000)
-            //     $display("raddr:%h  rdata:%h", addr, io_master_rdata);
         end
     end
 
@@ -175,8 +162,6 @@ module ysyx_25040111_lsu (
 
         // 写入参数
         if (wvalid & wready) begin
-            // if (addr >= 32'ha000_0000 & addr <= 32'ha001_0000) 
-            //     $display("waddr:%h  wdata:%h", addr, io_master_wdata);
             wlast <= 0;
             wvalid <= 0;   
         end
@@ -187,18 +172,24 @@ module ysyx_25040111_lsu (
         end
     end
 
+    assign valid = wen | ren ? valid_t : ready;
+
     always @(posedge clk) begin
         if (valid_t)
             valid_t <= 0;
 
-        `ifndef YOSYS_STA
-            if (|rresp | |bresp)
-                ebreak(5);
-        `endif // YOSYS_STA
+    `ifndef YOSYS_STA
+        if (|rresp | |bresp)
+            ebreak(5);
+    `endif // YOSYS_STA
     end
 
-    assign valid = wen | ren ? valid_t : ready;
 
+    wire arvalid_clint, rready_clint;
+    wire [1:0] rresp_clint;
+    wire arready_clint;
+    wire rvalid_clint;
+    wire [31:0] rmem_clint;
     ysyx_25040111_clint u_ysyx_25040111_clint(
                             .clk     	(clk),
                             .araddr  	(addr),
