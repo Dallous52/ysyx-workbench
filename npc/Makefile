@@ -51,7 +51,8 @@ VERILATOR_CFLAGS +=	-Wno-UNOPTFLAT \
 ifeq ($(TOPNAME), ysyxSoCFull)
 VERILATOR_CFLAGS +=	-I$(SOC_DIR)/perip/uart16550/rtl \
 					-I$(SOC_DIR)/perip/spi/rtl \
-					-DRUNSOC=1
+					-DRUNSOC=1 \
+					-Mdir build
 endif
 
 
