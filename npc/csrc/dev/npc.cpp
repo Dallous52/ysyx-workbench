@@ -1,6 +1,4 @@
 #include "npc.h"
-#include "VysyxSoCFull.h"
-#include "VysyxSoCFull___024root.h"
 #include "device.h"
 #include "memory.h"
 #include "nvboard.h"
@@ -8,15 +6,36 @@
 #include "tpdef.h"
 #include "util.h"
 
+#ifdef RUNSOC
+#include "VysyxSoCFull.h"
+#include "VysyxSoCFull___024root.h"
+
+#define REG       (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_reg__DOT__rf)
+#define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
+#define ADDR      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
+#define INST      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__inst)
+#else
+#include "Vysyx_25040111.h"
+#include "Vysyx_25040111___024root.h"
+
+
+#define REG       (top.rootp->ysyx_25040111__DOT__u_reg__DOT__rf)
+#define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
+#define ADDR      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
+#define INST      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__inst)
+#endif // RUNSOC
+
 #include <cstdio>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
 #define VCD_PATH  "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
-#define REG       (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_reg__DOT__rf)
-#define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
-#define ADDR      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
-#define INST      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__inst)
+
+#ifdef RUNSOC
+typedef VysyxSoCFull mtop; 
+#else
+typedef Vysyx_25040111 mtop; 
+#endif // RUNSOC
 
 #define EN_TRACE
 // #define ITRACE
@@ -24,7 +43,7 @@
 // #define MTRACE
 #define DIFFTEST
 
-static VysyxSoCFull top;
+static mtop top;
 static VerilatedVcdC *vtrace = nullptr;
 static bool vstart = false;
 void start_v() {vstart = true;}
