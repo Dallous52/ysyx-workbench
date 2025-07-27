@@ -1,3 +1,5 @@
+#ifdef RUNSOC
+
 #include "VysyxSoCFull.h"
 
 #include <nvboard.h>
@@ -46,3 +48,5 @@ void nvboard_free()
 {
     nvboard_quit();
 }
+
+#endif
