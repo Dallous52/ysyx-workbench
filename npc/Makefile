@@ -47,12 +47,12 @@ CXXFLAGS += $(INCFLAGS) # -g
 VERILATOR_CFLAGS +=	-Wno-UNOPTFLAT \
 					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/ \
 					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/IDU \
+					-Mdir build/$(TOPNAME)
 
 ifeq ($(TOPNAME), ysyxSoCFull)
 VERILATOR_CFLAGS +=	-I$(SOC_DIR)/perip/uart16550/rtl \
 					-I$(SOC_DIR)/perip/spi/rtl \
-					-DRUNSOC=1 \
-					-Mdir build
+					-DRUNSOC=1
 endif
 
 
