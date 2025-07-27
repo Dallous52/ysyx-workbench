@@ -32,6 +32,10 @@
 
 #ifdef RUNSOC
 typedef VysyxSoCFull mtop; 
+
+void nvboard_renew();
+void nvboard_initialize(VysyxSoCFull *top);
+void nvboard_free();
 #else
 typedef Vysyx_25040111 mtop; 
 #endif // RUNSOC
@@ -82,7 +86,6 @@ void npc_init(bool vcd, int argc, char** argv)
 	}
 
 #ifdef RUNSOC
-  void nvboard_initialize(VysyxSoCFull *top);
   nvboard_initialize(&top);
 #endif 
 
@@ -162,7 +165,6 @@ int cpu_exec(uint64_t steps)
     currpc = CPU_PC;
 
 #ifdef RUNSOC
-    void nvboard_renew();
     nvboard_renew();
 #endif
 
@@ -304,7 +306,6 @@ void npc_free()
   }
 
 #ifdef RUNSOC
-  void nvboard_free();
   nvboard_quit();
 #endif 
 }
