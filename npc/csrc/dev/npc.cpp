@@ -43,7 +43,7 @@ typedef Vysyx_25040111 mtop;
 #define EN_TRACE
 // #define ITRACE
 // #define FTRACE
-// #define MTRACE
+#define MTRACE
 // #define DIFFTEST
 
 static mtop top;
