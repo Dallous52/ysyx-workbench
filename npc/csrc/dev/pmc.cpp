@@ -59,6 +59,6 @@ void pmc_print()
     }
 
     cpi = all_inst ? (double)all_cycle / all_inst : 0.;
-    printf(ANSI_FMT("%-6s\t%10ld\t%10ld\t%5lf", ANSI_FG_GREEN) "\n", 
+    printf(ANSI_FMT("%-6s\t%10ld\t%10ld\t%5.3lf", ANSI_FG_GREEN) "\n", 
         "ALL", all_inst, all_cycle, cpi);
 }
