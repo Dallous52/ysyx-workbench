@@ -82,13 +82,11 @@ module ysyx_25040111_sram(
         `ifndef YOSYS_STA
             pmem_write(awaddr, wdata, wmask);
         `endif
-            wready <= 1;
             wtstart <= 0;       
         end
 
         // 写入结束
         if (wvalid & wready) begin
-            wready <= 0;
             bvalid <= 1;
         end
 
