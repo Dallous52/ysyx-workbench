@@ -129,7 +129,7 @@ word_t paddr_read(paddr_t addr, int len)
 void paddr_write(paddr_t addr, int len, word_t data)
 {
 #if defined(CONFIG_MTRACE) && CONFIG_MTRACE == 1
-  printf("[write] address = " FMT_PADDR "; pc = " FMT_WORD "; len = %d; data = \n" FMT_WORD,
+  printf("[write] address = " FMT_PADDR "; pc = " FMT_WORD "; len = %d; data = " FMT_WORD "\n",
     addr, cpu.pc, len, data);
 #endif // CONFIG_MTRACE
 
