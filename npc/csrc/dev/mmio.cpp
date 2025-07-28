@@ -5,6 +5,9 @@
 #include <cstdio>
 #include <sys/types.h>
 
+#define DEV_SERIAL (0xa00003f8)
+#define DEV_TIMER  (0xa0000048)
+
 typedef  void (*callback)(word_t, void*, bool);
 
 typedef struct 

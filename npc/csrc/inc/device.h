@@ -4,9 +4,6 @@
 #include "tpdef.h"
 #include <cstdint>
 
-#define DEV_SERIAL (0x10000000)
-#define DEV_TIMER  (0x02000048)
-
 // 0x80404000 - 0x80405000
 #define MROM_START  (0x20000000)
 #define MROM_END    (0x20001000)
