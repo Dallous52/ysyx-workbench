@@ -41,7 +41,7 @@ typedef Vysyx_25040111 mtop;
 #endif // RUNSOC
 
 #define EN_TRACE
-// #define ITRACE
+#define ITRACE
 // #define FTRACE
 // #define MTRACE
 // #define DIFFTEST
@@ -337,9 +337,6 @@ extern "C" int pmem_read(int raddr)
     rdata = paddr_read(address, 4);
   else if (!device_call((paddr_t)raddr, &rdata, false))
     finalize(2);
-    
-  printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x pc: 0x%08x;\n",
-          ANSI_FG_CYAN), (word_t)raddr, rdata, CPU_PC);
 
 #if defined(EN_TRACE) && defined(MTRACE)
 	// mtrace memory read
