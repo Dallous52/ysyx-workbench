@@ -147,20 +147,14 @@ module ysyx_25040111(
     );
 
     wire [31:0] rdata;
-    wire mem_en;
-    assign mem_en = |opt[11:10] & ~opt[15];
+    wire mem_en = |opt[11:10] & ~opt[15];
 
     // simple arbiter
-    wire lsu_ready;
-    assign lsu_ready = if_flag ? if_start : inst_ok;
-    wire lsu_wen;
-    assign lsu_wen = if_flag ? 0 : ~opt[12] & mem_en;
-    wire lsu_ren;
-    assign lsu_ren = if_flag ? 1 : opt[12] & mem_en;
-    wire [1:0] lsu_mask;
-    assign lsu_mask = if_flag ? 2'b11 : opt[11:10];
-    wire [31:0] lsu_addr;
-    assign lsu_addr = if_flag ? pc : rd_dt;
+    wire lsu_ready = if_flag ? if_start : inst_ok;
+    wire lsu_wen = if_flag ? 0 : ~opt[12] & mem_en;
+    wire lsu_ren = if_flag ? 1 : opt[12] & mem_en;
+    wire [1:0] lsu_mask = if_flag ? 2'b11 : opt[11:10];
+    wire [31:0] lsu_addr = if_flag ? pc : rd_dt;
     wire [31:0] lsu_rdata;
     wire lsu_ok;
 
@@ -221,15 +215,9 @@ module ysyx_25040111(
         .rs1_d 	(rs1_d  ),
         .rs2_d 	(rs2_d  ),
         .imm   	(imm    ),
-        .pc       (pc     ),
+        .pc     (pc     ),
         .rd_d  	(rd_dt  )
     );
-
-    // always @(posedge clock) begin
-    //     $display("opt: %h  reset:%b rdata:%h", opt, reset, lsu_rdata);
-    //     $display("ready:%b  ren:%b  wen:%b  addr:%h  if_ok:%b", lsu_ready, lsu_ren, lsu_wen, lsu_addr, lsu_ok);
-    //     $display("pc:%h  inst:%b  args:%b  next:%b", pc, inst_ok, args_ok, next_ok);
-    // end
 
     ysyx_25040111_pcu u_pcu(
         .clk          (clock        ),
