@@ -21,7 +21,7 @@ typedef void (*diff_raise_intr)(uint64_t);
 diff_raise_intr ref_difftest_raise_intr = nullptr;
 typedef void (*diff_nop)(void*, word_t);
 diff_nop ref_difftest_nop = nullptr;
-typedef void (*diff_init)(int);
+typedef void (*diff_init)(int, word_t);
 
 void init_difftest(long img_size, int port) 
 {
@@ -47,7 +47,12 @@ void init_difftest(long img_size, int port)
     diff_init ref_difftest_init = (diff_init)dlsym(handle, "difftest_init");
     assert(ref_difftest_init);
 
-    ref_difftest_init(port);
+#ifdef RUNSOC
+    ref_difftest_init(port, 0x30000000);
+#else
+    ref_difftest_init(port, 0x80000000);
+#endif
+
     ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
     
     word_t regbuf[32] = {};
