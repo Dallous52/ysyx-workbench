@@ -1,6 +1,11 @@
 `include "HDR/ysyx_25040111_inc.vh"
 `include "MOD/ysyx_25040111_MuxKey.v"
-// `include "ALU/ysyx_25040111_adder32.v"
+
+`ifdef RUNSOC
+`define PC_RESET 32'h30000000   
+`else
+`define PC_RESET 32'h80000000
+`endif
 
 module ysyx_25040111_pcu(
     input  clk,             // 时钟
@@ -37,7 +42,7 @@ module ysyx_25040111_pcu(
 
     always @(posedge clk) begin
         if (reset) begin
-            pc <= 32'h30000000;
+            pc <= `PC_RESET;
             valid <= 1;    
         end 
         else if (ready) begin
