@@ -153,7 +153,6 @@ module ysyx_25040111_lsu (
     // memory write
     assign bready = 1;
     always @(posedge clk) begin
-        $display("Xbar:%b  arr:%b  arv:%b  rr:%b  rv:%b", is_clint, arready, arvalid, rready, rvalid);
         // 地址有效
         if (wen & ready)
             awvalid <= 1;
