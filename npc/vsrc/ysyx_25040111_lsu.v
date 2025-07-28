@@ -160,6 +160,7 @@ module ysyx_25040111_lsu (
     // memory write
     assign bready = 1;
     always @(posedge clk) begin
+        $display("arr:%b  arv:%b  rr:%b  rv:%b", arready, arvalid, rready, rvalid);
         // 地址有效
         if (wen & ready)
             awvalid <= 1;
