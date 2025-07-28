@@ -87,9 +87,9 @@ module ysyx_25040111_lsu (
         2'b11, wdata << 24
     });
 
-`ifdef RUNSOC
     wire is_clint = (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END);
 
+`ifdef RUNSOC
     assign arvalid_clint    = is_clint ? arvalid         : 1'b0;
     assign arready          = is_clint ? arready_clint   : io_master_arready;
     assign rresp            = is_clint ? rresp_clint     : io_master_rresp;
@@ -128,17 +128,10 @@ module ysyx_25040111_lsu (
             rmem <= is_clint ? rmem_clint : io_master_rdata;
     end
 `else
-    reg [1:0] Xbar;
-    always @(*) begin
-        if (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END) begin
-            Xbar = 2'b10;
-            rmem = rmem_clint;
-        end
-        else begin
-            Xbar = 2'b01;
-            rmem = rmem_sram;
-        end
-    end
+    assign rmem = is_clint ? rmem_clint : rmem_sram;
+    assign arready = is_clint ? arready_clint : arready_sram;
+    assign rvalid = is_clint ? rvalid_clint : rvalid_sram;
+    assign rresp = is_clint ? rresp_clint : rresp_sram;
 `endif // RUNSOC
   
     // memory read
@@ -160,7 +153,7 @@ module ysyx_25040111_lsu (
     // memory write
     assign bready = 1;
     always @(posedge clk) begin
-        $display("Xbar:%b  arr:%b  arv:%b  rr:%b  rv:%b", Xbar[0], arready, arvalid, rready, rvalid);
+        $display("Xbar:%b  arr:%b  arv:%b  rr:%b  rv:%b", is_clint, arready, arvalid, rready, rvalid);
         // 地址有效
         if (wen & ready)
             awvalid <= 1;
@@ -220,18 +213,16 @@ module ysyx_25040111_lsu (
         .clk     	(clk),
         .araddr  	(addr),
         .rdata   	(rmem_clint),
-        .arvalid 	(Xbar[1] ? arvalid : 0),
-        .arready 	(Xbar[1] ? arready : arready_clint),
-        .rresp   	(Xbar[1] ? rresp   : rresp_clint),
-        .rvalid  	(Xbar[1] ? rvalid  : rvalid_clint),
+        .arvalid 	(is_clint ? arvalid : 0),
+        .arready 	(arready_clint),
+        .rresp   	(rresp_clint),
+        .rvalid  	(rvalid_clint),
         .rready  	(rready)
     );
 
-    wire arready_sram, awready_sram;
-    wire [1:0] rresp_sram, bresp_sram;
+    wire arready_sram;
+    wire [1:0] rresp_sram;
     wire rvalid_sram;
-    wire wready_sram;
-    wire bvalid_sram;
     wire [31:0] rmem_sram;
     ysyx_25040111_sram u_ysyx_25040111_sram(
         .clk     	(clk        ),
@@ -240,17 +231,17 @@ module ysyx_25040111_lsu (
         .wdata   	(wmem       ),
         .rdata   	(rmem_sram  ),
         .wstrb   	(wmask      ),
-        .wvalid  	(Xbar[0] ? wvalid   : 0             ),
-        .rready  	(Xbar[0] ? rready   : 0             ),
-        .arvalid 	(Xbar[0] ? arvalid  : 0             ),
-        .arready 	(Xbar[0] ? arready  : arready_sram  ),
-        .rresp   	(Xbar[0] ? rresp    : rresp_sram    ),
-        .rvalid  	(Xbar[0] ? rvalid   : rvalid_sram   ),
-        .awvalid 	(Xbar[0] ? awvalid  : 0             ),
-        .awready 	(Xbar[0] ? awready  : awready_sram  ),
-        .wready  	(Xbar[0] ? wready   : wready_sram   ),
-        .bresp   	(Xbar[0] ? bresp    : bresp_sram    ),
-        .bvalid  	(Xbar[0] ? bvalid   : bvalid_sram   ),
+        .arready 	(arready_sram   ),
+        .rresp   	(rresp_sram     ),
+        .rvalid  	(rvalid_sram    ),
+        .awready 	(awready        ),
+        .wready  	(wready         ),
+        .bresp   	(bresp          ),
+        .bvalid  	(bvalid         ),
+        .wvalid  	(~is_clint ? wvalid   : 0),
+        .rready  	(~is_clint ? rready   : 0),
+        .arvalid 	(~is_clint ? arvalid  : 0),
+        .awvalid 	(~is_clint ? awvalid  : 0),
         .bready  	(bready)
     );
 `endif // NOT RUNSOC
