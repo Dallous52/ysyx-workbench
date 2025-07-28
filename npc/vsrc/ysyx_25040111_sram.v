@@ -12,7 +12,7 @@ module ysyx_25040111_sram(
     input clk,
     input [31:0] araddr,
     input arvalid,
-    output reg arready,
+    output arready,
 
     output reg [31:0] rdata,
     output [1:0] rresp,
