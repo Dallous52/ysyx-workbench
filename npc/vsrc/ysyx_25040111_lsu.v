@@ -243,7 +243,7 @@ module ysyx_25040111_lsu (
         .wvalid  	(Xbar[0] ? wvalid   : 0             ),
         .rready  	(Xbar[0] ? rready   : 0             ),
         .arvalid 	(Xbar[0] ? arvalid  : 0             ),
-        .arready 	(Xbar[0] ? arready  : arready_sram  ),
+        .arready 	(arready),
         .rresp   	(Xbar[0] ? rresp    : rresp_sram    ),
         .rvalid  	(Xbar[0] ? rvalid   : rvalid_sram   ),
         .awvalid 	(Xbar[0] ? awvalid  : 0             ),
