@@ -76,7 +76,7 @@ sim: $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 
 sta:
 	make -C/home/dallous/Documents/yosys-sta/ RTL_FILES="$(RTL_FILE)" \
-		DESIGN=ysyx_25040111_top ANSWER_DIR=$(CURRDIR)/ sta
+		DESIGN=ysyx_25040111 ANSWER_DIR=$(CURRDIR)/ sta
 
 # gtkwave
 gtkwave:
@@ -95,8 +95,8 @@ pref:
 		ARCH=riscv32e-ysyxsoc run mainargs=test
 
 clean:
-	@rm -rf obj_dir
-	@rm -f waveform.vcd
+	@rm -rf build
+	@rm -f waveform*
 	@rm -rf result
 
 include ../Makefile
