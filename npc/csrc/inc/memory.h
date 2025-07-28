@@ -13,13 +13,13 @@
 // expected_value： 你预测 expression 最有可能的值（通常是 0 或 1）。
 #define likely(cond)   __builtin_expect(cond, 1)
 
-// 内存大小
-// #define MSIZE 0x8000000
+#ifdef RUNSOC
 #define MSIZE 0xffffff
-
-// 内存起始地址
-// #define MBASE 0x80000000
 #define MBASE 0x30000000
+#else
+#define MSIZE 0x8000000
+#define MBASE 0x80000000
+#endif
 
 // 内存初始化
 bool pmem_init(const char* fbin);
