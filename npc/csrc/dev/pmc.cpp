@@ -54,7 +54,7 @@ void pmc_print()
         all_inst += counter[i];
         all_cycle += cycnum[i];
         cpi = counter[i] ? (double)cycnum[i] / counter[i] : 0.;
-        printf(ANSI_FMT("%-6s\t%10d\t%10ld\t%5lf", ANSI_FG_GREEN) "\n", 
+        printf(ANSI_FMT("%-6s\t%10d\t%10ld\t%5.3lf", ANSI_FG_GREEN) "\n", 
             type_name[i], counter[i], cycnum[i], cpi);
     }
 
