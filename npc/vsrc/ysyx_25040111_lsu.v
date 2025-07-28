@@ -160,7 +160,7 @@ module ysyx_25040111_lsu (
     // memory write
     assign bready = 1;
     always @(posedge clk) begin
-        $display("Xbar:%b  arr:%b  arv:%b  rr:%b  rv:%b", Xbar, arready, arvalid, rready, rvalid);
+        $display("Xbar:%b  arr:%b  arv:%b  rr:%b  rv:%b", Xbar[0], arready, arvalid, rready, rvalid);
         // 地址有效
         if (wen & ready)
             awvalid <= 1;
@@ -243,7 +243,7 @@ module ysyx_25040111_lsu (
         .wvalid  	(Xbar[0] ? wvalid   : 0             ),
         .rready  	(Xbar[0] ? rready   : 0             ),
         .arvalid 	(Xbar[0] ? arvalid  : 0             ),
-        .arready 	(arready),
+        .arready 	(Xbar[0] ? arready  : arready_sram  ),
         .rresp   	(Xbar[0] ? rresp    : rresp_sram    ),
         .rvalid  	(Xbar[0] ? rvalid   : rvalid_sram   ),
         .awvalid 	(Xbar[0] ? awvalid  : 0             ),
