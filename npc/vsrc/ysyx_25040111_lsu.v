@@ -170,6 +170,7 @@ module ysyx_25040111_lsu (
         end
 
         // 写回复信息
+        $display("awv:%b  awr:%b  wv:%b  wr:%b  br:%b  bv:%b", awvalid, awready, wvalid, wready, bready, bvalid);
         if (bready & bvalid) begin
             valid_t <= 1;
         end
