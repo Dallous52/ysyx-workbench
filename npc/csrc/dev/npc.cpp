@@ -333,7 +333,10 @@ extern "C" int pmem_read(int raddr)
 	paddr_t address = raddr & ~0x3u;
 	word_t rdata = 0;
 
-	if (likely(in_pmem(address)))
+  printf(ANSI_FMT("[read mem] address: 0x%08x; pc: 0x%08x;\n",
+          ANSI_FG_CYAN), (word_t)raddr, CPU_PC);
+	
+  if (likely(in_pmem(address)))
 		rdata = paddr_read(address, 4);
 	else if (!device_call((paddr_t)raddr, &rdata, false))
 		finalize(2);
