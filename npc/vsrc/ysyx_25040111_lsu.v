@@ -65,27 +65,27 @@ module ysyx_25040111_lsu (
 
     wire [3:0] wmask;
     ysyx_25040111_MuxKey #(4, 2, 4) c_wmask(wmask, mask, {
-                                                2'b00, 4'h0,
-                                                2'b01, 4'b0001 << addr[1:0],
-                                                2'b10, addr[1] ? 4'b1100 : 4'b0011,
-                                                2'b11, 4'b1111
-                                            });
+        2'b00, 4'h0,
+        2'b01, 4'b0001 << addr[1:0],
+        2'b10, addr[1] ? 4'b1100 : 4'b0011,
+        2'b11, 4'b1111
+    });
 
     wire [2:0] tsize;
     ysyx_25040111_MuxKey #(4, 2, 3) c_tsize(tsize, mask, {
-                                                2'b00, 3'b0,
-                                                2'b01, 3'b000,
-                                                2'b10, 3'b001,
-                                                2'b11, 3'b010
-                                            });
+        2'b00, 3'b0,
+        2'b01, 3'b000,
+        2'b10, 3'b001,
+        2'b11, 3'b010
+    });
 
     wire [31:0] wmem;
     ysyx_25040111_MuxKey #(4, 2, 32) c_wt_data(wmem, addr[1:0], {
-                             2'b00, wdata,
-                             2'b01, wdata << 8,
-                             2'b10, wdata << 16,
-                             2'b11, wdata << 24
-                         });
+        2'b00, wdata,
+        2'b01, wdata << 8,
+        2'b10, wdata << 16,
+        2'b11, wdata << 24
+    });
 
 `ifdef RUNSOC
     wire is_clint = (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END);
@@ -128,18 +128,14 @@ module ysyx_25040111_lsu (
             rmem <= is_clint ? rmem_clint : io_master_rdata;
     end
 `else
-    reg [2:0] Xbar;
+    reg [1:0] Xbar;
     always @(*) begin
-        if (addr == `DEV_SERIAL) begin
-            Xbar = 3'b010;
-            rmem = rmem_uart;
-        end
-        else if (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END) begin
-            Xbar = 3'b100;
+        if (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END) begin
+            Xbar = 2'b10;
             rmem = rmem_clint;
         end
         else begin
-            Xbar = 3'b001;
+            Xbar = 2'b01;
             rmem = rmem_sram;
         end
     end
@@ -198,36 +194,79 @@ module ysyx_25040111_lsu (
     `endif // YOSYS_STA
     end
 
-
+`ifdef RUNSOC
     wire arvalid_clint, rready_clint;
     wire [1:0] rresp_clint;
     wire arready_clint;
     wire rvalid_clint;
     wire [31:0] rmem_clint;
     ysyx_25040111_clint u_ysyx_25040111_clint(
-                            .clk     	(clk),
-                            .araddr  	(addr),
-                            .arvalid 	(arvalid_clint),
-                            .arready 	(arready_clint),
-                            .rdata   	(rmem_clint),
-                            .rresp   	(rresp_clint),
-                            .rvalid  	(rvalid_clint),
-                            .rready  	(rready_clint)
-                        );
+        .clk     	(clk),
+        .araddr  	(addr),
+        .arvalid 	(arvalid_clint),
+        .arready 	(arready_clint),
+        .rdata   	(rmem_clint),
+        .rresp   	(rresp_clint),
+        .rvalid  	(rvalid_clint),
+        .rready  	(rready_clint)
+    );
+`else // RUNSOC
+    wire [1:0] rresp_clint;
+    wire arready_clint;
+    wire rvalid_clint;
+    wire [31:0] rmem_clint;
+    ysyx_25040111_clint u_ysyx_25040111_clint(
+        .clk     	(clk),
+        .araddr  	(addr),
+        .rdata   	(rmem_clint),
+        .arvalid 	(Xbar[1] ? arvalid : 0),
+        .arready 	(Xbar[1] ? arready : arready_clint),
+        .rresp   	(Xbar[1] ? rresp   : rresp_clint),
+        .rvalid  	(Xbar[1] ? rvalid  : rvalid_clint),
+        .rready  	(rready)
+    );
+
+    wire arready_sram, awready_sram;
+    wire [1:0] rresp_sram, bresp_sram;
+    wire rvalid_sram;
+    wire wready_sram;
+    wire bvalid_sram;
+    wire [31:0] rmem_sram;
+    ysyx_25040111_sram u_ysyx_25040111_sram(
+        .clk     	(clk        ),
+        .araddr  	(addr       ),
+        .awaddr  	(addr       ),
+        .wdata   	(wmem       ),
+        .rdata   	(rmem_sram  ),
+        .wstrb   	(wmask      ),
+        .wvalid  	(Xbar[0] ? wvalid   : 0             ),
+        .rready  	(Xbar[0] ? rready   : 0             ),
+        .arvalid 	(Xbar[0] ? arvalid  : 0             ),
+        .arready 	(Xbar[0] ? arready  : arready_sram  ),
+        .rresp   	(Xbar[0] ? rresp    : rresp_sram    ),
+        .rvalid  	(Xbar[0] ? rvalid   : rvalid_sram   ),
+        .awvalid 	(Xbar[0] ? awvalid  : 0             ),
+        .awready 	(Xbar[0] ? awready  : awready_sram  ),
+        .wready  	(Xbar[0] ? wready   : wready_sram   ),
+        .bresp   	(Xbar[0] ? bresp    : bresp_sram    ),
+        .bvalid  	(Xbar[0] ? bvalid   : bvalid_sram   ),
+        .bready  	(bready)
+    );
+`endif // NOT RUNSOC
 
     wire [31:0] offset;
     ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
-                             2'b00, rmem,
-                             2'b01, rmem >> 8,
-                             2'b10, rmem >> 16,
-                             2'b11, rmem >> 24
-                         });
+        2'b00, rmem,
+        2'b01, rmem >> 8,
+        2'b10, rmem >> 16,
+        2'b11, rmem >> 24
+    });
 
     ysyx_25040111_MuxKey #(4, 2, 32) c_rdmem(rdata, mask, {
-                             2'b00, 32'b0,
-                             2'b01, {{24{offset[7] & sign}}, offset[7:0]},
-                             2'b10, {{16{offset[15] & sign}}, offset[15:0]},
-                             2'b11, offset
-                         });
+        2'b00, 32'b0,
+        2'b01, {{24{offset[7] & sign}}, offset[7:0]},
+        2'b10, {{16{offset[15] & sign}}, offset[15:0]},
+        2'b11, offset
+    });
 
 endmodule
