@@ -39,14 +39,13 @@ module ysyx_25040111_exu(
     
     wire [31:0] eret;
     assign eret = opt[15] ? rs1_d : 32'd9;
+
+`ifndef YOSYS_STA
     always @(*) begin
         if (opt == `EBREAK_INST)
-        `ifndef YOSYS_STA
             ebreak(eret);
-        `else ;
-        `endif // YOSYS_STA
     end
-
+`endif // YOSYS_STA
 
 endmodule
     // ysyx_25040111_RegisterFile #(8, 32) u_rom2_t(
