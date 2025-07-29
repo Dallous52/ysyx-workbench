@@ -25,7 +25,7 @@
 
 // 0x83000000 - 0x85000000
 #define SDRAM_START (0xa0000000)
-#define SDRAM_END   (0xa2000000)
+#define SDRAM_END   (0xa4000000)
 
 void device_init();
 
