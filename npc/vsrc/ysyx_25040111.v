@@ -81,7 +81,7 @@ module ysyx_25040111(
 );
 
 // ------------------------------------------------
-//                I/O SIGNAL DEFINE 
+//                I/O SIGNAL DEFINE
 // ------------------------------------------------
 
     wire [4:0] rs1;
@@ -94,18 +94,39 @@ module ysyx_25040111(
     wire inst_ok, args_ok, next_ok;
 
     wire if_flag;
-    wire if_start;
     ysyx_25040111_ifu u_ifu (
-        .clk    (clock    ),
-        .reset  (reset),
-        .ready  (next_ok),
-        .if_flag (if_flag),
-        .if_start (if_start),
-        .inst_t (lsu_rdata),
-        .inst  (inst   ),
-        .if_ok  (if_flag ? lsu_ok : 0),
-        .valid (inst_ok)
+        .clk    (clock          ),
+        .reset  (reset          ),
+        .ready  (next_ok        ),
+        .if_flag(if_flag        ),
+        .start  (icache_valid   ),
+        .inst_t (icache_data    ),
+        .inst   (inst           ),
+        .if_ok  (icache_ready   ),
+        .valid  (inst_ok        )
     );
+
+    wire [31:0] icache_data;
+    wire icache_ready;
+    wire icache_valid;
+    wire icache_rok = if_flag ? lsu_ok : 1'b0; 
+    wire if_start;
+
+    ysyx_25040111_cache #(
+        .BLOCK_Ls 	(2  ),
+        .CACHE_Ls 	(4  ))
+    u_icache(
+        .clock  	(clock          ),
+        .reset  	(reset          ),
+        .addr   	(pc             ),
+        .data   	(icache_data    ),
+        .rstart 	(if_start       ),
+        .rok    	(icache_rok     ),
+        .rdata  	(lsu_rdata      ),
+        .valid  	(icache_valid   ),
+        .ready  	(icache_ready   )
+    );
+    
 
     ysyx_25040111_idu u_idu (
         .inst 	(inst  ),

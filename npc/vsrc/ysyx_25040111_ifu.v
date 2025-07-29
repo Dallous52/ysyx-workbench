@@ -4,7 +4,7 @@ module ysyx_25040111_ifu (
     input  clk,
     input  reset,
     input  ready,
-    output reg if_start,
+    output reg start,
     output reg if_flag,
     input [31:0] inst_t,
     output reg [31:0] inst,
@@ -13,37 +13,27 @@ module ysyx_25040111_ifu (
 );
 
     always @(posedge clk) begin
-        // $display("pc:%h  vaild:%b  ready:%b", pc, valid, ready);
-        // if (ready) begin
-        //     inst <= pmem_read(pc);
-        //     valid <= 1;
-        // end
-        // else begin
-        //     inst <= inst;
-        // end
-
-        // if (valid)
-        //     valid <= 0;
         if (reset) begin
             if_flag <= 0;
-            if_start <= 0;
+            start <= 0;
         end
-        else if (ready) begin 
-            if_flag <= 1;
-            if_start <= 1;
+        else begin
+            if (ready) begin
+                if_flag <= 1;
+                start <= 1;    
+            end 
+            if (start) start <= 0;
+
+            if (if_ok) begin
+                inst <= inst_t;
+                if_flag <= 0;
+                valid <= 1;
+            end
+            else inst <= inst;
+
+            if (valid)
+                valid <= 0;
         end
-
-        if (if_start) if_start <= 0;
-
-        if (if_ok) begin
-            inst <= inst_t;
-            if_flag <= 0;
-            valid <= 1;
-        end
-        else inst <= inst;
-
-        if (valid)
-            valid <= 0;
     end
 
 `ifdef PMC_EN
