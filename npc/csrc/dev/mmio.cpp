@@ -75,6 +75,7 @@ bool device_visit(paddr_t addr, uint32_t inst)
     if (opt != load && opt != store)
         return false;
 
+#ifdef RUNSOC
     if (addr >= FLASH_START && addr < FLASH_END)
         return false;
     else if (addr >= MROM_START && addr < MROM_END)
@@ -85,6 +86,9 @@ bool device_visit(paddr_t addr, uint32_t inst)
         return false;
     else if (addr >= SDRAM_START && addr < SDRAM_END)
         return false;
-    
+
     return true;
+#else
+    return (addr >= 0xa0000000);
+#endif
 }
