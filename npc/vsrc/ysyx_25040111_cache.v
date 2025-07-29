@@ -1,3 +1,5 @@
+`include "HDR/ysyx_25040111_dpic.vh"
+
 module ysyx_25040111_cache(
     input   clock,
     input   reset,
@@ -64,6 +66,7 @@ module ysyx_25040111_cache(
             cready <= 0;
         end
         else if (valid & hit) begin
+            cache_hit();
             cdata <= cblocks[index];
             cready <= 1'b1;
         end

@@ -13,10 +13,17 @@ static const char* type_name[EEND] = {
 
 static int counter[EEND] = { 0 };
 static int64_t cycnum[EEND] = { 0 };
+static int64_t hitnum = 0;
 
 extern "C" void monitor_counter(int dtype)
 {
     counter[dtype]++;
+}
+
+
+extern "C" void cache_hit()
+{
+    hitnum++;
 }
 
 
@@ -61,4 +68,6 @@ void pmc_print()
     cpi = all_inst ? (double)all_cycle / all_inst : 0.;
     printf(ANSI_FMT("%-6s\t%10ld\t%10ld\t%5.3lf", ANSI_FG_GREEN) "\n", 
         "ALL", all_inst, all_cycle, cpi);
+    printf("[cache hit] = " ANSI_FMT("%ld", ANSI_FG_GREEN) "\n", hitnum);
+    printf("[hit rate]  = " ANSI_FMT("%lf%%", ANSI_FG_GREEN) "\n", (double)hitnum / all_inst * 100.);
 }
