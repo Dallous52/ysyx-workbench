@@ -129,8 +129,10 @@ module ysyx_25040111_lsu (
     end
 `else
     always @(posedge clk) begin
-        if (rvalid & rready)
+        if (rvalid & rready) begin
             rmem <= is_clint ? rmem_clint : rmem_sram;
+            $display("rmem: %h   sram: %h", rmem, rmem_sram);            
+        end
     end
     assign arready = is_clint ? arready_clint : arready_sram;
     assign rvalid = is_clint ? rvalid_clint : rvalid_sram;
