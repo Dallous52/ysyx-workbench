@@ -124,8 +124,10 @@ module ysyx_25040111_lsu (
     assign io_master_rready   = is_clint ? 1'b0 : rready;
 
     always @(posedge clk) begin
-        if (rvalid & rready)
-            rmem <= is_clint ? rmem_clint : io_master_rdata;
+        if (rvalid & rready) begin
+            rmem <= is_clint ? rmem_clint : rmem_sram;
+            $display("rmem: %h   sram: %h", rmem, rmem_sram);            
+        end
     end
 `else
     always @(posedge clk) begin
