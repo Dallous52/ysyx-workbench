@@ -127,7 +127,7 @@ module ysyx_25040111_lsu (
     //     if (rvalid & rready)
     //         rmem <= is_clint ? rmem_clint : io_master_rdata;
     // end
-    assign rmem = is_clint ? rmem_clint : rmem_sram;
+    assign rmem = is_clint ? rmem_clint : io_master_rdata;
 
 `else
     assign rmem = is_clint ? rmem_clint : rmem_sram;
