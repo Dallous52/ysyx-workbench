@@ -83,8 +83,8 @@ SECTIONS {
     *(.scommon)
   } > sdram
 
-  _heap_start = 0x80000000;
-  _heap_end = 0x80400000;
+  _heap_start = 0xa4000000;
+  _heap_end = 0xa8000000;
 
   _stack_top = 0x0f000800;
   _stack_pointer = 0x0f002000;
