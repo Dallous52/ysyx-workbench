@@ -25,7 +25,7 @@ module ysyx_25040111_csr(
             csr[4] <= 32'h79737978;  // mvendorid
             csr[5] <= 32'd25040111;  // marchid
         end
-        if (wen) begin
+        else if (wen) begin
             // $display("mtevc %h\n", csr[1]);
             case (waddr)
                 12'h300: csr[0] <= wdata;
@@ -34,11 +34,7 @@ module ysyx_25040111_csr(
                 default: ;
             endcase
         end
-    end
-
-    // mcause write
-    always @(posedge clk) begin
-        if (|jtype) begin
+        else if (|jtype) begin
             case (jtype)
                 2'b01: csr[3] <= 32'd11;
                 2'b10: ;
