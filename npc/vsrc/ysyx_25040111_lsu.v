@@ -159,11 +159,6 @@ module ysyx_25040111_lsu (
             wlast <= 0;
             wvalid <= 0;   
         end
-
-        // 写回复信息
-        if (bready & bvalid) begin
-            valid_t <= 1;
-        end
     end
 
     assign valid = wen | ren ? valid_t : ready;
