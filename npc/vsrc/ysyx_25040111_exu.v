@@ -1,5 +1,5 @@
 `include "HDR/ysyx_25040111_inc.vh"
-`include "HDR/ysyx_20540111_dpic.vh"
+`include "HDR/ysyx_25040111_dpic.vh"
 `include "ALU/ysyx_25040111_alu.v"
 
 module ysyx_25040111_exu(
