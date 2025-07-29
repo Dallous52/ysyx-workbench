@@ -139,16 +139,6 @@ module ysyx_25040111_lsu (
 
         if (arvalid & arready)
             arvalid <= 0;
-
-        if (rvalid & rready) begin
-            rmem <= is_clint ? rmem_clint : 
-            `ifdef RUNSOC 
-                io_master_rdata;
-            `else
-                rmem_sram;
-            `endif
-            valid_t <= 1;
-        end
     end
 
     // memory write
@@ -179,7 +169,19 @@ module ysyx_25040111_lsu (
     assign valid = wen | ren ? valid_t : ready;
 
     always @(posedge clk) begin
-        if (valid_t)
+        if (rvalid & rready) begin
+            rmem <= is_clint ? rmem_clint : 
+            `ifdef RUNSOC 
+                io_master_rdata;
+            `else
+                rmem_sram;
+            `endif
+            valid_t <= 1;
+        end
+        else if (bready & bvalid) begin
+            valid_t <= 1;
+        end
+        else if (valid_t)
             valid_t <= 0;
 
     `ifndef YOSYS_STA

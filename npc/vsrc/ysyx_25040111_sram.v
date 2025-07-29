@@ -9,28 +9,28 @@
 `define READY_TIME 8'd1
 
 module ysyx_25040111_sram(
-    input clk,
-    input [31:0] araddr,
-    input arvalid,
-    output arready,
+    input wire clk,
+    input wire [31:0] araddr,
+    input wire arvalid,
+    output wire arready,
 
-    output [31:0] rdata,
-    output [1:0] rresp,
+    output wire [31:0] rdata,
+    output wire [1:0] rresp,
     output reg rvalid,
-    input  rready,
+    input wire  rready,
 
-    input [31:0] awaddr,
-    input awvalid,
-    output awready,
+    input wire [31:0] awaddr,
+    input wire awvalid,
+    output wire awready,
 
-    input [31:0] wdata,
-    input [3:0] wstrb, // wmask
-    input wvalid,
-    output wready,
+    input wire [31:0] wdata,
+    input wire [3:0] wstrb, // wmask
+    input wire wvalid,
+    output wire wready,
 
-    output [1:0] bresp,
-    output bvalid,
-    input bready
+    output wire [1:0] bresp,
+    output reg bvalid,
+    input wire bready
 );
     // memory read
     reg [31:0] rdata_t;
@@ -70,6 +70,7 @@ module ysyx_25040111_sram(
 
     assign awready = 1;
     assign wready = 1;
+    assign bresp = 2'b0;
     always @(posedge clk) begin
         // 写入参数读取准备
         if (awvalid & awready) begin
@@ -86,7 +87,6 @@ module ysyx_25040111_sram(
             bvalid <= 1;
         end
         else if (bvalid & bready) begin
-            bresp <= 2'b0;
             bvalid <= 0;
         end
     end
