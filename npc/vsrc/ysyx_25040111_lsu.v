@@ -132,7 +132,7 @@ module ysyx_25040111_lsu (
         if (rvalid & rready) begin
             rmem <= is_clint ? rmem_clint : rmem_sram;
         end
-        $display("rmem: %h   sram: %h", rmem, rmem_sram);            
+        $display("%b %b  rmem: %h   sram: %h", rvalid, rready, rmem, rmem_sram);            
     end
     assign arready = is_clint ? arready_clint : arready_sram;
     assign rvalid = is_clint ? rvalid_clint : rvalid_sram;
