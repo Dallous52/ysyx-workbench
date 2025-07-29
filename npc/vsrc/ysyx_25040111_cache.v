@@ -62,7 +62,6 @@ module ysyx_25040111_cache(
         if (reset) begin
             cdata <= 0;
             cready <= 0;
-            cvalids <= {CACHE_L{1'b0}};
         end
         else if (valid & hit) begin
             cdata <= cblocks[index];
@@ -77,16 +76,16 @@ module ysyx_25040111_cache(
     end
 
     always @(posedge clock) begin
-        if (~reset & valid & ~hit)
+        if (reset ) cvalids <= {CACHE_L{1'b0}};
+        else if (valid & ~hit)
             rstart <= 1'b1;
-        else
-            rstart <= 1'b0;
-
-        if (~reset & rok) begin
+        else if (rok) begin
             cblocks[index] <= rdata;
             ctags[index] <= tag;
             cvalids[index] <= 1;
         end
+
+        if (rstart) rstart <= 1'b0;
     end
 
 endmodule
