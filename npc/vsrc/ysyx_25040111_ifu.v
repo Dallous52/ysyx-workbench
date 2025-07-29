@@ -39,7 +39,7 @@ module ysyx_25040111_ifu (
 `ifdef PMC_EN
     always @(posedge clk) begin
         if (if_ok) begin
-            case (inst[6:0])
+            case (inst_t[6:0])
                 7'b0010011: monitor_counter(`IOPT);            
                 7'b0010111: monitor_counter(`IOPT);            
                 7'b0110111: monitor_counter(`IOPT);            
