@@ -68,6 +68,7 @@ void pmc_print()
     cpi = all_inst ? (double)all_cycle / all_inst : 0.;
     printf(ANSI_FMT("%-6s\t%10ld\t%10ld\t%5.3lf", ANSI_FG_GREEN) "\n", 
         "ALL", all_inst, all_cycle, cpi);
+    putchar('\n');
     printf("[cache hit] = " ANSI_FMT("%ld", ANSI_FG_GREEN) "\n", hitnum);
-    printf("[hit rate]  = " ANSI_FMT("%lf%%", ANSI_FG_GREEN) "\n", (double)hitnum / all_inst * 100.);
+    printf("[hit rate]  = " ANSI_FMT("%5.3lf%%", ANSI_FG_GREEN) "\n", (double)hitnum / all_inst * 100.);
 }
