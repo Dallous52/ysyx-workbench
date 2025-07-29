@@ -14,10 +14,10 @@ module ysyx_25040111_sram(
     input arvalid,
     output arready,
 
-    output reg [31:0] rdata,
+    output [31:0] rdata,
     output [1:0] rresp,
-    output rvalid,
-    input rready,
+    output reg rvalid,
+    input  rready,
 
     input [31:0] awaddr,
     input awvalid,
@@ -36,6 +36,8 @@ module ysyx_25040111_sram(
     reg [31:0] rdata_t;
 
     assign arready = 1;
+    assign rresp = 2'b00;
+    assign rdata = rdata_t;
     always @(posedge clk) begin
         // 准备开始
         if (arvalid & arready) begin
@@ -47,8 +49,6 @@ module ysyx_25040111_sram(
 
         // 完成传输
         if (rvalid & rready) begin
-            rdata <= rdata_t;
-            rresp <= 2'b00;
             rvalid <= 0;            
         end
     end
