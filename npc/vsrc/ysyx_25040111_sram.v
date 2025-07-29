@@ -1,6 +1,6 @@
 `ifndef RUNSOC
 
-`include "HDR/ysyx_20540111_dpic.vh"
+`include "HDR/ysyx_25040111_dpic.vh"
 
 `ifdef YOSYS_STA
 `include "MOD/ysyx_25040111_RegisterFile.v"    
