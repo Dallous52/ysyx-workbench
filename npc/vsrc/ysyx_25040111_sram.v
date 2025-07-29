@@ -46,9 +46,7 @@ module ysyx_25040111_sram(
         `endif
             rvalid <= 1; // 读取完毕
         end
-
-        // 完成传输
-        if (rvalid & rready) begin
+        else if (rvalid & rready) begin
             rvalid <= 0;            
         end
     end
@@ -77,21 +75,17 @@ module ysyx_25040111_sram(
         if (awvalid & awready) begin
             wtstart <= 1;
         end
-
-        if (wtstart & wvalid) begin
+        else if (wtstart & wvalid) begin
         `ifndef YOSYS_STA
             pmem_write(awaddr, wdata, wmask);
         `endif
             wtstart <= 0;       
         end
-
-        // 写入结束
+        
         if (wvalid & wready) begin
             bvalid <= 1;
         end
-
-        // 读回复信号
-        if (bvalid & bready) begin
+        else if (bvalid & bready) begin
             bresp <= 2'b0;
             bvalid <= 0;
         end
