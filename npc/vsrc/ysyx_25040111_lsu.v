@@ -123,10 +123,12 @@ module ysyx_25040111_lsu (
 
     assign io_master_rready   = is_clint ? 1'b0 : rready;
 
-    always @(posedge clk) begin
-        if (rvalid & rready)
-            rmem <= is_clint ? rmem_clint : io_master_rdata;
-    end
+    // always @(posedge clk) begin
+    //     if (rvalid & rready)
+    //         rmem <= is_clint ? rmem_clint : io_master_rdata;
+    // end
+    assign rmem = is_clint ? rmem_clint : rmem_sram;
+
 `else
     assign rmem = is_clint ? rmem_clint : rmem_sram;
     assign arready = is_clint ? arready_clint : arready_sram;
