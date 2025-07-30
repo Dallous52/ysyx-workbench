@@ -119,7 +119,9 @@ word_t paddr_read(paddr_t addr, int len)
 #endif // CONFIG_MTRACE
 
   paddr_t address = npc_addr_map(addr);
-  if (address == 0 && mem_err_ignore) return 0;
+  if (address == 0 && mem_err_ignore) { 
+    printf("[r : 0x%08x <=> 0x%08x]\n", addr, address); return 0;
+  }
   // printf(ANSI_FMT("[r : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
 
   if (likely(in_pmem(address))) return pmem_read(address, len);
@@ -137,7 +139,9 @@ void paddr_write(paddr_t addr, int len, word_t data)
 #endif // CONFIG_MTRACE
 
   paddr_t address = npc_addr_map(addr);
-  if (address == 0 && mem_err_ignore) return;
+  if (address == 0 && mem_err_ignore) { 
+    printf("[r : 0x%08x <=> 0x%08x]\n", addr, address); return;
+  }
   // printf(ANSI_FMT("[w : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
 
   if (likely(in_pmem(address))) { pmem_write(address, len, data); return; }
