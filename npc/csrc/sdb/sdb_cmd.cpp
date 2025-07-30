@@ -1,6 +1,6 @@
 #include "npc.h"
 #include "memory.h"
-#include "tpdef.h"
+#include "util.h"
 
 #include <cstdint>
 #include <cstdio>
@@ -198,5 +198,12 @@ int cmd_v(char* args)
 {
   void start_v();
   start_v();
+  return 0;
+}
+
+
+int cmd_csim(char* args)
+{
+  cachesim_step();
   return 0;
 }

@@ -19,6 +19,7 @@ int cmd_w(char* args);
 int cmd_d(char* args);
 int cmd_v(char* args);
 int cmd_n(char* args);
+int cmd_csim(char* args);
 
 
 // command table <name describe fuction> 
@@ -39,7 +40,8 @@ static struct
     { "w", "Stop program when ${EXPR} change", cmd_w},
     { "d", "Delete watch point with wp NO", cmd_d},
     { "v", "Start vcd trace create.", cmd_v},
-    { "n", "Start vcd trace create.", cmd_n}
+    { "n", "Start vcd trace create.", cmd_n},
+    { "csim", "run cachesim.", cmd_csim}
     /* TODO: Add more commands */
 };
 
