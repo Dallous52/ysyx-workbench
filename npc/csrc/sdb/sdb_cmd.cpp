@@ -207,7 +207,7 @@ int cmd_csim(char* args)
 {
   pmc_init();
 
-  int cls = 2, bls = 4;
+  int cls = 4, bls = 2;
   if (args == nullptr || sscanf(args, "%d %d", &cls, &bls) != 2)
   {
     printf("Please use command: \"csim [cache sqrt num] [block ...]\".\n");
