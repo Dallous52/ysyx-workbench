@@ -104,4 +104,5 @@ __EXPORT void difftest_init(int port, word_t pc) {
   /* Perform ISA dependent initialization. */
   init_isa();
   cpu.pc = pc;
+  nemu_state.state = NEMU_STOP;
 }
