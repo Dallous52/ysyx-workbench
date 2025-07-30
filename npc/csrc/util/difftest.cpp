@@ -15,7 +15,7 @@ typedef void (*diff_memcpy)(paddr_t, void *, size_t , bool);
 diff_memcpy ref_difftest_memcpy  = nullptr;
 typedef void (*diff_regcpy)(void *, bool);
 diff_regcpy ref_difftest_regcpy = nullptr;
-typedef void (*diff_exec)(uint64_t);
+typedef word_t (*diff_exec)(uint64_t);
 diff_exec ref_difftest_exec = nullptr;
 typedef void (*diff_raise_intr)(uint64_t);
 diff_raise_intr ref_difftest_raise_intr = nullptr;
