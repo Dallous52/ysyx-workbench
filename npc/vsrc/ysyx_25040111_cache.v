@@ -66,7 +66,9 @@ module ysyx_25040111_cache(
             cready <= 0;
         end
         else if (valid & hit) begin
+        `ifndef YOSYS_STA
             cache_hit();
+        `endif
             cdata <= cblocks[index];
             cready <= 1'b1;
         end
