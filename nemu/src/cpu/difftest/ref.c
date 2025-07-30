@@ -66,8 +66,9 @@ __EXPORT void difftest_regcpy(void *dut, bool direction)
 }
 
 __EXPORT void difftest_exec(uint64_t n) {
-  // printf("nume exec:pc %08x\n", cpu.pc);
+  printf("nume exec:pc0 %08x\n", cpu.pc);
   cpu_exec(n);
+  printf("nume exec:pc1 %08x\n", cpu.pc);
 }
 
 
