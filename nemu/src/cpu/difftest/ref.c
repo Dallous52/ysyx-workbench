@@ -13,6 +13,7 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include <utils.h>
 #include <isa.h>
 #include <cpu/cpu.h>
 #include <difftest-def.h>
@@ -69,7 +70,7 @@ __EXPORT uint64_t difftest_exec(uint64_t n) {
   cpu_exec(n);
   uint64_t inst = paddr_read(cpu.pc, 4);
   uint64_t ret = (inst << 32) | cpu.pc; 
-  return ret;
+  return nemu_state.state == NEMU_END ? 0 : ret;
 }
 
 
