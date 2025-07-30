@@ -15,6 +15,18 @@ static int counter[EEND] = { 0 };
 static int64_t cycnum[EEND] = { 0 };
 static int64_t hitnum = 0;
 
+
+void pmc_init()
+{
+    for (int i = 0; i < EEND; i++) 
+    {
+        counter[i] = 0;
+        cycnum[i] = 0;
+    }
+    hitnum = 0;
+}
+
+
 extern "C" void monitor_counter(int dtype)
 {
     counter[dtype]++;

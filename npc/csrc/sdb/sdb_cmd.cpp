@@ -204,6 +204,7 @@ int cmd_v(char* args)
 
 int cmd_csim(char* args)
 {
-  cachesim_step();
+  printf("%s\n", args);
+  cachesim_step(2, 4);
   return 0;
 }
