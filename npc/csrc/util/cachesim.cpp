@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <cstdio>
 
-typedef word_t (*diff_exec)(uint64_t);
+typedef uint64_t (*diff_exec)(uint64_t);
 extern diff_exec ref_difftest_exec;
 
 
