@@ -120,7 +120,7 @@ word_t paddr_read(paddr_t addr, int len)
 
   paddr_t address = npc_addr_map(addr);
   if (address == 0 && mem_err_ignore) { 
-    printf("[r : 0x%08x <=> 0x%08x]\n", addr, address); return 0xffffffff;
+    return 0xffffffff;
   }
   // printf(ANSI_FMT("[r : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
 
@@ -140,7 +140,7 @@ void paddr_write(paddr_t addr, int len, word_t data)
 
   paddr_t address = npc_addr_map(addr);
   if (address == 0 && mem_err_ignore) { 
-    printf("[r : 0x%08x <=> 0x%08x]\n", addr, address); return;
+    return;
   }
   // printf(ANSI_FMT("[w : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
 
