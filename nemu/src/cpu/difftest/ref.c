@@ -78,7 +78,7 @@ __EXPORT uint64_t difftest_sim() {
   uint64_t inst = paddr_read(cpu.pc, 4);
   uint64_t ret = (inst << 32) | cpu.pc;
   mem_err_ignore = false;
-  return nemu_state.state == NEMU_END ? 0 : ret;
+  return nemu_state.state != NEMU_RUNNING ? 0 : ret;
 }
 
 
