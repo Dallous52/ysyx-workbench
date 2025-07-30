@@ -67,6 +67,7 @@ __EXPORT void difftest_regcpy(void *dut, bool direction)
 
 __EXPORT word_t difftest_exec(uint64_t n) {
   cpu_exec(n);
+  printf("inst :> %08x\n", paddr_read(cpu.pc, 4));
   return cpu.pc;
 }
 

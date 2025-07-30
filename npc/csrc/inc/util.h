@@ -23,4 +23,7 @@ bool difftest_step(uint32_t pc);
 // difftest nop
 void difftest_nop(word_t pc);
 
+// cachesim 
+bool cachesim_step();
+
 #endif // NPC_DISASM
