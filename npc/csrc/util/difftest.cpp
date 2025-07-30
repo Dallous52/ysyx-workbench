@@ -24,6 +24,24 @@ diff_raise_intr ref_difftest_raise_intr = nullptr;
 typedef void (*diff_nop)(void*, word_t);
 diff_nop ref_difftest_nop = nullptr;
 typedef void (*diff_init)(int, word_t);
+diff_init ref_difftest_init = nullptr;
+
+
+void nemu_init(long img_size, int port)
+{
+    #ifdef RUNSOC
+    ref_difftest_init(port, 0x30000000);
+#else
+    ref_difftest_init(port, 0x80000000);
+#endif
+
+    ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
+    
+    word_t regbuf[32] = {};
+    reg_value(regbuf);
+    ref_difftest_regcpy(regbuf, DIFFTEST_TO_REF);
+}
+
 
 void init_difftest(long img_size, int port) 
 {
@@ -49,20 +67,10 @@ void init_difftest(long img_size, int port)
     ref_difftest_nop = (diff_nop)dlsym(handle, "difftest_nop");
     assert(ref_difftest_nop);
     
-    diff_init ref_difftest_init = (diff_init)dlsym(handle, "difftest_init");
+    ref_difftest_init = (diff_init)dlsym(handle, "difftest_init");
     assert(ref_difftest_init);
 
-#ifdef RUNSOC
-    ref_difftest_init(port, 0x30000000);
-#else
-    ref_difftest_init(port, 0x80000000);
-#endif
-
-    ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
-    
-    word_t regbuf[32] = {};
-    reg_value(regbuf);
-    ref_difftest_regcpy(regbuf, DIFFTEST_TO_REF);
+    nemu_init(img_size, port);
 }
   
 

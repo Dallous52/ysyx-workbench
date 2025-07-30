@@ -1,11 +1,12 @@
 #include "device.h"
+#include "memory.h"
 
-#include <cstdint>
 #include <cstdio>
 
 typedef uint64_t (*diff_sim)();
 extern diff_sim ref_difftest_sim;
 
+void nemu_init(long img_size, int port);
 
 bool cachesim_run(int cache_ls, int block_ls)
 {
@@ -24,6 +25,8 @@ bool cachesim_run(int cache_ls, int block_ls)
         
         // printf("cachesim:> %08x : [ %08x ]\n", pc, inst);
     }
+
+    nemu_init(get_img_size(), 0);
     
     return true;
 }
