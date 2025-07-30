@@ -10,7 +10,7 @@ void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime)
 {
   uint64_t high = inl(DEV_TIMMER + 4);
   uint64_t low =  inl(DEV_TIMMER);
-  uptime->us = (low | (high << 32)) >> 2;
+  uptime->us = (low | (high << 32)) >> 33;
 }
 
 void __am_timer_rtc(AM_TIMER_RTC_T *rtc) {
