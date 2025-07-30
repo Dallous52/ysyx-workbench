@@ -205,7 +205,7 @@ int cmd_v(char* args)
 int cmd_csim(char* args)
 {
   int cls = 2, bls = 4;
-  if (scanf("%d %d", &cls, &bls) != 2)
+  if (sscanf(args, "%d %d", &cls, &bls) != 2)
   {
     printf("Please use command: \"csim [cache sqrt num] [block ...]\".\n");
     return 0;
