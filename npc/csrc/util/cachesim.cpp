@@ -1,5 +1,6 @@
 #include "device.h"
 
+#include <cstdint>
 #include <cstdio>
 
 typedef word_t (*diff_exec)(uint64_t);
@@ -14,8 +15,12 @@ bool cachesim_step()
     word_t pc = 0x80000000;
 #endif
 
-    printf("cachesim:> %08x\n", pc);
-    pc = ref_difftest_exec(1);
+    
+    uint64_t ret = ref_difftest_exec(1);
+    uint32_t inst = (uint32_t)(ret >> 32);
+    pc = (uint32_t)ret;
+    
+    printf("cachesim:> %08x : [ %08x ]\n", pc, inst);
 
     return true;
 }
