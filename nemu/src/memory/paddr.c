@@ -48,6 +48,8 @@ static uint8_t *pmem = NULL;
 static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 #endif
 
+bool mem_err_ignore = false;
+
 
 uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 
@@ -134,6 +136,7 @@ void paddr_write(paddr_t addr, int len, word_t data)
 #endif // CONFIG_MTRACE
 
   paddr_t address = npc_addr_map(addr);
+  if (address == 0 && mem_err_ignore) return;
   // printf(ANSI_FMT("[w : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
 
   if (likely(in_pmem(address))) { pmem_write(address, len, data); return; }

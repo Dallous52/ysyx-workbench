@@ -66,10 +66,18 @@ __EXPORT void difftest_regcpy(void *dut, bool direction)
   }
 }
 
-__EXPORT uint64_t difftest_exec(uint64_t n) {
+__EXPORT void difftest_exec(uint64_t n) {
   cpu_exec(n);
+}
+
+
+extern bool mem_err_ignore;
+__EXPORT uint64_t difftest_sim() {
+  mem_err_ignore = true;
+  cpu_exec(1);
   uint64_t inst = paddr_read(cpu.pc, 4);
-  uint64_t ret = (inst << 32) | cpu.pc; 
+  uint64_t ret = (inst << 32) | cpu.pc;
+  mem_err_ignore = false;
   return nemu_state.state == NEMU_END ? 0 : ret;
 }
 
