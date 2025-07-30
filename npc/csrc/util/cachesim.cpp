@@ -22,7 +22,7 @@ bool cachesim_run(int cache_ls, int block_ls)
         inst = (uint32_t)(ret >> 32);
         pc = (uint32_t)ret;
         
-        printf("cachesim:> %08x : [ %08x ]\n", pc, inst);
+        // printf("cachesim:> %08x : [ %08x ]\n", pc, inst);
     }
     
     return true;
