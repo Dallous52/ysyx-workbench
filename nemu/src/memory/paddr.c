@@ -119,6 +119,7 @@ word_t paddr_read(paddr_t addr, int len)
 #endif // CONFIG_MTRACE
 
   paddr_t address = npc_addr_map(addr);
+  if (address == 0 && mem_err_ignore) return 0;
   // printf(ANSI_FMT("[r : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
 
   if (likely(in_pmem(address))) return pmem_read(address, len);
