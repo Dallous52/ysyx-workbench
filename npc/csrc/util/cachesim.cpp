@@ -3,8 +3,8 @@
 #include <cstdint>
 #include <cstdio>
 
-typedef uint64_t (*diff_exec)(uint64_t);
-extern diff_exec ref_difftest_exec;
+typedef uint64_t (*diff_sim)();
+extern diff_sim ref_difftest_sim;
 
 
 bool cachesim_run(int cache_ls, int block_ls)
@@ -18,8 +18,7 @@ bool cachesim_run(int cache_ls, int block_ls)
     uint32_t inst = 0;
     while (pc != 0)
     {
-        if (device_visit(paddr_t addr, uint32_t inst))
-        uint64_t ret = ref_difftest_exec(1);
+        uint64_t ret = ref_difftest_sim();
         inst = (uint32_t)(ret >> 32);
         pc = (uint32_t)ret;
         

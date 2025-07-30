@@ -15,8 +15,10 @@ typedef void (*diff_memcpy)(paddr_t, void *, size_t , bool);
 diff_memcpy ref_difftest_memcpy  = nullptr;
 typedef void (*diff_regcpy)(void *, bool);
 diff_regcpy ref_difftest_regcpy = nullptr;
-typedef uint64_t (*diff_exec)(uint64_t);
+typedef void (*diff_exec)(uint64_t);
 diff_exec ref_difftest_exec = nullptr;
+typedef uint64_t (*diff_sim)();
+diff_sim ref_difftest_sim = nullptr;
 typedef void (*diff_raise_intr)(uint64_t);
 diff_raise_intr ref_difftest_raise_intr = nullptr;
 typedef void (*diff_nop)(void*, word_t);
@@ -37,6 +39,9 @@ void init_difftest(long img_size, int port)
   
     ref_difftest_exec = (diff_exec)dlsym(handle, "difftest_exec");
     assert(ref_difftest_exec);
+
+    ref_difftest_sim = (diff_sim)dlsym(handle, "difftest_sim");
+    assert(ref_difftest_sim);
   
     ref_difftest_raise_intr = (diff_raise_intr)dlsym(handle, "difftest_raise_intr");
     assert(ref_difftest_raise_intr);
