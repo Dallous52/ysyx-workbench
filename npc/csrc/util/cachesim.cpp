@@ -34,7 +34,6 @@ bool cachesim_run(int cache_ls, int block_ls)
     {
         uint32_t tag = BITS(pc, 31, tag_idx);
         uint32_t index = BITS(pc, tag_idx - 1, block_ls);
-        uint32_t offset = BITS(pc, block_ls - 1, 0);
         
         bool hit = (tags[index] == tag) && valids[index];
         if (hit) hitnum++;
