@@ -115,8 +115,8 @@ module ysyx_25040111(
     wire if_start;
 
     ysyx_25040111_cache #(
-        .BLOCK_Ls 	(4  ),
-        .CACHE_Ls 	(4  ))
+        .CACHE_Ls 	(4  ),
+        .BLOCK_Ls 	(4  ))
     u_icache(
         .clock  	(clock          ),
         .reset  	(reset          ),
