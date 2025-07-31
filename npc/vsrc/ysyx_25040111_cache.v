@@ -76,7 +76,7 @@ module ysyx_25040111_cache(
         end
         else if ((valid & hit) | update) begin
         `ifndef YOSYS_STA
-            cache_hit();
+            if (valid & hit) cache_hit();
         `endif
             cdata <= {cblocks[index] >> (at << 5)}[31:0];
         end
