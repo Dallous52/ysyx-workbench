@@ -56,6 +56,7 @@ module ysyx_25040111_cache(
     reg [CACHE_L-1 : 0] cvalids;
 
     wire hit = (ctags[index] == tag) & (cvalids[index]);
+    wire [BLOCK_Ls-1 : 0] at = offset >> 2;
 
 //-----------------------------------------------------------------
 // State Machine
@@ -70,8 +71,12 @@ module ysyx_25040111_cache(
         `ifndef YOSYS_STA
             cache_hit();
         `endif
-            cdata <= cblocks[index];
-            cready <= 1'b1;
+            for (int i = 0; i < DATA_L; i++) begin
+                if (at == i[BLOCK_Ls-1 : 0]) begin
+                    cdata <= cblocks[index];
+                    cready <= 1'b1;
+                end 
+            end
         end
         else if (rok) begin
             cdata <= rdata;
