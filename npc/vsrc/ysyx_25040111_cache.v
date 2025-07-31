@@ -77,6 +77,8 @@ module ysyx_25040111_cache(
         else if ((valid & hit) | update) begin
         `ifndef YOSYS_STA
             if (valid & hit) cache_hit();
+            $display("addr:%h  valid:%b  hit:%b  count:%d  start:%b  rok:%b",
+                caddr, valid, hit, count, rstart, rok);
         `endif
             cdata <= {cblocks[index] >> (at << 5)}[31:0];
         end
