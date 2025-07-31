@@ -116,7 +116,7 @@ module ysyx_25040111(
 
     ysyx_25040111_cache #(
         .CACHE_Ls 	(4  ),
-        .BLOCK_Ls 	(4  ))
+        .BLOCK_Ls 	(2  ))
     u_icache(
         .clock  	(clock          ),
         .reset  	(reset          ),

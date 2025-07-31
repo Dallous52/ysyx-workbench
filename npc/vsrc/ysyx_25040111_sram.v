@@ -50,19 +50,7 @@ module ysyx_25040111_sram(
             rvalid <= 0;            
         end
     end
-
-`ifdef YOSYS_STA
-    ysyx_25040111_RegisterFile #(8, 32) u_rom2_t(
-        .clk   	(clk    ),
-        .wen   	(wtstart & wvalid),
-        .ren   	({arvalid & arready, 1'b0}),
-        .wdata 	(wdata),
-        .waddr 	(awaddr[7:0]),
-        .raddr1 (araddr[7:0]),
-        .rdata1 (rdata_t)
-    );
-`endif
-
+    
     // memory write
     wire [7:0] wmask;
     assign wmask = {4'b0, wstrb};
