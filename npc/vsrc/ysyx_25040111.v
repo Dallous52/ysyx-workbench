@@ -107,6 +107,7 @@ module ysyx_25040111(
     );
 
     wire [31:0] icache_data;
+    wire [31:0] icache_addr;
     wire [7:0]  tlen;
     wire icache_ready;
     wire icache_valid;
@@ -120,9 +121,10 @@ module ysyx_25040111(
         .clock  	(clock          ),
         .reset  	(reset          ),
         .addr   	(pc             ),
+        .raddr      (icache_addr    ),
         .data   	(icache_data    ),
         .rstart 	(if_start       ),
-        .rlen       (tlen),
+        .rlen       (tlen           ),
         .rok    	(icache_rok     ),
         .rdata  	(lsu_rdata      ),
         .valid  	(icache_valid   ),
@@ -178,7 +180,7 @@ module ysyx_25040111(
     wire lsu_ren = if_flag ? 1 : opt[12] & mem_en;
     wire [1:0] lsu_mask = if_flag ? 2'b11 : opt[11:10];
     wire [7:0] lsu_tlen = if_flag ? tlen : 8'b0;
-    wire [31:0] lsu_addr = if_flag ? pc : rd_dt;
+    wire [31:0] lsu_addr = if_flag ? icache_addr : rd_dt;
     wire [31:0] lsu_rdata;
     wire lsu_ok;
 
