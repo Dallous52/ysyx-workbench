@@ -11,6 +11,7 @@ module ysyx_25040111_lsu (
     input [1:0] mask,   // 掩码选择
     input [31:0] addr,  // 内存操作地址
     input [31:0] wdata, // 写入数据
+    input [7:0] tlen,   // 突发传输次数
     output [31:0] rdata,// 读出数据
     output valid
 
@@ -118,7 +119,7 @@ module ysyx_25040111_lsu (
     assign io_master_araddr   = is_clint ? 32'b0 : addr;
     assign io_master_arid     = 4'b0;
     assign io_master_arlen    = 8'b0;
-    assign io_master_arsize   = is_clint ? 3'b0 : 3'b010;
+    assign io_master_arsize   = is_clint ? 3'b0 : tsize;
     assign io_master_arburst  = 2'b0;
 
     assign io_master_rready   = is_clint ? 1'b0 : rready;

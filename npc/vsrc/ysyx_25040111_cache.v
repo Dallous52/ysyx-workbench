@@ -8,7 +8,7 @@ module ysyx_25040111_cache(
     output  [31:0] data,
     
     output reg rstart,
-    // output [7:0] rlen,
+    output [7:0] rlen,
     input  rok,
     input  [31:0] rdata,
 
@@ -47,7 +47,7 @@ module ysyx_25040111_cache(
 
     assign ready = cready;
     assign data = cdata;
-    // assign rlen = DATA_L;
+    assign rlen = DATA_L - 1;
 
 //-----------------------------------------------------------------
 // Register / Wire

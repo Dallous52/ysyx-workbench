@@ -107,6 +107,7 @@ module ysyx_25040111(
     );
 
     wire [31:0] icache_data;
+    wire [7:0]  tlen;
     wire icache_ready;
     wire icache_valid;
     wire icache_rok = if_flag ? lsu_ok : 1'b0; 
@@ -121,6 +122,7 @@ module ysyx_25040111(
         .addr   	(pc             ),
         .data   	(icache_data    ),
         .rstart 	(if_start       ),
+        .rlen       (tlen),
         .rok    	(icache_rok     ),
         .rdata  	(lsu_rdata      ),
         .valid  	(icache_valid   ),
@@ -175,6 +177,7 @@ module ysyx_25040111(
     wire lsu_wen = if_flag ? 0 : ~opt[12] & mem_en;
     wire lsu_ren = if_flag ? 1 : opt[12] & mem_en;
     wire [1:0] lsu_mask = if_flag ? 2'b11 : opt[11:10];
+    wire [7:0] lsu_tlen = if_flag ? tlen : 8'b0;
     wire [31:0] lsu_addr = if_flag ? pc : rd_dt;
     wire [31:0] lsu_rdata;
     wire lsu_ok;
@@ -189,6 +192,7 @@ module ysyx_25040111(
         .addr  	(lsu_addr      ),
         .wdata 	(rs2_d      ),
         .rdata 	(lsu_rdata      ),
+        .tlen   (lsu_tlen),
         .valid  (lsu_ok)
 `ifdef RUNSOC
         ,.io_master_awready (io_master_awready  ),
