@@ -50,7 +50,7 @@ bool cachesim_run(int cache_ls, int block_ls)
     }
 
     double p = hitnum / inst;
-    printf("[cache hit] = " ANSI_FMT("%ld", ANSI_FG_GREEN) "\n", (long)hitnum);
+    printf("[cache hit] = " ANSI_FMT("%ld / %ld", ANSI_FG_GREEN) "\n", (long)inst, (long)hitnum);
     printf(" [hit rate] = " ANSI_FMT("%5.3lf%%", ANSI_FG_GREEN) "\n", p * 100.);
     printf("     [AMAT] = " ANSI_FMT("%5.3lf", ANSI_FG_GREEN) "\n", 3. + (1. - p) * 8);
 
