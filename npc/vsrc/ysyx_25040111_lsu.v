@@ -145,13 +145,14 @@ module ysyx_25040111_lsu (
     assign bready = 1;
     always @(posedge clk) begin
         // 地址有效
-        if (wen & ready)
+        if (wen & ready) begin
             awvalid <= 1;
+            wvalid <= 1;
+            wlast <= 1;
+        end
 
         if (awvalid & awready) begin
             awvalid <= 0;
-            wvalid <= 1;
-            wlast <= 1;
         end
 
         // 写入参数
