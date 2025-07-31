@@ -64,6 +64,7 @@ module ysyx_25040111_cache(
     wire hit = (ctags[index] == tag) & (cvalids[index]);
     wire update = count == DATA_L;
     wire [BLOCK_Ls+4 : 0] at = {5'b0 , offset >> 2};
+    wire [31:0] tdata = {cblocks[index] >> (at << 5)};
 
 //-----------------------------------------------------------------
 // State Machine
@@ -78,7 +79,7 @@ module ysyx_25040111_cache(
         `ifndef YOSYS_STA
             if (valid & hit) cache_hit();
         `endif
-            cdata <= {cblocks[index] >> (at << 5)}[31:0];
+            cdata <= tdata;
         end
     end
 
