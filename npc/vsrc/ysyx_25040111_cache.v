@@ -29,7 +29,8 @@ module ysyx_25040111_cache(
     localparam TAG_IDX = BLOCK_Ls + CACHE_Ls;
     localparam TAG_HIG = 31 - TAG_IDX;
 
-    localparam BLOCK_L = 2**BLOCK_Ls * 8;
+    localparam BLOCK_L = 2**BLOCK_Ls << 3;
+    localparam DATA_L  = 2**BLOCK_Ls >> 2;
     localparam CACHE_L = 2**CACHE_Ls;
 
 //-----------------------------------------------------------------
