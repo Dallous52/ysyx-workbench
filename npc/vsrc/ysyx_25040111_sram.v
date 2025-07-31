@@ -64,7 +64,6 @@ module ysyx_25040111_sram(
 `endif
 
     // memory write
-    reg wtstart;
     wire [7:0] wmask;
     assign wmask = {4'b0, wstrb};
 
@@ -73,14 +72,10 @@ module ysyx_25040111_sram(
     assign bresp = 2'b0;
     always @(posedge clk) begin
         // 写入参数读取准备
-        if (awvalid & awready) begin
-            wtstart <= 1;
-        end
-        else if (wtstart & wvalid) begin
+        if (awvalid & awready & wvalid & wready) begin
         `ifndef YOSYS_STA
             pmem_write(awaddr, wdata, wmask);
         `endif
-            wtstart <= 0;       
         end
         
         if (wvalid & wready) begin
