@@ -71,13 +71,13 @@ module ysyx_25040111_lsu (
         2'b11, 4'b1111
     });
 
-    wire [2:0] tsize;
-    ysyx_25040111_MuxKey #(4, 2, 3) c_tsize(tsize, mask, {
-        2'b00, 3'b0,
-        2'b01, 3'b000,
-        2'b10, 3'b001,
-        2'b11, 3'b010
-    });
+    // wire [2:0] tsize;
+    // ysyx_25040111_MuxKey #(4, 2, 3) c_tsize(tsize, mask, {
+    //     2'b00, 3'b0,
+    //     2'b01, 3'b000,
+    //     2'b10, 3'b001,
+    //     2'b11, 3'b010
+    // });
 
     wire [31:0] wmem;
     ysyx_25040111_MuxKey #(4, 2, 32) c_wt_data(wmem, addr[1:0], {
@@ -101,7 +101,7 @@ module ysyx_25040111_lsu (
     assign io_master_awaddr  = is_clint ? 32'b0 : addr;
     assign io_master_awid    = 4'b0;
     assign io_master_awlen   = 8'b0;
-    assign io_master_awsize  = is_clint ? 3'b0 : tsize;
+    assign io_master_awsize  = is_clint ? 3'b0 : 3'b010;
     assign io_master_awburst = 2'b0;
 
     assign wready             = is_clint ? 1'b0  : io_master_wready;
@@ -118,7 +118,7 @@ module ysyx_25040111_lsu (
     assign io_master_araddr   = is_clint ? 32'b0 : addr;
     assign io_master_arid     = 4'b0;
     assign io_master_arlen    = 8'b0;
-    assign io_master_arsize   = is_clint ? 3'b0 : tsize;
+    assign io_master_arsize   = is_clint ? 3'b0 : 3'b010;
     assign io_master_arburst  = 2'b0;
 
     assign io_master_rready   = is_clint ? 1'b0 : rready;
