@@ -111,7 +111,7 @@ module ysyx_25040111_cache(
         if (reset ) begin
             cvalids <= {CACHE_L{1'b0}};
         end
-        else if (update & rok) begin
+        else if (update) begin
             ctags[index] <= tag;
             cvalids[index] <= 1'b1;    
         end
