@@ -80,8 +80,8 @@ module ysyx_25040111_cache(
         `endif
             cdata <= {cblocks[index] >> (at << 5)}[31:0];
         end
-        $display("addr:%h  rdata:%h  valid:%b  hit:%b  count:%d  start:%b  rok:%b",
-            caddr, rdata, valid, hit, count, rstart, rok);
+        $display("addr:%h  rdata:%h  valid:%b  count:%d  start:%b  rok:%b  at:%b  up:%b",
+            caddr, rdata, valid, count, rstart, rok, at, update);
     end
 
     // rstart
