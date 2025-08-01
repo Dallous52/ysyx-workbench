@@ -82,6 +82,7 @@ module ysyx_25040111_cache(
         `endif
             cdata <= tdata[31:0];
         end
+        $display("rok:%b  rdata:%h", rok, rdata);
     end
 
     // rstart
@@ -108,7 +109,7 @@ module ysyx_25040111_cache(
     
     // main cache
     always @(posedge clock) begin
-        if (reset ) begin
+        if (reset) begin
             cvalids <= {CACHE_L{1'b0}};
         end
         else if (update) begin
@@ -118,7 +119,7 @@ module ysyx_25040111_cache(
     end
     generate
         if (BLOCK_L > 32) begin
-            always_ff @(posedge clock) 
+            always_ff @(posedge clock)
                 if (rok) cblocks[index] <= {rdata, cblocks[index][BLOCK_L-1:32]};
         end else begin
             always_ff @(posedge clock)
