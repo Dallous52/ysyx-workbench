@@ -136,7 +136,9 @@ module ysyx_25040111(
         .valid  	(icache_valid   ),
         .ready  	(icache_ready   )
     );
-    
+    always @(posedge clock) begin
+        $display("flag: %b", if_flag);
+    end
 
     ysyx_25040111_idu u_idu (
         .inst 	(inst  ),
