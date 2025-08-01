@@ -167,6 +167,9 @@ module ysyx_25040111_lsu (
 
     always @(posedge clk) begin
         if (rvalid & rready) begin
+        `ifdef RUNSOC 
+            $display("rdata: %h", io_master_rdata);
+        `endif
             rmem <= is_clint ? rmem_clint : 
             `ifdef RUNSOC 
                 io_master_rdata;
