@@ -82,7 +82,7 @@ module ysyx_25040111_cache(
         `endif
             cdata <= tdata[31:0];
         end
-        $display("rok:%b  rdata:%h", rok, rdata);
+        $display("rok:%b  rdata:%h  rstart:%b", rok, rdata, rstart);
     end
 
     // rstart
