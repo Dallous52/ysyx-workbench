@@ -114,7 +114,7 @@ module ysyx_25040111(
     wire icache_rok = if_flag ? lsu_ok : 1'b0; 
     wire if_start;
     `ifdef RUNSOC        
-    wire icache_burst = pc[31:28] == 4'ha;
+    wire icache_burst = 0;// pc[31:28] == 4'ha;
     `else
     wire icache_burst = 1'b0;
     `endif
