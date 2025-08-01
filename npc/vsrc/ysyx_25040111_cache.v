@@ -4,17 +4,18 @@ module ysyx_25040111_cache(
     input   clock,
     input   reset,
 
-    input   [31:0] addr,
-    output  [31:0] data,
+    input   [31:0] addr,    // 访问地址
+    input   rburst,         // 是否突发读取
+    output  [31:0] data,    // 返回数据
     
-    output reg      rstart,
-    output [31:0]   raddr,
-    output [7:0]    rlen,
-    input           rok,
-    input  [31:0]   rdata,
+    output reg      rstart, // 传输开始控制信号
+    output [31:0]   raddr,  // 访问地址
+    output [7:0]    rlen,   // 访问次数
+    input           rok,    // 一次传输完成信号
+    input  [31:0]   rdata,  // 一次传输完成数据
 
-    input   valid,
-    output  ready
+    input   valid,          // 使能
+    output  ready           // 完成
 );
 
 //-----------------------------------------------------------------
@@ -48,7 +49,7 @@ module ysyx_25040111_cache(
 
     assign ready = cready;
     assign data = cdata;
-    assign rlen = DATA_L - 1;
+    assign rlen = rburst ? DATA_L - 1 : 8'b0;
     assign raddr = caddr;
 
 //-----------------------------------------------------------------
@@ -89,7 +90,7 @@ module ysyx_25040111_cache(
             rstart <= 1'b0;
         else if (valid & ~hit)
             rstart <= 1'b1;
-        else if (~update & rok & (count != DATA_L - 1))
+        else if (~update & rok & (count != DATA_L - 1) & ~rburst)
             rstart <= 1'b1;
         else
             rstart <= 1'b0;
@@ -141,7 +142,7 @@ module ysyx_25040111_cache(
             caddr <= 0;
         else if (valid & ~hit)
             caddr <= {addr[31:BLOCK_Ls], {BLOCK_Ls{1'b0}}};
-        else if (rok)
+        else if (rok & ~rburst)
             caddr <= caddr + 4;
         else if (update)
             caddr <= 0;

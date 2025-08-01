@@ -118,9 +118,9 @@ module ysyx_25040111_lsu (
     assign io_master_arvalid  = is_clint ? 1'b0 : arvalid;
     assign io_master_araddr   = is_clint ? 32'b0 : addr;
     assign io_master_arid     = 4'b0;
-    assign io_master_arlen    = 8'b0;
+    assign io_master_arlen    = tlen;
     assign io_master_arsize   = is_clint ? 3'b0 : tsize;
-    assign io_master_arburst  = 2'b0;
+    assign io_master_arburst  = |tlen ? 2'b01 : 2'b00;
 
     assign io_master_rready   = is_clint ? 1'b0 : rready;
 
@@ -178,8 +178,7 @@ module ysyx_25040111_lsu (
         else if (bready & bvalid) begin
             valid_t <= 1;
         end
-        else if (valid_t)
-            valid_t <= 0;
+        else valid_t <= 0;
 
     `ifndef YOSYS_STA
         if (|rresp | |bresp)

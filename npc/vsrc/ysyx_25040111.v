@@ -113,6 +113,11 @@ module ysyx_25040111(
     wire icache_valid;
     wire icache_rok = if_flag ? lsu_ok : 1'b0; 
     wire if_start;
+    `ifdef RUNSOC        
+    wire icache_burst = pc[31:28] == 4'ha;
+    `else
+    wire icache_burst = 1'b0;
+    `endif
 
     ysyx_25040111_cache #(
         .CACHE_Ls 	(4  ),
@@ -121,6 +126,7 @@ module ysyx_25040111(
         .clock  	(clock          ),
         .reset  	(reset          ),
         .addr   	(pc             ),
+        .rburst     (icache_burst   ),
         .raddr      (icache_addr    ),
         .data   	(icache_data    ),
         .rstart 	(if_start       ),
