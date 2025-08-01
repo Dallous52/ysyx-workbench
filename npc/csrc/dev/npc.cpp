@@ -28,7 +28,7 @@
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
-#define VCD_PATH  "/home/dallous/Documents/ysyx-workbench/npc/waveform.vcd"
+#define VCD_PATH  "/home/dallous/Documents/ysyx-workbench/npc/waveform/waveform.vcd"
 
 #ifdef RUNSOC
 typedef VysyxSoCFull mtop; 
