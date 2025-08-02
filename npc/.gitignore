@@ -12,5 +12,5 @@
 build/
 obj_dir/
 result/
-waveform/
+waveform/*
 .vscode/

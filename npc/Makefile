@@ -96,7 +96,7 @@ pref:
 
 clean:
 	@rm -rf build
-	@rm -rf waveform
+	@rm -f waveform/*
 	@rm -rf result
 
 include ../Makefile
