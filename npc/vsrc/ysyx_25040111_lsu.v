@@ -159,7 +159,7 @@ module ysyx_25040111_lsu (
         // 写入参数
         if (wvalid & wready) begin
             wlast <= 0;
-            wvalid <= 0;   
+            wvalid <= 0;
         end
     end
 
