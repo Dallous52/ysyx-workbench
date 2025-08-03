@@ -75,9 +75,9 @@ extern bool mem_err_ignore;
 extern word_t diff_sim_addr;
 __EXPORT uint64_t difftest_sim(word_t* addr) {
   mem_err_ignore = true;
-  cpu_exec(1);
   uint64_t inst = paddr_read(cpu.pc, 4);
   uint64_t ret = (inst << 32) | cpu.pc;
+  cpu_exec(1);
   *addr = diff_sim_addr;
   mem_err_ignore = false;
   return nemu_state.state - 2 >= 0 ? 0 : ret;
