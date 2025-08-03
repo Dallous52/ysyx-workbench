@@ -7,11 +7,11 @@
 
 module ysyx_25040111_idu(
     input [31:0] inst,
-    output [4:0] rs1,
-    output [4:0] rs2,
-    output [4:0] rd,
-    output [31:0] imm,
-    output [`OPT_HIGH:0] opt,
+    output reg [4:0] rs1,
+    output reg [4:0] rs2,
+    output reg [4:0]  rd,
+    output reg [31:0] imm,
+    output reg [`OPT_HIGH:0] opt,
     output [11:0] csr1, csr2
 );
 
