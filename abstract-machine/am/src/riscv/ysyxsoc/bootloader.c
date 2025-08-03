@@ -6,6 +6,8 @@
 
 #include "device/device.h"
 
+// #define DBG_NOTE
+
 extern char _ssbl_load;
 extern char _ssbl_op;
 extern char _ssbl_ed;
@@ -52,6 +54,7 @@ __attribute__((section("entry"))) void _first_bootloader()
 }
 
 
+#ifdef DBG_NOTE
 __attribute__((section("ssbl"))) void putch_(char ch) {
   volatile uint8_t* uart_lsr = (volatile uint8_t*)(DEV_SERIAL + 5);
   while (!(*uart_lsr & 0x20));
@@ -72,6 +75,7 @@ __attribute__((section("ssbl"))) void print_hex_(uint32_t num) {
         putch_(hex_char);
     }
 }
+#endif
 
 
 __attribute__((section("ssbl"))) void loader(uint8_t* dst, const uint8_t* src, uintptr_t len) 
@@ -96,6 +100,7 @@ __attribute__((section("ssbl"))) void loader(uint8_t* dst, const uint8_t* src, u
 
 __attribute__((section("ssbl.boot"))) void _second_bootloader()
 {
+#ifdef DBG_NOTE
     device_ctrl uart_lcr = (device_ctrl)(DEV_SERIAL + 3);
     *uart_lcr = 0x83;
 
@@ -110,6 +115,7 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     putch_('[');print_hex_((uintptr_t)&_code_op);putch_('-');
     putch_('>');print_hex_((uintptr_t)&_code_ed);putch_(']');
     putch_('\n');
+#endif
 
     // 代码加载
     uint8_t *d = (uint8_t*)&_code_op;
@@ -117,11 +123,13 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     uint32_t n = (uintptr_t)&_code_ed - (uintptr_t)&_code_op;
     loader(d, s, n);
 
+#ifdef DBG_NOTE
     putch_('r');putch_('o');putch_('d');putch_('a');putch_('t');putch_('a');
     putch_(':');
     putch_('[');print_hex_((uintptr_t)&_rodata_op);putch_('-');
     putch_('>');print_hex_((uintptr_t)&_rodata_ed);putch_(']');
     putch_('\n');
+#endif
 
     // 只读全局变量加载
     d = (uint8_t*)&_rodata_op;
@@ -129,11 +137,13 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     n = (uintptr_t)&_rodata_ed - (uintptr_t)&_rodata_op;
     loader(d, s, n);
 
+#ifdef DBG_NOTE
     putch_('d');putch_('a');putch_('t');putch_('a');
     putch_(':');putch_(' ');putch_(' ');
     putch_('[');print_hex_((uintptr_t)&_data_op);putch_('-');
     putch_('>');print_hex_((uintptr_t)&_data_ed);putch_(']');
     putch_('\n');
+#endif
 
     // 全局变量加载
     d = (uint8_t*)&_data_op;
@@ -141,8 +151,10 @@ __attribute__((section("ssbl.boot"))) void _second_bootloader()
     n = (uintptr_t)&_data_ed - (uintptr_t)&_data_op;
     loader(d, s, n);
 
+#ifdef DBG_NOTE
     putch_('o');putch_('k');putch_('e');putch_('y');
     putch_('\n');
+#endif
 
     voidfunc start = (voidfunc)(&_code_op);
 
