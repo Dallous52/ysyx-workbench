@@ -47,7 +47,7 @@ bool cachesim_run(int cache_ls, int block_ls)
             valids[index] = true;
         }
 
-        uint64_t ret = ref_difftest_sim(&paddr);
+        uint64_t ret = ref_difftest_sim(&paddr, pc);
         pc = (uint32_t)ret;
         inst = (word_t)(ret >> 32);
 
