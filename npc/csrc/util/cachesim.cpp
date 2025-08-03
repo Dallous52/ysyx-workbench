@@ -31,7 +31,7 @@ bool cachesim_run(int cache_ls, int block_ls)
 
     int tag_idx = block_ls + cache_ls;
 
-    double inst_num = 0, hitnum = 0;
+    double inst_num = 0, hit_num = 0, mem_num = 0;
     word_t paddr = 0, inst = 0;;
     while (pc != 0)
     {
@@ -39,7 +39,7 @@ bool cachesim_run(int cache_ls, int block_ls)
         uint32_t index = BITS(pc, tag_idx - 1, block_ls);
         
         bool hit = (tags[index] == tag) && valids[index];
-        if (hit) hitnum++;
+        if (hit) hit_num++;
         else
         {
             tags[index] = tag;
@@ -53,20 +53,18 @@ bool cachesim_run(int cache_ls, int block_ls)
         uint8_t opcode = BITS(inst, 6, 0);
         if (opcode == load || opcode == store)
         {
-            if (device_visit(paddr, inst))
-                printf("device :> inst:%08x  addr:%08x\n", inst, paddr);
-            else
-                printf("memory :> inst:%08x  addr:%08x\n", inst, paddr);
+            if (!device_visit(paddr, inst))
+                mem_num++;
         }
 
         inst_num++;
     }
 
-    double p = hitnum / inst_num;
-    printf("[cache hit] = " ANSI_FMT("%ld / %ld", ANSI_FG_GREEN) "\n", (long)hitnum, (long)inst_num);
+    double p = hit_num / inst_num;
+    printf("[cache hit] = " ANSI_FMT("%ld / %ld", ANSI_FG_GREEN) "\n", (long)hit_num, (long)inst_num);
     printf(" [hit rate] = " ANSI_FMT("%5.3lf%%", ANSI_FG_GREEN) "\n", p * 100.);
     printf("     [AMAT] = " ANSI_FMT("%5.3lf", ANSI_FG_GREEN) "\n", 3. + (1. - p) * 8);
-
+    printf("[memory ls] = " ANSI_FMT("%5.3lf", ANSI_FG_GREEN) "\n", mem_num);
     nemu_init(get_img_size(), 0);
     
     return true;
