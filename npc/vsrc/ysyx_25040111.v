@@ -125,7 +125,7 @@ module ysyx_25040111(
         .BLOCK_Ls 	(4  ))
     u_icache(
         .clock  	(clock          ),
-        .reset  	(reset          ),
+        .reset  	(reset | fencei ),
         .addr   	(pc             ),
         .rburst     (icache_burst   ),
         .raddr      (icache_addr    ),
