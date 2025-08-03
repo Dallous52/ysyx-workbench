@@ -44,7 +44,7 @@ typedef Vysyx_25040111 mtop;
 // #define ITRACE
 // #define FTRACE
 // #define MTRACE
-#define DIFFTEST
+// #define DIFFTEST
 
 static mtop top;
 static VerilatedVcdC *vtrace = nullptr;
