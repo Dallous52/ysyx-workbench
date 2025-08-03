@@ -29,9 +29,13 @@ bool cachesim_run(int cache_ls, int block_ls)
     bool* valids = new bool[cache_l];
     memset(valids, 0, sizeof(bool) * cache_l);
 
+    uint32_t* mtags = new uint32_t[cache_l];
+    bool* mvalids = new bool[cache_l];
+    memset(valids, 0, sizeof(bool) * cache_l);
+
     int tag_idx = block_ls + cache_ls;
 
-    double inst_num = 0, hit_num = 0, mem_num = 0;
+    double inst_num = 0, hit_num = 0, mem_num = 0, mhit_num = 0;
     word_t paddr = 0, inst = 0;;
     while (pc != 0)
     {
@@ -54,17 +58,33 @@ bool cachesim_run(int cache_ls, int block_ls)
         if (opcode == load || opcode == store)
         {
             if (!device_visit(paddr, inst))
+            {
+                uint32_t mtag = BITS(paddr, 31, tag_idx);
+                uint32_t mindex = BITS(paddr, tag_idx - 1, block_ls);
                 mem_num++;
+                
+                bool mhit = (mtags[mindex] == mtag) && mvalids[mindex];
+                if (mhit) mhit_num++;
+                else
+                {
+                    mtags[mindex] = mtag;
+                    mvalids[mindex] = true;
+                }
+            }
         }
 
         inst_num++;
     }
 
-    double p = hit_num / inst_num;
+    double p  = hit_num / inst_num;
+    double mp = mhit_num / mem_num;
     printf("[cache hit] = " ANSI_FMT("%ld / %ld", ANSI_FG_GREEN) "\n", (long)hit_num, (long)inst_num);
     printf(" [hit rate] = " ANSI_FMT("%5.3lf%%", ANSI_FG_GREEN) "\n", p * 100.);
-    printf("     [AMAT] = " ANSI_FMT("%5.3lf", ANSI_FG_GREEN) "\n", 3. + (1. - p) * 8);
-    printf("[memory ls] = " ANSI_FMT("%5.3lf", ANSI_FG_GREEN) "\n", mem_num);
+    printf("     [AMAT] = " ANSI_FMT("%5.3lf", ANSI_FG_GREEN) "\n", 3. + (1. - p) * 13);
+    printf("  [mem hit] = " ANSI_FMT("%ld / %ld", ANSI_FG_GREEN) "\n", (long)mhit_num, (long)mem_num);
+    printf("[mhit rete] = " ANSI_FMT("%5.3lf%%", ANSI_FG_GREEN) "\n", mp * 100.);
+    printf("   [AMAT_M] = " ANSI_FMT("%5.3lf", ANSI_FG_GREEN) "\n", 3. + (1. - mp) * 13);
+
     nemu_init(get_img_size(), 0);
     
     return true;
