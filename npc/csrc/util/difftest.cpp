@@ -4,11 +4,8 @@
 #include "memory.h"
 
 #include <assert.h>
-#include <cstddef>
-#include <cstdint>
 #include <cstdio>
 #include <dlfcn.h>
-#include <iostream>
 
 #define REF_SO_FILE "/home/dallous/Documents/ysyx-workbench/nemu/build/riscv32-nemu-interpreter-so"
 
