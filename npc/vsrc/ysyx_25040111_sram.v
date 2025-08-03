@@ -1,10 +1,7 @@
+`ifndef YOSYS_STA
 `ifndef RUNSOC
 
 `include "HDR/ysyx_25040111_dpic.vh"
-
-`ifdef YOSYS_STA
-`include "MOD/ysyx_25040111_RegisterFile.v"    
-`endif
 
 `define READY_TIME 8'd1
 
@@ -41,9 +38,7 @@ module ysyx_25040111_sram(
     always @(posedge clk) begin
         // 准备开始
         if (arvalid & arready) begin
-        `ifndef YOSYS_STA
             rdata_t <= pmem_read(araddr);
-        `endif
             rvalid <= 1; // 读取完毕
         end
         else if (rvalid & rready) begin
@@ -61,9 +56,7 @@ module ysyx_25040111_sram(
     always @(posedge clk) begin
         // 写入参数读取准备
         if (awvalid & awready & wvalid & wready) begin
-        `ifndef YOSYS_STA
             pmem_write(awaddr, wdata, wmask);
-        `endif
         end
         
         if (wvalid & wready) begin
@@ -76,4 +69,5 @@ module ysyx_25040111_sram(
 
 endmodule
 
+`endif // RUNSOC
 `endif // YOSYS_STA

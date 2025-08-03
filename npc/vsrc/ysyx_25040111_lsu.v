@@ -124,6 +124,10 @@ module ysyx_25040111_lsu (
 
     assign io_master_rready   = is_clint ? 1'b0 : rready;
 
+`elsif YOSYS_STA
+    assign arready = is_clint ? arready_clint : 0;
+    assign rvalid = is_clint ? rvalid_clint : 0;
+    assign rresp = is_clint ? rresp_clint : 0;
 `else
     assign arready = is_clint ? arready_clint : arready_sram;
     assign rvalid = is_clint ? rvalid_clint : rvalid_sram;
@@ -218,6 +222,7 @@ module ysyx_25040111_lsu (
         .rready  	(rready)
     );
 
+`ifndef YOSYS_STA
     wire arready_sram;
     wire [1:0] rresp_sram;
     wire rvalid_sram;
@@ -242,6 +247,8 @@ module ysyx_25040111_lsu (
         .awvalid 	(~is_clint ? awvalid  : 0),
         .bready  	(bready)
     );
+`endif
+
 `endif // NOT RUNSOC
 
     wire [31:0] offset;
