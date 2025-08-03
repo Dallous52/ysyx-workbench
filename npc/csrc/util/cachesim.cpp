@@ -56,7 +56,7 @@ bool cachesim_run(int cache_ls, int block_ls)
             printf("inst:%08x  addr:%08x\n", inst, paddr);
             if (device_visit(paddr, inst))
             {
-                pc++;
+                pc += 4;
                 inst_num++;
             }
         }
