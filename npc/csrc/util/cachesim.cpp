@@ -2,7 +2,6 @@
 #include "memory.h"
 #include "tpdef.h"
 
-#include <cstdint>
 #include <cstdio>
 #include <string.h>
 #include <math.h>
@@ -55,6 +54,11 @@ bool cachesim_run(int cache_ls, int block_ls)
         if (opcode == load || opcode == store)
         {
             printf("inst:%08x  addr:%08x\n", inst, paddr);
+            if (device_visit(paddr, inst))
+            {
+                pc++;
+                inst_num++;
+            }
         }
 
         inst_num++;
