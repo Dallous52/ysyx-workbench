@@ -78,6 +78,7 @@ __EXPORT uint64_t difftest_sim(word_t* addr, word_t pc) {
   uint64_t inst = paddr_read(cpu.pc, 4);
   uint64_t ret = (inst << 32) | cpu.pc;
   *addr = diff_sim_addr;
+  printf("nemu: %08x", diff_sim_addr);
   return nemu_state.state - 2 >= 0 ? 0 : ret;
 }
 
