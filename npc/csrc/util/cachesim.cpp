@@ -53,7 +53,10 @@ bool cachesim_run(int cache_ls, int block_ls)
         uint8_t opcode = BITS(inst, 6, 0);
         if (opcode == load || opcode == store)
         {
-            printf("inst:%08x  addr:%08x\n", inst, paddr);
+            if (device_visit(paddr, inst))
+                printf("device :> inst:%08x  addr:%08x\n", inst, paddr);
+            else
+                printf("memory :> inst:%08x  addr:%08x\n", inst, paddr);
         }
 
         inst_num++;
