@@ -50,13 +50,12 @@ bool cachesim_run(int cache_ls, int block_ls)
         pc = (uint32_t)ret;
         inst = (word_t)(ret >> 32);
 
-        word_t opcode = BITS(inst, 6, 0);
+        uint8_t opcode = BITS(inst, 6, 0);
         if (opcode == load || opcode == store)
         {
             printf("inst:%08x  addr:%08x\n", inst, paddr);
             if (device_visit(paddr, inst))
             {
-                printf("11111\n");
                 pc += 4;
                 inst_num++;
             }
