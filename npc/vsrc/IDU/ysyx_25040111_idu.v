@@ -162,6 +162,18 @@ module ysyx_25040111_idu(
         .opt    (opt_system)
     );
 
+    // ------------------------------------------------------- 
+    //                      MISC-MEM                
+    // -------------------------------------------------------
+    wire [4:0] rd_miscmem;
+    wire [`OPT_HIGH:0] opt_miscmem;
+    
+    ysyx_25040111_miscmem u_ysyx_25040111_miscmem(
+        .func3 	(inst[14:12]),
+        .rd    	(rd_miscmem ),
+        .opt   	(opt_miscmem)
+    );
+    
 
     // ------------------------------------------------------- 
     //                         Choose                       
@@ -260,6 +272,14 @@ module ysyx_25040111_idu(
             rd  = 5'b0;
             imm = imm_branch;
             opt = opt_branch;
+            end
+
+            7'b0001111: begin
+            rs1 = 5'b0;
+            rs2 = 5'b0;
+            rd  = rd_miscmem;
+            imm = 32'b0;
+            opt = opt_miscmem;    
             end
 
             default: begin
