@@ -166,70 +166,106 @@ module ysyx_25040111_idu(
     // ------------------------------------------------------- 
     //                         Choose                       
     // -------------------------------------------------------
-    ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, 5) rs1_c (rs1, inst[6:0], 5'b0, {
-        7'b0010011, rs1_opimm,
-        7'b0010111, 5'b0,
-        7'b0110111, 5'b0,
-        7'b1100111, rs1_jalr,
-        7'b1101111, 5'b0,
-        7'b1110011, rs1_system,
-        7'b0100011, rs1_store,
-        7'b0000011, rs1_load,
-        7'b0110011, rs1_op,
-        7'b1100011, rs1_branch
-    });
+    always @(*) begin
+        rs1 = 5'b0;
+        rs2 = 5'b0;
+        rd  = 5'b0;
+        imm = 32'b0;
+        opt = `OPT_LEN'b0;
 
-    ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, 5) rs2_c (rs2, inst[6:0], 5'b0, {
-        7'b0010011, 5'b0,
-        7'b0010111, 5'b0,
-        7'b0110111, 5'b0,
-        7'b1100111, 5'b0,
-        7'b1101111, 5'b0,
-        7'b1110011, 5'b0,
-        7'b0100011, rs2_store,
-        7'b0000011, 5'b0,
-        7'b0110011, rs2_op,
-        7'b1100011, rs2_branch
-    });
+        case (inst[6:0])
+            7'b0010011: begin
+            rs1 = rs1_opimm;
+            rs2 = 5'b0;
+            rd  = rd_opimm;
+            imm = imm_opimm;
+            opt = opt_opimm;
+            end
 
-    ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, 5) rd_c (rd, inst[6:0], 5'b0, {
-        7'b0010011, rd_opimm,
-        7'b0010111, rd_auipc_lui,
-        7'b0110111, rd_auipc_lui,
-        7'b1100111, rd_jalr,
-        7'b1101111, rd_jal,
-        7'b1110011, rd_system,
-        7'b0100011, 5'b0,
-        7'b0000011, rd_load,
-        7'b0110011, rd_op,
-        7'b1100011, 5'b0
-    });
+            // AUIPC：OP = 0010111
+            7'b0010111: begin
+            rs1 = 5'b0;
+            rs2 = 5'b0;
+            rd  = rd_auipc_lui;
+            imm = imm_auipc_lui;
+            opt = opt_auipc_lui;
+            end
 
-    ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, 32) imm_c (imm, inst[6:0], 32'b0, {
-        7'b0010011, imm_opimm,
-        7'b0010111, imm_auipc_lui,
-        7'b0110111, imm_auipc_lui,
-        7'b1100111, imm_jalr,
-        7'b1101111, imm_jal,
-        7'b1110011, imm_system,
-        7'b0100011, imm_store,
-        7'b0000011, imm_load,
-        7'b0110011, 32'b0,
-        7'b1100011, imm_branch
-    });
+            // LUI：OP = 0110111
+            7'b0110111: begin
+            rs1 = 5'b0;
+            rs2 = 5'b0;
+            rd  = rd_auipc_lui;
+            imm = imm_auipc_lui;
+            opt = opt_auipc_lui;
+            end
 
-    ysyx_25040111_MuxKeyWithDefault #(`OPCODE_NUM, 7, `OPT_LEN) opt_c (opt, inst[6:0], `OPT_LEN'b0, {
-        7'b0010011, opt_opimm,
-        7'b0010111, opt_auipc_lui,
-        7'b0110111, opt_auipc_lui,
-        7'b1100111, opt_jalr,
-        7'b1101111, opt_jal,
-        7'b1110011, opt_system,
-        7'b0100011, opt_store,
-        7'b0000011, opt_load,
-        7'b0110011, opt_op,
-        7'b1100011, opt_branch
-    });
+            // JALR：OP = 1100111
+            7'b1100111: begin
+            rs1 = rs1_jalr;
+            rs2 = 5'b0;
+            rd  = rd_jalr;
+            imm = imm_jalr;
+            opt = opt_jalr;
+            end
+
+            // JAL：OP = 1101111
+            7'b1101111: begin
+            rs1 = 5'b0;
+            rs2 = 5'b0;
+            rd  = rd_jal;
+            imm = imm_jal;
+            opt = opt_jal;
+            end
+
+            // SYSTEM：OP = 1110011
+            7'b1110011: begin
+            rs1 = rs1_system;
+            rs2 = 5'b0;
+            rd  = rd_system;
+            imm = imm_system;
+            opt = opt_system;
+            end
+
+            // S-Type（STORE）：OP = 0100011
+            7'b0100011: begin
+            rs1 = rs1_store;
+            rs2 = rs2_store;
+            rd  = 5'b0;
+            imm = imm_store;
+            opt = opt_store;
+            end
+
+            // I-Type（LOAD）：OP = 0000011
+            7'b0000011: begin
+            rs1 = rs1_load;
+            rs2 = 5'b0;
+            rd  = rd_load;
+            imm = imm_load;
+            opt = opt_load;
+            end
+
+            // R-Type（OP）：OP = 0110011
+            7'b0110011: begin
+            rs1 = rs1_op;
+            rs2 = rs2_op;
+            rd  = rd_op;
+            imm = 32'b0;
+            opt = opt_op;
+            end
+
+            7'b1100011: begin
+            rs1 = rs1_branch;
+            rs2 = rs2_branch;
+            rd  = 5'b0;
+            imm = imm_branch;
+            opt = opt_branch;
+            end
+
+            default: begin
+            end
+        endcase
+    end
 
 endmodule
 
