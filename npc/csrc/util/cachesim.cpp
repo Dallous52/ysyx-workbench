@@ -6,7 +6,7 @@
 #include <string.h>
 #include <math.h>
 
-typedef uint64_t (*diff_sim)(word_t*, word_t);
+typedef uint64_t (*diff_sim)(word_t*);
 extern diff_sim ref_difftest_sim;
 
 static const uint8_t load = 0b0000011;
@@ -46,7 +46,7 @@ bool cachesim_run(int cache_ls, int block_ls)
             valids[index] = true;
         }
 
-        uint64_t ret = ref_difftest_sim(&paddr, pc);
+        uint64_t ret = ref_difftest_sim(&paddr);
         pc = (uint32_t)ret;
         inst = (word_t)(ret >> 32);
 
@@ -54,11 +54,6 @@ bool cachesim_run(int cache_ls, int block_ls)
         if (opcode == load || opcode == store)
         {
             printf("inst:%08x  addr:%08x\n", inst, paddr);
-            if (device_visit(paddr, inst))
-            {
-                pc += 4;
-                inst_num++;
-            }
         }
 
         inst_num++;
