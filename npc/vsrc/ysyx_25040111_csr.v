@@ -10,7 +10,9 @@ module ysyx_25040111_csr(
     output reg [31:0] rdata
 );
 
-    reg [31:0] csr[5:0];
+    reg [31:0] csr[3:0];
+    wire [31:0] marchid = 32'd25040111;
+    wire [31:0] mvendorid = 32'h79737978;
     wire [11:0] raddr_m;
 
     // 写入
@@ -20,11 +22,8 @@ module ysyx_25040111_csr(
             csr[1] <= 32'h00000000;
             csr[2] <= 32'h00000000;
             csr[3] <= 32'h00000000;
-            csr[4] <= 32'h79737978;  // mvendorid
-            csr[5] <= 32'd25040111;  // marchid
         end
         else if (wen) begin
-            // $display("mtevc %h\n", csr[1]);
             case (waddr)
                 12'h300: csr[0] <= wdata;
                 12'h305: csr[1] <= wdata;
@@ -56,8 +55,8 @@ module ysyx_25040111_csr(
             12'h305: rdata = csr[1];
             12'h341: rdata = csr[2];
             12'h342: rdata = csr[3];
-            12'hF11: rdata = csr[4];
-            12'hF12: rdata = csr[5];
+            12'hF11: rdata = mvendorid;
+            12'hF12: rdata = marchid;
             default: rdata = 32'b0;
         endcase
     end
