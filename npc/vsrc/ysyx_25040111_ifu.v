@@ -36,6 +36,7 @@ module ysyx_25040111_ifu (
         end
     end
 
+`ifndef YOSYS_STA
 `ifdef PMC_EN
     always @(posedge clk) begin
         if (if_ok) begin
@@ -54,6 +55,7 @@ module ysyx_25040111_ifu (
             endcase
         end
     end
+`endif
 `endif
 
 endmodule

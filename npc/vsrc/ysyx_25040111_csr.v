@@ -9,7 +9,7 @@ module ysyx_25040111_csr(
     input [31:0] wdata,
     input [11:0] raddr,
     input [1:0]  jtype,
-    output [31:0] rdata
+    output reg [31:0] rdata
 );
 
     reg [31:0] csr[5:0];
@@ -52,13 +52,16 @@ module ysyx_25040111_csr(
     // MEPC	    0x341
     // MCAUSE	0x342
     // 读取
-    ysyx_25040111_MuxKeyWithDefault #(6, 12, 32) imm_c (rdata, raddr_m, 32'b0, {
-        12'h300, csr[0],
-        12'h305, csr[1],
-        12'h341, csr[2],
-        12'h342, csr[3],
-        12'hF11, csr[4],
-        12'hF12, csr[5]
-    });
+    always @(*) begin
+        case (raddr_m)
+            12'h300: rdata = csr[0];
+            12'h305: rdata = csr[1];
+            12'h341: rdata = csr[2];
+            12'h342: rdata = csr[3];
+            12'hF11: rdata = csr[4];
+            12'hF12: rdata = csr[5];
+            default: rdata = 32'b0;
+        endcase
+    end
 
 endmodule
