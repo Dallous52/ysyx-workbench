@@ -154,15 +154,15 @@ module ysyx_25040111(
     wire [31:0] rs1_d, rs2_d, rd_d;
 
     ysyx_25040111_RegisterFile #(4, 32) u_reg(
-        .clk   	(clock     ),
+        .clk   	(clock      ),
         .wen   	(opt[0] & args_ok),
-        .ren   	(opt[2:1]),
-        .wdata 	(rd_d    ),
-        .waddr 	(rd[3:0] ),
-        .raddr1 (rs1[3:0]),
-        .raddr2 (rs2[3:0]),
-        .rdata1 (rs1_d   ),
-        .rdata2 (rs2_dt  )
+        .ren   	(opt[2:1]   ),
+        .wdata 	(rd_d       ),
+        .waddr 	(rd[3:0]    ),
+        .raddr1 (rs1[3:0]   ),
+        .raddr2 (rs2[3:0]   ),
+        .rdata1 (rs1_d      ),
+        .rdata2 (rs2_dt     )
     );
 
     wire [31:0] csrw, csrr;
@@ -175,7 +175,7 @@ module ysyx_25040111(
         .jtype  (opt[9:8]   ),
         .wdata 	(csrw       ),
         .raddr 	(csr[1]     ),
-        .rdata 	(csrr              )
+        .rdata 	(csrr       )
     );
 
     wire [31:0] rdata;
