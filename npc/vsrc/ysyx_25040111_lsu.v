@@ -174,7 +174,9 @@ module ysyx_25040111_lsu (
             rmem <= is_clint ? rmem_clint : 
             `ifdef RUNSOC 
                 io_master_rdata;
-            `else
+            `elsif YOSYS_STA
+                32'b0;
+            `else 
                 rmem_sram;
             `endif
             valid_t <= 1;
