@@ -69,10 +69,26 @@ module ysyx_25040111_lsu (
 
     always @(*) begin
         case (mask)
-            2'b00: begin wmask = 4'h0; tsize = 3'b000;end
-            2'b01: begin wmask = 4'b0001 << addr[1:0]; tsize = 3'b000; end
-            2'b10: begin wmask = addr[1] ? 4'b1100 : 4'b0011; tsize = 3'b001;end
-            2'b11: begin wmask = 4'b1111; tsize = 3'b010; end
+            2'b00: begin 
+                wmask = 4'h0; 
+                tsize = 3'b000;
+                rdata = 32'b0;
+            end
+            2'b01: begin 
+                wmask = 4'b0001 << addr[1:0];
+                tsize = 3'b000; 
+                rdata = {{24{offset[7] & sign}}, offset[7:0]};
+            end
+            2'b10: begin 
+                wmask = addr[1] ? 4'b1100 : 4'b0011; 
+                tsize = 3'b001;
+                rdata = {{16{offset[15] & sign}}, offset[15:0]};    
+            end
+            2'b11: begin 
+                wmask = 4'b1111; 
+                tsize = 3'b010;
+                rdata = offset;
+            end
         endcase
     end
 
@@ -261,13 +277,5 @@ module ysyx_25040111_lsu (
         endcase
     end
 
-    always @(*) begin
-        case (mask)
-            2'b00: rdata = 32'b0;
-            2'b01: rdata = {{24{offset[7] & sign}}, offset[7:0]};
-            2'b10: rdata = {{16{offset[15] & sign}}, offset[15:0]};
-            2'b11: rdata = offset;
-        endcase
-    end
 
 endmodule
