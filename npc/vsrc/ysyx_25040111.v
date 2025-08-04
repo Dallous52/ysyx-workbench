@@ -5,10 +5,10 @@ module ysyx_25040111(
     input clock,
     input reset,
 
-    output [31:0] pc,
-    output [31:0] inst
+    output [31:0] pc
 `ifdef RUNSOC
-    ,input io_interrupt,
+    ,output [31:0] inst,
+    input io_interrupt,
 
     input io_master_awready,
     output io_master_awvalid,
@@ -79,7 +79,9 @@ module ysyx_25040111(
     output [3:0] io_slave_rid
 `endif // RUNSOC
 );
-
+`ifdef YOSYS_STA
+    wire [31:0] inst;
+`endif
 // ------------------------------------------------
 //                I/O SIGNAL DEFINE
 // ------------------------------------------------
