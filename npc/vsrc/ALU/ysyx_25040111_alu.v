@@ -1,8 +1,6 @@
 `ifndef NPC_ALU
 `define NPC_ALU 
 
-`include "../MOD/ysyx_25040111_MuxKey.v"
-
 module ysyx_25040111_alu (
     input [31:0] var1,
     input [31:0] var2,
