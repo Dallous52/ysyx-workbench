@@ -1,6 +1,5 @@
 `include "HDR/ysyx_25040111_inc.vh"
 `include "HDR/ysyx_25040111_dpic.vh"
-`include "MOD/ysyx_25040111_MuxKey.v"
 
 module ysyx_25040111_lsu (
     input clk,          // 时钟
@@ -111,7 +110,7 @@ module ysyx_25040111_lsu (
             end
         endcase
     end
-    
+
     wire is_clint = (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END);
 
 `ifdef RUNSOC

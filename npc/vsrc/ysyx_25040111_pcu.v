@@ -1,5 +1,4 @@
 `include "HDR/ysyx_25040111_inc.vh"
-`include "MOD/ysyx_25040111_MuxKey.v"
 
 `ifdef RUNSOC
 `define PC_RESET 32'h30000000   
