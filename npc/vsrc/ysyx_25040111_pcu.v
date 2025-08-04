@@ -21,8 +21,7 @@ module ysyx_25040111_pcu(
     output reg valid
 );
 
-    wire [31:0] ina;
-    wire [31:0] inb;
+    reg [31:0] ina, inb;
     wire [1:0] pc_ctl;
     
     assign pc_ctl = |opt[9:8] ? opt[9:8] : brench ? `INPC : `SNPC;
