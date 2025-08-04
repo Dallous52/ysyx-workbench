@@ -1,5 +1,4 @@
 `include "../HDR/ysyx_25040111_inc.vh"
-`include "../MOD/ysyx_25040111_MuxKeyWithDefault.v"
 
 `define OP_ADD  10'b0000000_000
 `define OP_SUB  10'b0100000_000
@@ -17,7 +16,7 @@ module ysyx_25040111_op(
     output [4:0] rs1,
     output [4:0] rs2,
     output [4:0] rd,
-    output [`OPT_HIGH:0] opt
+    output reg [`OPT_HIGH:0] opt
 );
 
     wire [6:0] fun7;
@@ -25,17 +24,20 @@ module ysyx_25040111_op(
 
     assign {fun7, rs2, rs1, fun3, rd} = inst;
 
-    ysyx_25040111_MuxKeyWithDefault #(10, 10, `OPT_LEN) opt_c (opt, {fun7, fun3}, `OPT_LEN'b0, {
-        `OP_SUB, `OPTG(`WFS, `RF_RS, `ADD, `SNPC, `EMPTY, `EXX),
-        `OP_ADD, `OPTG(`WFS, `RF_RS, `ADD, `SNPC, `EMPTY, `EMPTY),
-        `OP_SLL, `OPTG(`WFS, `RF_RS, `LSHIFT, `SNPC, `EMPTY, `EMPTY),
-        `OP_AND, `OPTG(`WFS, `RF_RS, `AND, `SNPC, `EMPTY, `EMPTY),
-        `OP_SLTU, `OPTG(`WFS, `RF_RS, `COMPARE, `SNPC, `EMPTY, `EXX),
-        `OP_OR, `OPTG(`WFS, `RF_RS, `AND, `SNPC, `EMPTY, `EXX),
-        `OP_XOR, `OPTG(`WFS, `RF_RS, `XOR, `SNPC, `EMPTY, `EMPTY),
-        `OP_SLT, `OPTG(`WFS, `RF_RS, `COMPARE, `SNPC, `EMPTY, `ESX),
-        `OP_SRA, `OPTG(`WFS, `RF_RS, `RSHIFT, `SNPC, `EMPTY, `XSX),
-        `OP_SRL, `OPTG(`WFS, `RF_RS, `RSHIFT, `SNPC, `EMPTY, `EMPTY)
-    });
+    always @(*) begin
+        case ({fun7, fun3})
+            `OP_SUB:  opt = `OPTG(`WFS, `RF_RS, `ADD, `SNPC, `EMPTY, `EXX);
+            `OP_ADD:  opt = `OPTG(`WFS, `RF_RS, `ADD, `SNPC, `EMPTY, `EMPTY);
+            `OP_SLL:  opt = `OPTG(`WFS, `RF_RS, `LSHIFT, `SNPC, `EMPTY, `EMPTY);
+            `OP_AND:  opt = `OPTG(`WFS, `RF_RS, `AND, `SNPC, `EMPTY, `EMPTY);
+            `OP_SLTU: opt = `OPTG(`WFS, `RF_RS, `COMPARE, `SNPC, `EMPTY, `EXX);
+            `OP_OR:   opt = `OPTG(`WFS, `RF_RS, `AND, `SNPC, `EMPTY, `EXX);
+            `OP_XOR:  opt = `OPTG(`WFS, `RF_RS, `XOR, `SNPC, `EMPTY, `EMPTY);
+            `OP_SLT:  opt = `OPTG(`WFS, `RF_RS, `COMPARE, `SNPC, `EMPTY, `ESX);
+            `OP_SRA:  opt = `OPTG(`WFS, `RF_RS, `RSHIFT, `SNPC, `EMPTY, `XSX);
+            `OP_SRL:  opt = `OPTG(`WFS, `RF_RS, `RSHIFT, `SNPC, `EMPTY, `EMPTY);
+            default:  opt = `OPT_LEN'b0;
+        endcase
+    end
 
 endmodule
