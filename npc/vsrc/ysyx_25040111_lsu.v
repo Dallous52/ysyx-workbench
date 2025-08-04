@@ -61,11 +61,10 @@ module ysyx_25040111_lsu (
     wire [1:0] bresp, rresp;
     reg wlast;
 
-    reg [31:0] rmem;
     reg valid_t;
-
     reg [3:0] wmask;
     reg [2:0] tsize;
+    reg [31:0] offset, wmem, rmem;
 
     always @(*) begin
         case (mask)
@@ -92,16 +91,27 @@ module ysyx_25040111_lsu (
         endcase
     end
 
-    reg [31:0] wmem;
     always @(*) begin
         case (addr[1:0])
-            2'b00: wmem = wdata;
-            2'b01: wmem = wdata << 8;
-            2'b10: wmem = wdata << 16;
-            2'b11: wmem = wdata << 24;
+            2'b00: begin
+                wmem = wdata;
+                offset = rmem;
+            end
+            2'b01: begin
+                wmem = wdata << 8;
+                offset = rmem >> 8;
+            end
+            2'b10: begin
+                wmem = wdata << 16;
+                offset = rmem >> 16;
+            end
+            2'b11: begin
+                wmem = wdata << 24;
+                offset = rmem >> 24;
+            end
         endcase
     end
-
+    
     wire is_clint = (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END);
 
 `ifdef RUNSOC
@@ -266,16 +276,5 @@ module ysyx_25040111_lsu (
 `endif
 
 `endif // NOT RUNSOC
-
-    reg [31:0] offset;
-    always @(*) begin
-        case (addr[1:0])
-            2'b00: offset = rmem;
-            2'b01: offset = rmem >> 8;
-            2'b10: offset = rmem >> 16;
-            2'b11: offset = rmem >> 24;
-        endcase
-    end
-
 
 endmodule
