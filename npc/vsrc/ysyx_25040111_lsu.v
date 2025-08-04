@@ -251,19 +251,23 @@ module ysyx_25040111_lsu (
 
 `endif // NOT RUNSOC
 
-    wire [31:0] offset;
-    ysyx_25040111_MuxKey #(4, 2, 32) c_rd_data(offset, addr[1:0], {
-        2'b00, rmem,
-        2'b01, rmem >> 8,
-        2'b10, rmem >> 16,
-        2'b11, rmem >> 24
-    });
+    reg [31:0] offset;
+    always @(*) begin
+        case (addr[1:0])
+            2'b00: offset = rmem;
+            2'b01: offset = rmem >> 8;
+            2'b10: offset = rmem >> 16;
+            2'b11: offset = rmem >> 24;
+        endcase
+    end
 
-    ysyx_25040111_MuxKey #(4, 2, 32) c_rdmem(rdata, mask, {
-        2'b00, 32'b0,
-        2'b01, {{24{offset[7] & sign}}, offset[7:0]},
-        2'b10, {{16{offset[15] & sign}}, offset[15:0]},
-        2'b11, offset
-    });
+    always @(*) begin
+        case (mask)
+            2'b00: rdata = 32'b0;
+            2'b01: rdata = {{24{offset[7] & sign}}, offset[7:0]};
+            2'b10: rdata = {{16{offset[15] & sign}}, offset[15:0]};
+            2'b11: rdata = offset;
+        endcase
+    end
 
 endmodule
