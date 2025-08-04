@@ -31,7 +31,6 @@ module ysyx_25040111_exu(
         endcase
     end
 
-
     ysyx_25040111_alu u_ysyx_25040111_alu(
         .var1 	(var1  ),
         .var2 	(var2  ),
