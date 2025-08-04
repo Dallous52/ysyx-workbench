@@ -15,7 +15,6 @@ module ysyx_25040111_opimm (
 
     always @(*) begin
         imm = {{20{imm_m[11]}}, imm_m};
-        opt = `OPT_LEN'b0;
 
         case (fun3)
             3'b000: opt = `OPTG(`WFX, `RF_IM, `ADD, `SNPC, `EMPTY, `EMPTY);     // addi
