@@ -1,12 +1,11 @@
 `include "../HDR/ysyx_25040111_inc.vh"
-`include "../MOD/ysyx_25040111_MuxKeyWithDefault.v"
 
 module ysyx_25040111_store(
     input [31:7] inst,
     output [4:0] rs1,
     output [4:0] rs2,
     output [31:0] imm,
-    output [`OPT_HIGH:0] opt
+    output reg [`OPT_HIGH:0] opt
 );
 
     wire [11:0] imm_m;
@@ -20,10 +19,13 @@ module ysyx_25040111_store(
 
     assign imm = {{20{imm_m[11]}}, imm_m};
 
-    ysyx_25040111_MuxKeyWithDefault #(3, 3, `OPT_LEN) opt_c (opt, fun3, `OPT_LEN'b0, {
-        3'b010, `OPTG(`XFS, `RF_IM, `ADD, `SNPC, `MSW, `EMPTY),  // sw
-        3'b001, `OPTG(`XFS, `RF_IM, `ADD, `SNPC, `MSH, `EMPTY),  // sh
-        3'b000, `OPTG(`XFS, `RF_IM, `ADD, `SNPC, `MSB, `EMPTY)   // sb
-    });
+    always @(*) begin
+        case (fun3)
+            3'b010: opt = `OPTG(`XFS, `RF_IM, `ADD, `SNPC, `MSW, `EMPTY);  // sw
+            3'b001: opt = `OPTG(`XFS, `RF_IM, `ADD, `SNPC, `MSH, `EMPTY);  // sh
+            3'b000: opt = `OPTG(`XFS, `RF_IM, `ADD, `SNPC, `MSB, `EMPTY);  // sb
+            default: opt = `OPT_LEN'b0;
+        endcase
+    end
 
 endmodule
