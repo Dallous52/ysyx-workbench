@@ -55,7 +55,7 @@ module ysyx_25040111_csr(
             else if (raddr == 12'hF12)
                 rdata = marchid;
             else
-                rdata = marchid;
+                rdata = 32'b0;
         end
         else
             rdata = 32'b0;
