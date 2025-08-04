@@ -26,12 +26,14 @@ module ysyx_25040111_pcu(
     wire [1:0] pc_ctl;
     
     assign pc_ctl = |opt[9:8] ? opt[9:8] : brench ? `INPC : `SNPC;
-    ysyx_25040111_MuxKey #(4, 2, 64) c_pc_arg({ina, inb}, pc_ctl, {
-        2'b00, {pc, 32'b0},
-        2'b01, {pc, 32'd4},
-        2'b10, {pc, imm},
-        2'b11, {rs1_d, imm}
-    });
+    always @(*) begin
+        case (pc_ctl)
+            2'b00: begin ina = pc; inb = 32'b0; end
+            2'b01: begin ina = pc; inb = 32'd4; end
+            2'b10: begin ina = pc; inb = imm; end
+            2'b11: begin ina = rs1_d; inb = imm; end
+        endcase
+    end
 
     wire [31:0] dnpc_normal;
     assign dnpc_normal = ina + inb;
