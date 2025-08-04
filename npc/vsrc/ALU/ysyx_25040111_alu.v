@@ -11,7 +11,7 @@ module ysyx_25040111_alu (
     input ext,
     input sign,
     input negate,
-    output [31:0] res
+    output reg [31:0] res
 );
 
     wire [31:0] res_add;
@@ -35,16 +35,18 @@ module ysyx_25040111_alu (
 
     assign shiftrl = $signed({var1[31] & sign, 31'b0}) >>> var2[4:0];
 
-    ysyx_25040111_MuxKey #(8, 3, 32) c_alu (res, opt, {
-        3'b000, var1,
-        3'b001, res_add, 
-        3'b010, ext ? (var1 | var2) : (var1 & var2),
-        3'b011, dxor,
-        3'b100, var1 << var2[4:0],
-        3'b101, (var1 >> var2[4:0]) | shiftrl,
-        3'b110, {31'b0, lt ^ negate},
-        3'b111, {31'b0, (~(|dxor)) ^ negate}
-    });
+    always @(*) begin
+        case (opt)
+            3'b000: res = var1;
+            3'b001: res = res_add;
+            3'b010: res = ext ? (var1 | var2) : (var1 & var2);
+            3'b011: res = dxor;
+            3'b100: res = var1 << var2[4:0];
+            3'b101: res = (var1 >> var2[4:0]) | shiftrl;
+            3'b110: res = {31'b0, lt ^ negate};
+            3'b111: res = {31'b0, (~(|dxor)) ^ negate};
+        endcase
+    end
     
 endmodule
 

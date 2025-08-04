@@ -13,14 +13,24 @@ module ysyx_25040111_exu(
     // -------------------------------------------------------
     //                        ALU
     // -------------------------------------------------------
-    wire [31:0] var1;
-    wire [31:0] var2;
-    ysyx_25040111_MuxKey #(4, 2, 64) c_alu_arg({var1, var2}, opt[4:3], {
-        2'b00, {imm, 32'b0},
-        2'b01, {pc, imm},
-        2'b10, {rs1_d, rs2_d},
-        2'b11, {rs1_d, imm}
-    });
+    reg [31:0] var1, var2;
+    always @(*) begin
+        case (opt[4:3])
+            2'b00: begin
+                var1 = imm; var2 = 32'b0;
+            end
+            2'b01: begin
+                var1 = pc; var2 = imm;
+            end
+            2'b10: begin
+                var1 = rs1_d; var2 = rs2_d;
+            end
+            2'b11: begin
+                var1 = rs1_d; var2 = imm;
+            end
+        endcase
+    end
+
 
     ysyx_25040111_alu u_ysyx_25040111_alu(
         .var1 	(var1  ),
