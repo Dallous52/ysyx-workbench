@@ -13,7 +13,6 @@ module ysyx_25040111_csr(
     reg [31:0] csr[3:0];
     wire [31:0] marchid = 32'd25040111;
     wire [31:0] mvendorid = 32'h79737978;
-    wire [11:0] raddr_m;
 
     // 写入
     always @(posedge clk) begin
@@ -24,25 +23,17 @@ module ysyx_25040111_csr(
             csr[3] <= 32'h00000000;
         end
         else if (wen) begin
-            case (waddr)
-                12'h300: csr[0] <= wdata;
-                12'h305: csr[1] <= wdata;
-                12'h341: csr[2] <= wdata;
-                default: ;
-            endcase
+            if (waddr == 12'h300)
+                csr[0] <= wdata;
+            else if (waddr == 12'h305)
+                csr[1] <= wdata;
+            else if (waddr == 12'h341)
+                csr[2] <= wdata;
         end
-        else if (|jtype) begin
-            case (jtype)
-                2'b01: csr[3] <= 32'd11;
-                2'b10: ;
-                2'b11: ;
-                default: ;
-            endcase
+        else if (jtype == 2'b01) begin
+            csr[3] <= 32'd11;   // ecall
         end
     end
-
-    // 读寄存器使能判断
-    assign raddr_m = ren ? raddr : {12{1'b0}};
 
     // MSTATUS	0x300
     // MTVEC	0x305
@@ -50,15 +41,19 @@ module ysyx_25040111_csr(
     // MCAUSE	0x342
     // 读取
     always @(*) begin
-        case (raddr_m)
-            12'h300: rdata = csr[0];
-            12'h305: rdata = csr[1];
-            12'h341: rdata = csr[2];
-            12'h342: rdata = csr[3];
-            12'hF11: rdata = mvendorid;
-            12'hF12: rdata = marchid;
-            default: rdata = 32'b0;
-        endcase
+        if (ren) begin
+            case (raddr)
+                12'h300: rdata = csr[0];
+                12'h305: rdata = csr[1];
+                12'h341: rdata = csr[2];
+                12'h342: rdata = csr[3];
+                12'hF11: rdata = mvendorid;
+                12'hF12: rdata = marchid;
+                default: rdata = marchid;
+            endcase
+        end
+        else
+            rdata = 32'b0;
     end
 
 endmodule
