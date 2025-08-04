@@ -164,17 +164,17 @@ module ysyx_25040111(
         .rdata2 (rs2_dt  )
     );
 
-    wire [31:0] csrw, csrd;
+    wire [31:0] csrw, csrr;
     ysyx_25040111_csr u_csr(
-        .clk   	(clock     ),
-        .reset  (reset),
+        .clk   	(clock      ),
+        .reset  (reset      ),
         .wen   	(opt[10] & opt[15] & args_ok),
-        .ren   	(opt[11] & opt[15]),
-        .waddr 	(csr[0]  ),
-        .jtype    (opt[9:8]),
-        .wdata 	(csrw    ),
-        .raddr 	(csr[1]  ),
-        .rdata 	(csrd    )
+        .ren   	(opt[11] & opt[15]          ),
+        .waddr 	(csr[0]     ),
+        .jtype  (opt[9:8]   ),
+        .wdata 	(csrw       ),
+        .raddr 	(csr[1]     ),
+        .rdata 	(csrr              )
     );
 
     wire [31:0] rdata;
@@ -238,7 +238,7 @@ module ysyx_25040111(
     assign rdata = if_flag ? 32'b0 : lsu_rdata;
     assign args_ok = if_flag ? 0 : lsu_ok;
 
-    assign rs2_d = opt[15] & opt[11] ? csrd : rs2_dt;
+    assign rs2_d = opt[15] & opt[11] ? csrr : rs2_dt;
     assign rd_d = opt[15] & opt[10] ? rs2_d :
            mem_en & opt[12] ? rdata : rd_dt;
     assign csrw = opt[15] & opt[10] ? rd_dt : 32'b0;
