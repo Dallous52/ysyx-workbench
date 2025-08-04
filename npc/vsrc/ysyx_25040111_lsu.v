@@ -12,7 +12,7 @@ module ysyx_25040111_lsu (
     input [31:0] addr,  // 内存操作地址
     input [31:0] wdata, // 写入数据
     input [7:0] tlen,   // 突发传输次数
-    output [31:0] rdata,// 读出数据
+    output reg [31:0] rdata,// 读出数据
     output valid
 
 `ifdef RUNSOC
