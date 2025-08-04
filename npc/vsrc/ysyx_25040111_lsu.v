@@ -64,29 +64,27 @@ module ysyx_25040111_lsu (
     reg [31:0] rmem;
     reg valid_t;
 
-    wire [3:0] wmask;
-    ysyx_25040111_MuxKey #(4, 2, 4) c_wmask(wmask, mask, {
-        2'b00, 4'h0,
-        2'b01, 4'b0001 << addr[1:0],
-        2'b10, addr[1] ? 4'b1100 : 4'b0011,
-        2'b11, 4'b1111
-    });
+    reg [3:0] wmask;
+    reg [2:0] tsize;
 
-    wire [2:0] tsize;
-    ysyx_25040111_MuxKey #(4, 2, 3) c_tsize(tsize, mask, {
-        2'b00, 3'b0,
-        2'b01, 3'b000,
-        2'b10, 3'b001,
-        2'b11, 3'b010
-    });
+    always @(*) begin
+        case (mask)
+            2'b00: begin wmask = 4'h0; tsize = 3'b000;end
+            2'b01: begin wmask = 4'b0001 << addr[1:0]; tsize = 3'b000; end
+            2'b10: begin wmask = addr[1] ? 4'b1100 : 4'b0011; tsize = 3'b001;end
+            2'b11: begin wmask = 4'b1111; tsize = 3'b010; end
+        endcase
+    end
 
-    wire [31:0] wmem;
-    ysyx_25040111_MuxKey #(4, 2, 32) c_wt_data(wmem, addr[1:0], {
-        2'b00, wdata,
-        2'b01, wdata << 8,
-        2'b10, wdata << 16,
-        2'b11, wdata << 24
-    });
+    reg [31:0] wmem;
+    always @(*) begin
+        case (addr[1:0])
+            2'b00: wmem = wdata;
+            2'b01: wmem = wdata << 8;
+            2'b10: wmem = wdata << 16;
+            2'b11: wmem = wdata << 24;
+        endcase
+    end
 
     wire is_clint = (addr >= `DEV_CLINT && addr <= `DEV_CLINT_END);
 
