@@ -122,7 +122,7 @@ module ysyx_25040111(
     `endif
 
     ysyx_25040111_cache #(
-        .CACHE_Ls 	(3  ),
+        .CACHE_Ls 	(2  ),
         .BLOCK_Ls 	(3  ))
     u_icache(
         .clock  	(clock          ),
