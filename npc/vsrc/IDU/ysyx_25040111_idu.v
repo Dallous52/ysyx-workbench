@@ -3,12 +3,10 @@
 
 `include "../HDR/ysyx_25040111_inc.vh"
 
-`define OPCODE_NUM 10
-
 module ysyx_25040111_idu(
     input [31:0] inst,
-    output reg [4:0] rs1,
-    output reg [4:0] rs2,
+    output reg [4:0]  rs1,
+    output reg [4:0]  rs2,
     output reg [4:0]  rd,
     output reg [31:0] imm,
     output reg [`OPT_HIGH:0] opt,

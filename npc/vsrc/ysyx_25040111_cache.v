@@ -4,18 +4,18 @@ module ysyx_25040111_cache(
     input   clock,
     input   reset,
 
-    input   [31:0] addr,    // 访问地址
-    input   rburst,         // 是否突发读取
-    output  [31:0] data,    // 返回数据
+    input   [31:0] addr,        // 访问地址
+    output  [31:0] data,        // 返回数据
     
-    output reg      rstart, // 传输开始控制信号
-    output [31:0]   raddr,  // 访问地址
-    output [7:0]    rlen,   // 访问次数
-    input           rok,    // 一次传输完成信号
-    input  [31:0]   rdata,  // 一次传输完成数据
+    output          chburst,    // 是否突发读取
+    output reg      chvalid,    // 传输开始控制信号
+    input           chready,    // 一次传输完成信号
+    output [31:0]   chaddr,     // 访问地址
+    output [7:0]    chlen,      // 访问次数
+    input  [31:0]   chdata,     // 一次传输完成数据
 
-    input   valid,          // 使能
-    output  ready           // 完成
+    input   ifu_valid,          // 使能
+    output  ifu_ready           // 完成
 );
 
 //-----------------------------------------------------------------
@@ -40,32 +40,34 @@ module ysyx_25040111_cache(
 // External Interface
 //-----------------------------------------------------------------
 
-    wire [TAG_HIG:0] tag = addr[31:TAG_IDX]; 
-    wire [CACHE_Ls-1 : 0] index = addr[TAG_IDX-1 : BLOCK_Ls];
+    wire [TAG_HIG:0]      tag    = addr[31:TAG_IDX]; 
+    wire [CACHE_Ls-1 : 0] index  = addr[TAG_IDX-1 : BLOCK_Ls];
     wire [BLOCK_Ls-1 : 0] offset = addr[BLOCK_Ls-1 : 0];
 
-    reg cready;
-    reg [31:0] cdata;
-
-    assign ready = cready;
-    assign data = cdata;
-    assign rlen = rburst ? DATA_L - 1 : 8'b0;
-    assign raddr = caddr;
+    assign ifu_ready    = cready;
+    assign data         = cdata;
+    assign chlen        = DATA_L - 1;
+    assign chaddr       = caddr;
+    assign chburst      = addr[31:28] == 4'ha;
 
 //-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
 
     reg [BLOCK_L-1 : 0] cblocks [CACHE_L-1 : 0];
-    reg [TAG_HIG:0] ctags [CACHE_L-1 : 0];
+    reg [TAG_HIG:0]     ctags [CACHE_L-1 : 0];
     reg [CACHE_L-1 : 0] cvalids;
-    reg [7:0] count;
-    reg [31:0] caddr;
 
-    wire hit = (ctags[index] == tag) & (cvalids[index]);
+    reg [7:0]   count;
+    reg [31:0]  caddr;
+    reg         cready;
+    reg [31:0]  cdata;
+
+    wire hit    = (ctags[index] == tag) & (cvalids[index]);
     wire update = count == DATA_L;
-    wire [BLOCK_Ls+4 : 0] at = {5'b0 , offset >> 2};
-    wire [BLOCK_L-1 : 0] tdata = {cblocks[index] >> (at << 5)};
+    
+    wire [BLOCK_Ls+4 : 0]   at    = {5'b0 , offset >> 2};
+    wire [BLOCK_L-1 : 0]    tdata = {cblocks[index] >> (at << 5)};
 
 //-----------------------------------------------------------------
 // State Machine
@@ -76,31 +78,29 @@ module ysyx_25040111_cache(
         if (reset) begin
             cdata <= 0;
         end
-        else if ((valid & hit) | update) begin
+        else if ((ifu_valid & hit & ~cready) | update) begin
         `ifndef YOSYS_STA
-            if (valid & hit) cache_hit();
+            if (ifu_valid & hit) cache_hit();
         `endif
             cdata <= tdata[31:0];
         end
     end
 
-    // rstart
+    // chvalid
     always @(posedge clock) begin
         if (reset)
-            rstart <= 1'b0;
-        else if (valid & ~hit)
-            rstart <= 1'b1;
-        else if (~update & rok & (count != DATA_L - 1) & ~rburst)
-            rstart <= 1'b1;
-        else
-            rstart <= 1'b0;
+            chvalid <= 1'b0;
+        else if (ifu_valid & ~hit)
+            chvalid <= 1'b1;
+        else if (update)
+            chvalid <= 1'b0;
     end
 
     // counter
     always @(posedge clock) begin
         if (reset) 
             count <= 8'b0;
-        else if (rok) 
+        else if (chready) 
             count <= count + 1;
         else if (update)
             count <= 8'b0;
@@ -119,10 +119,10 @@ module ysyx_25040111_cache(
     generate
         if (BLOCK_L > 32) begin
             always_ff @(posedge clock)
-                if (rok) cblocks[index] <= {rdata, cblocks[index][BLOCK_L-1:32]};
+                if (chready) cblocks[index] <= {chdata, cblocks[index][BLOCK_L-1:32]};
         end else begin
             always_ff @(posedge clock)
-                if (rok) cblocks[index] <= rdata;
+                if (chready) cblocks[index] <= chdata;
         end
     endgenerate
 
@@ -130,7 +130,7 @@ module ysyx_25040111_cache(
     always @(posedge clock) begin
         if (reset)
             cready <= 1'b0;
-        else if ((valid & hit) | update)
+        else if ((ifu_valid & hit & ~cready) | update)
             cready <= 1'b1;
         else
             cready <= 1'b0;
@@ -140,10 +140,8 @@ module ysyx_25040111_cache(
     always @(posedge clock) begin
         if (reset)
             caddr <= 0;
-        else if (valid & ~hit)
+        else if (ifu_valid & ~hit)
             caddr <= {addr[31:BLOCK_Ls], {BLOCK_Ls{1'b0}}};
-        else if (rok & ~rburst)
-            caddr <= caddr + 4;
         else if (update)
             caddr <= 0;
     end

@@ -28,8 +28,8 @@ module ysyx_25040111_pcu(
         case (pc_ctl)
             2'b00: begin ina = pc; inb = 32'b0; end
             2'b01: begin ina = pc; inb = 32'd4; end
-            2'b10: begin ina = pc; inb = imm; end
-            2'b11: begin ina = rs1_d; inb = imm; end
+            2'b10: begin ina = pc; inb = imm;   end
+            2'b11: begin ina = rs1_d; inb = imm;end
         endcase
     end
 

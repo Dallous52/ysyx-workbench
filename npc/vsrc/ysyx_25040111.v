@@ -3,15 +3,12 @@
 
 module ysyx_25040111(
     input clock,
-    input reset,
-
-    output [31:0] pc,
-    output [31:0] inst
+    input reset
 
 `ifdef RUNSOC
     ,input io_interrupt,
 
-    input io_master_awready,
+    input  io_master_awready,
     output io_master_awvalid,
     output [31:0] io_master_awaddr,
     output [3:0] io_master_awid,
@@ -81,190 +78,79 @@ module ysyx_25040111(
 `endif // RUNSOC
 );
 
-// ------------------------------------------------
-//                I/O SIGNAL DEFINE
-// ------------------------------------------------
+//-----------------------------------------------------------------
+// CONTROL SIGNAL
+//-----------------------------------------------------------------
 
-    wire [4:0] rs1;
-    wire [4:0] rs2;
-    wire [4:0] rd;
-    wire [11:0] csr [1:0];
-    wire [31:0] imm;
-    wire [`OPT_HIGH:0] opt;
+    wire ifu_valid,     ifu_ready;
+    wire icache_valid,  icache_ready;
+    wire idu_valid,     idu_ready;
+    
+    wire jpc_ready; // from wbu
 
-    wire inst_ok, args_ok, next_ok;
+//-----------------------------------------------------------------
+// DATA SIGNAL
+//-----------------------------------------------------------------
 
-    wire if_flag;
-    ysyx_25040111_ifu u_ifu (
-        .clk    (clock          ),
-        .reset  (reset          ),
-        .ready  (next_ok        ),
-        .if_flag(if_flag        ),
-        .start  (icache_valid   ),
-        .inst_t (icache_data    ),
-        .inst   (inst           ),
-        .if_ok  (icache_ready   ),
-        .valid  (inst_ok        )
+    // (icache : c) (ifu : f) (arbiter : a) (idu : d) (exu : x) 
+    // (wbu : b)    (csr : s) (reg : r)     (lsu : l)
+
+    // wbu <==> ifu
+    wire [31:0] bf_jpc;
+
+    // idu <==> ifu
+    wire        df_jump;
+    wire [31:0] fd_inst;
+
+    // ifu <==> icache
+    wire [31:0] fc_addr;
+    wire [31:0] cf_inst;
+
+    // icache <==> arbiter
+    wire        ca_burst;
+    wire [7:0]  ca_burst_len;
+    wire [31:0] ca_addr;
+    wire [31:0] ac_data;
+
+//-----------------------------------------------------------------
+// MODULE INSTANCES
+//-----------------------------------------------------------------
+    
+    // IFU
+    ysyx_25040111_ifu u_ifu(
+        .clock     	(clock      ),
+        .reset     	(reset      ),
+        .ifu_addr  	(fc_addr    ),
+        .ifu_inst  	(cf_inst    ),
+        .jump      	(df_jump    ),
+        .idu_inst   (fd_inst    ),
+        .jump_pc  	(bf_jpc     ),
+        .jpc_ready  (jpc_ready  ),
+        .ifu_ready 	(ifu_ready  ),
+        .ifu_valid 	(ifu_valid  ),
+        .idu_valid 	(idu_valid  ),
+        .idu_ready 	(idu_ready  )
     );
 
-    wire [31:0] icache_data;
-    wire [31:0] icache_addr;
-    wire [7:0]  tlen;
-    wire icache_ready;
-    wire icache_valid;
-    wire icache_rok = if_flag ? lsu_ok : 1'b0; 
-    wire if_start;
-    wire fencei = ~opt[0] & ~opt[15] & (opt[12:10] == 3'b100) & args_ok;
-    `ifdef RUNSOC        
-    wire icache_burst = pc[31:28] == 4'ha;
-    `else
-    wire icache_burst = 1'b0;
-    `endif
-
+    // ICACHE
     ysyx_25040111_cache #(
         .CACHE_Ls 	(2  ),
         .BLOCK_Ls 	(3  ))
     u_icache(
         .clock  	(clock          ),
-        .reset  	(reset | fencei ),
-        .addr   	(pc             ),
-        .rburst     (icache_burst   ),
-        .raddr      (icache_addr    ),
-        .data   	(icache_data    ),
-        .rstart 	(if_start       ),
-        .rlen       (tlen           ),
-        .rok    	(icache_rok     ),
-        .rdata  	(lsu_rdata      ),
-        .valid  	(icache_valid   ),
-        .ready  	(icache_ready   )
+        .reset  	(reset          ),
+        .addr   	(fc_addr        ),
+        .data   	(cf_inst        ),
+        .chburst    (ca_burst       ),
+        .chaddr     (ca_addr        ),
+        .chlen      (ca_burst_len   ),
+        .chdata  	(ac_data        ),
+        .ifu_valid  (ifu_valid      ),
+        .ifu_ready  (ifu_ready      ),
+        .chvalid 	(icache_valid   ),
+        .chready   	(icache_ready   )
     );
 
-    ysyx_25040111_idu u_idu (
-        .inst 	(inst  ),
-        .rs1  	(rs1   ),
-        .rs2  	(rs2   ),
-        .rd   	(rd    ),
-        .imm  	(imm   ),
-        .opt  	(opt   ),
-        .csr1   (csr[0]),
-        .csr2   (csr[1])
-    );
-
-    wire [31:0] rs2_dt, rd_dt;
-    wire [31:0] rs1_d, rs2_d, rd_d;
-
-    ysyx_25040111_RegisterFile #(4, 32) u_reg(
-        .clk   	(clock      ),
-        .wen   	(opt[0] & args_ok),
-        .ren   	(opt[2:1]   ),
-        .wdata 	(rd_d       ),
-        .waddr 	(rd[3:0]    ),
-        .raddr1 (rs1[3:0]   ),
-        .raddr2 (rs2[3:0]   ),
-        .rdata1 (rs1_d      ),
-        .rdata2 (rs2_dt     )
-    );
-
-    wire [31:0] csrw, csrr;
-    ysyx_25040111_csr u_csr(
-        .clk   	(clock      ),
-        .reset  (reset      ),
-        .wen   	(opt[10] & opt[15] & args_ok),
-        .ren   	(opt[11] & opt[15]          ),
-        .waddr 	(csr[0]     ),
-        .jtype  (opt[9:8]   ),
-        .wdata 	(csrw       ),
-        .raddr 	(csr[1]     ),
-        .rdata 	(csrr       )
-    );
-
-    wire [31:0] rdata;
-    wire mem_en = |opt[11:10] & ~opt[15];
-
-    // simple arbiter
-    wire lsu_ready = if_flag ? if_start : inst_ok;
-    wire lsu_wen = if_flag ? 0 : ~opt[12] & mem_en;
-    wire lsu_ren = if_flag ? 1 : opt[12] & mem_en;
-    wire [1:0] lsu_mask = if_flag ? 2'b11 : opt[11:10];
-    wire [7:0] lsu_tlen = if_flag ? tlen : 8'b0;
-    wire [31:0] lsu_addr = if_flag ? icache_addr : rd_dt;
-    wire [31:0] lsu_rdata;
-    wire lsu_ok;
-
-    ysyx_25040111_lsu u_lsu(
-        .clk    (clock),
-        .ready  (lsu_ready),
-        .wen   	(lsu_wen),
-        .ren   	(lsu_ren),
-        .sign  	(opt[14]    ),
-        .mask  	(lsu_mask),
-        .addr  	(lsu_addr      ),
-        .wdata 	(rs2_d      ),
-        .rdata 	(lsu_rdata      ),
-        .tlen   (lsu_tlen),
-        .valid  (lsu_ok)
-`ifdef RUNSOC
-        ,.io_master_awready (io_master_awready  ),
-        .io_master_awvalid 	(io_master_awvalid  ),
-        .io_master_awaddr  	(io_master_awaddr   ),
-        .io_master_awid    	(io_master_awid     ),
-        .io_master_awlen   	(io_master_awlen    ),
-        .io_master_awsize  	(io_master_awsize   ),
-        .io_master_awburst 	(io_master_awburst  ),
-        .io_master_wready  	(io_master_wready   ),
-        .io_master_wvalid  	(io_master_wvalid   ),
-        .io_master_wdata   	(io_master_wdata    ),
-        .io_master_wstrb   	(io_master_wstrb    ),
-        .io_master_wlast   	(io_master_wlast    ),
-        .io_master_bready  	(io_master_bready   ),
-        .io_master_bvalid  	(io_master_bvalid   ),
-        .io_master_bresp   	(io_master_bresp    ),
-        .io_master_bid     	(io_master_bid      ),
-        .io_master_arready 	(io_master_arready  ),
-        .io_master_arvalid 	(io_master_arvalid  ),
-        .io_master_araddr  	(io_master_araddr   ),
-        .io_master_arid    	(io_master_arid     ),
-        .io_master_arlen   	(io_master_arlen    ),
-        .io_master_arsize  	(io_master_arsize   ),
-        .io_master_arburst 	(io_master_arburst  ),
-        .io_master_rready  	(io_master_rready   ),
-        .io_master_rvalid  	(io_master_rvalid   ),
-        .io_master_rresp   	(io_master_rresp    ),
-        .io_master_rdata   	(io_master_rdata    ),
-        .io_master_rlast   	(io_master_rlast    ),
-        .io_master_rid     	(io_master_rid      )
-`endif // RUNSOC
-    );
-
-    assign rdata = if_flag ? 32'b0 : lsu_rdata;
-    assign args_ok = if_flag ? 0 : lsu_ok;
-
-    assign rs2_d = opt[15] & opt[11] ? csrr : rs2_dt;
-    assign rd_d = opt[15] & opt[10] ? rs2_d :
-           mem_en & opt[12] ? rdata : rd_dt;
-    assign csrw = opt[15] & opt[10] ? rd_dt : 32'b0;
-
-    ysyx_25040111_exu u_exu(
-        .opt   	(opt    ),
-        .rs1_d 	(rs1_d  ),
-        .rs2_d 	(rs2_d  ),
-        .imm   	(imm    ),
-        .pc     (pc     ),
-        .rd_d  	(rd_dt  )
-    );
-
-    ysyx_25040111_pcu u_pcu(
-        .clk          (clock        ),
-        .reset        (reset),
-        .ready        (args_ok    ),
-        .brench    	(rd_dt[0]   ),
-        .opt       	(opt[9:8]   ),
-        .mret      	(opt[15] & opt[12]),
-        .mret_addr 	(rs2_d      ),
-        .imm       	(imm        ),
-        .rs1_d     	(rs1_d      ),
-        .pc        	(pc         ),
-        .valid        (next_ok)
-    );
+    // IDU
 
 endmodule

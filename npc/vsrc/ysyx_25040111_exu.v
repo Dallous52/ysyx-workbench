@@ -57,12 +57,3 @@ module ysyx_25040111_exu(
 `endif // YOSYS_STA
 
 endmodule
-    // ysyx_25040111_RegisterFile #(8, 32) u_rom2_t(
-    //     .clk   	(clk    ),
-    //     .wen   	(|mem_en & ~opt[12]),
-    //     .ren   	({1'b0, opt[12] & |mem_en}),
-    //     .wdata 	(wdata),
-    //     .waddr 	(res[7:0]),
-    //     .raddr1 (res[7:0]),
-    //     .rdata1 (rd_dt)
-    // );
