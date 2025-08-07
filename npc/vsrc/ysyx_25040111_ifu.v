@@ -28,8 +28,9 @@ module ysyx_25040111_ifu (
 
     assign idu_inst     = inst;
     assign idu_ready    = inst_ok;
-    assign ifu_valid    = pc_ok;
+    assign ifu_valid    = jump ? jpc_ok : pc_ok;
     assign ifu_addr     = pc;
+
 //-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
@@ -37,7 +38,7 @@ module ysyx_25040111_ifu (
     wire [31:0] next_pc;
 
     reg  [31:0] pc;
-    reg         pc_ok;
+    reg         pc_ok, jpc_ok;
     reg  [31:0] inst;
     reg         inst_ok;
 
@@ -65,22 +66,30 @@ module ysyx_25040111_ifu (
             inst_ok <= 1'b0;
     end
 
-    // pc pc_ok
+    // pc
+    always @(posedge clock) begin
+        if (reset)
+            pc <= `PC_RESET;
+        else if (idu_ready & idu_valid)
+            pc <= next_pc;
+        else if (jpc_ready & jump)
+            pc <= jump_pc;
+    end
+
+    // pc jpc ok
     always @(posedge clock) begin
         if (reset) begin
-            pc <= `PC_RESET;
-            pc_ok <= 1;            
+            pc_ok <= 1'b1;
+            jpc_ok <= 1'b0;
         end
-        else if (idu_ready & idu_valid & ~jump) begin
-            pc <= next_pc;
-            pc_ok <= 1;            
+        else if (idu_ready & idu_valid)
+            pc_ok <= 1'b1;
+        else if (jpc_ready & jump)
+            jpc_ok <= 1'b1;
+        else if (ifu_ready & ifu_valid) begin
+            pc_ok <= 1'b0;
+            jpc_ok <= 1'b0;
         end
-        else if (jpc_ready & jump) begin
-            pc <= jump_pc;
-            pc_ok <= 1;            
-        end
-        else if (ifu_ready & ifu_valid)
-            pc_ok <= 0;
     end
 
 

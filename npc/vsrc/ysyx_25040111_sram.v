@@ -6,66 +6,60 @@
 `define READY_TIME 8'd1
 
 module ysyx_25040111_sram(
-    input wire clk,
-    input wire [31:0] araddr,
-    input wire arvalid,
-    output wire arready,
+    input           clock,
+    input           reset,
+    input [31:0]    araddr,
+    input [2:0]     arsize,
+    input           arvalid,
+    output          arready,
 
-    output wire [31:0] rdata,
-    output wire [1:0] rresp,
-    output reg rvalid,
-    input wire  rready,
+    output [31:0]   rdata,
+    output reg      rvalid,
+    input           rready,
 
-    input wire [31:0] awaddr,
-    input wire awvalid,
-    output wire awready,
+    input [31:0]    awaddr,
+    input           awvalid,
+    input [2:0]     awsize,
+    output          awready,
 
-    input wire [31:0] wdata,
-    input wire [3:0] wstrb, // wmask
-    input wire wvalid,
-    output wire wready,
-
-    output wire [1:0] bresp,
-    output reg bvalid,
-    input wire bready
+    input [31:0]    wdata,
+    input [3:0]     wstrb,
+    input           wvalid,
+    input           wlast,
+    output          wready,
+    output          bvalid,
+    input           bready
 );
     // memory read
     reg [31:0] rdata_t;
-
     assign arready = 1;
-    assign rresp = 2'b00;
     assign rdata = rdata_t;
-    always @(posedge clk) begin
-        // 准备开始
-        if (arvalid & arready) begin
-            rdata_t <= pmem_read(araddr);
-            rvalid <= 1; // 读取完毕
+    always @(posedge clock) begin
+        if (reset)begin
+            rdata_t <= 0;
+            rvalid <= 1'b0;            
         end
-        else if (rvalid & rready) begin
-            rvalid <= 0;            
+        else if (arvalid & arready) begin
+            rdata_t <= pmem_read(araddr);
+            rvalid  <= 1'b1;
+        end
+        else if (rvalid & rready & |hehe) begin
+            rvalid <= 1'b0;            
         end
     end
     
     // memory write
-    wire [7:0] wmask;
-    assign wmask = {4'b0, wstrb};
-
+    wire [7:0] wmask = {4'b0, wstrb};
     assign awready = 1;
     assign wready = 1;
-    assign bresp = 2'b0;
-    always @(posedge clk) begin
-        // 写入参数读取准备
-        if (awvalid & awready & wvalid & wready) begin
+    assign bvalid = wready & wvalid;
+    always @(*) begin
+        if (awvalid & awready & wvalid & wready & wlast & bready) begin
             pmem_write(awaddr, wdata, wmask);
         end
-        
-        if (wvalid & wready) begin
-            bvalid <= 1;
-        end
-        else if (bvalid & bready) begin
-            bvalid <= 0;
-        end
     end
+
+    wire [2:0] hehe = awsize + arsize + 1;
 
 endmodule
 

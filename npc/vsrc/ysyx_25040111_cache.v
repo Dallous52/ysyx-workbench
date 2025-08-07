@@ -1,11 +1,11 @@
 `include "HDR/ysyx_25040111_dpic.vh"
 
 module ysyx_25040111_cache(
-    input   clock,
-    input   reset,
+    input           clock,
+    input           reset,
 
-    input   [31:0] addr,        // 访问地址
-    output  [31:0] data,        // 返回数据
+    input   [31:0]  addr,       // 访问地址
+    output  [31:0]  data,       // 返回数据
     
     output          chburst,    // 是否突发读取
     output reg      chvalid,    // 传输开始控制信号
@@ -14,8 +14,8 @@ module ysyx_25040111_cache(
     output [7:0]    chlen,      // 访问次数
     input  [31:0]   chdata,     // 一次传输完成数据
 
-    input   ifu_valid,          // 使能
-    output  ifu_ready           // 完成
+    input           ifu_valid,  // 使能
+    output          ifu_ready   // 完成
 );
 
 //-----------------------------------------------------------------
@@ -48,7 +48,12 @@ module ysyx_25040111_cache(
     assign data         = cdata;
     assign chlen        = DATA_L - 1;
     assign chaddr       = caddr;
-    assign chburst      = addr[31:28] == 4'ha;
+
+`ifdef RUNSOC
+    assign chburst      = addr[31:28] == 4'ha;        
+`else
+    assign chburst      = 1'b0;        
+`endif
 
 //-----------------------------------------------------------------
 // Register / Wire
@@ -63,11 +68,16 @@ module ysyx_25040111_cache(
     reg         cready;
     reg [31:0]  cdata;
 
-    wire hit    = (ctags[index] == tag) & (cvalids[index]);
-    wire update = count == DATA_L;
+    wire        hit    = (ctags[index] == tag) & (cvalids[index]);
+    wire        update = count == DATA_L;
+    wire [31:0] naddr  = caddr + 4;
+    wire        rend   = (count == DATA_L - 1) & chready & chvalid;
     
-    wire [BLOCK_Ls+4 : 0]   at    = {5'b0 , offset >> 2};
-    wire [BLOCK_L-1 : 0]    tdata = {cblocks[index] >> (at << 5)};
+    wire [BLOCK_Ls+4 : 0] at = {5'b0 , offset >> 2};
+    wire [BLOCK_L-1 : 0] tdata = {cblocks[index] >> (at << 5)};
+    // wire [BLOCK_Ls-1 : 0]   at    = {offset >> 2};
+    // wire [BLOCK_L-1 : 0]    tdata = at == {BLOCK_Ls{1'b0}} ? 
+    //                                 cblocks[index] : {cblocks[index] >> 32};
 
 //-----------------------------------------------------------------
 // State Machine
@@ -90,9 +100,9 @@ module ysyx_25040111_cache(
     always @(posedge clock) begin
         if (reset)
             chvalid <= 1'b0;
-        else if (ifu_valid & ~hit)
+        else if (ifu_valid & ~hit & ~chvalid)
             chvalid <= 1'b1;
-        else if (update)
+        else if (rend)
             chvalid <= 1'b0;
     end
 
@@ -140,9 +150,11 @@ module ysyx_25040111_cache(
     always @(posedge clock) begin
         if (reset)
             caddr <= 0;
-        else if (ifu_valid & ~hit)
+        else if (ifu_valid & ~hit & ~chvalid)
             caddr <= {addr[31:BLOCK_Ls], {BLOCK_Ls{1'b0}}};
-        else if (update)
+        else if (chready & ~chburst)
+            caddr <= naddr;
+        else if (rend)
             caddr <= 0;
     end
 

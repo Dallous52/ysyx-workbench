@@ -42,23 +42,18 @@ module ysyx_25040111_csr(
     // 读取
     always @(*) begin
         if (ren) begin
-            if (raddr == 12'h300)
-                rdata = csr[0];
-            else if (raddr == 12'h305)
-                rdata = csr[1];
-            else if (raddr == 12'h341)
-                rdata = csr[2];
-            else if (raddr == 12'h342)
-                rdata = csr[3];
-            else if (raddr == 12'hF11)
-                rdata = mvendorid;
-            else if (raddr == 12'hF12)
-                rdata = marchid;
-            else
-                rdata = 32'b0;
-        end
-        else
+            case (raddr)
+                12'h300: rdata = csr[0];
+                12'h305: rdata = csr[1];
+                12'h341: rdata = csr[2];
+                12'h342: rdata = csr[3];
+                12'hF11: rdata = mvendorid;
+                12'hF12: rdata = marchid;
+                default: rdata = 32'b0;
+            endcase
+        end else begin
             rdata = 32'b0;
+        end
     end
 
 endmodule

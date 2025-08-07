@@ -5,48 +5,40 @@
 `endif
 
 module ysyx_25040111_clint(
-        input clk,
-        input [31:0] araddr,
-        input arvalid,
-        output reg arready,
+    input           clock,
+    input           reset,    
 
-        output reg [31:0] rdata,
-        output reg [1:0] rresp,
-        output reg rvalid,
-        input rready
-    );
+    input [31:0]    araddr,
+    input           arvalid,
+    output          arready,
 
-    // memory read
-    reg rdstart;
-    reg [31:0] rdata_t;
+    output [31:0]   rdata,
+    output          rvalid,
+    input           rready
+);
+
+    // time read
     reg [63:0] mtime;
+    reg [31:0] tdata;
+    reg        tvalid;
 
-    always @(posedge clk) begin
+    assign arready = 1'b1;
+    assign rvalid  = tvalid;
+    assign rdata   = tdata;
+    
+    always @(posedge clock) begin
         mtime <= mtime + 1;
 
-        // 地址读取
-        if (arvalid)
-            arready <= 1;
-
-        // 准备开始
-        if (arvalid & arready) begin
-            arready <= 0;
-            rdstart <= 1;
-            rvalid <= 0;
+        if (reset)begin
+            tdata <= 0;
+            tvalid <= 1'b0;
+        end        
+        else if (arvalid & arready) begin
+            tdata <= araddr == `CLINT_ADDR ? mtime[31:0] : mtime[63:32];
+            tvalid <= 1; // 读取完毕
         end
-
-        // 数据读取
-        if (rdstart) begin
-            rdata_t <= araddr == `CLINT_ADDR ? mtime[31:0] : mtime[63:32];
-            rvalid <= 1; // 读取完毕
-            rdstart <= 0;
-        end
-
-        // 完成传输
-        if (rvalid & rready) begin
-            rdata <= rdata_t;
-            rresp <= 2'b00;
-            rvalid <= 0;
+        else if (rvalid & rready) begin
+            tvalid <= 0;
         end
     end
 
