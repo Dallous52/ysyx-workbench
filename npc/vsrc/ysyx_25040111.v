@@ -96,51 +96,69 @@ module ysyx_25040111(
     wire wbu_avalid,    wbu_aready; // from arbiter
     wire wbu_evalid,    wbu_eready; // from exu
 
-    wire jpc_ready; // from wbu
+    wire jpc_ready; // from exu
 
 //-----------------------------------------------------------------
 // DATA SIGNAL
 //-----------------------------------------------------------------
 
-    // wbu <==> ifu
-    wire [31:0] wf_jpc;
+    // exu <==> ifu
+    wire [31:0]         ef_jpc;
+
+    // idu <==> exu
+    wire [31:0]         de_pc;
+    wire [31:0]         de_imm;
+    wire [`OPT_HIGH:0]  de_opt;
+    wire [4:0]          de_ard;
+
+    // idu <==> csr | reg
+    wire [4:0]          dr_ars1,
+                        dr_ars2;
+
+    // csr | reg <==> exu
+    wire [31:0]         re_rs1,
+                        re_rs2;
+    wire [31:0]         se_csr1,
+                        se_csr2;
 
     // idu <==> ifu
-    wire        df_jump;
-    wire [31:0] fd_inst;
+    wire                df_jump;
+    wire [31:0]         fd_inst;
+    wire [31:0]         fd_pc;
 
     // ifu <==> icache
-    wire [31:0] fc_addr;
-    wire [31:0] cf_inst;
+    wire [31:0]         fc_addr;
+    wire [31:0]         cf_inst;
 
     // icache <==> arbiter
-    wire        ca_burst;
-    wire [7:0]  ca_rlen;
-    wire [31:0] ca_addr;
-    wire [31:0] ac_data;
+    wire                ca_burst;
+    wire [7:0]          ca_rlen;
+    wire [31:0]         ca_addr;
+    wire [31:0]         ac_data;
 
     // arbiter <==> lsu
-    wire [31:0] al_waddr;
-    wire [31:0] al_raddr;
-    wire [31:0] al_wdata;
-    wire [1:0]  al_wmask;
-    wire [31:0] la_rdata;
-    wire [7:0]  al_rlen;
-    wire [1:0]  al_rmask;
-    wire        al_rsign;
-    wire        al_burst;
+    wire [31:0]         al_waddr;
+    wire [31:0]         al_raddr;
+    wire [31:0]         al_wdata;
+    wire [1:0]          al_wmask;
+    wire [31:0]         la_rdata;
+    wire [7:0]          al_rlen;
+    wire [1:0]          al_rmask;
+    wire                al_rsign;
+    wire                al_burst;
 
     // exu <==> arbiter
-    wire [31:0] ea_waddr;
-    wire [31:0] ea_raddr;
-    wire [31:0] ea_wdata;
-    wire [1:0]  ea_wmask, ea_rmask;
-    wire        ea_rsign;
-    wire [4:0]  ea_wbaddr;
+    wire [31:0]         ea_waddr;
+    wire [31:0]         ea_raddr;
+    wire [31:0]         ea_wdata;
+    wire [1:0]          ea_wmask, 
+                        ea_rmask;
+    wire                ea_rsign;
+    wire [4:0]          ea_wbaddr;
 
     // arbiter <==> wbu
-    wire [31:0] aw_data;
-    wire [4:0]  aw_addr;
+    wire [31:0]         aw_data;
+    wire [4:0]          aw_addr;
 
 //-----------------------------------------------------------------
 // MODULE INSTANCES
@@ -153,11 +171,12 @@ module ysyx_25040111(
         .ifu_addr  	(fc_addr     ),
         .ifu_inst  	(cf_inst     ),
         .jump      	(df_jump     ),
-        .idu_inst   (fd_inst     ),
-        .jump_pc  	(bf_jpc      ),
+        .jump_pc  	(ef_jpc      ),
         .jpc_ready  (jpc_ready   ),
         .ifu_ready 	(ifu_ready   ),
         .ifu_valid 	(ifu_valid   ),
+        .idu_inst   (fd_inst     ),
+        .idu_pc     (fd_pc       ),
         .idu_valid 	(idu_valid   ),
         .idu_ready 	(idu_ready   )
     );
@@ -236,7 +255,9 @@ module ysyx_25040111(
         .imm       	(imm         ),
         .opt       	(opt         ),
         .csr1      	(csr1        ),
-        .csr2      	(csr2        )
+        .csr2      	(csr2        ),
+        .idu_pc     (fd_pc       ),
+        .exe_pc     (de_pc       )
     );
     
     // LSU

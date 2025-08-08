@@ -8,19 +8,23 @@ module ysyx_25040111_idu(
     input               reset,
 
     input [31:0]        idu_inst,
+    input [31:0]        idu_pc,
     input               idu_ready,
     output              idu_valid,
     output              jump,
 
-    input               exe_ready,
-    output              exe_valid,
+    input               exe_valid,
+    output              exe_ready,
 
+    // wire to case
     output reg [4:0]    rs1,
     output reg [4:0]    rs2,
     output reg [4:0]    rd,
     output reg [31:0]   imm,
+    // wire to case
     output [11:0]       csr1, 
                         csr2,
+    output [31:0]       exe_pc,
                         
     output reg [`OPT_HIGH:0] opt
 );
@@ -29,28 +33,32 @@ module ysyx_25040111_idu(
 // External Interface
 //-----------------------------------------------------------------
 
-    assign exe_valid = decode_ok;
-    assign idu_valid = inst_wait;
+    assign exe_ready = decode_ok;
+    assign idu_valid = ~decode_ok;
     assign jump      = ~(opt[9:8] == 2'b01) | (opt[12] & opt[15]);
-
+    assign exe_pc    = pc;
 //-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
 
     reg [31:0]  inst;
+    reg [31:0]  pc;
     reg         decode_ok;
-    reg         inst_wait;
 
 //-----------------------------------------------------------------
 // State Machine
 //-----------------------------------------------------------------
 
-    // inst
+    // inst pc
     always @(posedge clock) begin
-        if (reset)
+        if (reset) begin
             inst <= 0;
-        else if (idu_ready & idu_valid)
+            pc <= 0;            
+        end
+        else if (idu_ready & idu_valid) begin
             inst <= idu_inst;
+            pc <= idu_pc;            
+        end
     end
 
     // decode_ok
@@ -59,18 +67,8 @@ module ysyx_25040111_idu(
             decode_ok <= 1'b0;
         else if (idu_ready & idu_valid)
             decode_ok <= 1'b1;
-        else if (exe_ready & exe_valid)
+        else if (exe_valid & exe_ready)
             decode_ok <= 1'b0;
-    end
-
-    // inst_wait
-    always @(posedge clock) begin
-        if (reset)
-            inst_wait <= 1'b1;
-        else if (idu_ready & idu_valid)
-            inst_wait <= 1'b0;
-        else if (exe_ready & exe_valid)
-            inst_wait <= 1'b1;
     end
 
 //-----------------------------------------------------------------

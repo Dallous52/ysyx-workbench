@@ -17,6 +17,7 @@ module ysyx_25040111_ifu (
     output          idu_ready,
     input           jump,
     output  [31:0]  idu_inst,
+    output  [31:0]  idu_pc,
 
     input   [31:0]  jump_pc,
     input           jpc_ready
@@ -30,6 +31,7 @@ module ysyx_25040111_ifu (
     assign idu_ready    = inst_ok;
     assign ifu_valid    = jump ? jpc_ok : pc_ok;
     assign ifu_addr     = pc;
+    assign idu_pc       = pc;
 
 //-----------------------------------------------------------------
 // Register / Wire

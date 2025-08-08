@@ -17,8 +17,8 @@ module ysyx_25040111_arbiter(
     input           exu_rsign,
     output [31:0]   wbu_rdata,
     output [4:0]    wbu_raddr,
-    output          wbu_valid,
-    input           wbu_ready,
+    output          wbu_ready,
+    input           wbu_valid,
 
     input           exu_wvalid,
     input  [31:0]   exu_waddr,
@@ -57,7 +57,7 @@ module ysyx_25040111_arbiter(
     assign exu_rready   = rready;
     assign wbu_rdata    = rdata;
     assign wbu_raddr    = wbaddr;
-    assign wbu_valid    = wbvalid;
+    assign wbu_ready    = wbready;
 
     // lsu ready
     assign lsu_raddr    = ~rvalid & cah_valid ? cah_addr  : raddr;
@@ -88,7 +88,10 @@ module ysyx_25040111_arbiter(
     reg [1:0]   rmask;
     reg         rsign;
     reg [4:0]   wbaddr;
-    reg         wbvalid;
+    reg         wbready;
+
+    wire        wsame = (lsu_waddr == raddr) & rvalid;
+    wire        rsame = (lsu_raddr == waddr) & wvalid;
 
 //-----------------------------------------------------------------
 // State Machine
@@ -102,7 +105,7 @@ module ysyx_25040111_arbiter(
             wdata  <= 0;            
             wmask  <= 2'b0;
         end
-        else if (exu_wvalid & ~wvalid) begin
+        else if (exu_wvalid & ~wvalid & ~wsame) begin
             wvalid <= 1'b1;
             waddr  <= exu_waddr;
             wdata  <= exu_wdata;
@@ -116,7 +119,7 @@ module ysyx_25040111_arbiter(
     always @(posedge clock) begin
         if (reset)
             wready <= 1'b0;
-        else if (exu_wvalid & ~wvalid)
+        else if (exu_wvalid & ~wvalid & ~wsame)
             wready <= 1'b1;
         else 
             wready <= 1'b0;
@@ -131,16 +134,17 @@ module ysyx_25040111_arbiter(
             rsign  <= 1'b0;
             rmask  <= 2'b0;
         end
-        else if (exu_rvalid & ~rvalid & ~cah_valid) begin
+        else if (exu_rvalid & ~rvalid & ~cah_valid & ~rsame) begin
             rvalid <= 1'b1;
             raddr  <= exu_raddr;
             rmask  <= exu_rmask;
             rsign  <= exu_rsign; 
         end
-        else if (lsu_rready & rvalid) begin
+        else if (lsu_rready & rvalid)
             rdata <= lsu_rdata;
-        end
-        else if (wbu_ready & wbu_valid)
+        else if (rsame & exu_rvalid & ~rvalid & ~cah_valid)
+            rdata <= wdata;
+        else if (wbu_valid & wbu_ready)
             rvalid <= 1'b0;
     end
 
@@ -148,24 +152,24 @@ module ysyx_25040111_arbiter(
     always @(posedge clock) begin
         if (reset)
             rready <= 1'b0;
-        else if (exu_rvalid & ~rvalid)
+        else if (exu_rvalid & ~rvalid & ~cah_valid)
             rready <= 1'b1;
         else 
             rready <= 1'b0;
     end
 
-    // wbaddr wbvalid
+    // wbaddr wbready
     always @(posedge clock) begin
         if (reset) begin
             wbaddr <= 5'b0;
-            wbvalid <= 1'b0;
+            wbready <= 1'b0;
         end
-        else if (exu_rvalid & ~rvalid)
+        else if (exu_rvalid & ~rvalid & ~cah_valid)
             wbaddr <= exu_wbaddr;
-        else if (lsu_rready & rvalid)
-            wbvalid <= 1'b1;
-        else if (wbu_valid & wbu_ready)
-            wbvalid <= 1'b0; 
+        else if ((lsu_rready & rvalid) | (rsame & rready))
+            wbready <= 1'b1;
+        else if (wbu_ready & wbu_valid)
+            wbready <= 1'b0; 
     end
 
 endmodule
