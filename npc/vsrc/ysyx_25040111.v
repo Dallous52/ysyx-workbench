@@ -93,8 +93,7 @@ module ysyx_25040111(
     wire exu_wvalid,    exu_wready;
     wire lsu_wready,    lsu_wvalid;
     wire lsu_rready,    lsu_rvalid;
-    wire wbu_avalid,    wbu_aready; // from arbiter
-    wire wbu_evalid,    wbu_eready; // from exu
+    wire reg_aready,    reg_eready; // to reg
 
     wire jpc_ready; // from exu
 
@@ -156,9 +155,9 @@ module ysyx_25040111(
     wire                ea_rsign;
     wire [4:0]          ea_wbaddr;
 
-    // arbiter <==> wbu
-    wire [31:0]         aw_data;
-    wire [4:0]          aw_addr;
+    // arbiter <==> reg
+    wire [31:0]         ar_data;
+    wire [4:0]          ar_addr;
 
 //-----------------------------------------------------------------
 // MODULE INSTANCES
@@ -216,10 +215,9 @@ module ysyx_25040111(
         .exu_rmask  (ea_rmask    ),
         .exu_rsign  (ea_rsign    ),
         .exu_wbaddr (ea_wbaddr   ),
-        .wbu_valid  (wbu_avalid  ),
-        .wbu_ready  (wbu_aready  ),
-        .wbu_raddr  (aw_addr     ),
-        .wbu_rdata  (aw_data     ),
+        .reg_ready  (reg_aready  ),
+        .reg_raddr  (ar_addr     ),
+        .reg_rdata  (ar_data     ),
         .exu_wvalid (exu_wvalid  ),
         .exu_wready (exu_wready  ),
         .exu_waddr  (ea_waddr    ),
@@ -308,6 +306,30 @@ module ysyx_25040111(
         .io_master_rlast   	(io_master_rlast    ),
         .io_master_rid     	(io_master_rid      )
 `endif
+    );
+    
+    // EXU    
+    ysyx_25040111_exu u_ysyx_25040111_exu(
+        .clock     	(clock      ),
+        .reset     	(reset      ),
+        .exe_valid 	(exe_valid  ),
+        .exe_ready 	(exe_ready  ),
+        .opt       	(opt        ),
+        .ard_in    	(ard_in     ),
+        .acsrd_in  	(acsrd_in   ),
+        .pc        	(de_pc      ),
+        .imm       	(imm        ),
+        .csri      	(csri       ),
+        .rs1       	(rs1        ),
+        .rs2       	(rs2        ),
+        .reg_ready 	(reg_ready  ),
+        .csr_ready 	(csr_ready  ),
+        .ardo      	(ardo       ),
+        .acsro     	(acsro      ),
+        .csro      	(csro       ),
+        .rdo       	(rdo        ),
+        .jump_pc   	(ef_jpc     ),
+        .jpc_ready 	(jpc_ready  )
     );
     
 

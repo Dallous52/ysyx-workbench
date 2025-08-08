@@ -2,13 +2,14 @@
 `define NPC_ALU 
 
 module ysyx_25040111_alu (
-    input [31:0] var1,
-    input [31:0] var2,
-    input [2:0] opt,
-    input snpc,
-    input ext,
-    input sign,
-    input negate,
+    input [31:0]    var1,
+    input [31:0]    var2,
+    input [2:0]     opt,
+    input           snpc,
+    input           ext,
+    input           sign,
+    input           negate,
+    
     output reg [31:0] res
 );
 

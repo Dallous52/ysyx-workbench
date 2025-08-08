@@ -3,7 +3,7 @@
 `define SYS_EBREAK 12'h001
 `define SYS_ECALL  12'h000
 `define SYS_MRET   12'h302
-
+mcause process
 module ysyx_25040111_system(
     input [31:7] inst,
     output [4:0] rs1,
@@ -44,7 +44,7 @@ module ysyx_25040111_system(
 
         case (inst[31:20])
             `SYS_EBREAK: opt_t = `EBREAK_INST;
-            `SYS_ECALL:  opt_t = `OPTG(`EMPTY, `PC_IM, `ADD, `JECALL, `WFS, `XXN);
+            `SYS_ECALL:  opt_t = `OPTG(`EMPTY, `PC_IM, `ADD, `EMP, `WFS, `XXN);
             `SYS_MRET:   opt_t = `OPTG(`EMPTY, `EMP, `EMPTY, `EMP, `XFS, `XXN);
             default:     opt_t = `OPT_LEN'b0;
         endcase

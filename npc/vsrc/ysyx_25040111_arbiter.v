@@ -15,10 +15,9 @@ module ysyx_25040111_arbiter(
     output          exu_rready,
     input  [1:0]    exu_rmask,
     input           exu_rsign,
-    output [31:0]   wbu_rdata,
-    output [4:0]    wbu_raddr,
-    output          wbu_ready,
-    input           wbu_valid,
+    output [31:0]   reg_rdata,
+    output [4:0]    reg_raddr,
+    output          reg_ready,
 
     input           exu_wvalid,
     input  [31:0]   exu_waddr,
@@ -55,9 +54,9 @@ module ysyx_25040111_arbiter(
 
     // exu ready
     assign exu_rready   = rready;
-    assign wbu_rdata    = rdata;
-    assign wbu_raddr    = wbaddr;
-    assign wbu_ready    = wbready;
+    assign reg_rdata    = rdata;
+    assign reg_raddr    = wbaddr;
+    assign reg_ready    = wbready;
 
     // lsu ready
     assign lsu_raddr    = ~rvalid & cah_valid ? cah_addr  : raddr;
@@ -142,9 +141,9 @@ module ysyx_25040111_arbiter(
         end
         else if (lsu_rready & rvalid)
             rdata <= lsu_rdata;
-        else if (rsame & exu_rvalid & ~rvalid & ~cah_valid)
+        else if (exu_rvalid & ~rvalid & ~cah_valid & rsame)
             rdata <= wdata;
-        else if (wbu_valid & wbu_ready)
+        else if (reg_ready)
             rvalid <= 1'b0;
     end
 
@@ -168,8 +167,8 @@ module ysyx_25040111_arbiter(
             wbaddr <= exu_wbaddr;
         else if ((lsu_rready & rvalid) | (rsame & rready))
             wbready <= 1'b1;
-        else if (wbu_ready & wbu_valid)
-            wbready <= 1'b0; 
+        else
+            wbready <= 1'b0;
     end
 
 endmodule
