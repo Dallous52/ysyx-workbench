@@ -13,8 +13,8 @@ module ysyx_25040111_idu(
     output              idu_valid,
     output              jump,
 
-    input               exe_valid,
-    output              exe_ready,
+    output              exe_valid,
+    input               exe_ready,
 
     // wire to case
     output reg [4:0]    rs1,
@@ -33,7 +33,7 @@ module ysyx_25040111_idu(
 // External Interface
 //-----------------------------------------------------------------
 
-    assign exe_ready = decode_ok;
+    assign exe_valid = decode_ok;
     assign idu_valid = ~decode_ok;
     assign jump      = ~(opt[9:8] == 2'b01) | (opt[12] & opt[15]);
     assign exe_pc    = pc;
