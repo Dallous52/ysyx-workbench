@@ -82,7 +82,7 @@ module ysyx_25040111_exu(
     wire mrd  = opt[15]     & opt[11];
     wire mwt  = eopt[15]    & eopt[10];
 
-    wire jmp  = ~(opt[9:8] == 2'b01) | (opt[12] & opt[15]);
+    wire jmp  = ~((eopt[9:8] == 2'b01) & |eopt[2:0]) | (eopt[12] & eopt[15]);
 
 //-----------------------------------------------------------------
 // MODULE INSTANCES
