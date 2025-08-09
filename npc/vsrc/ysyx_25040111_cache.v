@@ -67,6 +67,7 @@ module ysyx_25040111_cache(
     reg [31:0]  caddr;
     reg         cready;
     reg [31:0]  cdata;
+    reg         ended;
 
     wire        hit    = (ctags[index] == tag) & (cvalids[index]);
     wire        update = count == DATA_L;
@@ -100,7 +101,7 @@ module ysyx_25040111_cache(
     always @(posedge clock) begin
         if (reset)
             chvalid <= 1'b0;
-        else if (ifu_valid & ~hit & ~chvalid)
+        else if (ifu_valid & ~hit & ~chvalid & ~ended)
             chvalid <= 1'b1;
         else if (rend)
             chvalid <= 1'b0;
@@ -150,12 +151,20 @@ module ysyx_25040111_cache(
     always @(posedge clock) begin
         if (reset)
             caddr <= 0;
-        else if (ifu_valid & ~hit & ~chvalid)
+        else if (ifu_valid & ~hit & ~chvalid & ~ended)
             caddr <= {addr[31:BLOCK_Ls], {BLOCK_Ls{1'b0}}};
         else if (chready & ~chburst)
             caddr <= naddr;
+    end
+
+    // ended
+    always @(posedge clock) begin
+        if (reset)
+            ended <= 1'b0;
         else if (rend)
-            caddr <= 0;
+            ended <= 1'b1;
+        else if (ifu_ready & ifu_valid)
+            ended <= 0;
     end
 
 endmodule
