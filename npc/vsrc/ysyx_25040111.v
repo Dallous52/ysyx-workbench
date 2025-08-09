@@ -324,7 +324,7 @@ module ysyx_25040111(
     );
     
     // EXU
-    ysyx_25040111_exu u_ysyx_25040111_exu(
+    ysyx_25040111_exu u_exu(
         .clock     	(clock      ),
         .reset     	(reset      ),
         .exe_valid 	(exe_valid  ),
@@ -370,7 +370,7 @@ module ysyx_25040111(
     );
     
     // REG    
-    ysyx_25040111_reg u_ysyx_25040111_reg(
+    ysyx_25040111_reg u_reg(
         .clock   	(clock       ),
         .wen       	(reg_valid   ),
         .ren       	(de_opt[2:1] ),

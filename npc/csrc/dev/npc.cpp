@@ -11,7 +11,7 @@
 #include "VysyxSoCFull___024root.h"
 
 #define REG       (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_reg__DOT__rf)
-#define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__pc)
+#define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_idu__DOT__pc)
 #define ADDR      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
 #define INST      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__inst)
 #else
