@@ -35,8 +35,9 @@ module ysyx_25040111_idu(
 
     assign exe_valid = decode_ok;
     assign idu_valid = ~decode_ok;
-    assign jump      = ~(opt[9:8] == 2'b01) | (opt[12] & opt[15]);
+    assign jump      = (~(opt[9:8] == 2'b01) & jmp_valid) | (opt[12] & opt[15]);
     assign exe_pc    = pc;
+
 //-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
@@ -44,6 +45,8 @@ module ysyx_25040111_idu(
     reg [31:0]  inst;
     reg [31:0]  pc;
     reg         decode_ok;
+
+    wire        jmp_valid = |opt[2:0];
 
 //-----------------------------------------------------------------
 // State Machine
