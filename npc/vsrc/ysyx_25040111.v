@@ -89,11 +89,10 @@ module ysyx_25040111(
     wire icah_valid,    icah_ready;
     wire idu_valid,     idu_ready;
     wire exe_ready,     exe_valid;
-    wire exu_rvalid,    exu_rready;
-    wire exu_wvalid,    exu_wready;
+    wire exu_valid,     exu_ready;
     wire lsu_wready,    lsu_wvalid;
     wire lsu_rready,    lsu_rvalid;
-    wire reg_aready,    reg_eready; // to reg
+    wire reg_valid,     csr_valid;
 
     wire jpc_ready; // from exu
 
@@ -109,16 +108,17 @@ module ysyx_25040111(
     wire [31:0]         de_imm;
     wire [`OPT_HIGH:0]  de_opt;
     wire [4:0]          de_ard;
+    wire [11:0]         de_awcsr;
 
     // idu <==> csr | reg
     wire [4:0]          dr_ars1,
                         dr_ars2;
+    wire [11:0]         ds_arcsr;
 
     // csr | reg <==> exu
     wire [31:0]         re_rs1,
                         re_rs2;
-    wire [31:0]         se_csr1,
-                        se_csr2;
+    wire [31:0]         se_csr;
 
     // idu <==> ifu
     wire                df_jump;
@@ -147,17 +147,24 @@ module ysyx_25040111(
     wire                al_burst;
 
     // exu <==> arbiter
-    wire [31:0]         ea_waddr;
-    wire [31:0]         ea_raddr;
+    wire                ea_men;
+    wire [4:0]          ea_ard;
+    wire [31:0]         ea_rd;
+    wire                ea_gen;
+    wire [11:0]         ea_acsr;
+    wire [31:0]         ea_csr;
+    wire                ea_sen;
+    wire                ea_write;
     wire [31:0]         ea_wdata;
-    wire [1:0]          ea_wmask, 
-                        ea_rmask;
+    wire [31:0]         ea_addr;
+    wire [1:0]          ea_mask; 
     wire                ea_rsign;
-    wire [4:0]          ea_wbaddr;
 
-    // arbiter <==> reg
+    // arbiter <==> reg | csr
     wire [31:0]         ar_data;
     wire [4:0]          ar_addr;
+    wire [31:0]         as_data;
+    wire [11:0]         as_addr;
 
 //-----------------------------------------------------------------
 // MODULE INSTANCES
@@ -209,33 +216,41 @@ module ysyx_25040111(
         .cah_data   (ac_data     ),
         .cah_burst  (ca_burst    ),
         .cah_rlen   (ca_rlen     ),
-        .exu_rvalid (exu_rvalid  ),
-        .exu_rready (exu_rready  ),
-        .exu_raddr  (ea_raddr    ),
-        .exu_rmask  (ea_rmask    ),
-        .exu_rsign  (ea_rsign    ),
-        .exu_wbaddr (ea_wbaddr   ),
-        .reg_ready  (reg_aready  ),
-        .reg_raddr  (ar_addr     ),
-        .reg_rdata  (ar_data     ),
-        .exu_wvalid (exu_wvalid  ),
-        .exu_wready (exu_wready  ),
-        .exu_waddr  (ea_waddr    ),
+        .exu_valid  (exu_valid   ),
+        .exu_ready  (exu_ready   ),
+        .exu_men    (ea_men      ),
+        .exu_ard    (ea_ard      ),
+        .exu_rd     (ea_rd       ),
+        .exu_gen    (ea_gen      ),
+        .exu_acsr   (ea_acsr     ),
+        .exu_csr    (ea_csr      ),
+        .exu_sen    (ea_sen      ),
+        .exu_write  (ea_write    ),
         .exu_wdata  (ea_wdata    ),
-        .exu_wmask  (ea_wmask    ),
+        .exu_addr   (ea_addr     ),
+        .exu_mask   (ea_mask     ),
+        .exu_rsign  (ea_rsign    ),
         .lsu_rvalid (lsu_rvalid  ),
         .lsu_rready (lsu_rready  ),
         .lsu_rdata  (la_rdata    ),
         .lsu_raddr  (al_raddr    ),
-        .lsu_rmask  (al_rmask    ),
         .lsu_rlen   (al_rlen     ),
         .lsu_burst  (al_burst    ),
+        .lsu_rsign  (al_rsign    ),
+        .lsu_rmask  (al_rmask    ),
         .lsu_wvalid (lsu_wvalid  ),
         .lsu_wready (lsu_wready  ),
         .lsu_wdata  (al_wdata    ),
+        .lsu_waddr  (al_waddr    ),
         .lsu_wmask  (al_wmask    ),
-        .lsu_waddr  (al_waddr    )
+        .reg_valid  (reg_valid   ),
+        .csr_valid  (csr_valid   ),
+        .reg_data   (ar_data     ),
+        .csr_data   (as_data     ),
+        .reg_addr   (ar_addr     ),
+        .csr_addr   (as_addr     )
     );
+    
 
     // IDU
     ysyx_25040111_idu u_idu(
@@ -247,13 +262,13 @@ module ysyx_25040111(
         .jump      	(df_jump     ),
         .exe_ready 	(exe_ready   ),
         .exe_valid 	(exe_valid   ),
-        .rs1       	(rs1         ),
-        .rs2       	(rs2         ),
-        .rd        	(rd          ),
-        .imm       	(imm         ),
-        .opt       	(opt         ),
-        .csr1      	(csr1        ),
-        .csr2      	(csr2        ),
+        .rs1       	(dr_ars1     ),
+        .rs2       	(dr_ars2     ),
+        .rd        	(de_ard      ),
+        .imm       	(de_imm      ),
+        .opt       	(de_opt      ),
+        .csr1      	(de_awcsr    ),
+        .csr2      	(ds_arcsr    ),
         .idu_pc     (fd_pc       ),
         .exe_pc     (de_pc       )
     );
@@ -308,29 +323,52 @@ module ysyx_25040111(
 `endif
     );
     
-    // EXU    
+    // EXU
     ysyx_25040111_exu u_ysyx_25040111_exu(
         .clock     	(clock      ),
         .reset     	(reset      ),
         .exe_valid 	(exe_valid  ),
         .exe_ready 	(exe_ready  ),
-        .opt       	(opt        ),
-        .ard_in    	(ard_in     ),
-        .acsrd_in  	(acsrd_in   ),
+        .opt       	(de_opt     ),
+        .ard_in    	(de_ard     ),
+        .acsrd_in  	(de_awcsr   ),
         .pc        	(de_pc      ),
-        .imm       	(imm        ),
-        .csri      	(csri       ),
-        .rs1       	(rs1        ),
-        .rs2       	(rs2        ),
-        .reg_ready 	(reg_ready  ),
-        .csr_ready 	(csr_ready  ),
-        .ardo      	(ardo       ),
-        .acsro     	(acsro      ),
-        .csro      	(csro       ),
-        .rdo       	(rdo        ),
+        .imm       	(de_imm     ),
+        .csri      	(se_csr     ),
+        .rs1       	(re_rs1     ),
+        .rs2       	(re_rs2     ),
+        .abt_valid 	(exu_valid  ),
+        .abt_ready 	(exu_ready  ),
+        .abt_men   	(ea_men     ),
+        .abt_ard   	(ea_ard     ),
+        .abt_rd    	(ea_rd      ),
+        .abt_gen   	(ea_gen     ),
+        .abt_acsr  	(ea_acsr    ),
+        .abt_csr   	(ea_csr     ),
+        .abt_sen   	(ea_sen     ),
+        .abt_write 	(ea_write   ),
+        .abt_wdata 	(ea_wdata   ),
+        .abt_addr  	(ea_addr    ),
+        .abt_mask  	(ea_mask    ),
+        .abt_rsign 	(ea_rsign   ),
         .jump_pc   	(ef_jpc     ),
         .jpc_ready 	(jpc_ready  )
     );
+    
+    // CSR
+    wire ren = de_opt[11] & de_opt[15];
+    ysyx_25040111_csr u_csr(
+        .clock 	    (clock      ),
+        .reset 	    (reset      ),
+        .wen   	    (csr_valid  ),
+        .ren   	    (ren        ),
+        .waddr 	    (as_addr    ),
+        .wdata 	    (as_data    ),
+        .raddr 	    (ds_arcsr   ),
+        .jtype 	    (4'b0       ),
+        .rdata 	    (se_csr     )
+    );
+    
     
 
 endmodule

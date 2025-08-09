@@ -9,21 +9,23 @@ module ysyx_25040111_arbiter(
     input           cah_burst,
     input  [7:0]    cah_rlen,
 
-    input           exu_rvalid,
-    input  [31:0]   exu_raddr,
-    input  [4:0]    exu_wbaddr,
-    output          exu_rready,
-    input  [1:0]    exu_rmask,
-    input           exu_rsign,
-    output [31:0]   reg_rdata,
-    output [4:0]    reg_raddr,
-    output          reg_ready,
+    input           exu_valid,
+    output          exu_ready,
+    input           exu_men,
 
-    input           exu_wvalid,
-    input  [31:0]   exu_waddr,
-    output          exu_wready,
+    input  [4:0]    exu_ard,
+    input  [31:0]   exu_rd,
+    input           exu_gen,
+
+    input  [11:0]   exu_acsr,
+    input  [31:0]   exu_csr,
+    input           exu_sen,
+
+    input           exu_write,
     input  [31:0]   exu_wdata,
-    input  [1:0]    exu_wmask,
+    input  [31:0]   exu_addr,
+    input  [1:0]    exu_mask, 
+    input           exu_rsign,
 
     output          lsu_rvalid,
     input           lsu_rready,
@@ -38,27 +40,27 @@ module ysyx_25040111_arbiter(
     input           lsu_wready,
     output [31:0]   lsu_wdata,
     output [31:0]   lsu_waddr,
-    output [1:0]    lsu_wmask
+    output [1:0]    lsu_wmask,
+
+    output          reg_valid,
+    output          csr_valid,
+    output [31:0]   reg_data,
+    output [31:0]   csr_data,
+    output [4:0]    reg_addr,
+    output [11:0]   csr_addr
 );
 
 //-----------------------------------------------------------------
 // External Interface
 //-----------------------------------------------------------------
 
-    // exu write
+    // lsu write
     assign lsu_wvalid   = wvalid;
-    assign exu_wready   = wready;
     assign lsu_waddr    = waddr;
     assign lsu_wdata    = wdata;
     assign lsu_wmask    = wmask;
 
-    // exu ready
-    assign exu_rready   = rready;
-    assign reg_rdata    = rdata;
-    assign reg_raddr    = wbaddr;
-    assign reg_ready    = wbready;
-
-    // lsu ready
+    // lsu read
     assign lsu_raddr    = ~rvalid & cah_valid ? cah_addr  : raddr;
     assign lsu_rvalid   = ~rvalid & cah_valid ? cah_valid : rvalid;
     assign lsu_rlen     = ~rvalid & cah_valid ? cah_rlen  : 8'b0;
@@ -66,109 +68,102 @@ module ysyx_25040111_arbiter(
     assign lsu_rmask    = ~rvalid & cah_valid ? 2'b11     : rmask;
     assign lsu_rsign    = ~rvalid & cah_valid ? 1'b0      : rsign;
 
+    // write back
+    assign exu_ready    = ~working;
+    assign reg_valid    = (rvalid   & lsu_rvalid & lsu_rready) |
+                          (~exu_men & exu_ready  & exu_valid & exu_gen);
+    assign reg_data     = rvalid ? lsu_rdata : exu_rd;
+    assign reg_addr     = rvalid ? wbaddr    : exu_ard;
+    
+    assign csr_valid    = exu_ready & exu_valid & exu_sen;
+    assign csr_data     = exu_csr;
+    assign csr_addr     = exu_acsr;
+
     // cache inst fetch
-    assign cah_ready = ~rvalid & cah_valid ? lsu_rready   : 1'b0;
-    assign cah_data  = ~rvalid & cah_valid ? lsu_rdata    : 0;
+    assign cah_ready    = ~rvalid & cah_valid ? lsu_rready   : 1'b0;
+    assign cah_data     = ~rvalid & cah_valid ? lsu_rdata    : 0;
 
 //-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
 
+    reg         working;
+
     reg         wvalid;
-    reg         wready;
     reg [31:0]  waddr;
     reg [31:0]  wdata;
     reg [1:0]   wmask;
 
     reg         rvalid;
-    reg         rready;
     reg [31:0]  raddr;
-    reg [31:0]  rdata;
     reg [1:0]   rmask;
     reg         rsign;
     reg [4:0]   wbaddr;
-    reg         wbready;
 
-    wire        wsame = (lsu_waddr == raddr) & rvalid;
-    wire        rsame = (lsu_raddr == waddr) & wvalid;
+    wire        wok     = lsu_wready & lsu_wvalid;
 
 //-----------------------------------------------------------------
 // State Machine
 //-----------------------------------------------------------------
 
-    // wvalid waddr wdata
+    // working
+    always @(posedge clock) begin
+        if (reset)
+            working <= 1'b0;
+        else if (exu_valid & exu_ready & exu_men)
+            working <= 1'b1;
+        else if (reg_valid | wok)
+            working <= 1'b0;
+    end
+
+    // memory write paramter copy
     always @(posedge clock) begin
         if (reset) begin
-            wvalid <= 1'b0;
-            waddr  <= 0;
-            wdata  <= 0;            
-            wmask  <= 2'b0;
+            waddr <= 0;
+            wdata <= 0;
+            wmask <= 2'b0;
         end
-        else if (exu_wvalid & ~wvalid & ~wsame) begin
+        else if (exu_valid & exu_ready & exu_men & exu_write) begin
+            waddr <= exu_addr;
+            wdata <= exu_wdata;
+            wmask <= exu_mask;
+        end
+    end
+
+    // wvalid
+    always @(posedge clock) begin
+        if (reset)
+            wvalid <= 1'b0;
+        else if (exu_valid & exu_ready & exu_men & exu_write)
             wvalid <= 1'b1;
-            waddr  <= exu_waddr;
-            wdata  <= exu_wdata;
-            wmask  <= exu_wmask;
-        end
-        else if (lsu_wready & wvalid)
+        else if (wok)
             wvalid <= 1'b0;
     end
 
-    // wready
-    always @(posedge clock) begin
-        if (reset)
-            wready <= 1'b0;
-        else if (exu_wvalid & ~wvalid & ~wsame)
-            wready <= 1'b1;
-        else 
-            wready <= 1'b0;
-    end
-
-    // rvalid raddr rdata
+    // memory ready paramter copy
     always @(posedge clock) begin
         if (reset) begin
-            rvalid <= 1'b0;
-            raddr  <= 0;
-            rdata  <= 0;
-            rsign  <= 1'b0;
-            rmask  <= 2'b0;
-        end
-        else if (exu_rvalid & ~rvalid & ~cah_valid & ~rsame) begin
-            rvalid <= 1'b1;
-            raddr  <= exu_raddr;
-            rmask  <= exu_rmask;
-            rsign  <= exu_rsign; 
-        end
-        else if (lsu_rready & rvalid)
-            rdata <= lsu_rdata;
-        else if (exu_rvalid & ~rvalid & ~cah_valid & rsame)
-            rdata <= wdata;
-        else if (reg_ready)
-            rvalid <= 1'b0;
-    end
-
-    // rready
-    always @(posedge clock) begin
-        if (reset)
-            rready <= 1'b0;
-        else if (exu_rvalid & ~rvalid & ~cah_valid)
-            rready <= 1'b1;
-        else 
-            rready <= 1'b0;
-    end
-
-    // wbaddr wbready
-    always @(posedge clock) begin
-        if (reset) begin
+            raddr <= 0;
+            rmask <= 2'b0;
+            rsign <= 1'b0;
             wbaddr <= 5'b0;
-            wbready <= 1'b0;
         end
-        else if (exu_rvalid & ~rvalid & ~cah_valid)
-            wbaddr <= exu_wbaddr;
-        else if ((lsu_rready & rvalid) | (rsame & rready))
-            wbready <= 1'b1;
-        else
-            wbready <= 1'b0;
+        else if (exu_valid & exu_ready & exu_men & ~exu_write) begin
+            raddr <= exu_addr;
+            rmask <= exu_mask;
+            rsign <= exu_rsign;
+            wbaddr <= exu_ard;
+        end
+    end
+
+    // rvalid
+    always @(posedge clock) begin
+        if (reset)
+            rvalid <= 1'b0;
+        else if (exu_valid & exu_ready & exu_men & ~exu_write)
+            rvalid <= 1'b1;
+        else if (lsu_rready & lsu_rvalid)
+            rvalid <= 1'b0;
     end
 
 endmodule

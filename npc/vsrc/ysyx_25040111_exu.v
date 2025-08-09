@@ -18,28 +18,26 @@ module ysyx_25040111_exu(
     input  [31:0]           rs1,
     input  [31:0]           rs2,
 
-    output                  reg_ready,
-    output                  csr_ready,
-    output [4:0]            ardo,
-    output [11:0]           acsro,
-    output [31:0]           csro,
-    output [31:0]           rdo,
+    output                  abt_valid,
+    input                   abt_ready,
+    output                  abt_men,
 
+    output [4:0]            abt_ard,
+    output [31:0]           abt_rd,
+    output                  abt_gen,
+
+    output [11:0]           abt_acsr,
+    output [31:0]           abt_csr,
+    output                  abt_sen,
+
+    output                  abt_write,
+    output [31:0]           abt_wdata,
+    output [31:0]           abt_addr,
+    output [1:0]            abt_mask, 
+    output                  abt_rsign,
+    
     output [31:0]           jump_pc,
-    output                  jpc_ready,
-
-    input                   wready,
-    output                  wvalid,
-    output [31:0]           wdata,
-    output [31:0]           waddr,
-    output [1:0]            wmask, 
-
-    input                   rready,
-    output                  rvalid,
-    output [31:0]           raddr,
-    output [4:0]            wbaddr,
-    output [1:0]            rmask,
-    output                  rsign
+    output reg              jpc_ready
 );
 
 //-----------------------------------------------------------------
@@ -47,37 +45,44 @@ module ysyx_25040111_exu(
 //-----------------------------------------------------------------
     
     assign exe_ready = ~exe_ok;
-    assign jpc_ready = exe_ok;
+    assign abt_valid = exe_ok;
+    assign abt_men   = |abt_mask & ~eopt[15];
 
-    assign ardo      = ard;
-    assign rdo       = mwt ? csri : rd;
-    assign reg_ready = exe_ok & eopt[0];
+    assign abt_ard   = ard;
+    assign abt_rd    = mwt ? csri : rd;
+    assign abt_gen   = eopt[0];
 
-    assign acsro     = acsrd;
-    assign csro      = rd;
-    assign csr_ready = exe_ok & mwt;
+    assign abt_acsr  = acsrd;
+    assign abt_csr   = rd;
+    assign abt_sen   = mwt;
 
-    assign rsign     = eopt[14];
+    assign abt_rsign = eopt[14];
+    assign abt_write = ~eopt[12];
+    assign abt_addr  = rd;
+    assign abt_wdata = rs2;
+    assign abt_mask  = eopt[11:10];
 
 //-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
     
-    reg [31:0]  var1, var2; // alu args
-    reg [31:0]  arg1, arg2; // pc  args
-    reg [4:0]   ard;
-    reg [11:0]  acsrd;
-    reg         exe_ok;
+    reg [31:0]          var1, var2; // alu args
+    reg [31:0]          arg1, arg2; // pc  args
+    reg [4:0]           ard;
+    reg [11:0]          acsrd;
+    reg                 exe_ok;
 
-    reg [`OPT_HIGH: 0] eopt;
-    reg [4:0]          rlock;
+    reg [`OPT_HIGH: 0]  eopt;
+    reg [4:0]           rlock;
+    
+    wire[31:0]          rd;
 
     wire snpc = opt[12:10] == 3'b100;
-    wire mtp  = opt[12]  & opt[15];
-    wire mrd  = opt[15]  & opt[11];
-    wire mwt  = eopt[15] & eopt[10];
+    wire mtp  = opt[12]     & opt[15];
+    wire mrd  = opt[15]     & opt[11];
+    wire mwt  = eopt[15]    & eopt[10];
 
-    wire [31:0] rd;
+    wire jmp  = ~(opt[9:8] == 2'b01) | (opt[12] & opt[15]);
 
 //-----------------------------------------------------------------
 // MODULE INSTANCES
@@ -87,11 +92,11 @@ module ysyx_25040111_exu(
     ysyx_25040111_alu u_alu(
         .var1 	(var1       ),
         .var2 	(var2       ),
-        .opt  	(opt[7:5]   ),
+        .opt  	(eopt[7:5]  ),
         .snpc   (snpc       ),
-        .ext    (opt[13]    ),
-        .sign   (opt[14]    ),
-        .negate (opt[15]    ),
+        .ext    (eopt[13]   ),
+        .sign   (eopt[14]   ),
+        .negate (eopt[15]   ),
         .res  	(rd         )
     );
 
@@ -99,13 +104,23 @@ module ysyx_25040111_exu(
 // State Machine
 //-----------------------------------------------------------------
 
+    // jpc_ready
+    always @(posedge clock) begin
+        if (reset)
+            jpc_ready <= 1'b0;
+        else if (exe_ready & exe_valid & jmp)
+            jpc_ready <= 1'b1;
+        else
+            jpc_ready <= 1'b0;
+    end
+
     // exe_ok
     always @(posedge clock) begin
         if (reset)
             exe_ok <= 1'b0;
         else if (exe_ready & exe_valid)
             exe_ok <= 1'b1;
-        else if ()
+        else if (abt_ready & abt_valid)
             exe_ok <= 1'b0;
     end
 
