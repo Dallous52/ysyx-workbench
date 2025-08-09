@@ -371,15 +371,15 @@ module ysyx_25040111(
     
     // REG    
     ysyx_25040111_reg u_ysyx_25040111_reg(
-        .clock   	(clock      ),
-        .wen       	(reg_valid  ),
-        .ren       	(de_opt[2:1]),
-        .wdata   	(ar_data    ),
-        .waddr   	(ar_addr    ),
-        .ars1     	(dr_ars1    ),
-        .ars2     	(dr_ars2    ),
-        .rs1       	(re_rs1     ),
-        .rs2       	(re_rs2     )
+        .clock   	(clock       ),
+        .wen       	(reg_valid   ),
+        .ren       	(de_opt[2:1] ),
+        .wdata   	(ar_data     ),
+        .waddr   	(ar_addr[3:0]),
+        .ars1     	(dr_ars1[3:0]),
+        .ars2     	(dr_ars2[3:0]),
+        .rs1       	(re_rs1      ),
+        .rs2       	(re_rs2      )
     );
     
 endmodule
