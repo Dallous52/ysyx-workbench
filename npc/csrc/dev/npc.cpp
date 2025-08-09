@@ -13,7 +13,7 @@
 #define REG       (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_reg__DOT__rf)
 #define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_idu__DOT__pc)
 #define ADDR      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
-#define INST      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__inst)
+#define INST      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_idu__DOT__inst)
 #else
 #include "Vysyx_25040111.h"
 #include "Vysyx_25040111___024root.h"
@@ -44,7 +44,7 @@ typedef Vysyx_25040111 mtop;
 // #define ITRACE
 // #define FTRACE
 // #define MTRACE
-#define DIFFTEST
+// #define DIFFTEST
 
 static mtop top;
 static VerilatedVcdC *vtrace = nullptr;
