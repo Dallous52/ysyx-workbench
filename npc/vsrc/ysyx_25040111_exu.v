@@ -129,8 +129,7 @@ module ysyx_25040111_exu(
     // alu var1 var2
     always @(posedge clock) begin
         if (reset) begin
-            var1 <= 0;
-            var2 <= 0;
+            rdo <= 0;
         end
         else if (exe_ready & exe_valid) begin
             rdo <= rd;
@@ -171,7 +170,7 @@ module ysyx_25040111_exu(
         .negate (eopt[15]   ),
         .res  	(rd         )
     );
-    
+
 //-----------------------------------------------------------------
 // Combinational Logic
 //-----------------------------------------------------------------
