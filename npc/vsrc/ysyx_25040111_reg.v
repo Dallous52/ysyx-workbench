@@ -19,7 +19,10 @@ module ysyx_25040111_reg (
     end
 
     // 读取
-    assign rs1 = ren[0] ? rf[ars1] : 0;
-    assign rs2 = ren[1] ? rf[ars2] : 0;
+    wire   eq1 = ars1 == waddr;
+    wire   eq2 = ars2 == waddr;
+
+    assign rs1 = ren[0] ? wen & eq1 ? wdata : rf[ars1] : 0;
+    assign rs2 = ren[1] ? wen & eq2 ? wdata : rf[ars2] : 0;
 
 endmodule

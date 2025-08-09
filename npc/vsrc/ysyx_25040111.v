@@ -356,12 +356,12 @@ module ysyx_25040111(
     );
     
     // CSR
-    wire ren = de_opt[11] & de_opt[15];
+    wire csr_ren = de_opt[11] & de_opt[15];
     ysyx_25040111_csr u_csr(
         .clock 	    (clock      ),
         .reset 	    (reset      ),
         .wen   	    (csr_valid  ),
-        .ren   	    (ren        ),
+        .ren   	    (csr_ren    ),
         .waddr 	    (as_addr    ),
         .wdata 	    (as_data    ),
         .raddr 	    (ds_arcsr   ),
@@ -369,6 +369,17 @@ module ysyx_25040111(
         .rdata 	    (se_csr     )
     );
     
+    // REG    
+    ysyx_25040111_reg u_ysyx_25040111_reg(
+        .clock   	(clock      ),
+        .wen       	(reg_valid  ),
+        .ren       	(de_opt[2:1]),
+        .wdata   	(ar_data    ),
+        .waddr   	(ar_addr    ),
+        .ars1     	(dr_ars1    ),
+        .ars2     	(dr_ars2    ),
+        .rs1       	(re_rs1     ),
+        .rs2       	(re_rs2     )
+    );
     
-
 endmodule

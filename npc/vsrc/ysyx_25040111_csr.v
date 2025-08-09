@@ -40,8 +40,10 @@ module ysyx_25040111_csr(
     // MEPC	    0x341
     // MCAUSE	0x342
     // 读取
+    wire forward = (waddr == raddr) & wen;
+
     always @(*) begin
-        if (ren) begin
+        if (ren & ~forward) begin
             case (raddr)
                 12'h300: rdata = csr[0];
                 12'h305: rdata = csr[1];
@@ -51,7 +53,10 @@ module ysyx_25040111_csr(
                 12'hF12: rdata = marchid;
                 default: rdata = 32'b0;
             endcase
-        end else begin
+        end
+        else if (ren & forward)
+            rdata = wdata;
+        else begin
             rdata = 32'b0;
         end
     end

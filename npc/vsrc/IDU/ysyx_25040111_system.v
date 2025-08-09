@@ -3,7 +3,7 @@
 `define SYS_EBREAK 12'h001
 `define SYS_ECALL  12'h000
 `define SYS_MRET   12'h302
-mcause process
+// mcause process
 module ysyx_25040111_system(
     input [31:7] inst,
     output [4:0] rs1,
