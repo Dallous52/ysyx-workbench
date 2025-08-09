@@ -40,7 +40,7 @@ void nvboard_free();
 typedef Vysyx_25040111 mtop; 
 #endif // RUNSOC
 
-// #define EN_TRACE
+#define EN_TRACE
 #define ITRACE
 // #define FTRACE
 // #define MTRACE
