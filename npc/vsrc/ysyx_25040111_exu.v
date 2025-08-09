@@ -163,11 +163,11 @@ module ysyx_25040111_exu(
     ysyx_25040111_alu u_alu(
         .var1 	(var1       ),
         .var2 	(var2       ),
-        .opt  	(eopt[7:5]  ),
+        .opt  	(opt[7:5]   ),
         .snpc   (snpc       ),
-        .ext    (eopt[13]   ),
-        .sign   (eopt[14]   ),
-        .negate (eopt[15]   ),
+        .ext    (opt[13]    ),
+        .sign   (opt[14]    ),
+        .negate (opt[15]    ),
         .res  	(rd         )
     );
 
