@@ -49,16 +49,16 @@ module ysyx_25040111_exu(
     assign abt_men   = |abt_mask & ~eopt[15];
 
     assign abt_ard   = ard;
-    assign abt_rd    = mwt ? csri : rd;
+    assign abt_rd    = mwt ? csri : rdo;
     assign abt_gen   = eopt[0];
 
     assign abt_acsr  = acsrd;
-    assign abt_csr   = rd;
+    assign abt_csr   = rdo;
     assign abt_sen   = mwt;
 
     assign abt_rsign = eopt[14];
     assign abt_write = ~eopt[12];
-    assign abt_addr  = rd;
+    assign abt_addr  = rdo;
     assign abt_wdata = rs2;
     assign abt_mask  = eopt[11:10];
 
@@ -66,8 +66,12 @@ module ysyx_25040111_exu(
 // Register / Wire
 //-----------------------------------------------------------------
     
+    // wire to case
     reg [31:0]          var1, var2; // alu args
+    // wire to case
+
     reg [31:0]          arg1, arg2; // pc  args
+    reg [31:0]          rdo;
     reg [4:0]           ard;
     reg [11:0]          acsrd;
     reg                 exe_ok;
@@ -83,22 +87,6 @@ module ysyx_25040111_exu(
     wire mwt  = eopt[15]    & eopt[10];
 
     wire jmp  = ~((opt[9:8] == 2'b01) & |opt[2:0]) | (opt[12] & opt[15]);
-
-//-----------------------------------------------------------------
-// MODULE INSTANCES
-//-----------------------------------------------------------------
-
-    // ALU
-    ysyx_25040111_alu u_alu(
-        .var1 	(var1       ),
-        .var2 	(var2       ),
-        .opt  	(eopt[7:5]  ),
-        .snpc   (snpc       ),
-        .ext    (eopt[13]   ),
-        .sign   (eopt[14]   ),
-        .negate (eopt[15]   ),
-        .res  	(rd         )
-    );
 
 //-----------------------------------------------------------------
 // State Machine
@@ -145,15 +133,7 @@ module ysyx_25040111_exu(
             var2 <= 0;
         end
         else if (exe_ready & exe_valid) begin
-            case (opt[4:3])
-                2'b00: begin var1 <= imm; var2 <= 0;    end
-                2'b01: begin var1 <= pc;  var2 <= imm;  end
-                2'b10: begin 
-                    var1 <= rs1; 
-                    var2 <= mrd ? csri : rs2; 
-                end
-                2'b11: begin var1 <= rs1; var2 <= imm;  end
-            endcase
+            rdo <= rd;
         end
     end
 
@@ -163,8 +143,8 @@ module ysyx_25040111_exu(
             arg1 <= 0;
             arg2 <= 0;
         end
-        else if (jpc_ready) begin
-            case (eopt[9:8])
+        else if (exe_ready & exe_valid) begin
+            case (opt[9:8])
                 2'b00: begin 
                     arg1 <= mtp ? csri  : pc;  
                     arg2 <= mtp ? 32'd0 : rd[0] ? imm : 32'd4;  
@@ -177,10 +157,38 @@ module ysyx_25040111_exu(
     end
 
 //-----------------------------------------------------------------
+// MODULE INSTANCES
+//-----------------------------------------------------------------
+
+    // ALU
+    ysyx_25040111_alu u_alu(
+        .var1 	(var1       ),
+        .var2 	(var2       ),
+        .opt  	(eopt[7:5]  ),
+        .snpc   (snpc       ),
+        .ext    (eopt[13]   ),
+        .sign   (eopt[14]   ),
+        .negate (eopt[15]   ),
+        .res  	(rd         )
+    );
+    
+//-----------------------------------------------------------------
 // Combinational Logic
 //-----------------------------------------------------------------
 
     assign jump_pc = arg1 + arg2;
+
+    always @(*) begin
+        case (opt[4:3])
+            2'b00: begin var1 = imm; var2 = 0;    end
+            2'b01: begin var1 = pc;  var2 = imm;  end
+            2'b10: begin 
+                var1 = rs1; 
+                var2 = mrd ? csri : rs2; 
+            end
+            2'b11: begin var1 = rs1; var2 = imm;  end
+        endcase
+    end
 
 `ifndef YOSYS_STA
     // EBREADK
