@@ -141,8 +141,8 @@ module ysyx_25040111_exu(
     // alu var1 var2
     always @(posedge clock) begin
         if (reset) begin
-            var1 = 0;
-            var2 = 0;
+            var1 <= 0;
+            var2 <= 0;
         end
         else if (exe_ready & exe_valid) begin
             case (opt[4:3])
