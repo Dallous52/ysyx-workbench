@@ -163,8 +163,8 @@ module ysyx_25040111_exu(
             arg1 <= 0;
             arg2 <= 0;
         end
-        else if (exe_ready & exe_valid) begin
-            case (opt[9:8])
+        else if (jpc_ready) begin
+            case (eopt[9:8])
                 2'b00: begin 
                     arg1 <= mtp ? csri  : pc;  
                     arg2 <= mtp ? 32'd0 : rd[0] ? imm : 32'd4;  
