@@ -17,8 +17,8 @@ word_t sdram_read_expr(word_t addr)
     int row = addr / 2048;
     int idx = addr % 1024;
     int group = idx >= 512;
-    printf(ANSI_FMT("[read sdram] bank:%d  row:0x%04x  idx:%d;  data:%04x %04x\n", ANSI_FG_CYAN),
-    		bank, row, idx, sdram[bank][row][idx][1][group], sdram[bank][row][idx][0][group]);
+    // printf(ANSI_FMT("[read sdram] bank:%d  row:0x%04x  idx:%d;  data:%04x %04x\n", ANSI_FG_CYAN),
+    // 		bank, row, idx, sdram[bank][row][idx][1][group], sdram[bank][row][idx][0][group]);
     return ((uint32_t)sdram[bank][row][idx][1][group] << 16) | (uint32_t)sdram[bank][row][idx][0][group];
 }
 
