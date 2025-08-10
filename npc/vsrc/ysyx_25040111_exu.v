@@ -94,7 +94,7 @@ module ysyx_25040111_exu(
     wire mtp  = opt[12]     & opt[15];
     wire mrd  = opt[15]     & opt[11];
     wire mwt  = eopt[15]    & eopt[10];
-    wire lock = rlock[ard_in[3:0]] & rlock[ar1_in[3:0]] & rlock[ar2_in[3:0]];
+    wire lock = rlock[ard_in[3:0]] | rlock[ar1_in[3:0]] | rlock[ar2_in[3:0]];
     wire jmp  = ~((opt[9:8] == 2'b01) & |opt[2:0]) | (opt[12] & opt[15]);
     wire load = opt[12] & |opt[11:10] & ~opt[15];
 //-----------------------------------------------------------------
