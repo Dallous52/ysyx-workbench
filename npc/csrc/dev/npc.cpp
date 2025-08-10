@@ -153,6 +153,7 @@ static word_t inst_get(word_t addr)
     return sdram_read_expr(addr);
 
   assert(1);
+  return 0;
 }
 
 
