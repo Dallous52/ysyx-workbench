@@ -27,6 +27,8 @@ module ysyx_25040111_arbiter(
     input  [1:0]    exu_mask, 
     input           exu_rsign,
 
+    input  [31:0]   exu_pc,
+
     output          lsu_rvalid,
     input           lsu_rready,
     input  [31:0]   lsu_rdata,
@@ -105,6 +107,25 @@ module ysyx_25040111_arbiter(
 //-----------------------------------------------------------------
 // State Machine
 //-----------------------------------------------------------------
+
+    // ************************************************************
+    // apc get info to debug
+    reg [31:0]  apc, endpc, addr, endaddr;
+    always @(posedge clock) begin
+        if (reset) begin
+            endpc <= 0;            
+            apc <= 0;
+        end
+        else if (exu_valid & exu_ready) begin
+            apc <= exu_pc;
+            addr <= exu_addr;
+        end
+        else if (reg_valid | wtok) begin
+            endpc <= exu_valid & exu_ready ? exu_pc : apc;
+            endaddr <= exu_valid & exu_ready ? exu_addr : addr;        
+        end
+    end
+    // ************************************************************
 
     // working
     always @(posedge clock) begin

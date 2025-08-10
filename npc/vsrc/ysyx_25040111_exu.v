@@ -39,7 +39,8 @@ module ysyx_25040111_exu(
     output [31:0]           jump_pc,
     output reg              jpc_ready,
 
-    input                   abt_finish
+    input                   abt_finish,
+    output [31:0]           abt_pc
 );
 
 //-----------------------------------------------------------------
@@ -63,6 +64,8 @@ module ysyx_25040111_exu(
     assign abt_addr  = rdo;
     assign abt_wdata = rs2;
     assign abt_mask  = eopt[11:10];
+    
+    assign abt_pc = epc;
 
 //-----------------------------------------------------------------
 // Register / Wire
@@ -75,6 +78,7 @@ module ysyx_25040111_exu(
     reg [31:0]          arg1, arg2; // pc  args
     reg [31:0]          rdo;
     reg [31:0]          csro;
+    reg [31:0]          epc;
     reg [4:0]           ard;
     reg [11:0]          acsrd;
     reg                 exe_ok;
@@ -115,17 +119,19 @@ module ysyx_25040111_exu(
             exe_ok <= 1'b0;
     end
 
-    // ard acsrd eopt
+    // ard acsrd eopt epc
     always @(posedge clock) begin
         if (reset) begin
             eopt <= 0;
             ard <= 5'b0;
             acsrd <= 12'b0;
+            epc <= 0;
         end
         else if (exe_ready & exe_valid) begin
             ard <= ard_in;
             acsrd <= acsrd_in;
             eopt <= opt;
+            epc <= pc;
         end
     end
 

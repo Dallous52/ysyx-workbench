@@ -4,6 +4,7 @@
 #include "svdpi.h"
 #include "tpdef.h"
 #include "util.h"
+#include <cassert>
 
 #ifdef RUNSOC
 #include "nvboard.h"
@@ -13,7 +14,6 @@
 #define REG       (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_reg__DOT__rf)
 #define CPU_PC    (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_idu__DOT__pc)
 #define ADDR      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__lsu_addr)
-#define INST      (top.rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__u_idu__DOT__inst)
 #else
 #include "Vysyx_25040111.h"
 #include "Vysyx_25040111___024root.h"
@@ -21,7 +21,6 @@
 #define REG       (top.rootp->ysyx_25040111__DOT__u_reg__DOT__rf)
 #define CPU_PC    (top.rootp->pc)
 #define ADDR      (top.rootp->ysyx_25040111__DOT__lsu_addr)
-#define INST      (top.rootp->inst)
 #endif // RUNSOC
 
 #include <cstdio>
@@ -44,7 +43,7 @@ typedef Vysyx_25040111 mtop;
 #define ITRACE
 // #define FTRACE
 // #define MTRACE
-// #define DIFFTEST
+#define DIFFTEST
 
 static mtop top;
 static VerilatedVcdC *vtrace = nullptr;
@@ -102,15 +101,15 @@ void npc_init(bool vcd, int argc, char** argv)
 }
 
 
-static void ftrace(paddr_t pc, paddr_t call)
+static void ftrace(paddr_t pc, paddr_t call, word_t inst)
 {
   const char *ftrace_get_name(paddr_t addr);
 
   static const uint8_t jal = 0b1101111;
   static const uint8_t jalr = 0b1100111;
 
-  uint8_t opt = BITS(INST, 6, 0);
-  uint8_t rd = BITS(INST, 11, 7);
+  uint8_t opt = BITS(inst, 6, 0);
+  uint8_t rd = BITS(inst, 11, 7);
 
   if (opt == jal || opt == jalr)
   {
@@ -141,6 +140,19 @@ static void print_exe_info(word_t tpc, word_t tinst, char *logbuf, size_t buflen
   p++;
 
   disassemble(p, logbuf + buflen - p, tpc, (uint8_t *)&tinst, 4);
+}
+
+
+// get instruct
+word_t sdram_read_expr(word_t addr);
+static word_t inst_get(word_t addr)
+{
+  if (addr >= FLASH_START && addr < FLASH_END)
+    return paddr_read(addr, 4);
+  else if (addr >= SDRAM_START && addr < SDRAM_END)
+    return sdram_read_expr(addr);
+
+  assert(1);
 }
 
 
@@ -179,26 +191,27 @@ int cpu_exec(uint64_t steps)
 
     if (CPU_PC != currpc)
     {
-      cycle_counter(INST, cyc_num);
+      word_t inst = inst_get(CPU_PC);
+      cycle_counter(inst, cyc_num);
       cyc_num = 0;
       inst_num++;
 
 #if defined(EN_TRACE) && defined(ITRACE)
-      print_exe_info(currpc, INST, logbuf, 128);
+      print_exe_info(CPU_PC, inst, logbuf, 128);
       printf("%s\n", logbuf);
 #endif // ITRACE
 
 #if defined(EN_TRACE) && defined(FTRACE)
-      ftrace(currpc, CPU_PC);
+      ftrace(currpc, CPU_PC, inst);
 #endif // FTRACE
 
       check_wp();
 
 #ifdef DIFFTEST
       // printf("currpc : %08x\n", currpc);
-      if (device_visit(ADDR, INST))
+      if (device_visit(ADDR, inst))
         difftest_nop(currpc + 4);
-      else if (!difftest_step(currpc))
+      else if (!difftest_step(CPU_PC))
         npc_stat = NPC_STOP;
 #endif // DIFFTEST
     }

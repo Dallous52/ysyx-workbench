@@ -9,7 +9,6 @@
 
 // virtual device
 static uint8_t pmem[MSIZE] __attribute((aligned(4096))) = {};
-static uint8_t pflash[512]  __attribute((aligned(4096))) = {};
 
 // img size
 static size_t imgsize = 0;
@@ -149,8 +148,6 @@ bool pmem_init(const char* fbin)
   {
     printf(ANSI_FMT("load img file failed.\n", ANSI_FG_RED));
   }
-  // "/home/dallous/Documents/ysyx-workbench/am-kernels/kernels/hello/build/hello-riscv32e-ysyxsoc.bin"
-  // load_binary(fbin, pflash);
 
   return true;
 }

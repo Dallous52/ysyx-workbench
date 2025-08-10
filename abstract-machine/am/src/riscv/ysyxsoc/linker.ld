@@ -20,7 +20,7 @@ SECTIONS {
     KEEP(*(ssbl.boot))
     KEEP(*(ssbl*))
     _ssbl_ed = .;
-  } > sram AT> flash
+  } > sdram AT> flash
 
   _code_start = LOADADDR(.text);
   .text : ALIGN(4) { /* 代码段 */
@@ -86,6 +86,6 @@ SECTIONS {
   _heap_start = 0xa2000000;
   _heap_end = 0xa4000000;
 
-  _stack_top = 0x0f000800;
+  _stack_top = 0x0f000000;
   _stack_pointer = 0x0f002000;
 }

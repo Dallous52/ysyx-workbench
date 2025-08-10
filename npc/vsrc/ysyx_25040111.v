@@ -153,6 +153,7 @@ module ysyx_25040111(
     wire                ea_gen;
     wire [11:0]         ea_acsr;
     wire [31:0]         ea_csr;
+    wire [31:0]         ea_pc;
     wire                ea_sen;
     wire                ea_write;
     wire [31:0]         ea_wdata;
@@ -230,6 +231,7 @@ module ysyx_25040111(
         .exu_addr   (ea_addr     ),
         .exu_mask   (ea_mask     ),
         .exu_rsign  (ea_rsign    ),
+        .exu_pc     (ea_pc       ),
         .lsu_rvalid (lsu_rvalid  ),
         .lsu_rready (lsu_rready  ),
         .lsu_rdata  (la_rdata    ),
@@ -353,7 +355,8 @@ module ysyx_25040111(
         .abt_rsign 	(ea_rsign   ),
         .jump_pc   	(ef_jpc     ),
         .jpc_ready 	(jpc_ready  ),
-        .abt_finish (reg_valid  )
+        .abt_finish (reg_valid  ),
+        .abt_pc     (ea_pc      )
     );
     
     // CSR
