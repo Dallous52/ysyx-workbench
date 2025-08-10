@@ -165,7 +165,7 @@ module ysyx_25040111_exu(
         end
         else if (exe_ready & exe_valid & load) begin
             abt_wait <= 1'b1;
-            rlock <= ard;
+            rlock <= ard_in;
         end
         else if (abt_wait & abt_finish)
             abt_wait <= 1'b0;
