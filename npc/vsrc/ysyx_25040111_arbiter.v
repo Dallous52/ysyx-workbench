@@ -69,7 +69,7 @@ module ysyx_25040111_arbiter(
     assign lsu_rsign    = ~rvalid & cah_valid ? 1'b0      : rsign;
 
     // write back
-    assign exu_ready    = ~working;
+    assign exu_ready    = ~working & ~(cah_valid & exu_men & ~exu_write);
     assign reg_valid    = (rvalid   & lsu_rvalid & lsu_rready) |
                           (~exu_men & exu_ready  & exu_valid & exu_gen);
     assign reg_data     = rvalid ? lsu_rdata : exu_rd;
@@ -100,7 +100,7 @@ module ysyx_25040111_arbiter(
     reg         rsign;
     reg [4:0]   wbaddr;
 
-    wire        wok     = lsu_wready & lsu_wvalid;
+    wire        wtok     = lsu_wready & lsu_wvalid;
 
 //-----------------------------------------------------------------
 // State Machine
@@ -112,7 +112,7 @@ module ysyx_25040111_arbiter(
             working <= 1'b0;
         else if (exu_valid & exu_ready & exu_men)
             working <= 1'b1;
-        else if (reg_valid | wok)
+        else if (reg_valid | wtok)
             working <= 1'b0;
     end
 
@@ -136,7 +136,7 @@ module ysyx_25040111_arbiter(
             wvalid <= 1'b0;
         else if (exu_valid & exu_ready & exu_men & exu_write)
             wvalid <= 1'b1;
-        else if (wok)
+        else if (wtok)
             wvalid <= 1'b0;
     end
 
