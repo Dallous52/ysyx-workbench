@@ -172,11 +172,9 @@ int cpu_exec(uint64_t steps)
 
   uint64_t step_ok = 0;
   char logbuf[128] = {};
-
+  currpc = CPU_PC;
   while (steps--)
   {
-    currpc = CPU_PC;
-
 #ifdef RUNSOC
     nvboard_renew();
 #endif
@@ -192,6 +190,8 @@ int cpu_exec(uint64_t steps)
 
     if (CPU_PC != currpc)
     {
+      currpc = CPU_PC;
+      
       word_t inst = inst_get(CPU_PC);
       cycle_counter(inst, cyc_num);
       cyc_num = 0;
