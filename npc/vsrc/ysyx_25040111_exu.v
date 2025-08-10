@@ -10,8 +10,6 @@ module ysyx_25040111_exu(
     output                  exe_ready,
     input  [`OPT_HIGH:0]    opt,
     input  [4:0]            ard_in,
-    input  [4:0]            ar2_in,
-    input  [4:0]            ar1_in,
     input  [11:0]           acsrd_in,
     input  [31:0]           pc,
     input  [31:0]           imm,
@@ -94,7 +92,7 @@ module ysyx_25040111_exu(
     wire mtp  = opt[12]     & opt[15];
     wire mrd  = opt[15]     & opt[11];
     wire mwt  = eopt[15]    & eopt[10];
-    wire lock = ((ard_in == rlock) | (ar1_in == rlock) | (ar2_in == rlock)) & abt_wait;
+    wire lock = (ard_in == rlock) & abt_wait;
     wire jmp  = ~((opt[9:8] == 2'b01) & |opt[2:0]) | (opt[12] & opt[15]);
     wire load = opt[12] & |opt[11:10] & ~opt[15];
 //-----------------------------------------------------------------
