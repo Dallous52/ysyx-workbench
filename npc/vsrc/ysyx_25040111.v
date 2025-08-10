@@ -333,6 +333,8 @@ module ysyx_25040111(
         .exe_ready 	(exe_ready  ),
         .opt       	(de_opt     ),
         .ard_in    	(de_ard     ),
+        .ar1_in     (dr_ars1    ),
+        .ar2_in     (dr_ars2    ),
         .acsrd_in  	(de_awcsr   ),
         .pc        	(de_pc      ),
         .imm       	(de_imm     ),
@@ -356,6 +358,7 @@ module ysyx_25040111(
         .jump_pc   	(ef_jpc     ),
         .jpc_ready 	(jpc_ready  ),
         .abt_finish (reg_valid  ),
+        .abt_frd    (ar_addr    ),
         .abt_pc     (ea_pc      )
     );
     

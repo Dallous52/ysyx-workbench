@@ -10,6 +10,8 @@ module ysyx_25040111_exu(
     output                  exe_ready,
     input  [`OPT_HIGH:0]    opt,
     input  [4:0]            ard_in,
+    input  [4:0]            ar1_in,
+    input  [4:0]            ar2_in,
     input  [11:0]           acsrd_in,
     input  [31:0]           pc,
     input  [31:0]           imm,
@@ -40,6 +42,7 @@ module ysyx_25040111_exu(
     output reg              jpc_ready,
 
     input                   abt_finish,
+    input  [4:0]            abt_frd,
     output [31:0]           abt_pc
 );
 
@@ -83,8 +86,7 @@ module ysyx_25040111_exu(
     reg [11:0]          acsrd;
     reg                 exe_ok;
     reg [`OPT_HIGH: 0]  eopt;
-    reg                 abt_wait;
-    reg [4:0]           rlock;
+    reg [15:0]          rlock;
     
     wire[31:0]          rd;
 
@@ -92,7 +94,7 @@ module ysyx_25040111_exu(
     wire mtp  = opt[12]     & opt[15];
     wire mrd  = opt[15]     & opt[11];
     wire mwt  = eopt[15]    & eopt[10];
-    wire lock = (ard_in == rlock) & abt_wait;
+    wire lock = rlock[ard_in[3:0]] & rlock[ar1_in[3:0]] & rlock[ar2_in[3:0]];
     wire jmp  = ~((opt[9:8] == 2'b01) & |opt[2:0]) | (opt[12] & opt[15]);
     wire load = opt[12] & |opt[11:10] & ~opt[15];
 //-----------------------------------------------------------------
@@ -166,18 +168,16 @@ module ysyx_25040111_exu(
         end
     end
 
-    // abt_wait rlock
+    // rlock
     always @(posedge clock) begin
         if (reset) begin
-            abt_wait <= 1'b0;
-            rlock <= 5'b0;
+            rlock <= 16'b0;
         end
         else if (exe_ready & exe_valid & load) begin
-            abt_wait <= 1'b1;
-            rlock <= ard_in;
+            rlock[ard_in[3:0]] <= 1'b1;
         end
-        else if (abt_wait & abt_finish)
-            abt_wait <= 1'b0;
+        else if (abt_finish)
+            rlock[abt_frd[3:0]] <= 1'b0;
     end
 
 //-----------------------------------------------------------------
