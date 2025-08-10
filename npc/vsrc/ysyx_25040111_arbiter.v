@@ -125,7 +125,9 @@ module ysyx_25040111_arbiter(
             endpc <= 0;            
             endaddr <= 0;
         end
-        else if (reg_valid | wtok) begin
+        else if (((~exu_men & exu_ready  & exu_valid) | 
+                  (rvalid & lsu_rvalid & lsu_rready)) | wtok) 
+        begin
             endpc <= exu_valid & exu_ready ? exu_pc : apc;
             endaddr <= exu_valid & exu_ready ? exu_addr : addr;        
         end
