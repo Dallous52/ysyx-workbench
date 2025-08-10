@@ -51,7 +51,7 @@ module ysyx_25040111_exu(
     assign abt_men   = |abt_mask & ~eopt[15];
 
     assign abt_ard   = ard;
-    assign abt_rd    = mwt ? csri : rdo;
+    assign abt_rd    = mwt ? csro : rdo;
     assign abt_gen   = eopt[0];
 
     assign abt_acsr  = acsrd;
@@ -74,6 +74,7 @@ module ysyx_25040111_exu(
 
     reg [31:0]          arg1, arg2; // pc  args
     reg [31:0]          rdo;
+    reg [31:0]          csro;
     reg [4:0]           ard;
     reg [11:0]          acsrd;
     reg                 exe_ok;
@@ -128,13 +129,15 @@ module ysyx_25040111_exu(
         end
     end
 
-    // alu var1 var2
+    // rdo csro
     always @(posedge clock) begin
         if (reset) begin
             rdo <= 0;
+            csro <= 0;
         end
         else if (exe_ready & exe_valid) begin
             rdo <= rd;
+            csro <= csri;
         end
     end
 
