@@ -150,7 +150,7 @@ static word_t inst_get(word_t addr)
   if (addr >= FLASH_START && addr < FLASH_END)
     return paddr_read(addr, 4);
   else if (addr >= SDRAM_START && addr < SDRAM_END)
-    return sdram_read_expr(addr);
+    return sdram_read_expr(addr - SDRAM_START);
 
   assert(1);
   return 0;
@@ -190,8 +190,8 @@ int cpu_exec(uint64_t steps)
     if (CPU_PC != currpc)
     {
       currpc = CPU_PC;
-      
       word_t inst = inst_get(CPU_PC);
+
       cycle_counter(inst, cyc_num);
       cyc_num = 0;
       inst_num++;
