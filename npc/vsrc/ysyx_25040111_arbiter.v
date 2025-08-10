@@ -55,21 +55,21 @@ module ysyx_25040111_arbiter(
 //-----------------------------------------------------------------
 
     // lsu write
-    assign lsu_wvalid   = wvalid;
+    assign lsu_wvalid   = ~working & cah_valid ? 1'b0 : wvalid;
     assign lsu_waddr    = waddr;
     assign lsu_wdata    = wdata;
     assign lsu_wmask    = wmask;
 
     // lsu read
-    assign lsu_raddr    = ~rvalid & cah_valid ? cah_addr  : raddr;
-    assign lsu_rvalid   = ~rvalid & cah_valid ? cah_valid : rvalid;
-    assign lsu_rlen     = ~rvalid & cah_valid ? cah_rlen  : 8'b0;
-    assign lsu_burst    = ~rvalid & cah_valid ? cah_burst : 1'b0;
-    assign lsu_rmask    = ~rvalid & cah_valid ? 2'b11     : rmask;
-    assign lsu_rsign    = ~rvalid & cah_valid ? 1'b0      : rsign;
+    assign lsu_raddr    = ~working & cah_valid ? cah_addr  : raddr;
+    assign lsu_rvalid   = ~working & cah_valid ? cah_valid : rvalid;
+    assign lsu_rlen     = ~working & cah_valid ? cah_rlen  : 8'b0;
+    assign lsu_burst    = ~working & cah_valid ? cah_burst : 1'b0;
+    assign lsu_rmask    = ~working & cah_valid ? 2'b11     : rmask;
+    assign lsu_rsign    = ~working & cah_valid ? 1'b0      : rsign;
 
     // write back
-    assign exu_ready    = ~working & ~(cah_valid & exu_men & ~exu_write);
+    assign exu_ready    = ~working & ~(cah_valid & exu_men);
     assign reg_valid    = (rvalid   & lsu_rvalid & lsu_rready) |
                           (~exu_men & exu_ready  & exu_valid & exu_gen);
     assign reg_data     = rvalid ? lsu_rdata : exu_rd;
@@ -80,8 +80,8 @@ module ysyx_25040111_arbiter(
     assign csr_addr     = exu_acsr;
 
     // cache inst fetch
-    assign cah_ready    = ~rvalid & cah_valid ? lsu_rready   : 1'b0;
-    assign cah_data     = ~rvalid & cah_valid ? lsu_rdata    : 0;
+    assign cah_ready    = ~working & cah_valid ? lsu_rready   : 1'b0;
+    assign cah_data     = ~working & cah_valid ? lsu_rdata    : 0;
 
 //-----------------------------------------------------------------
 // Register / Wire
