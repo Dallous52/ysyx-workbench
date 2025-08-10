@@ -65,7 +65,7 @@ module ysyx_25040111_exu(
     assign abt_rsign = eopt[14];
     assign abt_write = ~eopt[12];
     assign abt_addr  = rdo;
-    assign abt_wdata = rs2;
+    assign abt_wdata = wdata;
     assign abt_mask  = eopt[11:10];
     
     assign abt_pc = epc;
@@ -81,6 +81,7 @@ module ysyx_25040111_exu(
     reg [31:0]          arg1, arg2; // pc  args
     reg [31:0]          rdo;
     reg [31:0]          csro;
+    reg [31:0]          wdata;
     reg [31:0]          epc;
     reg [4:0]           ard;
     reg [11:0]          acsrd;
@@ -142,10 +143,12 @@ module ysyx_25040111_exu(
         if (reset) begin
             rdo <= 0;
             csro <= 0;
+            wdata <= 0;
         end
         else if (exe_ready & exe_valid) begin
             rdo <= rd;
             csro <= csri;
+            wdata <= rs2;
         end
     end
 
