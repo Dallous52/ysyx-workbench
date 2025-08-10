@@ -186,7 +186,6 @@ int cpu_exec(uint64_t steps)
       vtrace->dump(sim_time++);
 
     cyc_num++;
-    printf("PC: %08x\n", CPU_PC);
 
     if (CPU_PC != currpc)
     {
