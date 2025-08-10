@@ -37,14 +37,16 @@ module ysyx_25040111_exu(
     output                  abt_rsign,
     
     output [31:0]           jump_pc,
-    output reg              jpc_ready
+    output reg              jpc_ready,
+
+    input                   abt_finish
 );
 
 //-----------------------------------------------------------------
 // External Interface
 //-----------------------------------------------------------------
     
-    assign exe_ready = ~exe_ok;
+    assign exe_ready = ~exe_ok & ~lock;
     assign abt_valid = exe_ok;
     assign abt_men   = |abt_mask & ~eopt[15];
 
@@ -75,8 +77,8 @@ module ysyx_25040111_exu(
     reg [4:0]           ard;
     reg [11:0]          acsrd;
     reg                 exe_ok;
-
     reg [`OPT_HIGH: 0]  eopt;
+    reg                 abt_wait;
     reg [4:0]           rlock;
     
     wire[31:0]          rd;
@@ -85,9 +87,9 @@ module ysyx_25040111_exu(
     wire mtp  = opt[12]     & opt[15];
     wire mrd  = opt[15]     & opt[11];
     wire mwt  = eopt[15]    & eopt[10];
-
+    wire lock = (ard_in == rlock) & abt_wait;
     wire jmp  = ~((opt[9:8] == 2'b01) & |opt[2:0]) | (opt[12] & opt[15]);
-
+    wire load = opt[12] & |opt[11:10] & ~opt[15];
 //-----------------------------------------------------------------
 // State Machine
 //-----------------------------------------------------------------
@@ -153,6 +155,20 @@ module ysyx_25040111_exu(
                 2'b11: begin arg1 <= rs1; arg2 <= imm;    end
             endcase
         end
+    end
+
+    // abt_wait rlock
+    always @(posedge clock) begin
+        if (reset) begin
+            abt_wait <= 1'b0;
+            rlock <= 5'b0;
+        end
+        else if (exe_ready & exe_valid & load) begin
+            abt_wait <= 1'b1;
+            rlock <= ard;
+        end
+        else if (abt_wait & abt_finish)
+            abt_wait <= 1'b0;
     end
 
 //-----------------------------------------------------------------

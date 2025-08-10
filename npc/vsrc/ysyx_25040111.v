@@ -352,7 +352,8 @@ module ysyx_25040111(
         .abt_mask  	(ea_mask    ),
         .abt_rsign 	(ea_rsign   ),
         .jump_pc   	(ef_jpc     ),
-        .jpc_ready 	(jpc_ready  )
+        .jpc_ready 	(jpc_ready  ),
+        .abt_finish (reg_valid  )
     );
     
     // CSR
