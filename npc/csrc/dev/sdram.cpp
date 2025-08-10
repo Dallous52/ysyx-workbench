@@ -12,14 +12,14 @@ static uint16_t sdram[4][8192][512][2][2] __attribute((aligned(4096))) = {};
 
 word_t sdram_read_expr(word_t addr)
 {
-    addr = addr / 4;
-    int bank = (addr / 512) % 4;
-    int row = addr / 2048;
-    int idx = addr % 512;
-    int group = (addr % 1024) >= 512;
+    uint32_t col  = BITS(addr, 11, 2);
+    uint32_t bank = BITS(addr, 13, 12); 
+    uint32_t row  = BITS(addr, 26, 14);    
+    int group = BITS(col, 9, 9);
+
     // printf(ANSI_FMT("[read sdram] bank:%d  row:0x%04x  idx:%d;  data:%04x %04x\n", ANSI_FG_CYAN),
     // 		bank, row, idx, sdram[bank][row][idx][1][group], sdram[bank][row][idx][0][group]);
-    return ((uint32_t)sdram[bank][row][idx][1][group] << 16) | (uint32_t)sdram[bank][row][idx][0][group];
+    return ((uint32_t)sdram[bank][row][col][1][group] << 16) | (uint32_t)sdram[bank][row][col][0][group];
 }
 
 
