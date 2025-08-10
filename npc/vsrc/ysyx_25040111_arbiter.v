@@ -113,12 +113,17 @@ module ysyx_25040111_arbiter(
     reg [31:0]  apc, endpc, addr, endaddr;
     always @(posedge clock) begin
         if (reset) begin
-            endpc <= 0;            
             apc <= 0;
+            addr <= 0;
         end
         else if (exu_valid & exu_ready) begin
             apc <= exu_pc;
             addr <= exu_addr;
+        end
+        
+        if (reset) begin
+            endpc <= 0;            
+            endaddr <= 0;
         end
         else if (reg_valid | wtok) begin
             endpc <= exu_valid & exu_ready ? exu_pc : apc;
