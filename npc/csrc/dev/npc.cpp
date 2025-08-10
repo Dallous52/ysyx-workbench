@@ -178,7 +178,7 @@ int cpu_exec(uint64_t steps)
 #ifdef RUNSOC
     nvboard_renew();
 #endif
-
+    printf("PC: %08x\n", CPU_PC);
     top.clock = 0; top.eval();
     if (vtrace && vstart)
       vtrace->dump(sim_time++);
