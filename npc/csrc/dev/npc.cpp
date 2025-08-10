@@ -31,17 +31,17 @@
 #define VCD_PATH  "/home/dallous/Documents/ysyx-workbench/npc/waveform/waveform.vcd"
 
 #ifdef RUNSOC
-typedef VysyxSoCFull mtop; 
+typedef VysyxSoCFull mtop;
 
 void nvboard_renew();
 void nvboard_initialize(VysyxSoCFull *top);
 void nvboard_free();
 #else
-typedef Vysyx_25040111 mtop; 
+typedef Vysyx_25040111 mtop;
 #endif // RUNSOC
 
 #define EN_TRACE
-#define ITRACE
+// #define ITRACE
 // #define FTRACE
 // #define MTRACE
 // #define DIFFTEST
@@ -72,11 +72,11 @@ int64_t cyc_num = 0;
 
 
 // initialize npc resource
-void npc_init(bool vcd, int argc, char** argv) 
+void npc_init(bool vcd, int argc, char** argv)
 {
 	Verilated::commandArgs(argc, argv);
-   
-	if (vcd) 
+
+	if (vcd)
 	{
 		// set vcd
 		Verilated::traceEverOn(true);
@@ -87,7 +87,7 @@ void npc_init(bool vcd, int argc, char** argv)
 
 #ifdef RUNSOC
   nvboard_initialize(&top);
-#endif 
+#endif
 
   // reset
 	top.reset = 1;
@@ -102,7 +102,7 @@ void npc_init(bool vcd, int argc, char** argv)
 }
 
 
-static void ftrace(paddr_t pc, paddr_t call) 
+static void ftrace(paddr_t pc, paddr_t call)
 {
   const char *ftrace_get_name(paddr_t addr);
 
@@ -112,7 +112,7 @@ static void ftrace(paddr_t pc, paddr_t call)
   uint8_t opt = BITS(INST, 6, 0);
   uint8_t rd = BITS(INST, 11, 7);
 
-  if (opt == jal || opt == jalr) 
+  if (opt == jal || opt == jalr)
   {
     const char *dst = ftrace_get_name(call);
     const char *src = ftrace_get_name(pc);
@@ -128,7 +128,7 @@ static void ftrace(paddr_t pc, paddr_t call)
 
 
 // print execute infomation
-static void print_exe_info(word_t tpc, word_t tinst, char *logbuf, size_t buflen) 
+static void print_exe_info(word_t tpc, word_t tinst, char *logbuf, size_t buflen)
 {
   char *p = logbuf;
   p += snprintf(p, buflen, "0x%08x: ", tpc);
@@ -147,11 +147,11 @@ static void print_exe_info(word_t tpc, word_t tinst, char *logbuf, size_t buflen
 // execute
 void pmc_print();
 void cycle_counter(word_t inst, int64_t ncyc);
-int cpu_exec(uint64_t steps) 
+int cpu_exec(uint64_t steps)
 {
   void check_wp();
 
-  if (npc_stat != NPC_RUN) 
+  if (npc_stat != NPC_RUN)
   {
     printf(ANSI_FMT("Program is stop!\n", ANSI_FG_MAGENTA));
     return 0;
@@ -160,7 +160,7 @@ int cpu_exec(uint64_t steps)
   uint64_t step_ok = 0;
   char logbuf[128] = {};
 
-  while (steps--) 
+  while (steps--)
   {
     currpc = CPU_PC;
 
@@ -174,10 +174,10 @@ int cpu_exec(uint64_t steps)
     top.clock = 1; top.eval();
     if (vtrace && vstart)
       vtrace->dump(sim_time++);
-    
+
     cyc_num++;
 
-    if (CPU_PC != currpc) 
+    if (CPU_PC != currpc)
     {
       cycle_counter(INST, cyc_num);
       cyc_num = 0;
@@ -203,7 +203,7 @@ int cpu_exec(uint64_t steps)
 #endif // DIFFTEST
     }
 
-    switch (npc_stat) 
+    switch (npc_stat)
     {
     case NPC_RUN:
       step_ok++;
@@ -227,9 +227,9 @@ int cpu_exec(uint64_t steps)
 
 
 // print regiestor
-void reg_print() 
+void reg_print()
 {
-  for (int i = 0; i < ARRLEN(regs); ++i) 
+  for (int i = 0; i < ARRLEN(regs); ++i)
   {
     int j = i + 4;
     for (; i < j; ++i)
@@ -241,9 +241,9 @@ void reg_print()
 
 
 // get regiestor value
-word_t reg_get_value(char *s, bool *success) 
+word_t reg_get_value(char *s, bool *success)
 {
-  if (s == NULL || success == NULL) 
+  if (s == NULL || success == NULL)
   {
     if (success == NULL)
       return 0;
@@ -252,20 +252,20 @@ word_t reg_get_value(char *s, bool *success)
     return 0;
   }
 
-  if (strcmp(s, "pc") == 0) 
+  if (strcmp(s, "pc") == 0)
   {
     *success = true;
     return CPU_PC;
   }
 
   int i = 0;
-  for (; i < ARRLEN(regs); i++) 
+  for (; i < ARRLEN(regs); i++)
   {
     if (strcmp(s, regs[i]) == 0)
       break;
   }
 
-  if (i == ARRLEN(regs)) 
+  if (i == ARRLEN(regs))
   {
     *success = false;
     return 0;
@@ -277,10 +277,10 @@ word_t reg_get_value(char *s, bool *success)
 
 
 // get reg values
-void reg_value(word_t *regbuf) 
+void reg_value(word_t *regbuf)
 {
   int i = 0;
-  for (; i < ARRLEN(regs); i++) 
+  for (; i < ARRLEN(regs); i++)
   {
     regbuf[i] = REG[i];
   }
@@ -288,7 +288,7 @@ void reg_value(word_t *regbuf)
 
 
 const char *reg_name(int idx) {
-  if (idx >= 0 && idx < 16) 
+  if (idx >= 0 && idx < 16)
   {
     return regs[idx];
   }
@@ -297,9 +297,9 @@ const char *reg_name(int idx) {
 
 
 // free npc resource
-void npc_free() 
+void npc_free()
 {
-  if (vtrace) 
+  if (vtrace)
   {
     vtrace->close();
     delete vtrace;
@@ -307,17 +307,17 @@ void npc_free()
 
 #ifdef RUNSOC
   nvboard_quit();
-#endif 
+#endif
 }
 
 
 // inst: ebreak
-extern "C" void ebreak(int code) 
+extern "C" void ebreak(int code)
 {
-	if (code) 
+	if (code)
 	{
 		npc_stat = NPC_ABORT;
-		if (code == 9) 
+		if (code == 9)
 		{
 			char logbuf[128] = {};
 			print_exe_info(CPU_PC, paddr_read(CPU_PC, 4), logbuf, 128);
@@ -328,7 +328,7 @@ extern "C" void ebreak(int code)
 }
 
 
-extern "C" int pmem_read(int raddr) 
+extern "C" int pmem_read(int raddr)
 {
 	paddr_t address = raddr & ~0x3u;
 	word_t rdata = 0;
@@ -341,7 +341,7 @@ extern "C" int pmem_read(int raddr)
 #if defined(EN_TRACE) && defined(MTRACE)
 	// mtrace memory read
 	word_t minst = paddr_read(CPU_PC, 4);
-	if (raddr != CPU_PC && 0b0000011 == BITS(minst, 6, 0)) 
+	if (raddr != CPU_PC && 0b0000011 == BITS(minst, 6, 0))
 	{
 		printf(ANSI_FMT("[read mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x;\n",
 						ANSI_FG_CYAN),
@@ -354,15 +354,15 @@ extern "C" int pmem_read(int raddr)
 }
 
 
-static void pmem_write_core(paddr_t address, int wdata, char wmask) 
+static void pmem_write_core(paddr_t address, int wdata, char wmask)
 {
 	// 读出当前地址上的完整 4 字节
 	word_t wdata_ = paddr_read(address, 4);
 
 	// 使用掩码逐字节合成新的数据
-	for (int i = 0; i < 4; ++i) 
+	for (int i = 0; i < 4; ++i)
 	{
-		if (wmask & (1 << i)) 
+		if (wmask & (1 << i))
 		{
 			// 替换 old_data 中对应字节为 wdata 中对应的字节
 			uint8_t byte = ((word_t)wdata >> (8 * i)) & 0xFF;
@@ -376,7 +376,7 @@ static void pmem_write_core(paddr_t address, int wdata, char wmask)
 }
 
 
-extern "C" void pmem_write(int waddr, int wdata, char wmask) 
+extern "C" void pmem_write(int waddr, int wdata, char wmask)
 {
 	// 总是往地址为`waddr & ~0x3u`的4字节按写掩码`wmask`写入`wdata`
 	// `wmask`中每比特表示`wdata`中1个字节的掩码
@@ -387,7 +387,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 #if defined(EN_TRACE) && defined(MTRACE)
 	// mtrace memory write
 	word_t minst = paddr_read(CPU_PC, 4);
-	if (0b0100011 == BITS(minst, 6, 0)) 
+	if (0b0100011 == BITS(minst, 6, 0))
 	{
 		printf(ANSI_FMT("[write mem] address: 0x%08x; data: 0x%08x; pc: 0x%08x; "
 						"mask: 0x%02x;\n",
@@ -396,7 +396,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 	}
 #endif // MTRACE
 
-	if (likely(in_pmem(address))) 
+	if (likely(in_pmem(address)))
 	{
 		pmem_write_core(address, wdata, wmask);
 		return;
