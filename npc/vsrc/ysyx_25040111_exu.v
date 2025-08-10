@@ -176,7 +176,8 @@ module ysyx_25040111_exu(
         else if (exe_ready & exe_valid & load) begin
             rlock[ard_in[3:0]] <= 1'b1;
         end
-        else if (abt_finish)
+        
+        if (abt_finish)
             rlock[abt_frd[3:0]] <= 1'b0;
     end
 
