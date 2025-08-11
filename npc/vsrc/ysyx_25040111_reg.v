@@ -10,25 +10,22 @@ module ysyx_25040111_reg (
     output [31:0] rs2
 );
 
-    // 我们只保存寄存器 1..15（共 15 个 32-bit 单元），索引映射为 [0..14] 对应 arch[1..15]
-    reg  [31:0] rf [14:0];
+    reg  [31:0] rf [15:0];
 
-    // 写：若写地址为 1..15 才写入
     always @(posedge clock) begin
-        if (wen && (waddr != 4'd0)) begin
-            rf[waddr - 1] <= wdata; // waddr in 1..15 maps to rf[0..14]
-        end
+        if (wen && (waddr != 4'd0))
+            rf[waddr] <= wdata;
+        rf[0] <= 0;
     end
 
-    // forwarding 条件：只有当写入的是 1..15 且地址匹配时才前递
-    wire forward1 = (wen && (waddr != 4'd0) && (ars1 == waddr));
-    wire forward2 = (wen && (waddr != 4'd0) && (ars2 == waddr));
+    // 读口（显式 forwarding 临时信号）
+    wire forward1 = (wen && (ars1 == waddr));
+    wire forward2 = (wen && (ars2 == waddr));
 
-    // 读：若 ars == 0 直接返回常数 0，否则从 rf[ars-1] 读出
-    wire [31:0] rf_rs1 = (ars1 == 4'd0) ? 32'd0 : rf[ars1 - 1];
-    wire [31:0] rf_rs2 = (ars2 == 4'd0) ? 32'd0 : rf[ars2 - 1];
+    wire [31:0] rf_rs1 = rf[ars1];
+    wire [31:0] rf_rs2 = rf[ars2];
 
     assign rs1 = ren[0] ? (forward1 ? wdata : rf_rs1) : 32'd0;
     assign rs2 = ren[1] ? (forward2 ? wdata : rf_rs2) : 32'd0;
-    
+
 endmodule
