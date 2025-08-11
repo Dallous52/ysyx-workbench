@@ -39,7 +39,7 @@ module ysyx_25040111_exu(
     output                  abt_rsign,
     
     output [31:0]           jump_pc,
-    output reg              jpc_ready,
+    output                  jpc_ready,
 
     input                   abt_finish,
     input  [4:0]            abt_frd,
@@ -50,12 +50,13 @@ module ysyx_25040111_exu(
 // External Interface
 //-----------------------------------------------------------------
     
-    assign exe_ready = ~exe_ok & ~lock;
-    assign abt_valid = exe_ok;
-    assign abt_men   = |abt_mask & ~eopt[15];
+    assign exe_ready = ~exe_start & ~lock;
 
+    assign abt_valid = exe_end;
+    assign abt_men   = |eopt[11:10] & ~eopt[15];
+    
     assign abt_ard   = ard;
-    assign abt_rd    = mwt ? csro : rdo;
+    assign abt_rd    = mwt ? ecsr : rdo;
     assign abt_gen   = eopt[0];
 
     assign abt_acsr  = acsrd;
@@ -65,123 +66,161 @@ module ysyx_25040111_exu(
     assign abt_rsign = eopt[14];
     assign abt_write = ~eopt[12];
     assign abt_addr  = rdo;
-    assign abt_wdata = wdata;
+    assign abt_wdata = ers2;
     assign abt_mask  = eopt[11:10];
+
+    assign abt_pc    = epc;
     
-    assign abt_pc = epc;
+    assign jpc_ready = jmpc_ok;
+    assign jump_pc   = rd; 
 
 //-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
-    
-    // wire to case
-    reg [31:0]          var1, var2; // alu args
-    // wire to case
 
-    reg [31:0]          arg1, arg2; // pc  args
-    reg [31:0]          rdo;
-    reg [31:0]          csro;
-    reg [31:0]          wdata;
-    reg [31:0]          epc;
-    reg [4:0]           ard;
-    reg [11:0]          acsrd;
-    reg                 exe_ok;
-    reg [`OPT_HIGH: 0]  eopt;
-    reg [15:0]          rlock;
-    
-    wire[31:0]          rd;
+    // exu input data
+    reg  [31:0]         ers1,   ers2,   ecsr;
+    reg  [31:0]         epc,    eimm; 
+    reg  [`OPT_HIGH:0]  eopt;
+    reg  [4:0]          ard;
+    reg  [11:0]         acsrd;
 
-    wire snpc = opt[12:10] == 3'b100;
-    wire mtp  = opt[12]     & opt[15];
-    wire mrd  = opt[15]     & opt[11];
-    wire mwt  = eopt[15]    & eopt[10];
-    wire lock = rlock[ard_in[3:0]] | rlock[ar1_in[3:0]] | rlock[ar2_in[3:0]];
-    wire jmp  = ~((opt[9:8] == 2'b01) & |opt[2:0]) | (opt[12] & opt[15]);
+    // output data
+    reg  [31:0]         rdo;
+
+    // pipeline ctrl
+    reg  [15:0]         rlock;
+    reg                 exe_start;
+    reg                 exe_end;
+    reg                 jmpc_ok;
+
+    // alu paramter
+    reg  [31:0]         alu_p1, alu_p2;
+    reg  [7:1]          alu_ctrl;
+    wire [31:0]         rd;
+    
+    // read after write lock paramter
+    wire lock = |(rlock & ((16'h1 << ard_in[3:0]) |
+                           (16'h1 << ar1_in[3:0]) |
+                           (16'h1 << ar2_in[3:0])));
+
     wire load = opt[12] & |opt[11:10] & ~opt[15];
+
+    wire [15:0] ard_mask  = 16'h1 << ard_in[3:0];
+    wire [15:0] frd_mask  = 16'h1 << abt_frd[3:0];
+
+    // jump pc process
+    wire jmp  = ~((eopt[9:8] == 2'b01) & |eopt[2:0]) | (eopt[12] & eopt[15]);
+    wire mtp  = eopt[12] & eopt[15];
+    
+    wire [15:0] rlock_set = exe_ready & exe_valid & load ? rlock | ard_mask : rlock;
+    wire [15:0] rlock_nxt = abt_finish ? rlock_set & ~frd_mask : rlock_set;
+
+    // other ctrl
+    wire mwt  = eopt[15] & eopt[10];
+    wire mrd  = opt[15]  & opt[11];
+
 //-----------------------------------------------------------------
 // State Machine
 //-----------------------------------------------------------------
 
-    // jpc_ready
-    always @(posedge clock) begin
-        if (reset)
-            jpc_ready <= 1'b0;
-        else if (exe_ready & exe_valid & jmp)
-            jpc_ready <= 1'b1;
-        else
-            jpc_ready <= 1'b0;
-    end
-
-    // exe_ok
-    always @(posedge clock) begin
-        if (reset)
-            exe_ok <= 1'b0;
-        else if (exe_ready & exe_valid)
-            exe_ok <= 1'b1;
-        else if (abt_ready & abt_valid)
-            exe_ok <= 1'b0;
-    end
-
-    // ard acsrd eopt epc
+    // input data
     always @(posedge clock) begin
         if (reset) begin
-            eopt <= 0;
-            ard <= 5'b0;
-            acsrd <= 12'b0;
-            epc <= 0;
+            ers1 <= 0; ers2 <= 0; ecsr <= 0;
+            epc  <= 0; eimm <= 0;
+            eopt <= `OPT_LEN'b0;
+            ard  <= 5'b0; acsrd <= 12'b0;
         end
         else if (exe_ready & exe_valid) begin
-            ard <= ard_in;
-            acsrd <= acsrd_in;
+            ers1 <= rs1; ers2 <= rs2; ecsr <= csri;
+            epc  <= pc;  eimm <= imm;
             eopt <= opt;
-            epc <= pc;
+            ard <= ard_in; acsrd <= acsrd_in;
         end
     end
 
-    // rdo csro
+    // exe start
     always @(posedge clock) begin
-        if (reset) begin
-            rdo <= 0;
-            csro <= 0;
-            wdata <= 0;
-        end
-        else if (exe_ready & exe_valid) begin
-            rdo <= rd;
-            csro <= csri;
-            wdata <= rs2;
-        end
+        if (reset)
+            exe_start <= 1'b0;
+        else if (exe_ready & exe_valid)
+            exe_start <= 1'b1;
+        else if (exe_start & exe_end)
+            exe_start <= 1'b0;
     end
 
-    // pc arg1 arg2
+    // exe end
+    always @(posedge clock) begin
+        if (reset)
+            exe_end <= 1'b0;
+        else if (exe_start & ~exe_end)
+            exe_end <= 1'b1;
+        else if (exe_start & exe_end)
+            exe_end <= 1'b0;
+    end
+
+    // executing
     always @(posedge clock) begin
         if (reset) begin
-            arg1 <= 0;
-            arg2 <= 0;
+            alu_p1 <= 0;
+            alu_p2 <= 0;
+            alu_ctrl <= 7'b0;         
         end
         else if (exe_ready & exe_valid) begin
-            case (opt[9:8])
-                2'b00: begin 
-                    arg1 <= mtp ? csri  : pc;  
-                    arg2 <= mtp ? 32'd0 : rd[0] ? imm : 32'd4;  
+            case (opt[4:3])
+                2'b00: begin alu_p1 <= imm; alu_p2 <= 0;    end
+                2'b01: begin alu_p1 <= pc;  alu_p2 <= imm;  end
+                2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;  end
+                2'b10: begin 
+                    alu_p1 <= rs1; 
+                    alu_p2 <= mrd ? csri : rs2; 
                 end
-                2'b01: begin arg1 <= pc;  arg2 <= 32'd4;  end
-                2'b10: begin arg1 <= pc;  arg2 <= imm;    end
-                2'b11: begin arg1 <= rs1; arg2 <= imm;    end
             endcase
+            
+            alu_ctrl[7:5] <= opt[7:5];
+            alu_ctrl[4]   <= opt[12:10] == 3'b100;
+            alu_ctrl[3:1] <= opt[15:13];
+        end
+        else if (exe_start & ~exe_end) begin
+            case (eopt[9:8])
+                2'b00: begin 
+                    alu_p1 <= mtp ? ecsr  : epc;  
+                    alu_p2 <= mtp ? 32'd0 : rd[0] ? eimm : 32'd4;  
+                end
+                2'b01: begin alu_p1 <= epc;  alu_p2 <= 32'd4; end
+                2'b10: begin alu_p1 <= epc;  alu_p2 <= eimm;  end
+                2'b11: begin alu_p1 <= ers1; alu_p2 <= eimm;  end
+            endcase
+
+            alu_ctrl[7:5] <= `ADD;
+            alu_ctrl[4]   <= 1'b0;
+            alu_ctrl[3:1] <= `EMPTY;
         end
     end
 
-    // rlock
+    // rdo
     always @(posedge clock) begin
-        if (reset) begin
-            rlock <= 16'b0;
-        end
-        else if (exe_ready & exe_valid & load) begin
-            rlock[ard_in[3:0]] <= 1'b1;
-        end
-        
-        if (abt_finish)
-            rlock[abt_frd[3:0]] <= 1'b0;
+        if (reset)
+            rdo <= 0;
+        else if (exe_start & ~exe_end)
+            rdo <= rd;
+    end
+
+    // jmpc_ok
+    always @(posedge clock) begin
+        if (reset)
+            jmpc_ok <= 1'b0;
+        else if (exe_start & ~exe_end)
+            jmpc_ok <= 1'b1;
+        else if (jmpc_ok)
+            jmpc_ok <= 1'b0;
+    end
+
+    // read after write process
+    always @(posedge clock) begin
+        if (reset) rlock <= 16'b0;
+        else rlock <= rlock_nxt;
     end
 
 //-----------------------------------------------------------------
@@ -190,33 +229,19 @@ module ysyx_25040111_exu(
 
     // ALU
     ysyx_25040111_alu u_alu(
-        .var1 	(var1       ),
-        .var2 	(var2       ),
-        .opt  	(opt[7:5]   ),
-        .snpc   (snpc       ),
-        .ext    (opt[13]    ),
-        .sign   (opt[14]    ),
-        .negate (opt[15]    ),
-        .res  	(rd         )
+        .var1 	(alu_p1         ),
+        .var2 	(alu_p2         ),
+        .opt  	(alu_ctrl[7:5]  ),
+        .snpc   (alu_ctrl[4]    ),
+        .ext    (alu_ctrl[1]    ),
+        .sign   (alu_ctrl[2]    ),
+        .negate (alu_ctrl[3]    ),
+        .res  	(rd             )
     );
 
 //-----------------------------------------------------------------
 // Combinational Logic
 //-----------------------------------------------------------------
-
-    assign jump_pc = arg1 + arg2;
-
-    always @(*) begin
-        case (opt[4:3])
-            2'b00: begin var1 = imm; var2 = 0;    end
-            2'b01: begin var1 = pc;  var2 = imm;  end
-            2'b10: begin 
-                var1 = rs1; 
-                var2 = mrd ? csri : rs2; 
-            end
-            2'b11: begin var1 = rs1; var2 = imm;  end
-        endcase
-    end
 
 `ifndef YOSYS_STA
     // EBREADK
