@@ -79,8 +79,8 @@ module ysyx_25040111_exu(
 //-----------------------------------------------------------------
 
     // exu input data
-    reg  [31:0]         ers1,   ers2,   ecsr;
-    reg  [31:0]         epc,    eimm; 
+    reg  [31:0]         ers2,   ecsr;
+    reg  [31:0]         epc; 
     reg  [`OPT_HIGH:0]  eopt;
     reg  [4:0]          ard;
     reg  [11:0]         acsrd;
@@ -127,15 +127,13 @@ module ysyx_25040111_exu(
     // input data
     always @(posedge clock) begin
         if (reset) begin
-            ers1 <= 0; ers2 <= 0; ecsr <= 0;
-            epc  <= 0; eimm <= 0;
-            eopt <= `OPT_LEN'b0;
+            ers2 <= 0; ecsr <= 0;
+            epc  <= 0; eopt <= `OPT_LEN'b0;
             ard  <= 5'b0; acsrd <= 12'b0;
         end
-        else if (exe_ready & exe_valid) begin
-            ers1 <= rs1; ers2 <= rs2; ecsr <= csri;
-            epc  <= pc;  eimm <= imm;
-            eopt <= opt;
+        else if (exe_start & ~exe_end) begin
+            ers2 <= rs2; ecsr <= csri;
+            epc  <= pc; eopt <= opt;
             ard <= ard_in; acsrd <= acsrd_in;
         end
     end
@@ -185,12 +183,12 @@ module ysyx_25040111_exu(
         else if (exe_start & ~exe_end) begin
             case (eopt[9:8])
                 2'b00: begin 
-                    alu_p1 <= mtp ? ecsr  : epc;  
-                    alu_p2 <= mtp ? 32'd0 : rd[0] ? eimm : 32'd4;  
+                    alu_p1 <= mtp ? csri  : pc;  
+                    alu_p2 <= mtp ? 32'd0 : rd[0] ? imm : 32'd4;  
                 end
-                2'b01: begin alu_p1 <= epc;  alu_p2 <= 32'd4; end
-                2'b10: begin alu_p1 <= epc;  alu_p2 <= eimm;  end
-                2'b11: begin alu_p1 <= ers1; alu_p2 <= eimm;  end
+                2'b01: begin alu_p1 <= pc;  alu_p2 <= 32'd4; end
+                2'b10: begin alu_p1 <= pc;  alu_p2 <= imm;  end
+                2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;  end
             endcase
 
             alu_ctrl[7:5] <= `ADD;
