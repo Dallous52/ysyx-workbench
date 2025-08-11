@@ -156,7 +156,7 @@ module ysyx_25040111_exu(
             exe_end <= 1'b0;
         else if (exe_start & ~exe_end)
             exe_end <= 1'b1;
-        else if (exe_start & exe_end)
+        else if (abt_valid & abt_ready)
             exe_end <= 1'b0;
     end
 
