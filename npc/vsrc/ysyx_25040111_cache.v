@@ -63,21 +63,21 @@ module ysyx_25040111_cache(
     reg [TAG_HIG:0]     ctags [CACHE_L-1 : 0];
     reg [CACHE_L-1 : 0] cvalids;
 
-    reg [7:0]   count;
+    reg [3:0]   count;
     reg [31:0]  caddr;
     reg         cready;
     reg [31:0]  cdata;
     reg         ended;
 
+    wire [3:0]  nup    = DATA_L;
+    wire [3:0]  ned    = DATA_L - 1; 
+
     wire        hit    = (ctags[index] == tag) & (cvalids[index]);
-    wire        update = count == DATA_L;
-    wire        rend   = (count == DATA_L - 1) & chready & chvalid;
+    wire        update = count == nup;
+    wire        rend   = (count == ned) & chready & chvalid;
     
     wire [BLOCK_Ls+4 : 0] at = {5'b0 , offset >> 2};
     wire [BLOCK_L-1 : 0] tdata = {cblocks[index] >> (at << 5)};
-    // wire [BLOCK_Ls-1 : 0]   at    = {offset >> 2};
-    // wire [BLOCK_L-1 : 0]    tdata = at == {BLOCK_Ls{1'b0}} ? 
-    //                                 cblocks[index] : {cblocks[index] >> 32};
 
 //-----------------------------------------------------------------
 // State Machine
@@ -109,11 +109,11 @@ module ysyx_25040111_cache(
     // counter
     always @(posedge clock) begin
         if (reset) 
-            count <= 8'b0;
+            count <= 4'b0;
         else if (chready) 
             count <= count + 1;
         else if (update)
-            count <= 8'b0;
+            count <= 4'b0;
     end
     
     // main cache

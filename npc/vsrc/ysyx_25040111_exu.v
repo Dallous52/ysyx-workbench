@@ -96,7 +96,7 @@ module ysyx_25040111_exu(
 
     // alu paramter
     reg  [31:0]         alu_p1, alu_p2;
-    reg  [7:1]          alu_ctrl;
+    reg  [6:0]          alu_ctrl;
     wire [31:0]         rd;
     
     // read after write lock paramter
@@ -176,9 +176,7 @@ module ysyx_25040111_exu(
                 end
             endcase
             
-            alu_ctrl[7:5] <= opt[7:5];
-            alu_ctrl[4]   <= opt[12:10] == 3'b100;
-            alu_ctrl[3:1] <= opt[15:13];
+            alu_ctrl <= {opt[7:5], (opt[12:10]==3'b100), opt[15:13]};
         end
         else if (exe_start & ~exe_end) begin
             case (opt[9:8])
@@ -191,9 +189,7 @@ module ysyx_25040111_exu(
                 2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;  end
             endcase
 
-            alu_ctrl[7:5] <= `ADD;
-            alu_ctrl[4]   <= 1'b0;
-            alu_ctrl[3:1] <= `EMPTY;
+            alu_ctrl <= {`ADD, 1'b0, `EMPTY};
         end
     end
 
@@ -229,11 +225,11 @@ module ysyx_25040111_exu(
     ysyx_25040111_alu u_alu(
         .var1 	(alu_p1         ),
         .var2 	(alu_p2         ),
-        .opt  	(alu_ctrl[7:5]  ),
-        .snpc   (alu_ctrl[4]    ),
-        .ext    (alu_ctrl[1]    ),
-        .sign   (alu_ctrl[2]    ),
-        .negate (alu_ctrl[3]    ),
+        .opt  	(alu_ctrl[6:4]  ),
+        .snpc   (alu_ctrl[3]    ),
+        .ext    (alu_ctrl[0]    ),
+        .sign   (alu_ctrl[1]    ),
+        .negate (alu_ctrl[2]    ),
         .res  	(rd             )
     );
 
