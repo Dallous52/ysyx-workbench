@@ -19,7 +19,7 @@ module ysyx_25040111_lsu (
     input  [31:0]   lsu_waddr,
     input  [1:0]    lsu_wmask
 
-`ifdef RUNSOC
+`ifdef STA_SOC
     ,input          io_master_awready,
     output          io_master_awvalid,
     output [31:0]   io_master_awaddr,
@@ -64,7 +64,7 @@ module ysyx_25040111_lsu (
     assign lsu_rdata  = rdata;
     assign lsu_wready = bvalid & bready & writing;
 
-`ifdef RUNSOC
+`ifdef STA_SOC
     assign awready            = io_master_awready;
     assign io_master_awvalid  = awvalid;
     assign io_master_awaddr   = lsu_waddr;
@@ -293,7 +293,7 @@ module ysyx_25040111_lsu (
         .rvalid  	(rvalid_clint   )
     );
     
-`ifndef RUNSOC
+`ifndef STA_SOC
     // SRAM
     wire        arready_sram;
     wire [31:0] rdata_sram;

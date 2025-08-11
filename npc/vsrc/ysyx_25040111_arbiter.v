@@ -110,7 +110,10 @@ module ysyx_25040111_arbiter(
 
     // ************************************************************
     // apc get info to debug
-    reg [31:0]  apc, endpc, addr, endaddr;
+    reg [31:0]  apc, addr;
+`ifndef YOSYS_STA
+    reg [31:0]  endpc, endaddr;
+`endif
     always @(posedge clock) begin
         if (reset) begin
             apc <= 0;
@@ -120,7 +123,8 @@ module ysyx_25040111_arbiter(
             apc <= exu_pc;
             addr <= exu_addr;
         end
-        
+
+`ifndef YOSYS_STA  
         if (reset) begin
             endpc <= 0;            
             endaddr <= 0;
@@ -131,6 +135,7 @@ module ysyx_25040111_arbiter(
             endpc <= exu_valid & exu_ready ? exu_pc : apc;
             endaddr <= exu_valid & exu_ready ? exu_addr : addr;        
         end
+`endif
     end
     // ************************************************************
 

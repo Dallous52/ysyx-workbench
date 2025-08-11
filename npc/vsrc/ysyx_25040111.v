@@ -5,7 +5,7 @@ module ysyx_25040111(
     input clock,
     input reset
 
-`ifdef RUNSOC
+`ifdef STA_SOC
     ,input          io_interrupt,
 
     input           io_master_awready,
@@ -190,7 +190,7 @@ module ysyx_25040111(
 
     // ICACHE
     ysyx_25040111_cache #(
-        .CACHE_Ls 	(2  ),
+        .CACHE_Ls 	(3  ),
         .BLOCK_Ls 	(3  ))
     u_icache(
         .clock  	(clock       ),
@@ -292,7 +292,7 @@ module ysyx_25040111(
         .lsu_wdata  (al_wdata    ),
         .lsu_waddr  (al_waddr    ),
         .lsu_wmask  (al_wmask    )
-`ifdef RUNSOC
+`ifdef STA_SOC
         ,.io_master_awready (io_master_awready  ),
         .io_master_awvalid 	(io_master_awvalid  ),
         .io_master_awaddr  	(io_master_awaddr   ),
