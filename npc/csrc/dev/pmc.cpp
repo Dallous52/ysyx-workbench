@@ -26,18 +26,10 @@ void pmc_init()
     hitnum = 0;
 }
 
-
-extern "C" void monitor_counter(int dtype)
-{
-    counter[dtype]++;
-}
-
-
 extern "C" void cache_hit()
 {
     hitnum++;
 }
-
 
 void cycle_counter(word_t inst, int64_t ncyc)
 {
@@ -45,16 +37,16 @@ void cycle_counter(word_t inst, int64_t ncyc)
 
     switch (opt) 
     {
-    case 0b0010011: cycnum[IOPT] += ncyc; break;            
-    case 0b0010111: cycnum[IOPT] += ncyc; break;            
-    case 0b0110111: cycnum[IOPT] += ncyc; break;            
-    case 0b1100111: cycnum[IJMP] += ncyc; break;            
-    case 0b1101111: cycnum[IJMP] += ncyc; break;            
-    case 0b1110011: cycnum[ICSR] += ncyc; break;            
-    case 0b0100011: cycnum[IMEM] += ncyc; break;            
-    case 0b0000011: cycnum[IMEM] += ncyc; break;            
-    case 0b0110011: cycnum[IOPT] += ncyc; break;            
-    case 0b1100011: cycnum[IJMP] += ncyc; break;            
+    case 0b0010011: cycnum[IOPT] += ncyc; counter[IOPT]++; break;            
+    case 0b0010111: cycnum[IOPT] += ncyc; counter[IOPT]++; break;            
+    case 0b0110111: cycnum[IOPT] += ncyc; counter[IOPT]++; break;            
+    case 0b1100111: cycnum[IJMP] += ncyc; counter[IJMP]++; break;            
+    case 0b1101111: cycnum[IJMP] += ncyc; counter[IJMP]++; break;            
+    case 0b1110011: cycnum[ICSR] += ncyc; counter[ICSR]++; break;            
+    case 0b0100011: cycnum[IMEM] += ncyc; counter[IMEM]++; break;            
+    case 0b0000011: cycnum[IMEM] += ncyc; counter[IMEM]++; break;            
+    case 0b0110011: cycnum[IOPT] += ncyc; counter[IOPT]++; break;            
+    case 0b1100011: cycnum[IJMP] += ncyc; counter[IJMP]++; break;            
     default: ;
     }
 }
