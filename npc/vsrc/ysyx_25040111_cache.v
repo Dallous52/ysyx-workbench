@@ -71,14 +71,13 @@ module ysyx_25040111_cache(
 
     wire        hit    = (ctags[index] == tag) & (cvalids[index]);
     wire        update = count == DATA_L;
-    wire [31:0] naddr  = caddr + 4;
     wire        rend   = (count == DATA_L - 1) & chready & chvalid;
     
-    // wire [BLOCK_Ls+4 : 0] at = {5'b0 , offset >> 2};
-    // wire [BLOCK_L-1 : 0] tdata = {cblocks[index] >> (at << 5)};
-    wire [BLOCK_Ls-1 : 0]   at    = {offset >> 2};
-    wire [BLOCK_L-1 : 0]    tdata = at == {BLOCK_Ls{1'b0}} ? 
-                                    cblocks[index] : {cblocks[index] >> 32};
+    wire [BLOCK_Ls+4 : 0] at = {5'b0 , offset >> 2};
+    wire [BLOCK_L-1 : 0] tdata = {cblocks[index] >> (at << 5)};
+    // wire [BLOCK_Ls-1 : 0]   at    = {offset >> 2};
+    // wire [BLOCK_L-1 : 0]    tdata = at == {BLOCK_Ls{1'b0}} ? 
+    //                                 cblocks[index] : {cblocks[index] >> 32};
 
 //-----------------------------------------------------------------
 // State Machine
@@ -154,7 +153,7 @@ module ysyx_25040111_cache(
         else if (ifu_valid & ~hit & ~chvalid & ~ended)
             caddr <= {addr[31:BLOCK_Ls], {BLOCK_Ls{1'b0}}};
         else if (chready & ~chburst)
-            caddr <= naddr;
+            caddr <= caddr + 4;
     end
 
     // ended
