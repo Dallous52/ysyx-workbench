@@ -74,11 +74,11 @@ module ysyx_25040111_cache(
     wire [31:0] naddr  = caddr + 4;
     wire        rend   = (count == DATA_L - 1) & chready & chvalid;
     
-    wire [BLOCK_Ls+4 : 0] at = {5'b0 , offset >> 2};
-    wire [BLOCK_L-1 : 0] tdata = {cblocks[index] >> (at << 5)};
-    // wire [BLOCK_Ls-1 : 0]   at    = {offset >> 2};
-    // wire [BLOCK_L-1 : 0]    tdata = at == {BLOCK_Ls{1'b0}} ? 
-    //                                 cblocks[index] : {cblocks[index] >> 32};
+    // wire [BLOCK_Ls+4 : 0] at = {5'b0 , offset >> 2};
+    // wire [BLOCK_L-1 : 0] tdata = {cblocks[index] >> (at << 5)};
+    wire [BLOCK_Ls-1 : 0]   at    = {offset >> 2};
+    wire [BLOCK_L-1 : 0]    tdata = at == {BLOCK_Ls{1'b0}} ? 
+                                    cblocks[index] : {cblocks[index] >> 32};
 
 //-----------------------------------------------------------------
 // State Machine
