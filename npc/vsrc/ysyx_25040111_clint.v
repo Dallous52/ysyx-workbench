@@ -34,6 +34,7 @@ module ysyx_25040111_clint(
             tvalid <= 1'b0;
         end        
         else if (arvalid & arready) begin
+            $display("clint addr:%h", araddr);
             tdata <= araddr == `CLINT_ADDR ? mtime[31:0] : mtime[63:32];
             tvalid <= 1; // 读取完毕
         end
