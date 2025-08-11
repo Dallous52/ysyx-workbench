@@ -181,7 +181,7 @@ module ysyx_25040111_exu(
             alu_ctrl[3:1] <= opt[15:13];
         end
         else if (exe_start & ~exe_end) begin
-            case (eopt[9:8])
+            case (opt[9:8])
                 2'b00: begin 
                     alu_p1 <= mtp ? csri  : pc;  
                     alu_p2 <= mtp ? 32'd0 : rd[0] ? imm : 32'd4;  
