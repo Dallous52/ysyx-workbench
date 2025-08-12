@@ -80,7 +80,7 @@ module ysyx_25040111_arbiter(
     assign lsu_rsign    = ~working & cah_valid ? 1'b0      : rsign;
 
     // write back
-    assign exu_ready    = ~working & ~(cah_valid & exu_men);
+    assign exu_ready    = ~working & (~cah_valid | (~exu_men & ~erri));
     assign reg_valid    = (~exu_men & exu_ready  & exu_valid & exu_gen) |
                           (rvalid   & lsu_rvalid & lsu_rready);
     assign reg_data     = rvalid ? lsu_rdata : exu_rd;
