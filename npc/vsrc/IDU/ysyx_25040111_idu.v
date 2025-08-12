@@ -21,12 +21,15 @@ module ysyx_25040111_idu(
     output reg [4:0]    rs2,
     output reg [4:0]    rd,
     output reg [31:0]   imm,
+    output reg [`OPT_HIGH:0] opt,
     // wire to case
+
+    output [3:0]        err_type,
+    output              err,
+
     output [11:0]       csrw, 
                         csrr,
-    output [31:0]       exe_pc,
-                        
-    output reg [`OPT_HIGH:0] opt
+    output [31:0]       exe_pc
 );
 
 //-----------------------------------------------------------------
@@ -88,7 +91,7 @@ module ysyx_25040111_idu(
         .rs1  	(rs1_opimm ),
         .rd   	(rd_opimm  ),
         .imm  	(imm_opimm ),
-        .opt    (opt_opimm)
+        .opt    (opt_opimm )
     );
 
  
@@ -97,11 +100,11 @@ module ysyx_25040111_idu(
     wire [`OPT_HIGH:0] opt_op;
 
     ysyx_25040111_op u_ysyx_25040111_op(
-        .inst 	(inst[31:7]),
-        .rs1  	(rs1_op ),
-        .rs2    (rs2_op),
-        .rd   	(rd_op ),
-        .opt    (opt_op)
+        .inst 	(inst[31:7] ),
+        .rs1  	(rs1_op     ),
+        .rs2    (rs2_op     ),
+        .rd   	(rd_op      ),
+        .opt    (opt_op     )
     );
 
  
@@ -111,8 +114,8 @@ module ysyx_25040111_idu(
     wire [`OPT_HIGH:0] opt_auipc_lui;
     
     ysyx_25040111_auipc_lui u_ysyx_25040111_auipc_lui(
-        .inst 	(inst[31:7]  ),
-        .chos 	(inst[5]  ),
+        .inst 	(inst[31:7]      ),
+        .chos 	(inst[5]         ),
         .rd   	(rd_auipc_lui    ),
         .imm  	(imm_auipc_lui   ),
         .opt  	(opt_auipc_lui   )
@@ -126,7 +129,7 @@ module ysyx_25040111_idu(
     wire [4:0] rd_jalr;
     
     ysyx_25040111_jalr u_ysyx_25040111_jalr(
-        .inst 	(inst[31:7]  ),
+        .inst 	(inst[31:7] ),
         .rs1  	(rs1_jalr   ),
         .imm  	(imm_jalr   ),
         .opt  	(opt_jalr   ),
@@ -141,7 +144,7 @@ module ysyx_25040111_idu(
     wire [`OPT_HIGH:0] opt_branch;
     
     ysyx_25040111_branch u_ysyx_25040111_branch(
-        .inst 	(inst[31:7]  ),
+        .inst 	(inst[31:7]   ),
         .rs1  	(rs1_branch   ),
         .rs2  	(rs2_branch   ),
         .imm  	(imm_branch   ),
@@ -171,7 +174,7 @@ module ysyx_25040111_idu(
     wire [`OPT_HIGH:0] opt_load;
     
     ysyx_25040111_load u_ysyx_25040111_load(
-        .inst 	(inst[31:7]  ),
+        .inst 	(inst[31:7] ),
         .rs1  	(rs1_load   ),
         .rd   	(rd_load    ),
         .imm  	(imm_load   ),
@@ -198,13 +201,15 @@ module ysyx_25040111_idu(
     wire [31:0] imm_system;
 
     ysyx_25040111_system u_ysyx_25040111_system(
-        .inst 	(inst[31:7]  ),
-        .rs1    (rs1_system),
-        .rd     (rd_system),
-        .csrr   (csrr),
-        .csrw   (csrw),
-        .imm    (imm_system),
-        .opt    (opt_system)
+        .inst 	    (inst[31:7]  ),
+        .rs1        (rs1_system  ),
+        .rd         (rd_system   ),
+        .csrr       (csrr        ),
+        .csrw       (csrw        ),
+        .imm        (imm_system  ),
+        .opt        (opt_system  ),
+        .err_type   (err_type    ),
+        .err        (err         )
     );
  
     // MISC-MEM                

@@ -5,12 +5,15 @@
 `define SYS_MRET   12'h302
 // mcause process
 module ysyx_25040111_system(
-    input [31:7] inst,
-    output [4:0] rs1,
-    output [4:0] rd,
-    output reg [11:0] csrw, csrr,
-    output [31:0] imm,
-    output reg [`OPT_HIGH:0] opt
+    input       [31:7]          inst,
+    output      [4:0]           rs1,
+    output      [4:0]           rd,
+    output reg  [11:0]          csrw,
+    output reg  [11:0]          csrr,
+    output      [31:0]          imm,
+    output reg  [`OPT_HIGH:0]   opt,
+    output reg  [3:0]           err_type,
+    output reg                  err
 );
     wire [2:0] fun3;
     wire fix;
@@ -23,28 +26,31 @@ module ysyx_25040111_system(
     assign imm = 32'b0;
 
     always @(*) begin
+        csrw = inst[31:20];
+        csrr = inst[31:20];
+        err_type = 4'b0;
+        err      = 0;
+
         case ({inst[31:20], fix})
             {`SYS_EBREAK, 1'b1}: begin
                 csrw = 12'b0;
                 csrr = 12'b0;
             end
             {`SYS_ECALL,  1'b1}: begin
-                csrw = `MEPC;
-                csrr = `MTVEC;
+                err_type = 4'd11;
+                err      = 1;
             end
             {`SYS_MRET,   1'b1}: begin
                 csrw = 12'b0;
                 csrr = `MEPC;
             end
             default: begin
-                csrw = inst[31:20];
-                csrr = inst[31:20];
             end
         endcase
 
         case (inst[31:20])
             `SYS_EBREAK: opt_t = `EBREAK_INST;
-            `SYS_ECALL:  opt_t = `OPTG(`EMPTY, `PC_IM, `ADD, `EMP, `WFS, `XXN);
+            `SYS_ECALL:  opt_t = `OPT_LEN'h8000;
             `SYS_MRET:   opt_t = `OPTG(`EMPTY, `EMP, `EMPTY, `EMP, `XFS, `XXN);
             default:     opt_t = `OPT_LEN'b0;
         endcase

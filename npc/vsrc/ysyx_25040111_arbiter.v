@@ -49,12 +49,21 @@ module ysyx_25040111_arbiter(
     output [31:0]   reg_data,
     output [31:0]   csr_data,
     output [4:0]    reg_addr,
-    output [11:0]   csr_addr
+    output [11:0]   csr_addr,
+
+    input           erri,
+    input  [3:0]    errtpi,
+    output          erro,
+    output [3:0]    errtpo
 );
 
 //-----------------------------------------------------------------
 // External Interface
 //-----------------------------------------------------------------
+
+    // err process
+    assign erro         = erri;
+    assign errtpo       = errtpi;
 
     // lsu write
     assign lsu_wvalid   = ~working & cah_valid ? 1'b0 : wvalid;

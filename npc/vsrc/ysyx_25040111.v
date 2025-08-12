@@ -94,7 +94,11 @@ module ysyx_25040111(
     wire lsu_rready,    lsu_rvalid;
     wire reg_valid,     csr_valid;
 
-    wire jpc_ready; // from exu
+    wire        jpc_ready; // from exu
+    wire        err_find;  // from arbiter
+    wire [3:0]  err_type;  // from arbiter
+
+    wire flush = err_find | reset;
 
 //-----------------------------------------------------------------
 // DATA SIGNAL
@@ -109,6 +113,8 @@ module ysyx_25040111(
     wire [`OPT_HIGH:0]  de_opt;
     wire [4:0]          de_ard;
     wire [11:0]         de_awcsr;
+    wire [3:0]          de_errtp;
+    wire                de_err;
 
     // idu <==> csr | reg
     wire [4:0]          dr_ars1,
@@ -160,6 +166,8 @@ module ysyx_25040111(
     wire [31:0]         ea_addr;
     wire [1:0]          ea_mask; 
     wire                ea_rsign;
+    wire                ea_err;
+    wire [3:0]          ea_errtp;
 
     // arbiter <==> reg | csr
     wire [31:0]         ar_data;
@@ -185,7 +193,9 @@ module ysyx_25040111(
         .idu_inst   (fd_inst     ),
         .idu_pc     (fd_pc       ),
         .idu_valid 	(idu_valid   ),
-        .idu_ready 	(idu_ready   )
+        .idu_ready 	(idu_ready   ),
+        .err        (err_find    ),
+        .errpc      (se_csr      )
     );
 
     // ICACHE
@@ -210,7 +220,7 @@ module ysyx_25040111(
     // ARBITER
     ysyx_25040111_arbiter u_arbiter(
         .clock      (clock       ),
-        .reset      (reset       ),
+        .reset      (flush       ),
         .cah_valid  (icah_valid  ),
         .cah_ready  (icah_ready  ),
         .cah_addr   (ca_addr     ),
@@ -250,14 +260,18 @@ module ysyx_25040111(
         .reg_data   (ar_data     ),
         .csr_data   (as_data     ),
         .reg_addr   (ar_addr     ),
-        .csr_addr   (as_addr     )
+        .csr_addr   (as_addr     ),
+        .erri       (ea_err      ),
+        .errtpi     (ea_errtp    ),
+        .erro       (err_find    ),
+        .errtpo     (err_type    )
     );
     
 
     // IDU
     ysyx_25040111_idu u_idu(
         .clock     	(clock       ),
-        .reset     	(reset       ),
+        .reset     	(flush       ),
         .idu_inst  	(fd_inst     ),
         .idu_ready 	(idu_ready   ),
         .idu_valid 	(idu_valid   ),
@@ -272,13 +286,15 @@ module ysyx_25040111(
         .csrw      	(de_awcsr    ),
         .csrr      	(ds_arcsr    ),
         .idu_pc     (fd_pc       ),
-        .exe_pc     (de_pc       )
+        .exe_pc     (de_pc       ),
+        .err        (de_err      ),
+        .err_type   (de_errtp    )
     );
     
     // LSU
     ysyx_25040111_lsu u_lsu(
         .clock      (clock       ),
-        .reset      (reset       ),
+        .reset      (flush       ),
         .lsu_rvalid (lsu_rvalid  ),
         .lsu_rready (lsu_rready  ),
         .lsu_rdata  (la_rdata    ),
@@ -328,7 +344,7 @@ module ysyx_25040111(
     // EXU
     ysyx_25040111_exu u_exu(
         .clock     	(clock      ),
-        .reset     	(reset      ),
+        .reset     	(flush      ),
         .exe_valid 	(exe_valid  ),
         .exe_ready 	(exe_ready  ),
         .opt       	(de_opt     ),
@@ -359,11 +375,16 @@ module ysyx_25040111(
         .jpc_ready 	(jpc_ready  ),
         .abt_finish (reg_valid  ),
         .abt_frd    (ar_addr    ),
-        .abt_pc     (ea_pc      )
+        .abt_pc     (ea_pc      ),
+        .erri       (de_err     ),
+        .errtpi     (de_errtp   ),
+        .erro       (ea_err     ),
+        .errtpo     (ea_errtp   )
     );
     
     // CSR
-    wire csr_ren = de_opt[11] & de_opt[15];
+    wire        csr_ren   = (de_opt[11] & de_opt[15]) | err_find;
+    wire [11:0] csr_raddr = err_find ? `MTVEC : ds_arcsr;
     ysyx_25040111_csr u_csr(
         .clock 	    (clock      ),
         .reset 	    (reset      ),
@@ -372,7 +393,8 @@ module ysyx_25040111(
         .waddr 	    (as_addr    ),
         .wdata 	    (as_data    ),
         .raddr 	    (ds_arcsr   ),
-        .jtype 	    (4'b0       ),
+        .err        (err_find   ),
+        .errtp 	    (err_type   ),
         .rdata 	    (se_csr     )
     );
     

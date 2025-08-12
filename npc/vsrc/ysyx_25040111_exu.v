@@ -43,7 +43,12 @@ module ysyx_25040111_exu(
 
     input                   abt_finish,
     input  [4:0]            abt_frd,
-    output [31:0]           abt_pc
+    output [31:0]           abt_pc,
+
+    input                   erri,
+    input  [3:0]            errtpi,
+    output                  erro,
+    output [3:0]            errtpo
 );
 
 //-----------------------------------------------------------------
@@ -53,15 +58,15 @@ module ysyx_25040111_exu(
     assign exe_ready = ~exe_start & ~lock;
 
     assign abt_valid = exe_end;
-    assign abt_men   = |eopt[11:10] & ~eopt[15];
+    assign abt_men   = |eopt[11:10] & ~eopt[15] & ~error;
     
     assign abt_ard   = ard;
     assign abt_rd    = mwt ? ecsr : rdo;
-    assign abt_gen   = eopt[0];
+    assign abt_gen   = eopt[0] & ~error;
 
-    assign abt_acsr  = acsrd;
-    assign abt_csr   = rdo;
-    assign abt_sen   = mwt;
+    assign abt_acsr  = error ? `MEPC : acsrd;
+    assign abt_csr   = error ? epc   : rdo;
+    assign abt_sen   = mwt | error;
 
     assign abt_rsign = eopt[14];
     assign abt_write = ~eopt[12];
@@ -74,6 +79,9 @@ module ysyx_25040111_exu(
     assign jpc_ready = jmpc_ok;
     assign jump_pc   = rd; 
 
+    assign erro      = error;
+    assign errtpo    = errtp;
+
 //-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
@@ -84,6 +92,8 @@ module ysyx_25040111_exu(
     reg  [`OPT_HIGH:0]  eopt;
     reg  [4:0]          ard;
     reg  [11:0]         acsrd;
+    reg  [3:0]          errtp;
+    reg                 error;
 
     // output data
     reg  [31:0]         rdo;
@@ -130,11 +140,13 @@ module ysyx_25040111_exu(
             ers2 <= 0; ecsr <= 0;
             epc  <= 0; eopt <= `OPT_LEN'b0;
             ard  <= 5'b0; acsrd <= 12'b0;
+            error <= 1'b0; errtp <= 4'b0; 
         end
         else if (exe_start & ~exe_end) begin
             ers2 <= rs2; ecsr <= csri;
             epc  <= pc; eopt <= opt;
             ard <= ard_in; acsrd <= acsrd_in;
+            error <= erri; errtp <= errtpi;
         end
     end
 
@@ -181,8 +193,8 @@ module ysyx_25040111_exu(
         else if (exe_start & ~exe_end) begin
             case (opt[9:8])
                 2'b00: begin 
-                    alu_p1 <= mtp ? csri  : pc;  
-                    alu_p2 <= mtp ? 32'd0 : rd[0] ? imm : 32'd4;  
+                    alu_p1 <= pc;  
+                    alu_p2 <= rd[0] ? imm : 32'd4;  
                 end
                 2'b01: begin alu_p1 <= pc;  alu_p2 <= 32'd4; end
                 2'b10: begin alu_p1 <= pc;  alu_p2 <= imm;  end

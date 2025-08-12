@@ -6,7 +6,8 @@ module ysyx_25040111_csr(
     input  [11:0]       waddr,
     input  [31:0]       wdata,
     input  [11:0]       raddr,
-    input  [3:0]        jtype,
+    input               err,
+    input  [3:0]        errtp,
     output reg [31:0]   rdata
 );
 
@@ -30,8 +31,8 @@ module ysyx_25040111_csr(
             else if (waddr == 12'h341)
                 csr[2] <= wdata;
         end
-        else if (jtype == 4'b1) begin
-            csr[3] <= 32'd11;   // ecall
+        else if (err) begin
+            csr[3] <= {28'b0, errtp};   // err process
         end
     end
 

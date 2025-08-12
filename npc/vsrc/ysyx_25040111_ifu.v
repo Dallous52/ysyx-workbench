@@ -20,7 +20,10 @@ module ysyx_25040111_ifu (
     output  [31:0]  idu_pc,
 
     input   [31:0]  jump_pc,
-    input           jpc_ready
+    input           jpc_ready,
+
+    input           err,
+    input   [31:0]  errpc
 );
 
 //-----------------------------------------------------------------
@@ -56,7 +59,7 @@ module ysyx_25040111_ifu (
     
     // inst  inst_ok
     always @(posedge clock) begin
-        if (reset) begin
+        if (reset | err) begin
             inst <= 0;
             inst_ok <= 1'b0;            
         end
@@ -72,6 +75,8 @@ module ysyx_25040111_ifu (
     always @(posedge clock) begin
         if (reset)
             pc <= `PC_RESET;
+        else if (err)
+            pc <= errpc;
         else if (idu_ready & idu_valid)
             pc <= next_pc;
         else if (jpc_ready & jump)
@@ -80,7 +85,7 @@ module ysyx_25040111_ifu (
 
     // pc jpc ok
     always @(posedge clock) begin
-        if (reset) begin
+        if (reset | err) begin
             pc_ok <= 1'b1;
             jpc_ok <= 1'b0;
         end
