@@ -392,7 +392,7 @@ module ysyx_25040111(
         .ren   	    (csr_ren    ),
         .waddr 	    (as_addr    ),
         .wdata 	    (as_data    ),
-        .raddr 	    (ds_arcsr   ),
+        .raddr 	    (csr_raddr  ),
         .err        (err_find   ),
         .errtp 	    (err_type   ),
         .rdata 	    (se_csr     )
