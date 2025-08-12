@@ -15,7 +15,9 @@ module ysyx_25040111_cache(
     input  [31:0]   chdata,     // 一次传输完成数据
 
     input           ifu_valid,  // 使能
-    output          ifu_ready   // 完成
+    output          ifu_ready,  // 完成
+
+    input           err
 );
 
 //-----------------------------------------------------------------
@@ -138,7 +140,7 @@ module ysyx_25040111_cache(
 
     // cready
     always @(posedge clock) begin
-        if (reset)
+        if (reset | err)
             cready <= 1'b0;
         else if ((ifu_valid & hit & ~cready) | update)
             cready <= 1'b1;

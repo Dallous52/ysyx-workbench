@@ -214,7 +214,8 @@ module ysyx_25040111(
         .ifu_valid  (ifu_valid   ),
         .ifu_ready  (ifu_ready   ),
         .chvalid 	(icah_valid  ),
-        .chready   	(icah_ready  )
+        .chready   	(icah_ready  ),
+        .err        (err_find    )
     );
 
     // ARBITER
