@@ -159,69 +159,38 @@ module ysyx_25040111_exu(
     end
 
     // executing
-    // 假定已经有 clk/reset 和原来的信号定义
-    wire exe_branch0 = exe_ready & exe_valid;        // 原来第一个 case
-    wire exe_branch1 = exe_start & ~exe_end;         // 原来第二个 case
-    wire write_en    = exe_branch0 | exe_branch1;    // 只有这两种情况要写寄存器
-
-    // 复用常量
-    wire [31:0] CONST_4 = 32'd4;
-    wire [31:0] CONST_0 = 32'd0;
-
-    // --------- mode0 (exe_branch0) 的组合输出 ---------
-    wire [31:0] p1_mode0 = (opt[4:3] == 2'b00) ? imm :
-                        (opt[4:3] == 2'b01) ? pc  :
-                        rs1; // 2'b10 和 2'b11 都是 rs1
-
-    wire [31:0] p2_mode0 = (opt[4:3] == 2'b00) ? CONST_0 :
-                        (opt[4:3] == 2'b01) ? imm :
-                        (opt[4:3] == 2'b11) ? imm :
-                        /*2'b10*/            (mrd ? csri : rs2);
-
-    // alu_ctrl for branch0
-    wire [6:0] alu_ctrl_mode0; // 根据你原来的宽度调整这里的位宽
-    assign alu_ctrl_mode0 = { opt[7:5], (opt[12:10] == 3'b100), opt[15:13] };
-
-    // --------- mode1 (exe_branch1) 的组合输出 ---------
-    wire [31:0] p1_mode1 = (opt[9:8] == 2'b00) ? (mtp ? csri : pc) :
-                        (opt[9:8] == 2'b01) ? pc :
-                        (opt[9:8] == 2'b10) ? pc :
-                        rs1;
-
-    wire [31:0] p2_mode1 = (opt[9:8] == 2'b00) ? (mtp ? CONST_0 : (rd[0] ? imm : CONST_4)) :
-                        (opt[9:8] == 2'b01) ? CONST_4 :
-                        (opt[9:8] == 2'b10) ? imm :
-                        imm; // 2'b11 -> imm
-
-    // alu_ctrl for branch1 is fixed
-    wire [6:0] alu_ctrl_mode1;
-    assign alu_ctrl_mode1 = { `ADD, 1'b0, `EMPTY }; // 确认宏定义宽度匹配
-
-    // --------- 根据当前是哪条分支选组合结果 ---------
-    wire [31:0] alu_p1_w = exe_branch0 ? p1_mode0 :
-                        exe_branch1 ? p1_mode1 :
-                        32'd0; // idle 时可保持某默认或上一个值（但不会写入寄存器）
-
-    wire [31:0] alu_p2_w = exe_branch0 ? p2_mode0 :
-                        exe_branch1 ? p2_mode1 :
-                        32'd0;
-
-    wire [6:0] alu_ctrl_w = exe_branch0 ? alu_ctrl_mode0 :
-                            exe_branch1 ? alu_ctrl_mode1 :
-                            7'b0;
-
-    // --------- 寄存器写入（有写使能） ---------
     always @(posedge clock) begin
         if (reset) begin
-            alu_p1 <= 32'd0;
-            alu_p2 <= 32'd0;
-            alu_ctrl <= 7'b0;
-        end else if (write_en) begin
-            alu_p1 <= alu_p1_w;
-            alu_p2 <= alu_p2_w;
-            alu_ctrl <= alu_ctrl_w;
+            alu_p1 <= 0;
+            alu_p2 <= 0;
+            alu_ctrl <= 7'b0;         
         end
-        // else 保持原值（避免不必要写入）
+        else if (exe_ready & exe_valid) begin
+            case (opt[4:3])
+                2'b00: begin alu_p1 <= imm; alu_p2 <= 0;    end
+                2'b01: begin alu_p1 <= pc;  alu_p2 <= imm;  end
+                2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;  end
+                2'b10: begin 
+                    alu_p1 <= rs1; 
+                    alu_p2 <= mrd ? csri : rs2; 
+                end
+            endcase
+            
+            alu_ctrl <= {opt[7:5], (opt[12:10]==3'b100), opt[15:13]};
+        end
+        else if (exe_start & ~exe_end) begin
+            case (opt[9:8])
+                2'b00: begin 
+                    alu_p1 <= mtp ? csri  : pc;  
+                    alu_p2 <= mtp ? 32'd0 : rd[0] ? imm : 32'd4;  
+                end
+                2'b01: begin alu_p1 <= pc;  alu_p2 <= 32'd4; end
+                2'b10: begin alu_p1 <= pc;  alu_p2 <= imm;  end
+                2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;  end
+            endcase
+
+            alu_ctrl <= {`ADD, 1'b0, `EMPTY};
+        end
     end
 
     // rdo
