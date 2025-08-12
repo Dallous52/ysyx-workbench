@@ -220,7 +220,7 @@ module ysyx_25040111(
     // ARBITER
     ysyx_25040111_arbiter u_arbiter(
         .clock      (clock       ),
-        .reset      (flush       ),
+        .reset      (reset       ),
         .cah_valid  (icah_valid  ),
         .cah_ready  (icah_ready  ),
         .cah_addr   (ca_addr     ),
