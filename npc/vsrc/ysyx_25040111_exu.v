@@ -193,8 +193,8 @@ module ysyx_25040111_exu(
         else if (exe_start & ~exe_end) begin
             case (opt[9:8])
                 2'b00: begin 
-                    alu_p1 <= pc;  
-                    alu_p2 <= rd[0] ? imm : 32'd4;  
+                    alu_p1 <= mtp ? csri  : pc;  
+                    alu_p2 <= mtp ? 32'd0 : rd[0] ? imm : 32'd4;  
                 end
                 2'b01: begin alu_p1 <= pc;  alu_p2 <= 32'd4; end
                 2'b10: begin alu_p1 <= pc;  alu_p2 <= imm;  end
