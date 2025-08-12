@@ -160,7 +160,7 @@ module ysyx_25040111_cache(
 
     // ended
     always @(posedge clock) begin
-        if (reset)
+        if (reset | err)
             ended <= 1'b0;
         else if (rend)
             ended <= 1'b1;
