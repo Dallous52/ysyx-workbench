@@ -25,7 +25,7 @@ module ysyx_25040111_idu(
     // wire to case
 
     output [3:0]        err_type,
-    output              err,
+    output reg          err,
 
     output [11:0]       csrw, 
                         csrr,
@@ -199,6 +199,7 @@ module ysyx_25040111_idu(
     wire [4:0] rs1_system, rd_system;
     wire [`OPT_HIGH:0] opt_system;
     wire [31:0] imm_system;
+    wire errmux;
 
     ysyx_25040111_system u_ysyx_25040111_system(
         .inst 	    (inst[31:7]  ),
@@ -209,7 +210,7 @@ module ysyx_25040111_idu(
         .imm        (imm_system  ),
         .opt        (opt_system  ),
         .err_type   (err_type    ),
-        .err        (err         )
+        .err        (errmux      )
     );
  
     // MISC-MEM                
@@ -232,6 +233,7 @@ module ysyx_25040111_idu(
         rd  = 5'b0;
         imm = 32'b0;
         opt = `OPT_LEN'b0;
+        err = 1'b0;
 
         case (inst[6:0])
             7'b0010011: begin
@@ -280,6 +282,7 @@ module ysyx_25040111_idu(
                 rd  = rd_system;
                 imm = imm_system;
                 opt = opt_system;
+                err = errmux;
             end
 
             7'b0100011: begin
