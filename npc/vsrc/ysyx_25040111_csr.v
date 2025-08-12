@@ -21,7 +21,6 @@ module ysyx_25040111_csr(
             csr[0] <= 32'h00001800;
             csr[1] <= 32'h00000000;
             csr[2] <= 32'h00000000;
-            csr[3] <= 32'h00000000;
         end
         else if (wen) begin
             if (waddr == 12'h300)
@@ -31,9 +30,11 @@ module ysyx_25040111_csr(
             else if (waddr == 12'h341)
                 csr[2] <= wdata;
         end
-        else if (err) begin
+        
+        if (reset) 
+            csr[3] <= 32'h00000000;
+        if (err)
             csr[3] <= {28'b0, errtp};   // err process
-        end
     end
 
     // MSTATUS	0x300
