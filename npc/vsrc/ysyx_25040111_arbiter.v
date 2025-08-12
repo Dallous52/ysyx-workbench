@@ -132,8 +132,8 @@ module ysyx_25040111_arbiter(
             endpc <= exu_valid & exu_ready ? exu_pc : tmp_pc;
             endaddr <= exu_valid & exu_ready ? exu_addr : tmp_addr;        
         end
-`endif
     end
+`endif
     // ************************************************************
 
     // tmp addr pc
