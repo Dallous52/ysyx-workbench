@@ -62,7 +62,7 @@ module ysyx_25040111_arbiter(
 //-----------------------------------------------------------------
 
     // err process
-    assign erro         = erri;
+    assign erro         = handsk & erri;
     assign errtpo       = errtpi;
 
     // lsu write
@@ -81,12 +81,12 @@ module ysyx_25040111_arbiter(
 
     // write back
     assign exu_ready    = ~working & (~cah_valid | (~exu_men & ~erri));
-    assign reg_valid    = (~exu_men & exu_ready  & exu_valid & exu_gen) |
+    assign reg_valid    = (~exu_men & handsk & exu_gen) |
                           (rvalid   & lsu_rvalid & lsu_rready);
     assign reg_data     = rvalid ? lsu_rdata : exu_rd;
     assign reg_addr     = rvalid ? wbaddr    : exu_ard;
     
-    assign csr_valid    = exu_ready & exu_valid & exu_sen;
+    assign csr_valid    = handsk  & exu_sen;
     assign csr_data     = exu_csr;
     assign csr_addr     = exu_acsr;
 
@@ -114,6 +114,7 @@ module ysyx_25040111_arbiter(
     reg [4:0]   wbaddr;
 
     wire        wtok    = lsu_wready & lsu_wvalid;
+    wire        handsk  = exu_valid & exu_ready;
 
 //-----------------------------------------------------------------
 // State Machine
@@ -127,7 +128,7 @@ module ysyx_25040111_arbiter(
         if (reset) begin
             tmp_addr <= 0;
         end
-        else if (exu_valid & exu_ready) begin
+        else if (handsk) begin
             tmp_addr <= exu_addr;
         end
 
@@ -150,7 +151,7 @@ module ysyx_25040111_arbiter(
         if (reset) begin
             tmp_pc <= 0;
         end
-        else if (exu_valid & exu_ready) begin
+        else if (handsk) begin
             tmp_pc <= exu_pc;
         end
     end
@@ -159,7 +160,7 @@ module ysyx_25040111_arbiter(
     always @(posedge clock) begin
         if (reset)
             working <= 1'b0;
-        else if (exu_valid & exu_ready & exu_men)
+        else if (handsk & exu_men)
             working <= 1'b1;
         else if (reg_valid | wtok)
             working <= 1'b0;
@@ -172,7 +173,7 @@ module ysyx_25040111_arbiter(
             wdata <= 0;
             wmask <= 2'b0;
         end
-        else if (exu_valid & exu_ready & exu_men & exu_write) begin
+        else if (handsk & exu_men & exu_write) begin
             waddr <= exu_addr;
             wdata <= exu_wdata;
             wmask <= exu_mask;
@@ -183,7 +184,7 @@ module ysyx_25040111_arbiter(
     always @(posedge clock) begin
         if (reset)
             wvalid <= 1'b0;
-        else if (exu_valid & exu_ready & exu_men & exu_write)
+        else if (handsk & exu_men & exu_write)
             wvalid <= 1'b1;
         else if (wtok)
             wvalid <= 1'b0;
@@ -197,7 +198,7 @@ module ysyx_25040111_arbiter(
             rsign <= 1'b0;
             wbaddr <= 5'b0;
         end
-        else if (exu_valid & exu_ready & exu_men & ~exu_write) begin
+        else if (handsk & exu_men & ~exu_write) begin
             raddr <= exu_addr;
             rmask <= exu_mask;
             rsign <= exu_rsign;
@@ -209,7 +210,7 @@ module ysyx_25040111_arbiter(
     always @(posedge clock) begin
         if (reset)
             rvalid <= 1'b0;
-        else if (exu_valid & exu_ready & exu_men & ~exu_write)
+        else if (handsk & exu_men & ~exu_write)
             rvalid <= 1'b1;
         else if (lsu_rready & lsu_rvalid)
             rvalid <= 1'b0;
