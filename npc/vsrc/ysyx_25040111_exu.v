@@ -217,7 +217,7 @@ module ysyx_25040111_exu(
     always @(posedge clock) begin
         if (reset)
             jmpc_ok <= 1'b0;
-        else if (exe_start & ~exe_end)
+        else if (exe_start & ~exe_end & jmp)
             jmpc_ok <= 1'b1;
         else if (jmpc_ok)
             jmpc_ok <= 1'b0;
