@@ -190,7 +190,7 @@ module ysyx_25040111(
 
     // ICACHE
     ysyx_25040111_cache #(
-        .CACHE_Ls 	(1  ),
+        .CACHE_Ls 	(2  ),
         .BLOCK_Ls 	(3  ))
     u_icache(
         .clock  	(clock       ),
@@ -269,8 +269,8 @@ module ysyx_25040111(
         .rd        	(de_ard      ),
         .imm       	(de_imm      ),
         .opt       	(de_opt      ),
-        .csr1      	(de_awcsr    ),
-        .csr2      	(ds_arcsr    ),
+        .csrw      	(de_awcsr    ),
+        .csrr      	(ds_arcsr    ),
         .idu_pc     (fd_pc       ),
         .exe_pc     (de_pc       )
     );

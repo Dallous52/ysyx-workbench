@@ -72,8 +72,8 @@ module ysyx_25040111_arbiter(
 
     // write back
     assign exu_ready    = ~working & ~(cah_valid & exu_men);
-    assign reg_valid    = (rvalid   & lsu_rvalid & lsu_rready) |
-                          (~exu_men & exu_ready  & exu_valid & exu_gen);
+    assign reg_valid    = (~exu_men & exu_ready  & exu_valid & exu_gen) |
+                          (rvalid   & lsu_rvalid & lsu_rready);
     assign reg_data     = rvalid ? lsu_rdata : exu_rd;
     assign reg_addr     = rvalid ? wbaddr    : exu_ard;
     
@@ -91,6 +91,8 @@ module ysyx_25040111_arbiter(
 
     reg         working;
 
+    reg [31:0]  tmp_pc;
+
     reg         wvalid;
     reg [31:0]  waddr;
     reg [31:0]  wdata;
@@ -102,42 +104,47 @@ module ysyx_25040111_arbiter(
     reg         rsign;
     reg [4:0]   wbaddr;
 
-    wire        wtok     = lsu_wready & lsu_wvalid;
+    wire        wtok    = lsu_wready & lsu_wvalid;
 
 //-----------------------------------------------------------------
 // State Machine
 //-----------------------------------------------------------------
 
     // ************************************************************
-    // apc get info to debug
-    reg [31:0]  apc, addr;
+    // get info for diff test
 `ifndef YOSYS_STA
-    reg [31:0]  endpc, endaddr;
-`endif
+    reg [31:0]  endpc, endaddr, tmp_addr;
     always @(posedge clock) begin
         if (reset) begin
-            apc <= 0;
-            addr <= 0;
+            tmp_addr <= 0;
         end
         else if (exu_valid & exu_ready) begin
-            apc <= exu_pc;
-            addr <= exu_addr;
+            tmp_addr <= exu_addr;
         end
 
-`ifndef YOSYS_STA  
         if (reset) begin
-            endpc <= 0;            
+            endpc <= 0;
             endaddr <= 0;
         end
         else if (((~exu_men & exu_ready  & exu_valid) | 
                   (rvalid & lsu_rvalid & lsu_rready)) | wtok) 
         begin
-            endpc <= exu_valid & exu_ready ? exu_pc : apc;
-            endaddr <= exu_valid & exu_ready ? exu_addr : addr;        
+            endpc <= exu_valid & exu_ready ? exu_pc : tmp_pc;
+            endaddr <= exu_valid & exu_ready ? exu_addr : tmp_addr;        
         end
 `endif
     end
     // ************************************************************
+
+    // tmp addr pc
+    always @(posedge clock) begin
+        if (reset) begin
+            tmp_pc <= 0;
+        end
+        else if (exu_valid & exu_ready) begin
+            tmp_pc <= exu_pc;
+        end
+    end
 
     // working
     always @(posedge clock) begin

@@ -5,8 +5,8 @@
 `endif
 
 module ysyx_25040111_ifu (
-    input  clock,
-    input  reset,
+    input           clock,
+    input           reset,
     
     input           ifu_ready,
     output          ifu_valid,

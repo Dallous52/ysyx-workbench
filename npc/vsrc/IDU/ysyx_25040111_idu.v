@@ -22,8 +22,8 @@ module ysyx_25040111_idu(
     output reg [4:0]    rd,
     output reg [31:0]   imm,
     // wire to case
-    output [11:0]       csr1, 
-                        csr2,
+    output [11:0]       csrw, 
+                        csrr,
     output [31:0]       exe_pc,
                         
     output reg [`OPT_HIGH:0] opt
@@ -201,8 +201,8 @@ module ysyx_25040111_idu(
         .inst 	(inst[31:7]  ),
         .rs1    (rs1_system),
         .rd     (rd_system),
-        .csr2   (csr2),
-        .csr1   (csr1),
+        .csrr   (csrr),
+        .csrw   (csrw),
         .imm    (imm_system),
         .opt    (opt_system)
     );

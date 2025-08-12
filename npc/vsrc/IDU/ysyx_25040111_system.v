@@ -8,7 +8,7 @@ module ysyx_25040111_system(
     input [31:7] inst,
     output [4:0] rs1,
     output [4:0] rd,
-    output reg [11:0] csr1, csr2,
+    output reg [11:0] csrw, csrr,
     output [31:0] imm,
     output reg [`OPT_HIGH:0] opt
 );
@@ -25,20 +25,20 @@ module ysyx_25040111_system(
     always @(*) begin
         case ({inst[31:20], fix})
             {`SYS_EBREAK, 1'b1}: begin
-                csr1 = 12'b0;
-                csr2 = 12'b0;
+                csrw = 12'b0;
+                csrr = 12'b0;
             end
             {`SYS_ECALL,  1'b1}: begin
-                csr1 = `MEPC;
-                csr2 = `MTVEC;
+                csrw = `MEPC;
+                csrr = `MTVEC;
             end
             {`SYS_MRET,   1'b1}: begin
-                csr1 = 12'b0;
-                csr2 = `MEPC;
+                csrw = 12'b0;
+                csrr = `MEPC;
             end
             default: begin
-                csr1 = inst[31:20];
-                csr2 = inst[31:20];
+                csrw = inst[31:20];
+                csrr = inst[31:20];
             end
         endcase
 
