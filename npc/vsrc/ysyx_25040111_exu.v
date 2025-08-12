@@ -120,7 +120,7 @@ module ysyx_25040111_exu(
     wire [15:0] frd_mask  = 16'h1 << abt_frd[3:0];
 
     // jump pc process
-    wire jmp  = ~((eopt[9:8] == 2'b01) & |eopt[2:0]) | (eopt[12] & eopt[15]);
+    wire jmp  = ~((opt[9:8] == 2'b01) & |opt[2:0]) | (opt[12] & opt[15]);
     wire mtp  = eopt[12] & eopt[15];
     
     wire [15:0] rlock_set = exe_ready & exe_valid & load ? rlock | ard_mask : rlock;
