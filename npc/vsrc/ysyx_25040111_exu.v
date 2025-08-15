@@ -196,9 +196,9 @@ module ysyx_25040111_exu(
                     alu_p1 <= mtp ? csri  : pc;  
                     alu_p2 <= mtp ? 32'd0 : rd[0] ? imm : 32'd4;  
                 end
-                2'b01: begin alu_p1 <= pc;  alu_p2 <= imm;   end
-                2'b10: begin alu_p1 <= pc;  alu_p2 <= 32'd4; end
-                2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;   end
+                2'b01: begin alu_p1 <= pc;  alu_p2 <= 32'd4; end
+                2'b10: begin alu_p1 <= pc;  alu_p2 <= imm;  end
+                2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;  end
             endcase
 
             alu_ctrl <= {`ADD, 1'b0, `EMPTY};
