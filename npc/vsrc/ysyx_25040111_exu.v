@@ -233,10 +233,10 @@ module ysyx_25040111_exu(
         .var1 	(alu_p1         ),
         .var2 	(alu_p2         ),
         .opt  	(alu_ctrl       ),
-        .snpc   ((opt[12:10]==3'b100) & exe_end),
-        .ext    (opt[13] & exe_end),
-        .sign   (opt[14] & exe_end),
-        .negate (opt[15] & exe_end),
+        .snpc   ((opt[12:10]==3'b100) & ~exe_end),
+        .ext    (opt[13] & ~exe_end),
+        .sign   (opt[14] & ~exe_end),
+        .negate (opt[15] & ~exe_end),
         .res  	(rd             )
     );
 
