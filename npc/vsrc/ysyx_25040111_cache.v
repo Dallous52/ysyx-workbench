@@ -34,9 +34,11 @@ module ysyx_25040111_cache(
     localparam TAG_IDX = BLOCK_Ls + CACHE_Ls;
     localparam TAG_HIG = 31 - TAG_IDX;
 
-    localparam BLOCK_L = 2**BLOCK_Ls << 3;
-    localparam DATA_L  = 2**BLOCK_Ls >> 2;
-    localparam CACHE_L = 2**CACHE_Ls;
+    localparam BLOCK_L = 1 << (CACHE_Ls + BLOCK_Ls - 2);
+    localparam COUNT_L = BLOCK_Ls - 2;
+    localparam DATA_L  = 1 << COUNT_L;
+    localparam CACHE_L = 1 << CACHE_Ls;
+    localparam IDX_L   = COUNT_L + CACHE_Ls;
 
 //-----------------------------------------------------------------
 // External Interface
@@ -52,35 +54,44 @@ module ysyx_25040111_cache(
     assign chaddr       = caddr;
 
 `ifdef RUNSOC
-    assign chburst      = 1'b1;        
+    assign chburst      = 1'b1;
 `else
-    assign chburst      = 1'b0;        
+    assign chburst      = 1'b0;
 `endif
 
 //-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
 
-    reg [BLOCK_L-1 : 0] cblocks [CACHE_L-1 : 0];
-    reg [TAG_HIG:0]     ctags   [CACHE_L-1 : 0];
-    reg [CACHE_L-1 : 0] cvalids;
+    reg [31:0]           cblocks [BLOCK_L-1 : 0];
+    reg [TAG_HIG:0]      ctags   [CACHE_L-1 : 0];
+    reg [CACHE_L-1 : 0]  cvalids;
 
-    reg [3:0]   count;
-    reg [31:0]  caddr;
-    reg         cready;
-    reg [31:0]  cdata;
-    reg         ended;
+    reg  [COUNT_L   : 0] count;
+    wire [IDX_L-1   : 0] bidx;
+    wire [IDX_L-1   : 0] sidx;
+    generate
+        if (BLOCK_Ls > 2) begin
+            assign bidx = {index, offset[BLOCK_Ls-1:2]};
+            assign sidx = {index, count[COUNT_L-1:0]};
+        end
+        else begin
+            assign bidx = index;
+            assign sidx = index;
+        end
+    endgenerate
+    
+    reg  [31:0]          caddr;
+    reg                  cready;
+    reg  [31:0]          cdata;
+    reg                  ended;
 
-    wire [3:0]  nup    = DATA_L;
-    wire [3:0]  ned    = DATA_L - 1;
+    wire [COUNT_L:0]     nup = DATA_L;
 
     wire        hit    = (ctags[index] == tag) & (cvalids[index]);
     wire        update = count == nup;
-    wire        rend   = (count == ned) & chready & chvalid;
+    wire        rend   = (count == chlen[COUNT_L:0]) & chready & chvalid;
     
-    wire [BLOCK_Ls+4 : 0] at = {5'b0 , offset >> 2};
-    wire [BLOCK_L-1 : 0] tdata = {cblocks[index] >> (at << 5)};
-
 //-----------------------------------------------------------------
 // State Machine
 //-----------------------------------------------------------------
@@ -94,7 +105,7 @@ module ysyx_25040111_cache(
         `ifndef YOSYS_STA
             if (ifu_valid & hit) cache_hit();
         `endif
-            cdata <= tdata[31:0];
+            cdata <= cblocks[bidx];
         end
     end
 
@@ -111,11 +122,11 @@ module ysyx_25040111_cache(
     // counter
     always @(posedge clock) begin
         if (reset) 
-            count <= 4'b0;
+            count <= {(COUNT_L+1){1'b0}};
         else if (chready) 
             count <= count + 1;
         else if (update)
-            count <= 4'b0;
+            count <= {(COUNT_L+1){1'b0}};
     end
     
     // main cache
@@ -128,15 +139,10 @@ module ysyx_25040111_cache(
             cvalids[index] <= 1'b1;    
         end
     end
-    generate
-        if (BLOCK_L > 32) begin
-            always_ff @(posedge clock)
-                if (chready) cblocks[index] <= {chdata, cblocks[index][BLOCK_L-1:32]};
-        end else begin
-            always_ff @(posedge clock)
-                if (chready) cblocks[index] <= chdata;
-        end
-    endgenerate
+
+    always @(posedge clock) begin
+        if (chready) cblocks[sidx] <= chdata;        
+    end
 
     // cready
     always @(posedge clock) begin
