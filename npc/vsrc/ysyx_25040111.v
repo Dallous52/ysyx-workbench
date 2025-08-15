@@ -192,7 +192,7 @@ module ysyx_25040111(
         .ifu_valid 	(ifu_valid   ),
         .idu_inst   (fd_inst     ),
         .idu_pc     (fd_pc       ),
-        .idu_valid 	(idu_valid   ),
+        .idu_valid 	(idu_valid   ), 
         .idu_ready 	(idu_ready   ),
         .err        (err_find    ),
         .errpc      (se_csr      )
@@ -200,8 +200,8 @@ module ysyx_25040111(
 
     // ICACHE
     ysyx_25040111_cache #(
-        .CACHE_Ls 	(5  ),
-        .BLOCK_Ls 	(5  ))
+        .CACHE_Ls 	(6  ),
+        .BLOCK_Ls 	(6  ))
     u_icache(
         .clock  	(clock       ),
         .reset  	(reset       ),
