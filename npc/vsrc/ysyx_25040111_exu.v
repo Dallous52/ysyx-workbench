@@ -176,7 +176,6 @@ module ysyx_25040111_exu(
         if (reset) begin
             alu_p1 <= 0;
             alu_p2 <= 0;
-            alu_ctrl <= 7'b0;         
         end
         else if (exe_ready & exe_valid) begin
             case (opt[4:3])
@@ -188,8 +187,6 @@ module ysyx_25040111_exu(
                 2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;  end
                 2'b10: begin alu_p1 <= pc;  alu_p2 <= imm;  end
             endcase
-            
-            alu_ctrl <= {opt[7:5], (opt[12:10]==3'b100), opt[15:13]};
         end
         else if (exe_start & ~exe_end) begin
             case (opt[9:8])
@@ -201,8 +198,6 @@ module ysyx_25040111_exu(
                 2'b10: begin alu_p1 <= pc;  alu_p2 <= imm;   end
                 2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;   end
             endcase
-
-            alu_ctrl <= {`ADD, 1'b0, `EMPTY};
         end
     end
 
