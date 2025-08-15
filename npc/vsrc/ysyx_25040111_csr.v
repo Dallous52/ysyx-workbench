@@ -32,7 +32,7 @@ module ysyx_25040111_csr(
         end
         
         if (reset) 
-            csr[3] <= 32'h00000000;
+            csr[3] <= 32'h0;
         if (err)
             csr[3] <= {28'b0, errtp};   // err process
     end
