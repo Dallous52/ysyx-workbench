@@ -52,7 +52,7 @@ module ysyx_25040111_cache(
     assign chaddr       = caddr;
 
 `ifdef RUNSOC
-    assign chburst      = addr[31:28] == 4'ha;        
+    assign chburst      = 1'b1;        
 `else
     assign chburst      = 1'b0;        
 `endif
