@@ -232,7 +232,7 @@ module ysyx_25040111_exu(
     ysyx_25040111_alu u_alu(
         .var1 	(alu_p1         ),
         .var2 	(alu_p2         ),
-        .opt  	(alu_ctrl[6:4]  ),
+        .opt  	(alu_ctrl       ),
         .snpc   ((opt[12:10]==3'b100) & exe_end),
         .ext    (opt[13] & exe_end),
         .sign   (opt[14] & exe_end),
