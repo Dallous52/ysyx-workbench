@@ -200,7 +200,7 @@ module ysyx_25040111(
 
     // ICACHE
     ysyx_25040111_cache #(
-        .CACHE_Ls 	(4  ),
+        .CACHE_Ls 	(1  ),
         .BLOCK_Ls 	(4  ))
     u_icache(
         .clock  	(clock       ),
