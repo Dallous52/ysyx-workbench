@@ -107,7 +107,7 @@ module ysyx_25040111_exu(
     // alu paramter
     reg  [31:0]         alu_p1, alu_p2;
     wire [31:0]         rd;
-    wire [6:0]          alu_ctrl;
+    reg [6:0]          alu_ctrl;
     always @* begin
     case (exe_end)
         1'b1: alu_ctrl = {`ADD, 1'b0, `EMPTY};
