@@ -180,11 +180,11 @@ module ysyx_25040111_exu(
         else if (exe_ready & exe_valid) begin
             case (opt[4:3])
                 2'b00: begin alu_p1 <= imm; alu_p2 <= 0;    end
-                2'b01: begin alu_p1 <= pc;  alu_p2 <= imm;  end
+                2'b01: begin                    alu_p1 <= rs1; 
+                    alu_p2 <= mrd ? csri : rs2;    end
                 2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;  end
                 2'b10: begin 
-                    alu_p1 <= rs1; 
-                    alu_p2 <= mrd ? csri : rs2; 
+                    alu_p1 <= pc;  alu_p2 <= imm;
                 end
             endcase
             
