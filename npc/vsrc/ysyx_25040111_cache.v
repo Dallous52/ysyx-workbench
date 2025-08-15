@@ -52,7 +52,7 @@ module ysyx_25040111_cache(
     assign chaddr       = caddr;
 
 `ifdef RUNSOC
-    assign chburst      = addr[31:28] == 4'ha;        
+    assign chburst      = 1'b1; // addr[31:28] == 4'ha;        
 `else
     assign chburst      = 1'b0;        
 `endif
@@ -62,7 +62,7 @@ module ysyx_25040111_cache(
 //-----------------------------------------------------------------
 
     reg [BLOCK_L-1 : 0] cblocks [CACHE_L-1 : 0];
-    reg [TAG_HIG:0]     ctags [CACHE_L-1 : 0];
+    reg [TAG_HIG:0]     ctags   [CACHE_L-1 : 0];
     reg [CACHE_L-1 : 0] cvalids;
 
     reg [3:0]   count;
@@ -72,7 +72,7 @@ module ysyx_25040111_cache(
     reg         ended;
 
     wire [3:0]  nup    = DATA_L;
-    wire [3:0]  ned    = DATA_L - 1; 
+    wire [3:0]  ned    = DATA_L - 1;
 
     wire        hit    = (ctags[index] == tag) & (cvalids[index]);
     wire        update = count == nup;
