@@ -106,8 +106,9 @@ module ysyx_25040111_exu(
 
     // alu paramter
     reg  [31:0]         alu_p1, alu_p2;
-    reg  [6:0]          alu_ctrl;
     wire [31:0]         rd;
+    wire [6:0]          alu_ctrl = exe_start & ~exe_end ?  {opt[7:5], (opt[12:10]==3'b100), opt[15:13]} :
+                                exe_start & exe_end & jmp ? {`ADD, 1'b0, `EMPTY} : 7'b0;
     
     // read after write lock paramter
     wire lock = |(rlock & ((16'h1 << ard_in[3:0]) |
@@ -197,8 +198,8 @@ module ysyx_25040111_exu(
                     alu_p2 <= mtp ? 32'd0 : rd[0] ? imm : 32'd4;  
                 end
                 2'b01: begin alu_p1 <= pc;  alu_p2 <= 32'd4; end
-                2'b10: begin alu_p1 <= pc;  alu_p2 <= imm;  end
-                2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;  end
+                2'b10: begin alu_p1 <= pc;  alu_p2 <= imm;   end
+                2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;   end
             endcase
 
             alu_ctrl <= {`ADD, 1'b0, `EMPTY};
