@@ -95,7 +95,7 @@ bool cachesim_run(int cache_ls, int block_ls)
     printf("[mhit rete] = " ANSI_FMT("%5.3lf%%", ANSI_FG_GREEN) "\n", mp * 100.);
     printf("   [AMAT_M] = " ANSI_FMT("%5.3lf", ANSI_FG_GREEN) "\n", 3. + (1. - mp) * 13);
     printf("[branch hit] = " ANSI_FMT("%ld / %ld", ANSI_FG_GREEN) "\n", (long)branch_hit, (long)branch_num);
-    printf("[b hit rate] = " ANSI_FMT("%5.3lf", ANSI_FG_GREEN) "\n", branch_hit / branch_num);
+    printf("[b hit rate] = " ANSI_FMT("%5.3lf%%", ANSI_FG_GREEN) "\n", branch_hit / branch_num * 100.);
 
     nemu_init(get_img_size(), 0);
     
