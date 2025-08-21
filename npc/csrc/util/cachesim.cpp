@@ -37,7 +37,8 @@ bool cachesim_run(int cache_ls, int block_ls)
     int tag_idx = block_ls + cache_ls;
 
     double inst_num = 0, hit_num = 0, mem_num = 0, mhit_num = 0;
-    word_t paddr = 0, inst = 0;;
+    double branch_hit = 0., branch_num = 0.; 
+    word_t paddr = 0, nxpc = 0, inst = 0;
     while (pc != 0)
     {
         uint32_t tag = BITS(pc, 31, tag_idx);
@@ -51,7 +52,7 @@ bool cachesim_run(int cache_ls, int block_ls)
             valids[index] = true;
         }
 
-        uint64_t ret = ref_difftest_sim(&paddr);
+        uint64_t ret = ref_difftest_sim(&paddr, &nxpc);
         pc = (uint32_t)ret;
         inst = (word_t)(ret >> 32);
 
@@ -76,7 +77,10 @@ bool cachesim_run(int cache_ls, int block_ls)
         
         if (opcode == branch)
         {
-
+            branch_num++;
+            // 总是不跳转
+            if (nxpc == pc + 4)
+                branch_hit++;
         }
 
         inst_num++;
@@ -90,6 +94,8 @@ bool cachesim_run(int cache_ls, int block_ls)
     printf("  [mem hit] = " ANSI_FMT("%ld / %ld", ANSI_FG_GREEN) "\n", (long)mhit_num, (long)mem_num);
     printf("[mhit rete] = " ANSI_FMT("%5.3lf%%", ANSI_FG_GREEN) "\n", mp * 100.);
     printf("   [AMAT_M] = " ANSI_FMT("%5.3lf", ANSI_FG_GREEN) "\n", 3. + (1. - mp) * 13);
+    printf("[branch hit] = " ANSI_FMT("%ld / %ld", ANSI_FG_GREEN) "\n", (long)branch_hit, (long)branch_num);
+    printf("[b hit rate] = " ANSI_FMT("%5.3lf", ANSI_FG_GREEN) "\n", branch_hit / branch_num);
 
     nemu_init(get_img_size(), 0);
     
