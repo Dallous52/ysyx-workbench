@@ -43,7 +43,7 @@ module ysyx_25040111_csr(
     // MCAUSE	0x342
     // 读取
     wire forward = (waddr == raddr) & wen;
-
+    
     always @(*) begin
         if (ren & ~forward) begin
             case (raddr)

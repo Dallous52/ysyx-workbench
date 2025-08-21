@@ -25,7 +25,7 @@ module ysyx_25040111_cache(
 //-----------------------------------------------------------------
     
     parameter CACHE_Ls = 4; // Block len sqrt   16
-    parameter BLOCK_Ls = 2; // Byte len sqrt    4
+    parameter BLOCK_Ls = 3; // Byte len sqrt    4
 
 //-----------------------------------------------------------------
 // Local Params

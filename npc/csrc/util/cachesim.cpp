@@ -11,6 +11,7 @@ extern diff_sim ref_difftest_sim;
 
 static const uint8_t load = 0b0000011;
 static const uint8_t store = 0b0100011;
+static const uint8_t branch = 0b1100011;
 
 void nemu_init(long img_size, int port);
 
@@ -71,6 +72,11 @@ bool cachesim_run(int cache_ls, int block_ls)
                     mvalids[mindex] = true;
                 }
             }
+        }
+        
+        if (opcode == branch)
+        {
+            
         }
 
         inst_num++;
