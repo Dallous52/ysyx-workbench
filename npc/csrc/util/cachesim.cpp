@@ -6,7 +6,7 @@
 #include <string.h>
 #include <math.h>
 
-typedef uint64_t (*diff_sim)(word_t*);
+typedef uint64_t (*diff_sim)(word_t*, word_t*);
 extern diff_sim ref_difftest_sim;
 
 static const uint8_t load = 0b0000011;
@@ -76,7 +76,7 @@ bool cachesim_run(int cache_ls, int block_ls)
         
         if (opcode == branch)
         {
-            
+
         }
 
         inst_num++;
