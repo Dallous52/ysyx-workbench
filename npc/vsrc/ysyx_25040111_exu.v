@@ -184,8 +184,8 @@ module ysyx_25040111_exu(
                     alu_p1 <= rs1; 
                     alu_p2 <= mrd ? csri : rs2;    
                 end
-                2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;  end
                 2'b10: begin alu_p1 <= pc;  alu_p2 <= imm;  end
+                2'b11: begin alu_p1 <= rs1; alu_p2 <= imm;  end
             endcase
             
             alu_ctrl <= {opt[7:5], (opt[12:10]==3'b100), opt[15:13]};
