@@ -54,12 +54,18 @@ module ysyx_25040111_arbiter(
     input           erri,
     input  [3:0]    errtpi,
     output          erro,
-    output [3:0]    errtpo
+    output [3:0]    errtpo,
+
+    input           in_fencei,
+    output          ot_fencei
 );
 
 //-----------------------------------------------------------------
 // External Interface
 //-----------------------------------------------------------------
+
+    // fencei
+    assign ot_fencei = in_fencei & handsk;
 
     // err process
     assign erro         = handsk & erri;

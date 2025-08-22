@@ -98,7 +98,10 @@ module ysyx_25040111(
     wire        err_find;  // from arbiter
     wire [3:0]  err_type;  // from arbiter
 
-    wire flush = err_find | reset;
+    wire fencei;
+
+    wire flush = err_find | reset | fencei;
+    wire cflush = fencei | reset;
 
 //-----------------------------------------------------------------
 // DATA SIGNAL
@@ -168,6 +171,7 @@ module ysyx_25040111(
     wire                ea_rsign;
     wire                ea_err;
     wire [3:0]          ea_errtp;
+    wire                ea_fencei;
 
     // arbiter <==> reg | csr
     wire [31:0]         ar_data;
@@ -204,7 +208,7 @@ module ysyx_25040111(
         .BLOCK_Ls 	(4  ))
     u_icache(
         .clock  	(clock       ),
-        .reset  	(reset       ),
+        .reset  	(cflush      ),
         .addr   	(fc_addr     ),
         .data   	(cf_inst     ),
         .chburst    (ca_burst    ),
@@ -265,7 +269,9 @@ module ysyx_25040111(
         .erri       (ea_err      ),
         .errtpi     (ea_errtp    ),
         .erro       (err_find    ),
-        .errtpo     (err_type    )
+        .errtpo     (err_type    ),
+        .in_fencei  (ea_fencei   ),
+        .ot_fencei  (fencei      )
     );
     
 
@@ -380,7 +386,8 @@ module ysyx_25040111(
         .erri       (de_err     ),
         .errtpi     (de_errtp   ),
         .erro       (ea_err     ),
-        .errtpo     (ea_errtp   )
+        .errtpo     (ea_errtp   ),
+        .fencei     (ea_fencei  )
     );
     
     // CSR

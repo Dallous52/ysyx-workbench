@@ -48,7 +48,9 @@ module ysyx_25040111_exu(
     input                   erri,
     input  [3:0]            errtpi,
     output                  erro,
-    output [3:0]            errtpo
+    output [3:0]            errtpo,
+
+    output                  fencei
 );
 
 //-----------------------------------------------------------------
@@ -81,6 +83,8 @@ module ysyx_25040111_exu(
 
     assign erro      = error;
     assign errtpo    = errtp;
+    
+    assign fencei = ~eopt[0] & ~eopt[15] & (eopt[12:10] == 3'b100);
 
 //-----------------------------------------------------------------
 // Register / Wire
