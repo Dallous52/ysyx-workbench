@@ -18,27 +18,26 @@ module ysyx_25040111_clint(
 );
 
     // time read
-    reg [63:0] mtime;
-    reg [31:0] tdata;
     reg        tvalid;
 
     assign arready = 1'b1;
     assign rvalid  = tvalid;
-    assign rdata   = tdata;
+    assign rdata   = tvalid ? (araddr[3:0] == 4'd8) ? mtime[31:0] : mtime[63:32] : 32'b0;
     
-    always @(posedge clock) begin
-        mtime <= mtime + 1;
+    reg [63:0] mtime;
 
-        if (reset)begin
-            tdata <= 0;
-            tvalid <= 1'b0;
-        end        
-        else if (arvalid & arready) begin
-            tdata <= araddr == `CLINT_ADDR ? mtime[31:0] : mtime[63:32];
-            tvalid <= 1; // 读取完毕
-        end
-        else if (rvalid & rready) begin
-            tvalid <= 0;
+    always @(posedge clock) begin
+        if (reset) begin
+            mtime <= 0;
+            tvalid   <= 0;
+        end else begin
+            mtime <= mtime + 1;
+
+            if (arvalid & arready) begin
+                tvalid <= 1;
+            end else if (rvalid & rready) begin
+                tvalid <= 0;
+            end
         end
     end
 
