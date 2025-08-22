@@ -78,7 +78,7 @@ module ysyx_25040111_exu(
 
     assign abt_pc    = epc;
     
-    assign jpc_ready = jmpc_ok;
+    assign jpc_ready = jmpc_ok | (abt_valid & abt_ready & fencei);
     assign jump_pc   = rd; 
 
     assign erro      = error;
