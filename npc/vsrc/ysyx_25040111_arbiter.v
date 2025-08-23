@@ -128,7 +128,7 @@ module ysyx_25040111_arbiter(
 
     // ************************************************************
     // get info for diff test
-`ifndef YOSYS
+`ifndef STA
     reg [31:0]  endpc, endaddr, tmp_addr;
     always @(posedge clock) begin
         if (reset) begin
