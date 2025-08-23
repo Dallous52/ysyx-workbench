@@ -19,7 +19,7 @@ SOC_DIR = /home/dallous/Documents/ysyx-workbench/ysyxSoC
 ARGS ?= 
 
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
-VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
+VSRCS = result/ysyx_25040111-1000MHz/ysyx_25040111.v # $(shell find $(abspath ./vsrc) -name "*.v")
 
 ifeq ($(TOPNAME), ysyxSoCFull)
 VSRCS += $(shell find $(SOC_DIR)/perip -name "*.v")
