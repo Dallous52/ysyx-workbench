@@ -20,6 +20,7 @@ ARGS ?=
 
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = result/ysyx_25040111-1000MHz/ysyx_25040111.v # $(shell find $(abspath ./vsrc) -name "*.v")
+VSRCS += /home/dallous/Documents/yosys-sta/nangate45/sim/cells.v
 
 ifeq ($(TOPNAME), ysyxSoCFull)
 VSRCS += $(shell find $(SOC_DIR)/perip -name "*.v")
