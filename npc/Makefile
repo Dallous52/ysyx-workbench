@@ -8,7 +8,8 @@
 # --noassert: 关闭 Verilator 内部的 assert
 VERILATOR_CFLAGS += -MMD --build -cc  --autoflush \
 				-O3 --x-assign fast --x-initial fast --noassert \
-				--timescale "1ns/1ns" --no-timing
+				--timescale "1ns/1ns" --no-timing --lint-only -Wall -Werror \
+				-Wno-DECLFILENAME
 
 # 顶层模块名称
 TOPNAME ?= ysyx_25040111 # ysyxSoCFull
