@@ -7,7 +7,7 @@
 # --x-initial fast: 允许 X 初值优化
 # --noassert: 关闭 Verilator 内部的 assert
 VERILATOR_CFLAGS += -MMD --build -cc  --autoflush \
-				-O3 --x-assign fast --x-initial fast --noassert \
+				-O3 --x-assign fast --x-initial fast --noassert -Wno-UNUSED \
 				--timescale "1ns/1ns" --no-timing --lint-only -Wall -Wno-DECLFILENAME
 
 # 顶层模块名称
