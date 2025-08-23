@@ -172,7 +172,7 @@ int cpu_exec(uint64_t steps)
 
   uint64_t step_ok = 0;
   char logbuf[128] = {};
-  // currpc = CPU_PC;
+  currpc = CPU_PC;
   while (steps--)
   {
 #ifdef RUNSOC
@@ -187,34 +187,34 @@ int cpu_exec(uint64_t steps)
 
     cyc_num++;
 
-//     if (CPU_PC != currpc)
-//     {
-//       currpc = CPU_PC;
-//       word_t inst = inst_get(CPU_PC);
+    if (CPU_PC != currpc)
+    {
+      currpc = CPU_PC;
+      word_t inst = inst_get(CPU_PC);
 
-//       cycle_counter(inst, cyc_num);
-//       cyc_num = 0;
-//       inst_num++;
+      cycle_counter(inst, cyc_num);
+      cyc_num = 0;
+      inst_num++;
 
-// #if defined(EN_TRACE) && defined(ITRACE)
-//       print_exe_info(CPU_PC, inst, logbuf, 128);
-//       printf("%s\n", logbuf);
-// #endif // ITRACE
+#if defined(EN_TRACE) && defined(ITRACE)
+      print_exe_info(CPU_PC, inst, logbuf, 128);
+      printf("%s\n", logbuf);
+#endif // ITRACE
 
-// #if defined(EN_TRACE) && defined(FTRACE)
-//       ftrace(currpc, CPU_PC, inst);
-// #endif // FTRACE
+#if defined(EN_TRACE) && defined(FTRACE)
+      ftrace(currpc, CPU_PC, inst);
+#endif // FTRACE
 
-//       check_wp();
+      check_wp();
 
-// #ifdef DIFFTEST
-//       // printf("currpc : %08x\n", currpc);
-//       if (device_visit(ADDR, inst))
-//         difftest_nop(currpc + 4);
-//       else if (!difftest_step(CPU_PC))
-//         npc_stat = NPC_STOP;
-// #endif // DIFFTEST
-//     }
+#ifdef DIFFTEST
+      // printf("currpc : %08x\n", currpc);
+      if (device_visit(ADDR, inst))
+        difftest_nop(currpc + 4);
+      else if (!difftest_step(CPU_PC))
+        npc_stat = NPC_STOP;
+#endif // DIFFTEST
+    }
 
     switch (npc_stat)
     {
@@ -242,62 +242,61 @@ int cpu_exec(uint64_t steps)
 // print regiestor
 void reg_print()
 {
-  // for (int i = 0; i < ARRLEN(regs); ++i)
-  // {
-  //   int j = i + 4;
-  //   for (; i < j; ++i)
-  //     printf("[%s] 0x%08x\t", regs[i], REG[i]);
-  //   putchar('\n');
-  //   --i;
-  // }
+  for (int i = 0; i < ARRLEN(regs); ++i)
+  {
+    int j = i + 4;
+    for (; i < j; ++i)
+      printf("[%s] 0x%08x\t", regs[i], REG[i]);
+    putchar('\n');
+    --i;
+  }
 }
 
 
 // get regiestor value
 word_t reg_get_value(char *s, bool *success)
 {
-  // if (s == NULL || success == NULL)
-  // {
-  //   if (success == NULL)
-  //     return 0;
+  if (s == NULL || success == NULL)
+  {
+    if (success == NULL)
+      return 0;
 
-  //   *success = false;
-  //   return 0;
-  // }
+    *success = false;
+    return 0;
+  }
 
-  // if (strcmp(s, "pc") == 0)
-  // {
-  //   *success = true;
-  //   return CPU_PC;
-  // }
+  if (strcmp(s, "pc") == 0)
+  {
+    *success = true;
+    return CPU_PC;
+  }
 
-  // int i = 0;
-  // for (; i < ARRLEN(regs); i++)
-  // {
-  //   if (strcmp(s, regs[i]) == 0)
-  //     break;
-  // }
+  int i = 0;
+  for (; i < ARRLEN(regs); i++)
+  {
+    if (strcmp(s, regs[i]) == 0)
+      break;
+  }
 
-  // if (i == ARRLEN(regs))
-  // {
-  //   *success = false;
-  //   return 0;
-  // }
+  if (i == ARRLEN(regs))
+  {
+    *success = false;
+    return 0;
+  }
 
-  // *success = true;
-  // return REG[i];
-  return 0;
+  *success = true;
+  return REG[i];
 }
 
 
 // get reg values
 void reg_value(word_t *regbuf)
 {
-  // int i = 0;
-  // for (; i < ARRLEN(regs); i++)
-  // {
-  //   regbuf[i] = REG[i];
-  // }
+  int i = 0;
+  for (; i < ARRLEN(regs); i++)
+  {
+    regbuf[i] = REG[i];
+  }
 }
 
 
@@ -334,7 +333,7 @@ extern "C" void ebreak(int code)
 		if (code == 9)
 		{
 			char logbuf[128] = {};
-			// print_exe_info(CPU_PC, paddr_read(CPU_PC, 4), logbuf, 128);
+			print_exe_info(CPU_PC, paddr_read(CPU_PC, 4), logbuf, 128);
 			printf(ANSI_FMT("[unrealized] %s\n", ANSI_FG_RED), logbuf);
 		}
 	} else
