@@ -154,7 +154,7 @@ static word_t inst_get(word_t addr)
   else if (addr >= SDRAM_START && addr < SDRAM_END)
     return sdram_read_expr(addr - SDRAM_START);
 #else
-  else if (addr >= 0x80000000 && addr < 0x81000000)
+  if (addr >= 0x80000000 && addr < 0x81000000)
     return paddr_read(addr, 4);
 #endif
 
