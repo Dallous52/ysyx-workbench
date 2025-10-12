@@ -191,7 +191,7 @@ int cpu_exec(uint64_t steps)
     {
       currpc = CPU_PC;
       word_t inst = inst_get(CPU_PC);
-
+      printf("inst : %08x\n", inst);
       cycle_counter(inst, cyc_num);
       cyc_num = 0;
       inst_num++;
