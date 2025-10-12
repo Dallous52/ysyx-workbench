@@ -151,6 +151,10 @@ static word_t inst_get(word_t addr)
     return paddr_read(addr, 4);
   else if (addr >= SDRAM_START && addr < SDRAM_END)
     return sdram_read_expr(addr - SDRAM_START);
+#ifndef RUNSOC
+  else if (addr >= 0x80000000 && addr < 0x81000000)
+    return paddr_read(addr - 0x50000000, 4);
+#endif
 
   assert(1);
   return 0;
@@ -208,7 +212,7 @@ int cpu_exec(uint64_t steps)
       check_wp();
 
 #ifdef DIFFTEST
-      printf("currpc : %08x\n", currpc);
+      // printf("currpc : %08x\n", currpc);
       if (device_visit(ADDR, inst))
         difftest_nop(currpc + 4);
       else if (!difftest_step(CPU_PC))
