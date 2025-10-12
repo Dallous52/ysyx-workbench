@@ -208,7 +208,7 @@ int cpu_exec(uint64_t steps)
       check_wp();
 
 #ifdef DIFFTEST
-      // printf("currpc : %08x\n", currpc);
+      printf("currpc : %08x\n", currpc);
       if (device_visit(ADDR, inst))
         difftest_nop(currpc + 4);
       else if (!difftest_step(CPU_PC))
