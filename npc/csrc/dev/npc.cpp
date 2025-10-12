@@ -147,13 +147,15 @@ static void print_exe_info(word_t tpc, word_t tinst, char *logbuf, size_t buflen
 word_t sdram_read_expr(word_t addr);
 static word_t inst_get(word_t addr)
 {
+
+#ifdef RUNSOC
   if (addr >= FLASH_START && addr < FLASH_END)
     return paddr_read(addr, 4);
   else if (addr >= SDRAM_START && addr < SDRAM_END)
     return sdram_read_expr(addr - SDRAM_START);
-#ifndef RUNSOC
+#else
   else if (addr >= 0x80000000 && addr < 0x81000000)
-    return paddr_read(addr - 0x50000000, 4);
+    return paddr_read(addr, 4);
 #endif
 
   assert(1);
