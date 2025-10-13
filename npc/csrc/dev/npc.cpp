@@ -341,8 +341,7 @@ extern "C" void ebreak(int code)
 			print_exe_info(CPU_PC, paddr_read(CPU_PC, 4), logbuf, 128);
 			printf(ANSI_FMT("[unrealized] %s\n", ANSI_FG_RED), logbuf);
 		}
-	} else
-		npc_stat = NPC_END;
+	} else npc_stat = NPC_END;
 }
 
 

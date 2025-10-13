@@ -24,8 +24,13 @@ insert-arg: image
 
 image: image-dep
 	@$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt
-	@echo + OBJCOPY "->" $(IMAGE_REL).bind
+	@echo + OBJCOPY "->" $(IMAGE_REL).bin
 	@$(OBJCOPY) -S --set-section-flags .bss=alloc,contents -O binary $(IMAGE).elf $(IMAGE).bin
+
+hex: image-dep
+	@$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt
+	@echo + OBJCOPY "->" $(IMAGE_REL).hex
+	@$(OBJCOPY) -O verilog --adjust-vma -0x80000000 $(IMAGE).elf $(IMAGE).hex
 
 run: insert-arg
 	@echo $(NPCFLAGS)

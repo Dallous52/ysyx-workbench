@@ -10,6 +10,8 @@ VERILATOR_CFLAGS += -MMD --build -cc  --autoflush \
 				-O3 --x-assign fast --x-initial fast --noassert \
 				--timescale "1ns/1ns" --no-timing
 
+IVERILOG_FLAG = -g2012
+
 # 顶层模块名称
 TOPNAME ?= ysyx_25040111 # ysyxSoCFull
 
