@@ -62,14 +62,18 @@ module ysyx_25040111_sram(
     end
     
     // memory write
-    wire [7:0] wmask = {4'b0, wstrb};
+    `ifdef __ICARUS__
+        wire [31:0] wmask = {{8{wstrb[3]}}, {8{wstrb[2]}}, {8{wstrb[1]}}, {8{wstrb[0]}}};
+    `else
+        wire [7:0] wmask = {4'b0, wstrb};
+    `endif
     assign awready = 1;
     assign wready = 1;
     assign bvalid = wready & wvalid;
     always @(*) begin
         if (awvalid & awready & wvalid & wready & wlast & bready) begin
             `ifdef __ICARUS__
-                mem[araddr >> 2];
+                mem[awaddr >> 2] <= (mem[awaddr >> 2] & ~wmask) | (wdata & wmask);
             `else
                 pmem_write(awaddr, wdata, wmask);
             `endif // __ICARUS__
