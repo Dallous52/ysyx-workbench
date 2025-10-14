@@ -70,7 +70,7 @@ module ysyx_25040111_sram(
     assign awready = 1;
     assign wready = 1;
     assign bvalid = wready & wvalid;
-    always @(*) begin
+    always @(posedge clock) begin
         if (awvalid & awready & wvalid & wready & wlast & bready) begin
             `ifdef __ICARUS__
                 mem[awaddr >> 2] <= (mem[awaddr >> 2] & ~wmask) | (wdata & wmask);
