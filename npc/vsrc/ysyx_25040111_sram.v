@@ -68,7 +68,11 @@ module ysyx_25040111_sram(
     assign bvalid = wready & wvalid;
     always @(*) begin
         if (awvalid & awready & wvalid & wready & wlast & bready) begin
-            pmem_write(awaddr, wdata, wmask);
+            `ifdef __ICARUS__
+                mem[araddr >> 2];
+            `else
+                pmem_write(awaddr, wdata, wmask);
+            `endif // __ICARUS__
         end
     end
 
