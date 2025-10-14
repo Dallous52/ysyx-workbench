@@ -70,7 +70,7 @@ endif
 all: sim
 
 # simple sim test
-sim: $(NVBOARD_ARCHIVE)
+sim: $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 	@mkdir -p build
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	verilator $(VERILATOR_CFLAGS) \
