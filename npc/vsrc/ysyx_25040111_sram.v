@@ -32,11 +32,12 @@ module ysyx_25040111_sram(
     input           bready
 );
 
+`ifdef __ICARUS__
     reg [31:0] mem [0:3145727];
-
     initial begin
         $readmemh(`HEX_PATH, mem);
     end
+`endif // __ICARUS__
 
     // memory read
     reg [31:0] rdata_t;
