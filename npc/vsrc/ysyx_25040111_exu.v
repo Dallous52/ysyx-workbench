@@ -259,7 +259,11 @@ module ysyx_25040111_exu(
     assign eret = opt[15] ? rs1 : 32'd9;
     always @(*) begin
         if (opt == `EBREAK_INST)
-            ebreak(eret);
+        `ifdef __ICARUS__
+            $finish();
+        `else
+            ebreak(eret);            
+        `endif
     end
 `endif // YOSYS_STA
 

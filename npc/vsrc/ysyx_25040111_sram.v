@@ -3,6 +3,7 @@
 
 `include "HDR/ysyx_25040111_dpic.vh"
 
+`define HEX_PATH "/home/dallous/Documents/ysyx-workbench/am-kernels/benchmarks/microbench/build/microbench-riscv32e-npc.hex"
 `define READY_TIME 8'd1
 
 module ysyx_25040111_sram(
@@ -33,6 +34,10 @@ module ysyx_25040111_sram(
 
     reg [31:0] mem [0:3145727];
 
+    initial begin
+        $readmemh(`HEX_PATH, mem);
+    end
+
     // memory read
     reg [31:0] rdata_t;
     assign arready = 1;
@@ -43,7 +48,11 @@ module ysyx_25040111_sram(
             rvalid <= 1'b0;            
         end
         else if (arvalid & arready) begin
-            rdata_t <= pmem_read(araddr);
+            `ifdef __ICARUS__
+                rdata_t <= mem[araddr >> 2];
+            `else
+                rdata_t <= pmem_read(araddr);
+            `endif // __ICARUS__
             rvalid  <= 1'b1;
         end
         else if (rvalid & rready & |hehe) begin

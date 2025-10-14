@@ -10,7 +10,8 @@ VERILATOR_CFLAGS += -MMD --build -cc  --autoflush \
 				-O3 --x-assign fast --x-initial fast --noassert \
 				--timescale "1ns/1ns" --no-timing
 
-IVERILOG_FLAG = -g2012
+IVERILOG_FLAG = -g2012 -I/home/dallous/Documents/ysyx-workbench/npc/vsrc/ \
+					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/IDU \
 
 # 顶层模块名称
 TOPNAME ?= ysyx_25040111 # ysyxSoCFull
@@ -94,7 +95,9 @@ gtkwave:
 run: sim
 	./build/$(TOPNAME)/top $(ARGS)
 
-isim: 
+isim:
+	@mkdir -p build/isim
+	@iverilog $(IVERILOG_FLAG) -o itop $(VSRCS)
 
 pref:
 	make -C/home/dallous/Documents/ysyx-workbench/am-kernels/benchmarks/microbench/ \

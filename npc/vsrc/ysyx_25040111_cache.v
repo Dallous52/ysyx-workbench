@@ -103,7 +103,9 @@ module ysyx_25040111_cache(
         end
         else if ((ifu_valid & hit & ~cready) | update) begin
         `ifndef YOSYS_STA
+        `ifndef __ICARUS__ 
             if (ifu_valid & hit) cache_hit();
+        `endif
         `endif
             cdata <= cblocks[bidx];
         end
