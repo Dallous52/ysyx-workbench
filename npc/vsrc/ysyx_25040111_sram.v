@@ -56,7 +56,7 @@ module ysyx_25040111_sram(
             `endif // __ICARUS__
             rvalid  <= 1'b1;
         end
-        else if (rvalid & rready & |hehe) begin
+        else if (rvalid & rready) begin
             rvalid <= 1'b0;            
         end
     end
@@ -79,8 +79,6 @@ module ysyx_25040111_sram(
             `endif // __ICARUS__
         end
     end
-
-    wire [2:0] hehe = awsize + arsize + 1;
 
 endmodule
 
