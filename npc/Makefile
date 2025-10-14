@@ -70,7 +70,7 @@ endif
 all: sim
 
 # simple sim test
-sim: $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
+sim: $(NVBOARD_ARCHIVE)
 	@mkdir -p build
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	verilator $(VERILATOR_CFLAGS) \
@@ -93,6 +93,8 @@ gtkwave:
 # build and run
 run: sim
 	./build/$(TOPNAME)/top $(ARGS)
+
+isim: 
 
 pref:
 	make -C/home/dallous/Documents/ysyx-workbench/am-kernels/benchmarks/microbench/ \

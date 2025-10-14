@@ -30,6 +30,9 @@ module ysyx_25040111_sram(
     output          bvalid,
     input           bready
 );
+
+    reg [31:0] mem [0:3145727];
+
     // memory read
     reg [31:0] rdata_t;
     assign arready = 1;
