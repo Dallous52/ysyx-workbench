@@ -33,10 +33,13 @@ module ysyx_25040111_sram(
 );
 
 `ifdef __ICARUS__
-    reg [31:0] mem [0:3145727];
+    reg [7:0] mem [0:6291456];
     initial begin
+        $display("read hex from %s", `HEX_PATH);
         $readmemh(`HEX_PATH, mem);
     end
+    wire [31:0] iaraddr = araddr & {4'b0, {26{1'b1}}, 2'b0};
+    wire [31:0] mrdata = {mem[iaraddr | 32'b11], mem[iaraddr | 32'b10], mem[iaraddr | 32'b01], mem[iaraddr]};
 `endif // __ICARUS__
 
     // memory read
@@ -50,7 +53,8 @@ module ysyx_25040111_sram(
         end
         else if (arvalid & arready) begin
             `ifdef __ICARUS__
-                rdata_t <= mem[araddr >> 2];
+                rdata_t <= mrdata;
+                $display("read iaddr %h data %h", araddr, mrdata);
             `else
                 rdata_t <= pmem_read(araddr);
             `endif // __ICARUS__
@@ -63,7 +67,7 @@ module ysyx_25040111_sram(
     
     // memory write
     `ifdef __ICARUS__
-        wire [31:0] wmask = {{8{wstrb[3]}}, {8{wstrb[2]}}, {8{wstrb[1]}}, {8{wstrb[0]}}};
+        wire [31:0] iawaddr = awaddr & {4'b0, {26{1'b1}}, 2'b0};
     `else
         wire [7:0] wmask = {4'b0, wstrb};
     `endif
@@ -73,7 +77,11 @@ module ysyx_25040111_sram(
     always @(posedge clock) begin
         if (awvalid & awready & wvalid & wready & wlast & bready) begin
             `ifdef __ICARUS__
-                mem[awaddr >> 2] <= (mem[awaddr >> 2] & ~wmask) | (wdata & wmask);
+                $display("write mem %h", awaddr);
+                if (wstrb[0]) mem[iawaddr] <= wdata[7:0];
+                if (wstrb[1]) mem[iawaddr | 32'b01] <= wdata[15:8];
+                if (wstrb[2]) mem[iawaddr | 32'b10] <= wdata[23:16];
+                if (wstrb[3]) mem[iawaddr | 32'b11] <= wdata[31:24];
             `else
                 pmem_write(awaddr, wdata, wmask);
             `endif // __ICARUS__

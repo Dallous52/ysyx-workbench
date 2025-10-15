@@ -66,6 +66,8 @@ module ysyx_25040111_ifu (
         else if (ifu_ready & ifu_valid) begin
             inst <= ifu_inst;
             inst_ok <= 1'b1;
+            $display("pc %h  inst %h", pc, ifu_inst);
+            $stop;
         end
         else if (idu_ready & idu_valid)
             inst_ok <= 1'b0;

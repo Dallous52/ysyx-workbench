@@ -97,7 +97,8 @@ run: sim
 
 isim:
 	@mkdir -p build/isim
-	@iverilog $(IVERILOG_FLAG) -o itop $(VSRCS)
+	@iverilog $(IVERILOG_FLAG) -o build/isim/itop $(VSRCS) isim.v
+	@vvp build/isim/itop
 
 pref:
 	make -C/home/dallous/Documents/ysyx-workbench/am-kernels/benchmarks/microbench/ \
