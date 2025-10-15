@@ -67,8 +67,7 @@ module ysyx_25040111_ifu (
             inst <= ifu_inst;
             inst_ok <= 1'b1;
             `ifdef __ICARUS__
-                $display("pc %h  inst %h", pc, ifu_inst);
-                $stop;
+                if ($isunknown(ifu_inst)) $stop;
             `endif
         end
         else if (idu_ready & idu_valid)

@@ -54,7 +54,7 @@ module ysyx_25040111_sram(
         else if (arvalid & arready) begin
             `ifdef __ICARUS__
                 rdata_t <= mrdata;
-                $display("read iaddr %h data %h", araddr, mrdata);
+                // $display("read iaddr %h data %h", araddr, mrdata);
             `else
                 rdata_t <= pmem_read(araddr);
             `endif // __ICARUS__
@@ -77,11 +77,15 @@ module ysyx_25040111_sram(
     always @(posedge clock) begin
         if (awvalid & awready & wvalid & wready & wlast & bready) begin
             `ifdef __ICARUS__
-                $display("write mem %h", awaddr);
-                if (wstrb[0]) mem[iawaddr] <= wdata[7:0];
-                if (wstrb[1]) mem[iawaddr | 32'b01] <= wdata[15:8];
-                if (wstrb[2]) mem[iawaddr | 32'b10] <= wdata[23:16];
-                if (wstrb[3]) mem[iawaddr | 32'b11] <= wdata[31:24];
+                // $display("write mem %h", awaddr);
+                if (awaddr == 32'ha00003f8)
+                    $write("%c", wdata[7:0]);
+                else begin
+                    if (wstrb[0]) mem[iawaddr] <= wdata[7:0];
+                    if (wstrb[1]) mem[iawaddr | 32'b01] <= wdata[15:8];
+                    if (wstrb[2]) mem[iawaddr | 32'b10] <= wdata[23:16];
+                    if (wstrb[3]) mem[iawaddr | 32'b11] <= wdata[31:24];
+                end
             `else
                 pmem_write(awaddr, wdata, wmask);
             `endif // __ICARUS__
