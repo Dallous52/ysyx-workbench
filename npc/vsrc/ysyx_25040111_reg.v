@@ -15,7 +15,9 @@ module ysyx_25040111_reg (
     always @(posedge clock) begin
         if (wen && (waddr != 4'd0))
             rf[waddr] <= wdata;
-        $display("sp num: %h", rf[1]);
+        `ifdef __ICARUS__
+            $display("ra num: %h", rf[1]);
+        `endif
         rf[0] <= 0;
     end
 
