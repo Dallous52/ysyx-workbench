@@ -16,7 +16,7 @@ module ysyx_25040111_reg (
         if (wen && (waddr != 4'd0))
             rf[waddr] <= wdata;
         `ifdef __ICARUS__
-            $display("ra num: %h", rf[1]);
+            // $display("ra: %h; sp: %h;", rf[1], rf[2]);
         `endif
         rf[0] <= 0;
     end

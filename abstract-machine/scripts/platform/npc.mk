@@ -30,7 +30,7 @@ image: image-dep
 hex: image-dep
 	@$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt
 	@echo + OBJCOPY "->" $(IMAGE_REL).hex
-	@$(OBJCOPY) -O verilog --adjust-vma -0x80000000 $(IMAGE).elf $(IMAGE).hex
+	@$(OBJCOPY) -S --set-section-flags .bss=alloc,contents -O verilog --adjust-vma -0x80000000 $(IMAGE).elf $(IMAGE).hex
 
 run: insert-arg
 	@echo $(NPCFLAGS)

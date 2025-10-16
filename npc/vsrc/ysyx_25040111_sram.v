@@ -3,7 +3,9 @@
 
 `include "HDR/ysyx_25040111_dpic.vh"
 
-`define HEX_PATH "/home/dallous/Documents/ysyx-workbench/am-kernels/benchmarks/microbench/build/microbench-riscv32e-npc.hex"
+`define HEX_PATH_BENCH "/home/dallous/Documents/ysyx-workbench/am-kernels/benchmarks/microbench/build/microbench-riscv32e-npc.hex"
+`define HEX_PATH_RT    "/home/dallous/Documents/rt-thread-am/bsp/abstract-machine/build/rtthread-riscv32e-npc.hex"
+`define HEX_PATH `HEX_PATH_RT
 `define READY_TIME 8'd1
 
 module ysyx_25040111_sram(
@@ -33,10 +35,11 @@ module ysyx_25040111_sram(
 );
 
 `ifdef __ICARUS__
-    reg [7:0] mem [0:6291456];
+    reg [7:0] mem [0:6291456 * 4];
     initial begin
         $display("read hex from %s", `HEX_PATH);
         $readmemh(`HEX_PATH, mem);
+        $display("read end");
     end
     wire [31:0] iaraddr = araddr & {4'b0, {26{1'b1}}, 2'b0};
     wire [31:0] mrdata = {mem[iaraddr | 32'b11], mem[iaraddr | 32'b10], mem[iaraddr | 32'b01], mem[iaraddr]};

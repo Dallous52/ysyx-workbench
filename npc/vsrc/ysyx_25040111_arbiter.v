@@ -148,7 +148,7 @@ module ysyx_25040111_arbiter(
             endpc <= exu_valid & exu_ready ? exu_pc : tmp_pc;
             endaddr <= exu_valid & exu_ready ? exu_addr : tmp_addr;
             `ifdef __ICARUS__
-                $display("pc %h, addr %h", endpc, endaddr);
+                // $display("pc %h, addr %h", endpc, endaddr);
             `endif    
         end
     end
