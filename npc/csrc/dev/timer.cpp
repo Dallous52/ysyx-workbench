@@ -1,5 +1,4 @@
 #include "device.h"
-#include "tpdef.h"
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -12,7 +11,7 @@ word_t rtc[2] = {};
 void timer_init()
 {
     // 获取程序启动时间
-    clock_gettime(CLOCK_MONOTONIC, &start); 
+    clock_gettime(CLOCK_MONOTONIC, &start);
 }
 
 void timer_handler(word_t addr, void* data, bool isw)
