@@ -35,7 +35,7 @@ module ysyx_25040111_sram(
 );
 
 `ifdef __ICARUS__
-    reg [7:0] mem [0:6291456 * 4];
+    reg [7:0] mem [0:67108864];
     integer i;
     initial begin
         for (i = 0; i < 6291456 * 4 + 1; i = i + 1)
