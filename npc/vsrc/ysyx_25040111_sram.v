@@ -36,7 +36,10 @@ module ysyx_25040111_sram(
 
 `ifdef __ICARUS__
     reg [7:0] mem [0:6291456 * 4];
+    integer i;
     initial begin
+        for (i = 0; i < 6291456 * 4 + 1; i = i + 1)
+            mem[i] = 8'h00;
         $display("read hex from %s", `HEX_PATH);
         $readmemh(`HEX_PATH, mem);
         $display("read end");
