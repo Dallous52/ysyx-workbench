@@ -22,13 +22,12 @@ module isim();
     .clock (clock),
     .reset (reset)
   );
-  
 
   // 波形文件输出
-    //   initial begin
-    //     $dumpfile("wave.vcd");
-    //     $dumpvars(0, tb_top);
-    //   end
+  initial begin
+    $dumpfile("waveform/isim.vcd");
+    $dumpvars(0, isim);
+  end
 
   // 仿真运行时间
     //   initial begin
