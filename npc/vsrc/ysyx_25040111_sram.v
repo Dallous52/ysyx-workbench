@@ -69,6 +69,8 @@ module ysyx_25040111_sram(
     always @(posedge clock) begin
         if (reset)
             rcount <= 8'b0;
+        else if (arvalid & arready)
+            rcount <= 8'b0;
         else if (rvalid & rready)
             rcount <= rend ? 8'b0 : rcount + 1;
     end
