@@ -15,8 +15,10 @@ module ysyx_25040111_sram(
     input           reset,
     input [31:0]    araddr,
     input [2:0]     arsize,
+    input [7:0]     arlen,
     input           arvalid,
     output          arready,
+    input [1:0]     arburst,
 
     output [31:0]   rdata,
     output reg      rvalid,
@@ -50,6 +52,34 @@ module ysyx_25040111_sram(
     wire [31:0] mrdata = {mem[iaraddr | 32'b11], mem[iaraddr | 32'b10], mem[iaraddr | 32'b01], mem[iaraddr]};
 `endif // __ICARUS__
 
+    reg reading;
+    reg [7:0] rcount;
+    reg [31:0] raddr;
+
+    assign rend = rcount == arlen;
+    always @(posedge clock) begin
+        if (reset)
+            reading <= 1'b0;
+        else if (arvalid & arready)
+            reading <= 1'b1;
+        else if (rvalid & rready & rend)
+            reading <= 1'b0;
+    end
+
+    always @(posedge clock) begin
+        if (reset)
+            rcount <= 8'b0;
+        else if (rvalid & rready)
+            rcount <= rend ? 8'b0 : rcount + 1;
+    end
+
+    always @(posedge clock) begin
+        if (arvalid & arready)
+            raddr <= araddr;
+        else if (rvalid & rready)
+            raddr <= raddr + 32'd4;
+    end
+
     // memory read
     reg [31:0] rdata_t;
     assign arready = 1;
@@ -59,7 +89,7 @@ module ysyx_25040111_sram(
             rdata_t <= 0;
             rvalid <= 1'b0;            
         end
-        else if (arvalid & arready) begin
+        else if (reading & ~rvalid) begin
             `ifdef __ICARUS__
                 rdata_t <= mrdata;
                 // $display("read iaddr %h data %h", araddr, mrdata);
@@ -69,7 +99,7 @@ module ysyx_25040111_sram(
             rvalid  <= 1'b1;
         end
         else if (rvalid & rready) begin
-            rvalid <= 1'b0;            
+            rvalid <= 1'b0;
         end
     end
     

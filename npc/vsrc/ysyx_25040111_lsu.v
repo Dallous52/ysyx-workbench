@@ -304,6 +304,8 @@ module ysyx_25040111_lsu (
     ysyx_25040111_sram u_sram(
         .clock   	(clock          ),
         .reset   	(reset          ),
+        .arburst    ({1'b0, lsu_burst}),
+        .arlen      (arlen),
         .araddr  	(lsu_raddr      ),
         .arsize     (rsize          ),
         .arvalid 	(arvalid        ),
