@@ -48,7 +48,7 @@ module ysyx_25040111_sram(
         $readmemh(`HEX_PATH, mem);
         $display("read end");
     end
-    wire [31:0] iaraddr = araddr & {4'b0, {26{1'b1}}, 2'b0};
+    wire [31:0] iaraddr = raddr & {4'b0, {26{1'b1}}, 2'b0};
     wire [31:0] mrdata = {mem[iaraddr | 32'b11], mem[iaraddr | 32'b10], mem[iaraddr | 32'b01], mem[iaraddr]};
 `endif // __ICARUS__
 
@@ -94,10 +94,8 @@ module ysyx_25040111_sram(
                 rdata_t <= mrdata;
                 // $display("read iaddr %h data %h", araddr, mrdata);
             `else
-                rdata_t <= pmem_read(araddr);
+                rdata_t <= pmem_read(raddr);
             `endif // __ICARUS__
-            rvalid  <= 1'b1;
-            $display("%h  %d", raddr, rcount);
         end
         else if (rvalid & rready) begin
             rvalid <= 1'b0;
