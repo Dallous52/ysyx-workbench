@@ -43,9 +43,9 @@ module isim();
     .io_master_arvalid      (us_arvalid),
     .io_master_arid         (/* unused */),
     .io_master_araddr       (us_araddr),
-    .io_master_arlen        (/* unused */),
+    .io_master_arlen        (us_arlen),
     .io_master_arsize       (us_arsize),
-    .io_master_arburst      (/* unused */),
+    .io_master_arburst      (us_arburst),
     .io_master_rready       (us_rready),
     .io_master_rvalid       (su_rvalid),
     .io_master_rid          (/* unused */),
@@ -103,10 +103,14 @@ module isim();
   wire        us_rready;
   wire        su_rvalid;
   wire [31:0] su_rdata;
+  wire [1:0]  us_arburst;
+  wire [7:0]  us_arlen;
 
   ysyx_25040111_sram u_ysyx_25040111_sram(
     .clock   	(clock       ),
     .reset   	(reset       ),
+    .arburst  (us_arburst  ),
+    .arlen    (us_arlen),
     .araddr  	(us_araddr   ),
     .arsize  	(us_arsize   ),
     .arvalid 	(us_arvalid  ),

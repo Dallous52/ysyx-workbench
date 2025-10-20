@@ -102,7 +102,7 @@ verilog:
 
 four:
 	@mkdir -p build/isim
-	@iverilog $(IVERILOG_FLAG) -o build/isim/itop test.v isim.v
+	@iverilog $(IVERILOG_FLAG) -o build/isim/itop $(VSRCS) isim.v
 	@vvp build/isim/itop
 
 netlist:
