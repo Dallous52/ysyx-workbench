@@ -78,6 +78,7 @@ module ysyx_25040111_sram(
             raddr <= araddr;
         else if (rvalid & rready)
             raddr <= raddr + 32'd4;
+        $display("%h  %d", raddr, rcount);
     end
 
     // memory read
