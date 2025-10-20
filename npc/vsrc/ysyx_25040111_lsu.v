@@ -206,6 +206,7 @@ module ysyx_25040111_lsu (
             wvalid <= 1'b0;
             wlast <= 1'b0;
         end
+        $display("raddr:%h", lsu_raddr);
     end
 
 //-----------------------------------------------------------------
