@@ -206,7 +206,6 @@ module ysyx_25040111_lsu (
             wvalid <= 1'b0;
             wlast <= 1'b0;
         end
-        $display("raddr:%h %b", lsu_raddr, is_clint);
     end
 
 //-----------------------------------------------------------------
@@ -309,7 +308,7 @@ module ysyx_25040111_lsu (
         .arlen      (arlen),
         .araddr  	(lsu_raddr      ),
         .arsize     (rsize          ),
-        .arvalid 	(arvalid        ),
+        .arvalid 	(arvalid & ~is_clint),
         .arready 	(arready_sram   ),
         .rdata   	(rdata_sram     ),
         .rvalid  	(rvalid_sram    ),
