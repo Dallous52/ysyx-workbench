@@ -56,7 +56,7 @@ module ysyx_25040111_cache(
 `ifdef STA_SOC
     assign chburst      = 1'b1;
 `else
-    assign chburst      = 1'b0;
+    assign chburst      = 1'b1;
 `endif
 
 //-----------------------------------------------------------------
