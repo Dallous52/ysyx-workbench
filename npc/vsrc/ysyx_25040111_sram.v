@@ -56,7 +56,7 @@ module ysyx_25040111_sram(
     reg [7:0] rcount;
     reg [31:0] raddr;
 
-    assign rend = rcount == arlen;
+    wire rend = rcount == arlen;
     always @(posedge clock) begin
         if (reset)
             reading <= 1'b0;
