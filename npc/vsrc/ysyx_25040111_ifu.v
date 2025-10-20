@@ -32,7 +32,7 @@ module ysyx_25040111_ifu (
 
     assign idu_inst     = inst;
     assign idu_ready    = inst_ok;
-    assign ifu_valid    = jump ? jpc_ok : pc_ok;
+    assign ifu_valid    = jump ? jpc_ok : ~inst_ok;
     assign ifu_addr     = pc;
     assign idu_pc       = pc;
 
@@ -43,7 +43,7 @@ module ysyx_25040111_ifu (
     wire [31:0] next_pc;
 
     reg  [31:0] pc;
-    reg         pc_ok, jpc_ok;
+    reg         jpc_ok;
     reg  [31:0] inst;
     reg         inst_ok;
 
@@ -51,7 +51,7 @@ module ysyx_25040111_ifu (
 // COMBINATIONAL LOGIC
 //-----------------------------------------------------------------
 
-    assign next_pc = pc + 4;
+
 
 //-----------------------------------------------------------------
 // State Machine
@@ -66,9 +66,11 @@ module ysyx_25040111_ifu (
         else if (ifu_ready & ifu_valid) begin
             inst <= ifu_inst;
             inst_ok <= 1'b1;
+            `ifndef YOSYS_STA
             `ifdef __ICARUS__
                 if ($isunknown(ifu_inst)) $stop;
                 else if ($isunknown(pc)) $stop;
+            `endif
             `endif
         end
         else if (idu_ready & idu_valid)
@@ -82,23 +84,19 @@ module ysyx_25040111_ifu (
         else if (err)
             pc <= errpc;
         else if (idu_ready & idu_valid)
-            pc <= next_pc;
+            pc <= pc + 32'd4;
         else if (jpc_ready & jump)
             pc <= jump_pc;
     end
 
-    // pc jpc ok
+    // jpc ok
     always @(posedge clock) begin
         if (reset | err) begin
-            pc_ok <= 1'b1;
             jpc_ok <= 1'b0;
         end
-        else if (idu_ready & idu_valid)
-            pc_ok <= 1'b1;
         else if (jpc_ready & jump)
             jpc_ok <= 1'b1;
         else if (ifu_ready & ifu_valid) begin
-            pc_ok <= 1'b0;
             jpc_ok <= 1'b0;
         end
     end

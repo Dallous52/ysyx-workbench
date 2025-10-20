@@ -1,11 +1,13 @@
 `ifndef YOSYS_STA
 `ifndef RUNSOC
 
+`ifndef __ICARUS__
 `include "HDR/ysyx_25040111_dpic.vh"
+`endif
 
 `define HEX_PATH_BENCH "/home/dallous/Documents/ysyx-workbench/am-kernels/benchmarks/microbench/build/microbench-riscv32e-npc.hex"
 `define HEX_PATH_RT    "/home/dallous/Documents/rt-thread-am/bsp/abstract-machine/build/rtthread-riscv32e-npc.hex"
-`define HEX_PATH `HEX_PATH_RT
+`define HEX_PATH `HEX_PATH_BENCH
 `define READY_TIME 8'd1
 
 module ysyx_25040111_sram(

@@ -53,7 +53,7 @@ module ysyx_25040111_cache(
     assign chlen        = DATA_L - 1;
     assign chaddr       = caddr;
 
-`ifdef RUNSOC
+`ifdef STA_SOC
     assign chburst      = 1'b1;
 `else
     assign chburst      = 1'b0;
@@ -159,11 +159,11 @@ module ysyx_25040111_cache(
     // caddr
     always @(posedge clock) begin
         if (reset)
-            caddr <= 0;
+            caddr <= 32'b0;
         else if (ifu_valid & ~hit & ~chvalid & ~ended)
             caddr <= {addr[31:BLOCK_Ls], {BLOCK_Ls{1'b0}}};
         else if (chready & ~chburst)
-            caddr <= caddr + 4;
+            caddr <= caddr + 32'd4;
     end
 
     // ended

@@ -23,8 +23,9 @@ ARGS ?=
 
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
-# VSRCS = result/ysyx_25040111-1000MHz/ysyx_25040111.v
-# VSRCS += /home/dallous/Documents/yosys-sta/nangate45/sim/cells.v
+
+VNSRCS = result/ysyx_25040111-500MHz/ysyx_25040111.netlist.fixed.v
+VNSRCS += /home/dallous/Documents/yosys-sta/pdk/nangate45/sim/cells.v
 
 ifeq ($(TOPNAME), ysyxSoCFull)
 VSRCS += $(shell find $(SOC_DIR)/perip -name "*.v")
@@ -33,7 +34,6 @@ endif
 
 CURRDIR ?= /home/dallous/Documents/ysyx-workbench/npc
 RTL_FILE = $(VSRCS)
-
 
 # 获取所有 C/C++ 源文件（`csrc` 目录下的 `.c`、`.cc`、`.cpp` 文件）
 CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
@@ -81,7 +81,7 @@ sim: $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 
 sta:
 	make -C/home/dallous/Documents/yosys-sta/ RTL_FILES="$(RTL_FILE)" \
-		DESIGN=ysyx_25040111 ANSWER_DIR=$(CURRDIR)/ sta
+		DESIGN=ysyx_25040111 O=$(CURRDIR)/result CLK_PORT_NAME=clock sta
 
 # gtkwave
 gtkwave:
@@ -95,10 +95,20 @@ gtkwave:
 run: sim
 	./build/$(TOPNAME)/top $(ARGS)
 
-isim:
+verilog:
+	@mkdir -p build
+	@iverilog -g2012 -E -DYOSYS_STA -I/home/dallous/Documents/ysyx-workbench/npc/vsrc/ \
+		-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/IDU -obuild/ysyx_25040111.v $(VSRCS)
+
+four:
 	@mkdir -p build/isim
-	@iverilog $(IVERILOG_FLAG) -o build/isim/itop $(VSRCS) isim.v
+	@iverilog $(IVERILOG_FLAG) -o build/isim/itop test.v isim.v
 	@vvp build/isim/itop
+
+netlist:
+	@mkdir -p build/netlist
+	@iverilog -g2012 -DNETLIST -o build/netlist/itop $(VNSRCS) isim.v vsrc/ysyx_25040111_sram.v
+	@vvp build/netlist/itop
 
 pref:
 	make -C/home/dallous/Documents/ysyx-workbench/am-kernels/benchmarks/microbench/ \
