@@ -90,6 +90,8 @@ module ysyx_25040111_sram(
             rvalid <= 1'b0;            
         end
         else if (reading & ~rvalid) begin
+            $display("%h  %d  %d", raddr, rcount, arlen);
+
             `ifdef __ICARUS__
                 rdata_t <= mrdata;
                 // $display("read iaddr %h data %h", araddr, mrdata);
@@ -97,7 +99,6 @@ module ysyx_25040111_sram(
                 rdata_t <= pmem_read(raddr);
             `endif // __ICARUS__
             rvalid  <= 1'b1;
-            $display("%h  %d  %d", raddr, rcount, arlen);
         end
         else if (rvalid & rready) begin
             rvalid <= 1'b0;
