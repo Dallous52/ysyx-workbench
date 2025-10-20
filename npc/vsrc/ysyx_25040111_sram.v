@@ -77,7 +77,7 @@ module ysyx_25040111_sram(
         if (arvalid & arready)
             raddr <= araddr;
         else if (rvalid & rready)
-            raddr <= raddr + 32'd4;
+            raddr <=  rend ? 8'b0 : raddr + 32'd4;
     end
 
     // memory read
