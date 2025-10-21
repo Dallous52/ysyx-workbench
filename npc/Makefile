@@ -79,9 +79,12 @@ sim: $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 		$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS)) \
 		--exe -o top
 
-sta:
-	make -C/home/dallous/Documents/yosys-sta/ RTL_FILES="$(RTL_FILE)" \
-		DESIGN=ysyx_25040111 O=$(CURRDIR)/result CLK_PORT_NAME=clock sta
+sta: verilog
+	make -C/home/dallous/Documents/yosys-sta/ \
+		RTL_FILES=$(CURRDIR)/build/ysyx_25040111.v \
+		DESIGN=ysyx_25040111 \
+		O=$(CURRDIR)/result \
+		CLK_PORT_NAME=clock sta
 
 # gtkwave
 gtkwave:
