@@ -21,7 +21,6 @@ module isim();
   ysyx_25040111 u_ysyx_25040111(
     .clock (clock),
     .reset (reset)
-  `ifdef NETLIST 
     ,.io_interrupt           (1'h0),	
     .io_master_awready      (su_awready),
     .io_master_awvalid      (us_awvalid),
@@ -81,10 +80,8 @@ module isim();
     .io_slave_rdata         (/* unused */),
     .io_slave_rresp         (/* unused */),
     .io_slave_rlast         (/* unused */)
-  `endif
   );
 
-`ifdef NETLIST
   wire [31:0] us_awaddr;
   wire        su_awready;
   wire        us_awvalid;
@@ -130,7 +127,6 @@ module isim();
     .bvalid  	(su_bvalid   ),
     .bready  	(us_bready   )
   );
-`endif
 
 `ifdef NETLIST
 initial begin

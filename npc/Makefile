@@ -26,8 +26,8 @@ IMG ?=
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
 
-VNSRCS = result/ysyx_25040111-500MHz/ysyx_25040111.netlist.fixed.v
-VNSRCS += /home/dallous/Documents/yosys-sta/pdk/nangate45/sim/cells.v
+NETLIST ?= # result/ysyx_25040111-500MHz/ysyx_25040111.netlist.fixed.v
+CELLS ?= # /home/dallous/Documents/yosys-sta/pdk/nangate45/sim/cells.v
 
 ifeq ($(TOPNAME), ysyxSoCFull)
 VSRCS += $(shell find $(SOC_DIR)/perip -name "*.v")
@@ -107,12 +107,18 @@ verilog:
 
 sim-iverilog:
 	@mkdir -p build/isim
-	@iverilog $(IVERILOG_FLAG) -o build/isim/itop $(VSRCS) isim.v
+	@rm -f build/isim/sim-iverilog.hex
+	@riscv64-linux-gnu-objcopy -Ibinary -O verilog $(IMG) build/isim/sim-iverilog.hex
+	@iverilog $(IVERILOG_FLAG) -DHEX_PATH="\"$(CURRDIR)/build/isim/sim-iverilog.hex\""\
+		-o build/isim/itop build/ysyx_25040111.v isim.v vsrc/ysyx_25040111_sram.v
 	@vvp build/isim/itop
 
-netlist:
+sim-iverilog-netlist:
 	@mkdir -p build/netlist
-	@iverilog -g2012 -DNETLIST -o build/netlist/itop $(VNSRCS) isim.v vsrc/ysyx_25040111_sram.v
+	@rm -f build/netlist/sim-iverilog-netlist.hex
+	@riscv64-linux-gnu-objcopy -Ibinary -O verilog $(IMG) build/netlist/sim-iverilog-netlist.hex
+	@iverilog $(IVERILOG_FLAG) -DHEX_PATH="\"$(CURRDIR)/build/netlist/sim-iverilog-netlist.hex\""\
+		-o build/netlist/itop $(NETLIST) $(CELLS) isim.v vsrc/ysyx_25040111_sram.v
 	@vvp build/netlist/itop
 
 pref:
