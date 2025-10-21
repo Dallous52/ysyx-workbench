@@ -21,6 +21,8 @@ SOC_DIR = /home/dallous/Documents/ysyx-workbench/ysyxSoC
 
 ARGS ?= 
 
+IMG ?=
+
 # 获取所有 Verilog 源文件（`vsrc` 目录下的 `.v` 文件）
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
 
@@ -103,7 +105,7 @@ verilog:
 	@iverilog -g2012 -E -DYOSYS_STA -I/home/dallous/Documents/ysyx-workbench/npc/vsrc/ \
 		-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/IDU -obuild/ysyx_25040111.v $(VSRCS)
 
-four:
+sim-iverilog:
 	@mkdir -p build/isim
 	@iverilog $(IVERILOG_FLAG) -o build/isim/itop $(VSRCS) isim.v
 	@vvp build/isim/itop
