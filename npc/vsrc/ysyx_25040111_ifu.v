@@ -1,4 +1,4 @@
-`ifdef RUNSOC
+`ifdef STA_SOC
 `define PC_RESET 32'h30000000   
 `else
 `define PC_RESET 32'h80000000

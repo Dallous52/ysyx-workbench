@@ -7,7 +7,7 @@
 
 `define HEX_PATH_BENCH "/home/dallous/Documents/ysyx-workbench/am-kernels/benchmarks/microbench/build/microbench-riscv32e-npc.hex"
 `define HEX_PATH_RT    "/home/dallous/Documents/rt-thread-am/bsp/abstract-machine/build/rtthread-riscv32e-npc.hex"
-`define HEX_PATH `HEX_PATH_RT
+`define HEX_PATH `HEX_PATH_BENCH
 `define READY_TIME 8'd1
 
 module ysyx_25040111_sram(
@@ -85,7 +85,15 @@ module ysyx_25040111_sram(
     // memory read
     reg [31:0] rdata_t;
     assign arready = 1;
+
+    `ifdef NETLIST
+    assign rdata = raddr == 32'h30000000 ? 32'h800002B7 :
+                   raddr == 32'h30000004 ? 32'h00028067 :
+                   raddr <  32'h80000000 ? 32'd0 : rdata_t;
+    `else
     assign rdata = rdata_t;
+    `endif
+
     always @(posedge clock) begin
         if (reset)begin
             rdata_t <= 0;
