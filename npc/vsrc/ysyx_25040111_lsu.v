@@ -67,9 +67,10 @@ module ysyx_25040111_lsu (
     wire        rready;
     wire [31:0] rout;
 
-    wire [7:0]  arlen = lsu_burst ? lsu_rlen : 8'b0;
-    wire        is_clint = (lsu_raddr >= `DEV_CLINT && lsu_raddr <= `DEV_CLINT_END);
-    wire        rend     = rcount == arlen;
+    // clint
+    wire        arready_clint;
+    wire [31:0] rdata_clint;
+    wire        rvalid_clint;
 
     // axi write
     reg         awvalid;
@@ -91,6 +92,10 @@ module ysyx_25040111_lsu (
     reg         writing;
     reg [7:0]   rcount;
 
+    wire [7:0]  arlen = lsu_burst ? lsu_rlen : 8'b0;
+    wire        is_clint = (lsu_raddr >= `DEV_CLINT && lsu_raddr <= `DEV_CLINT_END);
+    wire        rend     = rcount == arlen;
+    
 //-----------------------------------------------------------------
 // External Interface
 //-----------------------------------------------------------------
@@ -278,9 +283,6 @@ module ysyx_25040111_lsu (
 //-----------------------------------------------------------------
 
     // CLINT
-    wire        arready_clint;
-    wire [31:0] rdata_clint;
-    wire        rvalid_clint;
     ysyx_25040111_clint u_clint(
         .clock   	(clock          ),
         .reset   	(reset          ),
