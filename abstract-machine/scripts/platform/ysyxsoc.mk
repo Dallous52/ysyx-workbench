@@ -22,8 +22,13 @@ CFLAGS += -DMAINARGS_MAX_LEN=$(MAINARGS_MAX_LEN) -DMAINARGS_PLACEHOLDER=\""$(MAI
 
 NPCFLAGS = -b$(IMAGE).bin -e$(IMAGE).elf -r #-v
 
+IMAGE_NAME = $(notdir $(IMAGE))
+
 insert-arg: image
+	@echo $(IMAGE_NAME)
+ifeq ($(filter dummy-riscv32e-%, $(IMAGE_NAME)),)
 	@python3 $(AM_HOME)/tools/insert-arg.py $(IMAGE).bin $(MAINARGS_MAX_LEN) "$(MAINARGS_PLACEHOLDER)" "$(mainargs)"
+endif
 
 image: image-dep
 	@$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt
@@ -32,6 +37,10 @@ image: image-dep
 
 run: insert-arg
 	@echo $(NPCFLAGS)
-	$(MAKE) -C$(NPC_HOME) run ARGS="$(NPCFLAGS)" TOPNAME=ysyxSoCFull
+ifeq ($(filter dummy-riscv32e-%, $(IMAGE_NAME)),)
+	$(MAKE) -C/home/dallous/Documents/ysyx-workbench/npc/ run ARGS="$(NPCFLAGS)" TOPNAME=ysyxSoCFull
+else
+	@exit 0
+endif
 
 .PHONY: insert-arg
