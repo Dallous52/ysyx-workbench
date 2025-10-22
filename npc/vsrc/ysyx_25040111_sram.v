@@ -34,6 +34,22 @@ module ysyx_25040111_sram(
     output          bvalid,
     input           bready
 );
+    reg reading;
+    reg [7:0] rcount;
+    reg [31:0] raddr;
+
+    // memory read
+    reg [31:0] rdata_t;
+    assign arready = 1;
+
+    `ifdef NETLIST
+    assign rdata = raddr == 32'h30000000 ? 32'h800002B7 :
+                   raddr == 32'h30000004 ? 32'h00028067 :
+                   raddr <  32'h80000000 ? 32'd0 : rdata_t;
+    `else
+    assign rdata = rdata_t;
+    `endif
+
 
 `ifdef __ICARUS__
     reg [7:0] mem [0:67108864];
@@ -48,10 +64,6 @@ module ysyx_25040111_sram(
     wire [31:0] iaraddr = raddr & {4'b0, {26{1'b1}}, 2'b0};
     wire [31:0] mrdata = {mem[iaraddr | 32'b11], mem[iaraddr | 32'b10], mem[iaraddr | 32'b01], mem[iaraddr]};
 `endif // __ICARUS__
-
-    reg reading;
-    reg [7:0] rcount;
-    reg [31:0] raddr;
 
     wire rend = rcount == arlen;
     always @(posedge clock) begin
@@ -79,18 +91,6 @@ module ysyx_25040111_sram(
             raddr <= raddr + 32'd4;
     end
 
-    // memory read
-    reg [31:0] rdata_t;
-    assign arready = 1;
-
-    `ifdef NETLIST
-    assign rdata = raddr == 32'h30000000 ? 32'h800002B7 :
-                   raddr == 32'h30000004 ? 32'h00028067 :
-                   raddr <  32'h80000000 ? 32'd0 : rdata_t;
-    `else
-    assign rdata = rdata_t;
-    `endif
-
     always @(posedge clock) begin
         if (reset)begin
             rdata_t <= 0;
@@ -112,15 +112,16 @@ module ysyx_25040111_sram(
         end
     end
     
+    assign awready = 1;
+    assign wready = 1;
+    assign bvalid = wready & wvalid;
     // memory write
     `ifdef __ICARUS__
         wire [31:0] iawaddr = awaddr & {4'b0, {26{1'b1}}, 2'b0};
     `else
         wire [7:0] wmask = {4'b0, wstrb};
     `endif
-    assign awready = 1;
-    assign wready = 1;
-    assign bvalid = wready & wvalid;
+
     always @(posedge clock) begin
         if (awvalid & awready & wvalid & wready & wlast & bready) begin
             `ifdef __ICARUS__

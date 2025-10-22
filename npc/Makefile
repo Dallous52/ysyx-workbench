@@ -53,8 +53,8 @@ INCFLAGS += -I$(NEMU_HOME)/tools/capstone/repo/include/
 
 CXXFLAGS += $(INCFLAGS) # -g
 VERILATOR_CFLAGS +=	-Wno-UNOPTFLAT \
-					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/ \
-					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/IDU \
+					-I$(CURRDIR)/vsrc/ \
+					-I$(CURRDIR)/vsrc/IDU \
 					-Mdir build/$(TOPNAME)
 
 ifeq ($(TOPNAME), ysyxSoCFull)
