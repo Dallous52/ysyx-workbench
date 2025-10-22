@@ -33,15 +33,6 @@ module ysyx_25040111_idu(
 );
 
 //-----------------------------------------------------------------
-// External Interface
-//-----------------------------------------------------------------
-
-    assign exe_valid = decode_ok;
-    assign idu_valid = ~decode_ok;
-    assign jump      = (~(opt[9:8] == 2'b01) & jmp_valid) | (opt[12] & opt[15]) | fencei;
-    assign exe_pc    = pc;
-
-//-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
 
@@ -51,6 +42,15 @@ module ysyx_25040111_idu(
 
     wire        jmp_valid = |opt[2:0];
     wire        fencei = ~opt[0] & ~opt[15] & (opt[12:10] == 3'b100);
+    
+//-----------------------------------------------------------------
+// External Interface
+//-----------------------------------------------------------------
+
+    assign exe_valid = decode_ok;
+    assign idu_valid = ~decode_ok;
+    assign jump      = (~(opt[9:8] == 2'b01) & jmp_valid) | (opt[12] & opt[15]) | fencei;
+    assign exe_pc    = pc;
     
 //-----------------------------------------------------------------
 // State Machine

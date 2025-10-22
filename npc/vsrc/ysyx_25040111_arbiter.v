@@ -61,6 +61,28 @@ module ysyx_25040111_arbiter(
 );
 
 //-----------------------------------------------------------------
+// Register / Wire
+//-----------------------------------------------------------------
+
+    reg         working;
+
+    reg [31:0]  tmp_pc;
+
+    reg         wvalid;
+    reg [31:0]  waddr;
+    reg [31:0]  wdata;
+    reg [1:0]   wmask;
+
+    reg         rvalid;
+    reg [31:0]  raddr;
+    reg [1:0]   rmask;
+    reg         rsign;
+    reg [4:0]   wbaddr;
+
+    wire        wtok    = lsu_wready & lsu_wvalid;
+    wire        handsk  = exu_valid & exu_ready;
+
+//-----------------------------------------------------------------
 // External Interface
 //-----------------------------------------------------------------
 
@@ -99,28 +121,6 @@ module ysyx_25040111_arbiter(
     // cache inst fetch
     assign cah_ready    = ~working & cah_valid ? lsu_rready   : 1'b0;
     assign cah_data     = ~working & cah_valid ? lsu_rdata    : 0;
-
-//-----------------------------------------------------------------
-// Register / Wire
-//-----------------------------------------------------------------
-
-    reg         working;
-
-    reg [31:0]  tmp_pc;
-
-    reg         wvalid;
-    reg [31:0]  waddr;
-    reg [31:0]  wdata;
-    reg [1:0]   wmask;
-
-    reg         rvalid;
-    reg [31:0]  raddr;
-    reg [1:0]   rmask;
-    reg         rsign;
-    reg [4:0]   wbaddr;
-
-    wire        wtok    = lsu_wready & lsu_wvalid;
-    wire        handsk  = exu_valid & exu_ready;
 
 //-----------------------------------------------------------------
 // State Machine

@@ -7,8 +7,6 @@
 #include <cstdio>
 #include <dlfcn.h>
 
-#define REF_SO_FILE "/home/dallous/Documents/ysyx-workbench/nemu/build/riscv32-nemu-interpreter-so"
-
 typedef void (*diff_memcpy)(paddr_t, void *, size_t , bool);
 diff_memcpy ref_difftest_memcpy  = nullptr;
 typedef void (*diff_regcpy)(void *, bool);
@@ -43,10 +41,15 @@ void nemu_init(long img_size, int port)
 
 void init_difftest(long img_size, int port) 
 {
-    void *handle;
-    handle = dlopen(REF_SO_FILE, RTLD_LAZY);
+    char path[512];
+    const char *npc_home = getenv("NPC_HOME");
+    assert(npc_home);
+
+    snprintf(path, sizeof(path), "%s/riscv32-nemu-interpreter-so", npc_home);
+
+    void *handle = dlopen(path, RTLD_LAZY);
     assert(handle);
-  
+
     ref_difftest_memcpy = (diff_memcpy)dlsym(handle, "difftest_memcpy");
     assert(ref_difftest_memcpy);
   

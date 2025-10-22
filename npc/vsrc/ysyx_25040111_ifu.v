@@ -27,16 +27,6 @@ module ysyx_25040111_ifu (
 );
 
 //-----------------------------------------------------------------
-// External Interface
-//-----------------------------------------------------------------
-
-    assign idu_inst     = inst;
-    assign idu_ready    = inst_ok;
-    assign ifu_valid    = jump ? jpc_ok : ~inst_ok;
-    assign ifu_addr     = pc;
-    assign idu_pc       = pc;
-
-//-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
 
@@ -46,6 +36,16 @@ module ysyx_25040111_ifu (
     reg         jpc_ok;
     reg  [31:0] inst;
     reg         inst_ok;
+
+//-----------------------------------------------------------------
+// External Interface
+//-----------------------------------------------------------------
+
+    assign idu_inst     = inst;
+    assign idu_ready    = inst_ok;
+    assign ifu_valid    = jump ? jpc_ok : ~inst_ok;
+    assign ifu_addr     = pc;
+    assign idu_pc       = pc;
 
 //-----------------------------------------------------------------
 // COMBINATIONAL LOGIC

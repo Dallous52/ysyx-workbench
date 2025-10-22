@@ -41,25 +41,6 @@ module ysyx_25040111_cache(
     localparam IDX_L   = COUNT_L + CACHE_Ls;
 
 //-----------------------------------------------------------------
-// External Interface
-//-----------------------------------------------------------------
-
-    wire [TAG_HIG:0]      tag    = addr[31:TAG_IDX]; 
-    wire [CACHE_Ls-1 : 0] index  = addr[TAG_IDX-1 : BLOCK_Ls];
-    wire [BLOCK_Ls-1 : 0] offset = addr[BLOCK_Ls-1 : 0];
-
-    assign ifu_ready    = cready;
-    assign data         = cdata;
-    assign chlen        = DATA_L - 1;
-    assign chaddr       = caddr;
-
-`ifdef STA_SOC
-    assign chburst      = 1'b1;
-`else
-    assign chburst      = 1'b1;
-`endif
-
-//-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
 
@@ -70,6 +51,26 @@ module ysyx_25040111_cache(
     reg  [COUNT_L   : 0] count;
     wire [IDX_L-1   : 0] bidx;
     wire [IDX_L-1   : 0] sidx;
+    
+    reg  [31:0]          caddr;
+    reg                  cready;
+    reg  [31:0]          cdata;
+    reg                  ended;
+
+    wire [COUNT_L:0]     nup = DATA_L;
+    
+//-----------------------------------------------------------------
+// External Interface
+//-----------------------------------------------------------------
+
+    wire [TAG_HIG:0]      tag    = addr[31:TAG_IDX]; 
+    wire [CACHE_Ls-1 : 0] index  = addr[TAG_IDX-1 : BLOCK_Ls];
+    wire [BLOCK_Ls-1 : 0] offset = addr[BLOCK_Ls-1 : 0];
+
+    wire        hit    = (ctags[index] == tag) & (cvalids[index]);
+    wire        update = count == nup;
+    wire        rend   = (count == chlen[COUNT_L:0]) & chready & chvalid;
+
     generate
         if (BLOCK_Ls > 2) begin
             assign bidx = {index, offset[BLOCK_Ls-1:2]};
@@ -81,17 +82,17 @@ module ysyx_25040111_cache(
         end
     endgenerate
     
-    reg  [31:0]          caddr;
-    reg                  cready;
-    reg  [31:0]          cdata;
-    reg                  ended;
+    assign ifu_ready    = cready;
+    assign data         = cdata;
+    assign chlen        = DATA_L - 1;
+    assign chaddr       = caddr;
 
-    wire [COUNT_L:0]     nup = DATA_L;
+`ifdef STA_SOC
+    assign chburst      = 1'b1;
+`else
+    assign chburst      = 1'b1;
+`endif
 
-    wire        hit    = (ctags[index] == tag) & (cvalids[index]);
-    wire        update = count == nup;
-    wire        rend   = (count == chlen[COUNT_L:0]) & chready & chvalid;
-    
 //-----------------------------------------------------------------
 // State Machine
 //-----------------------------------------------------------------

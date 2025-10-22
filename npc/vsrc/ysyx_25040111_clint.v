@@ -19,13 +19,12 @@ module ysyx_25040111_clint(
 
     // time read
     reg        tvalid;
+    reg [63:0] mtime;
 
     assign arready = 1'b1;
     assign rvalid  = tvalid;
     assign rdata   = tvalid ? (araddr[3:0] == 4'd8) ? mtime[31:0] : mtime[63:32] : 32'b0;
     
-    reg [63:0] mtime;
-
     always @(posedge clock) begin
         if (reset) begin
             mtime <= 0;

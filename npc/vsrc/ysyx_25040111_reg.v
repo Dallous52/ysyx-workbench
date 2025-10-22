@@ -12,19 +12,19 @@ module ysyx_25040111_reg (
 
     reg  [31:0] rf [15:0];
 
-    always @(posedge clock) begin
-        if (wen && (waddr != 4'd0)) begin
-            rf[waddr] <= wdata;       
-        end
-        rf[0] <= 0;
-    end
-
     // 读口（显式 forwarding 临时信号）
     wire forward1 = (wen && (ars1 == waddr));
     wire forward2 = (wen && (ars2 == waddr));
 
     wire [31:0] rf_rs1 = rf[ars1];
     wire [31:0] rf_rs2 = rf[ars2];
+    
+    always @(posedge clock) begin
+        if (wen && (waddr != 4'd0)) begin
+            rf[waddr] <= wdata;       
+        end
+        rf[0] <= 0;
+    end
 
     assign rs1 = ren[0] ? (forward1 ? wdata : rf_rs1) : 32'd0;
     assign rs2 = ren[1] ? (forward2 ? wdata : rf_rs2) : 32'd0;

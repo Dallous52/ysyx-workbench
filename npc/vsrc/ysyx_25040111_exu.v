@@ -54,39 +54,6 @@ module ysyx_25040111_exu(
 );
 
 //-----------------------------------------------------------------
-// External Interface
-//-----------------------------------------------------------------
-    
-    assign exe_ready = ~exe_start & ~lock;
-
-    assign abt_valid = exe_end;
-    assign abt_men   = |eopt[11:10] & ~eopt[15] & ~error;
-    
-    assign abt_ard   = ard;
-    assign abt_rd    = mwt ? ecsr : rdo;
-    assign abt_gen   = eopt[0] & ~error;
-
-    assign abt_acsr  = error ? `MEPC : acsrd;
-    assign abt_csr   = error ? epc   : rdo;
-    assign abt_sen   = mwt | error;
-
-    assign abt_rsign = eopt[14];
-    assign abt_write = ~eopt[12];
-    assign abt_addr  = rdo;
-    assign abt_wdata = ers2;
-    assign abt_mask  = eopt[11:10];
-
-    assign abt_pc    = epc;
-    
-    assign jpc_ready = jmpc_ok | (abt_valid & abt_ready & fencei);
-    assign jump_pc   = rd; 
-
-    assign erro      = error;
-    assign errtpo    = errtp;
-    
-    assign fencei = ~eopt[0] & ~eopt[15] & (eopt[12:10] == 3'b100);
-
-//-----------------------------------------------------------------
 // Register / Wire
 //-----------------------------------------------------------------
 
@@ -133,6 +100,39 @@ module ysyx_25040111_exu(
     // other ctrl
     wire mwt  = eopt[15] & eopt[10];
     wire mrd  = opt[15]  & opt[11];
+
+//-----------------------------------------------------------------
+// External Interface
+//-----------------------------------------------------------------
+    
+    assign exe_ready = ~exe_start & ~lock;
+
+    assign abt_valid = exe_end;
+    assign abt_men   = |eopt[11:10] & ~eopt[15] & ~error;
+    
+    assign abt_ard   = ard;
+    assign abt_rd    = mwt ? ecsr : rdo;
+    assign abt_gen   = eopt[0] & ~error;
+
+    assign abt_acsr  = error ? `MEPC : acsrd;
+    assign abt_csr   = error ? epc   : rdo;
+    assign abt_sen   = mwt | error;
+
+    assign abt_rsign = eopt[14];
+    assign abt_write = ~eopt[12];
+    assign abt_addr  = rdo;
+    assign abt_wdata = ers2;
+    assign abt_mask  = eopt[11:10];
+
+    assign abt_pc    = epc;
+    
+    assign jpc_ready = jmpc_ok | (abt_valid & abt_ready & fencei);
+    assign jump_pc   = rd; 
+
+    assign erro      = error;
+    assign errtpo    = errtp;
+    
+    assign fencei = ~eopt[0] & ~eopt[15] & (eopt[12:10] == 3'b100);
 
 //-----------------------------------------------------------------
 // State Machine

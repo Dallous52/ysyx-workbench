@@ -57,6 +57,41 @@ module ysyx_25040111_lsu (
 );
 
 //-----------------------------------------------------------------
+// Register / Wire
+//-----------------------------------------------------------------
+
+    // axi read
+    reg         arvalid;
+    wire        arready;
+    wire        rvalid;
+    wire        rready;
+    wire [31:0] rout;
+
+    wire [7:0]  arlen = lsu_burst ? lsu_rlen : 8'b0;
+    wire        is_clint = (lsu_raddr >= `DEV_CLINT && lsu_raddr <= `DEV_CLINT_END);
+    wire        rend     = rcount == arlen;
+
+    // axi write
+    reg         awvalid;
+    wire        awready;
+    reg         wvalid;
+    wire        wready;
+    reg         wlast;
+    wire        bready;
+    wire        bvalid;
+
+    // wire to case
+    reg [31:0]  rdata;
+    reg [31:0]  woffset, roffset;
+    reg [2:0]   wsize, rsize;
+    reg [3:0]   wstrb;
+    // wire to case
+
+    reg         reading;
+    reg         writing;
+    reg [7:0]   rcount;
+
+//-----------------------------------------------------------------
 // External Interface
 //-----------------------------------------------------------------
 
@@ -101,42 +136,6 @@ module ysyx_25040111_lsu (
     assign rvalid             = is_clint ? rvalid_clint    : rvalid_sram;
     assign rout               = is_clint ? rdata_clint     : rdata_sram;
 `endif
-
-//-----------------------------------------------------------------
-// Register / Wire
-//-----------------------------------------------------------------
-
-    // axi read
-    reg         arvalid;
-    wire        arready;
-    wire        rvalid;
-    wire        rready;
-    wire [31:0] rout;
-
-    wire [7:0]  arlen = lsu_burst ? lsu_rlen : 8'b0;
-    wire        is_clint = (lsu_raddr >= `DEV_CLINT && lsu_raddr <= `DEV_CLINT_END);
-    wire        rend     = rcount == arlen;
-
-    // axi write
-    reg         awvalid;
-    wire        awready;
-    reg         wvalid;
-    wire        wready;
-    reg         wlast;
-    wire        bready;
-    wire        bvalid;
-
-    // wire to case
-    reg [31:0]  rdata;
-    reg [31:0]  woffset, roffset;
-    reg [2:0]   wsize, rsize;
-    reg [3:0]   wstrb;
-    // wire to case
-
-
-    reg         reading;
-    reg         writing;
-    reg [7:0]   rcount;
 
 //-----------------------------------------------------------------
 // State Machine

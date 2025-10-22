@@ -2,6 +2,7 @@
 *
 !*/
 !libcapstone.so.5
+!riscv32-nemu-interpreter-so
 !Makefile
 !*.mk
 !*.[cSh]
