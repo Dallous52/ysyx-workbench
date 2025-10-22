@@ -111,7 +111,7 @@ sim-iverilog:
 	@rm -f build/isim/sim-iverilog.hex
 	@riscv64-linux-gnu-objcopy -Ibinary -O verilog $(IMG) build/isim/sim-iverilog.hex
 	@iverilog $(IVERILOG_FLAG) -DHEX_PATH="\"$(CURRDIR)/build/isim/sim-iverilog.hex\""\
-		-o build/isim/itop build/ysyx_25040111.v isim.v vsrc/ysyx_25040111_sram.v
+		-o $(CURRDIR)/build/isim/itop $(CURRDIR)/build/ysyx_25040111.v isim.v $(CURRDIR)/vsrc/ysyx_25040111_sram.v
 	@vvp build/isim/itop
 
 sim-iverilog-netlist:
@@ -119,7 +119,7 @@ sim-iverilog-netlist:
 	@rm -f build/netlist/sim-iverilog-netlist.hex
 	@riscv64-linux-gnu-objcopy -Ibinary -O verilog $(IMG) build/netlist/sim-iverilog-netlist.hex
 	@iverilog $(IVERILOG_FLAG) -DHEX_PATH="\"$(CURRDIR)/build/netlist/sim-iverilog-netlist.hex\""\
-		-o build/netlist/itop $(NETLIST) $(CELLS) isim.v vsrc/ysyx_25040111_sram.v
+		-o $(CURRDIR)/build/netlist/itop $(NETLIST) $(CELLS) isim.v $(CURRDIR)/vsrc/ysyx_25040111_sram.v
 	@vvp build/netlist/itop
 
 pref:

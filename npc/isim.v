@@ -6,6 +6,27 @@ module isim();
   reg clock;
   reg reset;
 
+  wire [31:0] us_awaddr;
+  wire        su_awready;
+  wire        us_awvalid;
+  wire [2:0]  us_awsize;
+  wire        su_wready;
+  wire        us_wvalid;
+  wire [31:0] us_wdata;
+  wire [3:0]  us_wstrb;
+  wire        us_wlast;
+  wire        us_bready;
+  wire        su_bvalid;
+  wire        su_arready;
+  wire        us_arvalid;
+  wire [31:0] us_araddr;
+  wire [2:0]  us_arsize;
+  wire        us_rready;
+  wire        su_rvalid;
+  wire [31:0] su_rdata;
+  wire [1:0]  us_arburst;
+  wire [7:0]  us_arlen;
+
   // 生成时钟
   initial clock = 0;
   always #5 clock = ~clock; // 10ns周期 = 100MHz
@@ -81,27 +102,6 @@ module isim();
     .io_slave_rresp         (/* unused */),
     .io_slave_rlast         (/* unused */)
   );
-
-  wire [31:0] us_awaddr;
-  wire        su_awready;
-  wire        us_awvalid;
-  wire [2:0]  us_awsize;
-  wire        su_wready;
-  wire        us_wvalid;
-  wire [31:0] us_wdata;
-  wire [3:0]  us_wstrb;
-  wire        us_wlast;
-  wire        us_bready;
-  wire        su_bvalid;
-  wire        su_arready;
-  wire        us_arvalid;
-  wire [31:0] us_araddr;
-  wire [2:0]  us_arsize;
-  wire        us_rready;
-  wire        su_rvalid;
-  wire [31:0] su_rdata;
-  wire [1:0]  us_arburst;
-  wire [7:0]  us_arlen;
 
   ysyx_25040111_sram u_ysyx_25040111_sram(
     .clock   	(clock       ),
