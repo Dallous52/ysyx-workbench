@@ -10,14 +10,16 @@ VERILATOR_CFLAGS += -MMD --build -cc  --autoflush \
 				-O3 --x-assign fast --x-initial fast --noassert \
 				--timescale "1ns/1ns" --no-timing
 
-IVERILOG_FLAG = -g2012 -I/home/dallous/Documents/ysyx-workbench/npc/vsrc/ \
-					-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/IDU \
+CURRDIR ?= $(shell pwd)
+
+IVERILOG_FLAG = -g2012 -I$(CURRDIR)/vsrc/ \
+					-I$(CURRDIR)/vsrc/IDU \
 
 # 顶层模块名称
 TOPNAME ?= ysyx_25040111 # ysyxSoCFull
 
 # ysyxSoC 目录
-SOC_DIR = /home/dallous/Documents/ysyx-workbench/ysyxSoC
+SOC_DIR = $(CURRDIR)/../ysyxSoC
 
 ARGS ?= 
 
@@ -34,7 +36,6 @@ VSRCS += $(shell find $(SOC_DIR)/perip -name "*.v")
 VSRCS += $(SOC_DIR)/build/ysyxSoCFull.v
 endif
 
-CURRDIR ?= /home/dallous/Documents/ysyx-workbench/npc
 RTL_FILE = $(VSRCS)
 
 # 获取所有 C/C++ 源文件（`csrc` 目录下的 `.c`、`.cc`、`.cpp` 文件）
@@ -47,8 +48,8 @@ INCFLAGS = $(addprefix -I, $(NVBOARD_HOME)/usr/include)
 INCFLAGS += -DRUNSOC=1
 endif
 
-INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/npc/csrc/inc/
-INCFLAGS += -I/home/dallous/Documents/ysyx-workbench/nemu/tools/capstone/repo/include/
+INCFLAGS += -I$(CURRDIR)/csrc/inc/
+INCFLAGS += -I$(NEMU_HOME)/tools/capstone/repo/include/
 
 CXXFLAGS += $(INCFLAGS) # -g
 VERILATOR_CFLAGS +=	-Wno-UNOPTFLAT \
