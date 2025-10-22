@@ -106,7 +106,7 @@ verilog:
 	@iverilog -g2012 -E -DYOSYS_STA -I$(CURRDIR)/vsrc/ \
 		-I$(CURRDIR)/vsrc/IDU -obuild/ysyx_25040111.v $(VSRCS)
 
-sim-iverilog:
+sim-iverilog: verilog
 	@mkdir -p build/isim
 	@rm -f build/isim/sim-iverilog.hex
 	@riscv64-linux-gnu-objcopy -Ibinary -O verilog $(IMG) build/isim/sim-iverilog.hex

@@ -35,8 +35,13 @@ static csh handle;
 
 void init_disasm()
 {
-  void *dl_handle;
-  dl_handle = dlopen("/home/dallous/Documents/ysyx-workbench/nemu/tools/capstone/repo/libcapstone.so.5", RTLD_LAZY);
+  char path[512];
+  const char *nemu_home = getenv("NEMU_HOME");
+  assert(nemu_home);
+  
+  snprintf(path, sizeof(path), "%s/tools/capstone/repo/libcapstone.so.5", nemu_home);
+
+  void *dl_handle = dlopen(path, RTLD_LAZY);
   assert(dl_handle);
 
   pcs_open cs_open_dl= nullptr;
