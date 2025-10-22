@@ -103,8 +103,8 @@ run: sim
 
 verilog:
 	@mkdir -p build
-	@iverilog -g2012 -E -DYOSYS_STA -I/home/dallous/Documents/ysyx-workbench/npc/vsrc/ \
-		-I/home/dallous/Documents/ysyx-workbench/npc/vsrc/IDU -obuild/ysyx_25040111.v $(VSRCS)
+	@iverilog -g2012 -E -DYOSYS_STA -I$(CURRDIR)/vsrc/ \
+		-I$(CURRDIR)/vsrc/IDU -obuild/ysyx_25040111.v $(VSRCS)
 
 sim-iverilog:
 	@mkdir -p build/isim
