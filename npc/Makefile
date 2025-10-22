@@ -49,7 +49,7 @@ INCFLAGS += -DRUNSOC=1
 endif
 
 INCFLAGS += -I$(CURRDIR)/csrc/inc/
-INCFLAGS += -I$(NEMU_HOME)/tools/capstone/repo/include/
+INCFLAGS += -I$(CURRDIR)/csrc/uinc/
 
 CXXFLAGS += $(INCFLAGS) # -g
 VERILATOR_CFLAGS +=	-Wno-UNOPTFLAT \

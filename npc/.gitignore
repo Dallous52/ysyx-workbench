@@ -1,6 +1,7 @@
 *.*
 *
 !*/
+!libcapstone.so.5
 !Makefile
 !*.mk
 !*.[cSh]

@@ -36,10 +36,10 @@ static csh handle;
 void init_disasm()
 {
   char path[512];
-  const char *nemu_home = getenv("NEMU_HOME");
-  assert(nemu_home);
+  const char *npc_home = getenv("NPC_HOME");
+  assert(npc_home);
   
-  snprintf(path, sizeof(path), "%s/tools/capstone/repo/libcapstone.so.5", nemu_home);
+  snprintf(path, sizeof(path), "%s/libcapstone.so.5", npc_home);
 
   void *dl_handle = dlopen(path, RTLD_LAZY);
   assert(dl_handle);
