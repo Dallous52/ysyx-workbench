@@ -66,6 +66,8 @@ module ysyx_25040111_arbiter(
 
     reg         working;
 
+    reg         add_freq;
+
     reg         wvalid;
     reg [31:0]  waddr;
     reg [31:0]  wdata;
