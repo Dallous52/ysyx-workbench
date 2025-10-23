@@ -99,10 +99,7 @@ module ysyx_25040111_cache(
 
     // cdata
     always @(posedge clock) begin
-        if (reset) begin
-            cdata <= 0;
-        end
-        else if ((ifu_valid & hit & ~cready) | update) begin
+        if ((ifu_valid & hit & ~cready) | update) begin
         `ifndef YOSYS_STA
         `ifndef __ICARUS__ 
             if (ifu_valid & hit) cache_hit();
@@ -159,9 +156,7 @@ module ysyx_25040111_cache(
 
     // caddr
     always @(posedge clock) begin
-        if (reset)
-            caddr <= 32'b0;
-        else if (ifu_valid & ~hit & ~chvalid & ~ended)
+        if (ifu_valid & ~hit & ~chvalid & ~ended)
             caddr <= {addr[31:BLOCK_Ls], {BLOCK_Ls{1'b0}}};
         else if (chready & ~chburst)
             caddr <= caddr + 32'd4;

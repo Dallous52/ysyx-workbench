@@ -140,13 +140,7 @@ module ysyx_25040111_exu(
 
     // input data
     always @(posedge clock) begin
-        if (reset) begin
-            ers2 <= 0; ecsr <= 0;
-            epc  <= 0; eopt <= `OPT_LEN'b0;
-            ard  <= 5'b0; acsrd <= 12'b0;
-            error <= 1'b0; errtp <= 4'b0; 
-        end
-        else if (exe_start & ~exe_end) begin
+        if (exe_start & ~exe_end) begin
             ers2 <= rs2; ecsr <= csri;
             epc  <= pc; eopt <= opt;
             ard <= ard_in; acsrd <= acsrd_in;
@@ -176,12 +170,7 @@ module ysyx_25040111_exu(
 
     // executing
     always @(posedge clock) begin
-        if (reset) begin
-            alu_p1 <= 0;
-            alu_p2 <= 0;
-            alu_ctrl <= 7'b0;         
-        end
-        else if (exe_ready & exe_valid) begin
+        if (exe_ready & exe_valid) begin
             case (opt[4:3])
                 2'b00: begin alu_p1 <= imm; alu_p2 <= 0;    end
                 2'b01: begin                    

@@ -149,9 +149,7 @@ module ysyx_25040111_arbiter(
             endaddr <= exu_valid & exu_ready ? exu_addr : tmp_addr;
         end
     end
-`endif
-    // ************************************************************
-
+    
     // tmp addr pc
     always @(posedge clock) begin
         if (reset) begin
@@ -161,6 +159,8 @@ module ysyx_25040111_arbiter(
             tmp_pc <= exu_pc;
         end
     end
+`endif
+    // ************************************************************
 
     // working
     always @(posedge clock) begin

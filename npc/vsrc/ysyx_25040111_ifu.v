@@ -60,7 +60,6 @@ module ysyx_25040111_ifu (
     // inst  inst_ok
     always @(posedge clock) begin
         if (reset | err) begin
-            inst <= 0;
             inst_ok <= 1'b0;            
         end
         else if (ifu_ready & ifu_valid) begin

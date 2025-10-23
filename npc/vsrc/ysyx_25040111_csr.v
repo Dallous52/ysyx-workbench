@@ -19,8 +19,6 @@ module ysyx_25040111_csr(
     always @(posedge clock) begin
         if (reset) begin
             csr[0] <= 32'h00001800;
-            csr[1] <= 32'h00000000;
-            csr[2] <= 32'h00000000;
         end
         else if (wen) begin
             if (waddr == 12'h300)
