@@ -89,7 +89,7 @@ void init_mem()
   // Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
 }
 
-
+#ifdef TARGET_SHARE
 static paddr_t npc_addr_map(paddr_t addr)
 {  
   if (addr >= FLASH_START && addr < FLASH_END)
@@ -105,7 +105,7 @@ static paddr_t npc_addr_map(paddr_t addr)
 
   return 0;
 }
-
+#endif // TARGET_SHARE
 
 word_t paddr_read(paddr_t addr, int len) 
 {
@@ -118,10 +118,15 @@ word_t paddr_read(paddr_t addr, int len)
   }
 #endif // CONFIG_MTRACE
 
+#ifdef TARGET_SHARE
   paddr_t address = npc_addr_map(addr);
   if (address == 0 && mem_err_ignore) { 
     return 0xffffffff;
   }
+#else
+  paddr_t address = addr;
+#endif // TARGET_SHARE
+
   // printf(ANSI_FMT("[r : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
 
   if (likely(in_pmem(address))) return pmem_read(address, len);
@@ -138,10 +143,15 @@ void paddr_write(paddr_t addr, int len, word_t data)
     addr, cpu.pc, len, data);
 #endif // CONFIG_MTRACE
 
+#ifdef TARGET_SHARE
   paddr_t address = npc_addr_map(addr);
   if (address == 0 && mem_err_ignore) { 
     return;
   }
+#else
+  paddr_t address = addr;
+#endif // TARGET_SHARE
+
   // printf(ANSI_FMT("[w : 0x%08x <=> 0x%08x]\n", ANSI_FG_CYAN), addr, address);
 
   if (likely(in_pmem(address))) { pmem_write(address, len, data); return; }

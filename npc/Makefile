@@ -19,7 +19,7 @@ IVERILOG_FLAG = -g2012 -I$(CURRDIR)/vsrc/ \
 TOPNAME ?= ysyx_25040111 # ysyxSoCFull
 
 # ysyxSoC 目录
-SOC_DIR = $(CURRDIR)/../ysyxSoC
+SOC_DIR = /home/dallous/Documents/ysyx-workbench/ysyxSoC# $(CURRDIR)/../ysyxSoC
 
 ARGS ?= 
 

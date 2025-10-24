@@ -48,7 +48,7 @@ ftrace_d* func_info = NULL;
 
 static void restart() {
   /* Set the initial program counter. */
-  cpu.pc = 0x20000000;// RESET_VECTOR;
+  cpu.pc = 0x80000000;// RESET_VECTOR;
 
   /* The zero register is always 0. */
   cpu.gpr[0] = 0;

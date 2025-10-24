@@ -25,7 +25,7 @@ diff_init ref_difftest_init = nullptr;
 
 void nemu_init(long img_size, int port)
 {
-    #ifdef RUNSOC
+#ifdef RUNSOC
     ref_difftest_init(port, 0x30000000);
 #else
     ref_difftest_init(port, 0x80000000);

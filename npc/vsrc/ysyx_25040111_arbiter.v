@@ -129,7 +129,7 @@ module ysyx_25040111_arbiter(
     // ************************************************************
     // get info for diff test
 `ifndef YOSYS_STA
-    reg [31:0]  endpc, endaddr, tmp_addr;
+    reg [31:0]  endpc, endaddr, tmp_addr, tmp_pc;
     always @(posedge clock) begin
         if (reset) begin
             tmp_addr <= 0;
