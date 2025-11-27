@@ -1,7 +1,7 @@
 From ab0e9b63b882ae9741ed0623fe0e13062d11a835 Mon Sep 17 00:00:00 2001
 From: huhao <huhao1226968736@outlook.com>
 Date: Wed, 22 Oct 2025 14:30:10 +0800
-Subject: [PATCH 2/2] for ci patch
+Subject: [PATCH 2/3] for ci patch
 
 ---
  perip/uart16550/rtl/uart_tfifo.v | 4 ++--

@@ -1,7 +1,7 @@
-From 433c3c2e6b293d60b3d502a7236cc8aa04c83804 Mon Sep 17 00:00:00 2001
+From b4e7d44cd68b8647ddcf0fefda8f2d21c46ac792 Mon Sep 17 00:00:00 2001
 From: huhao <huhao1226968736@outlook.com>
 Date: Tue, 21 Oct 2025 21:44:44 +0800
-Subject: [PATCH] CI Preparation for ci
+Subject: [PATCH 1/4] CI Preparation for ci
 
 ---
  .clangd                            |  9 ++++

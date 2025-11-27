@@ -25,8 +25,8 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc)
   {
     if (ref_r->gpr[i] != gpr(i))
     {
-      printf("0x%x reg: [%s] error [nemu: 0x%x] [spike: 0x%x]\n", 
-        pc, reg_name(i), gpr(i), ref_r->gpr[i]);
+      printf("0x%x 0x%x reg: [%s] error [nemu: 0x%x] [spike: 0x%x]\n", 
+        pc, ref_r->pc, reg_name(i), gpr(i), ref_r->gpr[i]);
       ret = false;
     }
   }

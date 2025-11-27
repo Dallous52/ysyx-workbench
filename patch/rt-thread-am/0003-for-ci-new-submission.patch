@@ -1,7 +1,7 @@
 From 03cc20e37ef2b95600b9bf4762458c02bee6d2bf Mon Sep 17 00:00:00 2001
 From: huhao <huhao1226968736@outlook.com>
 Date: Fri, 24 Oct 2025 21:24:55 +0800
-Subject: [PATCH 3/3] for ci new submission
+Subject: [PATCH 3/4] for ci new submission
 
 ---
  bsp/abstract-machine/Makefile   |  4 ++++

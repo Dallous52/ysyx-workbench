@@ -1,7 +1,7 @@
 From 069124ec5658bced6566978ab6b317cbf2a01a24 Mon Sep 17 00:00:00 2001
 From: huhao <huhao1226968736@outlook.com>
 Date: Wed, 22 Oct 2025 16:52:31 +0800
-Subject: [PATCH 2/2] for ci patch
+Subject: [PATCH 2/4] for ci patch
 
 ---
  bsp/abstract-machine/src/uart.c | 12 ++++++------
